@@ -172,6 +172,7 @@ private:
         int imaxqtr = nobs * 50; // default derived from stats::kmeans()
 
         for (iter = 1; iter <= maxiter; ++iter) {
+
             /* OPtimal-TRAnsfer stage: there is only one pass through the data. 
              * Each point is re-allocated, if necessary, to the cluster that will
              * induce the maximum reduction in within-cluster sum of squares.
@@ -215,6 +216,17 @@ private:
     }
 
 private:
+#ifdef DEBUG
+    template<class T>
+    void print_vector(const T& vec, const char* msg) {
+        std::cout << msg << std::endl;
+        for (auto c : vec) {
+            std::cout << c << " ";
+        }
+        std::cout << std::endl;
+    }
+#endif
+
     void add_point_to_cluster(int obs, int cen) {
         auto copy = centers + cen * ndim;
         auto mine = data + obs * ndim;
@@ -255,7 +267,6 @@ private:
         return;
     }
 
-private:
     double squared_distance_from_cluster(int pt, int clust) const {
         const double* acopy = data + pt * ndim;
         const double* ccopy = centers + clust * ndim;
@@ -349,8 +360,8 @@ private:
 
             // LIVE(L) has to be decreased by M before re-entering OPTRA.
             // This means that if I >= LIVE(L1) in the next OPTRA call,
-            // the last update must be >= M steps ago, given that we 
-            // looped through all the observations already.
+            // the last update must be >= M steps ago, as we effectively
+            // 'lapped' the previous update for this cluster.
             live[cen] -= nobs;
         }
 
@@ -374,56 +385,57 @@ private:
         int istep = 0;
 
         while (1) {
-           for (int obs = 0; obs < nobs; ++obs, ++icoun) { 
-                auto l1 = ic1[obs];
-                auto l2 = ic2[obs];
+           for (int obs = 0; obs < nobs; ++obs) { 
+               ++icoun;
+               auto l1 = ic1[obs];
 
-                // point I is the only member of cluster L1, no transfer.
-                if (nc[l1] != 1) {
+               // point I is the only member of cluster L1, no transfer.
+               if (nc[l1] != 1) {
 
-                    /* NCP(L) is equal to the step at which cluster L is last updated plus M.
-                     * (AL: M is the notation for the number of observations, a.k.a. 'nobs').
-                     *
-                     * If ISTEP > NCP(L1), no need to re-compute distance from point I to 
-                     * cluster L1. Note that if cluster L1 is last updated exactly M 
-                     * steps ago, we still need to compute the distance from point I to 
-                     * cluster L1.
-                     */
-                    if (istep <= ncp[l1]) {
-                        d[obs] = squared_distance_from_cluster(obs, l1) * an1[l1];
-                    }
+                   /* NCP(L) is equal to the step at which cluster L is last updated plus M.
+                    * (AL: M is the notation for the number of observations, a.k.a. 'nobs').
+                    *
+                    * If ISTEP > NCP(L1), no need to re-compute distance from point I to 
+                    * cluster L1. Note that if cluster L1 is last updated exactly M 
+                    * steps ago, we still need to compute the distance from point I to 
+                    * cluster L1.
+                    */
+                   if (istep <= ncp[l1]) {
+                       d[obs] = squared_distance_from_cluster(obs, l1) * an1[l1];
+                   }
 
-                    // If ISTEP >= both NCP(L1) & NCP(L2) there will be no transfer of point I at this step. 
-                    if (istep < ncp[l1] || istep < ncp[l2]) {
-                        if (squared_distance_from_cluster(obs, l2) < d[obs] / an2[l2]) {
-                            /* Update cluster centres, NCP, NC, ITRAN, AN1 & AN2 for clusters
-                             * L1 & L2.   Also update IC1(I) & IC2(I).   Note that if any
-                             * updating occurs in this stage, INDX is set back to 0. 
-                             */
-                            icoun = 0;
-                            indx = 0;
+                   // If ISTEP >= both NCP(L1) & NCP(L2) there will be no transfer of point I at this step. 
+                   auto l2 = ic2[obs];
+                   if (istep < ncp[l1] || istep < ncp[l2]) {
+                       if (squared_distance_from_cluster(obs, l2) < d[obs] / an2[l2]) {
+                           /* Update cluster centres, NCP, NC, ITRAN, AN1 & AN2 for clusters
+                            * L1 & L2.   Also update IC1(I) & IC2(I).   Note that if any
+                            * updating occurs in this stage, INDX is set back to 0. 
+                            */
+                           icoun = 0;
+                           indx = 0;
 
-                            itran[l1] = true;
-                            itran[l2] = true;
-                            ncp[l1] = istep + nobs;
-                            ncp[l2] = istep + nobs;
-                            transfer_point(obs, l1, l2);
-                        }
-                    }
-                }
+                           itran[l1] = true;
+                           itran[l2] = true;
+                           ncp[l1] = istep + nobs;
+                           ncp[l2] = istep + nobs;
+                           transfer_point(obs, l1, l2);
+                       }
+                   }
+               }
 
-                // If no re-allocation took place in the last M steps, return.
-                if (icoun == nobs) {
-                    return;
-                }
+               // If no re-allocation took place in the last M steps, return.
+               if (icoun == nobs) {
+                   return;
+               }
 
-                // AL: incrementing after checks against NCP(L1), to avoid off-by-one 
-                // errors after switching to zero-indexing for the observations.
-                ++istep;
-                if (istep >= imaxqtr) {
-                    imaxqtr = -1;
-                    return;
-                }
+               // AL: incrementing ISTEP after checks against NCP(L1), to avoid off-by-one 
+               // errors after switching to zero-indexing for the observations.
+               ++istep;
+               if (istep >= imaxqtr) {
+                   imaxqtr = -1;
+                   return;
+               }
             }
         } 
     }
@@ -431,14 +443,14 @@ private:
 private:
     void transfer_point(int obs, int l1, int l2) {
         const double al1 = nc[l1], alw = al1 - 1;
-        const double al2 = nc[l2], alt = al2 - 1;
+        const double al2 = nc[l2], alt = al2 + 1;
 
         auto copy1 = centers + l1 * ndim;
         auto copy2 = centers + l2 * ndim;
         auto acopy = data + obs * ndim;
         for (int dim = 0; dim < ndim; ++dim, ++copy1, ++copy2, ++acopy) {
             *copy1 = (*copy1 * al1 - *acopy) / alw;
-            *copy2 = (*copy2 * al2 - *acopy) / alt;
+            *copy2 = (*copy2 * al2 + *acopy) / alt;
         }
 
         --nc[l1];
