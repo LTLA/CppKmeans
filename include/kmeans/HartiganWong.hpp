@@ -121,7 +121,7 @@ public:
         return nc;
     }
 
-    /*
+    /**
      * @return The within-cluster sum of squares for each cluster.
      *
      * All values are guaranteed to be non-negative.
@@ -131,7 +131,7 @@ public:
         return wcss;
     }
 
-    /*
+    /**
      * @return The number of iterations used to achieve convergence.
      *
      * This value may be greater than the `maxit` if convergence was not achieved.
@@ -140,7 +140,7 @@ public:
         return iter;
     }
 
-    /*
+    /**
      * @return The status of the algorithm.
      * This may be:
      *
