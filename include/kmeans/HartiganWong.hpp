@@ -8,8 +8,32 @@
 #include <stdexcept>
 #include <iostream>
 
+/**
+ * @file HartiganWong.hpp
+ *
+ * @brief Implements the Hartigan-Wong algorithm for k-means clustering.
+ */
+
 namespace kmeans {
 
+/**
+ * @brief Implements the Hartigan-Wong algorithm for k-means clustering.
+ *
+ * The Hartigan-Wong algorithm performs several iterations of transferring points between clusters, 
+ * involving a computationally expensive "optimal transfer" step that checks each observation against each cluster for the lowest squared distance;
+ * followed by a cheaper "quick transfer" step, which iterates between the best and second-best cluster choices for each observation.
+ * The latter enables rapid exploration of the local solution space without the unnecessary expense of repeatedly comparing to all clusters for all observations.
+ * In addition, each distance calculation to a cluster accounts for the shift in the means when a point is transferred. 
+ * The algorithm terminates when no observation wishes to transfer between clusters.
+ *
+ * This implementation is derived from the Fortran code underlying the `kmeans` function in the **stats** R package,
+ * which in turn is derived from Hartigan and Wong (1979).
+ *
+ * @see
+ * Hartigan, J. A. and Wong, M. A. (1979).
+ * Algorithm AS 136: A K-means clustering algorithm.
+ * _Applied Statistics_, 28, 100-108.
+ */
 class HartiganWong {
     const int ndim, nobs;
     const double* data;
@@ -35,6 +59,18 @@ class HartiganWong {
     static constexpr int ncp_init = -2;
     static constexpr int ncp_unchanged = -1;
 public:
+    /**
+     * @param nd Number of dimensions.
+     * @param no Number of observations.
+     * @param[in] d Pointer to an array where columns are observations and rows are dimensions. 
+     * Data should be stored in column-major order.
+     * @param nc Number of cluster centers.
+     * @param[in, out] d Pointer to an array where columns are cluster centers and rows are dimensions. 
+     * On input, this should contain the initial centroid locations for each cluster.
+     * Data should be stored in column-major order.
+     * On output, this will contain the final centroid locations for each cluster.
+     * @param maxit Maximum number of iterations.
+     */
     HartiganWong(int nd, int no, const double* d, int nc, double* c, int maxit = 10) :
         ndim(nd), 
         nobs(no), 
@@ -67,22 +103,56 @@ public:
         kmeans();
     } 
 
+    /**
+     * @return The cluster assignments for each observation.
+     *
+     * Entries are guaranteed to exist for clusters 0 to `nc - 1`, where `nc` is as supplied in the `HartiganWong()` constructor.
+     */
     const std::vector<int>& clusters () const {
         return ic1;
     }
 
+    /**
+     * @return The number of observations in each cluster.
+     *
+     * All values are guaranteed to be positive.
+     */
     const std::vector<int>& sizes() const {
         return nc;
     }
 
-    const std::vector<double>& WCSS() const {
+    /*
+     * @return The within-cluster sum of squares for each cluster.
+     *
+     * All values are guaranteed to be non-negative.
+     * Note that they may be zero for clusters with only one observation.
+     */
+    const std::vector<double>& withinss() const {
         return wcss;
     }
 
+    /*
+     * @return The number of iterations used to achieve convergence.
+     *
+     * This value may be greater than the `maxit` if convergence was not achieved.
+     */
     const int iterations() const {
         return iter;
     }
 
+    /*
+     * @return The status of the algorithm.
+     * This may be:
+     *
+     * - 0: convergence achieved.
+     * - 1: empty cluster detected.
+     * This usually indicates a problem with the initial choic of centroids.
+     * It can also occur in pathological situations with duplicate points.
+     * - 2: maximum iterations reached without convergence. 
+     * - 3: this previously indicated situations where the number of centers is not positive or greater than the number of observations.
+     * Now, both will cause exceptions to be thrown, so this error code is no longer in use.
+     * - 4: maximum number of quick transfer steps exceeded.
+     */
     const int status() const {
         return ifault;
     }
@@ -104,7 +174,7 @@ private:
 
         } else if (ncenters > nobs) {
             throw std::runtime_error("number of centers must be less than number of observations"); 
-        } else if (ncenters == 0) {
+        } else if (ncenters <= 0) {
             throw std::runtime_error("number of centers must be positive");
         }
 
