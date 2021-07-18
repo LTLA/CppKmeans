@@ -11,10 +11,10 @@
 namespace kmeans {
 
 class HartiganWong {
-    int ndim, nobs;
+    const int ndim, nobs;
     const double* data;
 
-    int ncenters;
+    const int ncenters;
     double* centers;
 
     // Subsequent arguments in the same order as supplied to R's kmns_ function.
@@ -25,7 +25,7 @@ class HartiganWong {
 
     std::vector<uint8_t> itran;
     std::vector<int> live;
-    int maxiter;
+    const int maxiter;
     std::vector<double> wcss;
 
     int ifault = 0;
@@ -67,18 +67,41 @@ public:
         kmeans();
     } 
 
+    const std::vector<int>& clusters () const {
+        return ic1;
+    }
+
+    const std::vector<int>& sizes() const {
+        return ic1;
+    }
+
+    const std::vector<double>& WCSS() const {
+        return wcss;
+    }
+
+    const int iterations() const {
+        return iter;
+    }
+
+    const int status() const {
+        return ifault;
+    }
+
 private:
     void kmeans() {
-        constexpr double big = 1e30;
         if (ncenters == 1) {
             // All points in cluster 0.
+            nc[0] = nobs;
             compute_wcss();
             return;
+
         } else if (ncenters == nobs) {
             // Special case, each observation is a center.
             std::iota(ic1.begin(), ic1.end(), 0);
+            std::fill(nc.begin(), nc.end(), 1);
             compute_wcss();
             return;
+
         } else if (ncenters > nobs) {
             throw std::runtime_error("number of centers must be less than number of observations"); 
         } else if (ncenters == 0) {
