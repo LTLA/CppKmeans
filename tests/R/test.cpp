@@ -11,7 +11,7 @@ Rcpp::List run_kmeans(Rcpp::NumericMatrix x, Rcpp::NumericMatrix init) {
         Rcpp::Named("centers") = output, 
         Rcpp::Named("clusters") = Rcpp::wrap(hw.clusters()),
         Rcpp::Named("size") = hw.sizes(),
-        Rcpp::Named("wcss") = Rcpp::wrap(hw.WCSS()),
+        Rcpp::Named("wcss") = Rcpp::wrap(hw.withinss()),
         Rcpp::Named("status") = hw.status(),
         Rcpp::Named("status") = hw.status(),
         Rcpp::Named("iterations") = hw.iterations()

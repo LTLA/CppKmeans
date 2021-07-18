@@ -1,3 +1,9 @@
+# This script executes comparisons against the reference stats::kmeans()
+# implementation. It does so by using Rcpp to build a small function that
+# executes the core Hartigan-Wong functionality, and then compares the 
+# results after clustering with pre-defined centers. We use a preset init
+# so as to avoid problems with differences in the PRNGs between C++ and R.
+
 # Building the function.
 library(Rcpp)
 if (!file.exists("kmeans")) {
@@ -6,7 +12,7 @@ if (!file.exists("kmeans")) {
 sourceCpp("test.cpp")
 
 library(testthat)
-for (nc in c(20, 50, 100)) {
+for (nc in c(20, 50, 100, 500, 2000)) {
     for (nr in c(2, 10, 20)) {
         for (k in c(2, 5, 10)) {
             cat("NR = ", nr, ", NC = ", nc, ", k = " , k, "\n", sep="")
