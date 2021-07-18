@@ -37,6 +37,37 @@ TEST_P(HartiganWongTest, Basic) {
     hydrate(centers);
 
     kmeans::HartiganWong hw(nr, nc, data.data(), ncenters, centers.data());
+
+    // Checking that there's the specified number of clusters, and that they're all non-empty.
+    std::vector<int> counts(ncenters);
+    const auto& clusters = hw.clusters();
+    for (auto c : clusters) {
+        EXPECT_TRUE(c >= 0 && c < ncenters);
+        ++counts[c];
+    }
+    EXPECT_EQ(counts, hw.sizes());
+    for (auto c : counts) {
+        EXPECT_TRUE(c > 0); 
+    }
+
+    if (ncenters < nc) {
+        EXPECT_TRUE(hw.iterations() > 0);
+
+        // Checking that the WCSS calculations are correct.
+        const auto& wcss = hw.WCSS();
+        for (size_t i = 0; i < ncenters; ++i) {
+            if (counts[i] > 1) {
+                EXPECT_TRUE(wcss[i] > 0);
+            } else {
+                EXPECT_EQ(wcss[i], 0);
+            }
+        }
+    } else {
+        // Checking that the averages are just equal to the points.
+        EXPECT_EQ(data, centers);
+    }
+
+    EXPECT_EQ(hw.status(), 0);
 }
 
 INSTANTIATE_TEST_CASE_P(
