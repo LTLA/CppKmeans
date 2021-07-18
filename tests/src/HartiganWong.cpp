@@ -30,6 +30,7 @@ using HartiganWongTest = TestCore<std::tuple<int, int, int> >;
 
 TEST_P(HartiganWongTest, Basic) {
     auto param = GetParam();
+    assemble(param);
     auto ncenters = std::get<2>(param);
 
     std::vector<double> centers(ncenters * nr);
