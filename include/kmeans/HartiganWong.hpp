@@ -72,7 +72,7 @@ public:
     }
 
     const std::vector<int>& sizes() const {
-        return ic1;
+        return nc;
     }
 
     const std::vector<double>& WCSS() const {
@@ -147,11 +147,7 @@ private:
         for (int obs = 0; obs < nobs; ++obs) {
             auto cen = ic1[obs];
             ++nc[cen];
-            auto copy = centers + cen * ndim;
-            auto mine = data + obs * ndim;
-            for (int dim = 0; dim < ndim; ++dim, ++copy, ++mine) {
-                *copy += *mine;
-            }
+            add_point_to_cluster(obs, cen);
         }
 
         // Check to see if there is any empty cluster at this stage 
@@ -161,16 +157,13 @@ private:
                 return;
             }
 
-            const double num = nc[cen];
-            auto copy = centers + cen * ndim;
-            for (int dim = 0; dim < ndim; ++dim, ++copy) {
-                *copy /= num;
-            }
+            divide_by_cluster_size(cen);
 
             /* Initialize AN1, AN2.
              * AN1(L) = NC(L) / (NC(L) - 1)
              * AN2(L) = NC(L) / (NC(L) + 1)
              */
+            const double num = nc[cen];
             an2[cen] = num / (num + 1);
             an1[cen] = (num > 1 ? num / (num - 1) : big);
         }
@@ -222,25 +215,30 @@ private:
     }
 
 private:
+    void add_point_to_cluster(int obs, int cen) {
+        auto copy = centers + cen * ndim;
+        auto mine = data + obs * ndim;
+        for (int dim = 0; dim < ndim; ++dim, ++copy, ++mine) {
+            *copy += *mine;
+        }
+    }
+
+    void divide_by_cluster_size(int cen) {
+        auto curcenter = centers + cen * ndim;
+        for (int dim = 0; dim < ndim; ++dim, ++curcenter) {
+            *curcenter /= nc[cen];
+        }
+    }
+
     void compute_wcss() {
         std::fill(centers, centers + ncenters * ndim, 0);
         std::fill(wcss.begin(), wcss.end(), 0);
 
         for (int obs = 0; obs < nobs; ++obs) {
-            auto cen = ic1[obs];
-            auto curcenter = centers + cen * ndim;
-
-            auto curdata = data + obs * ndim;
-            for (int dim = 0; dim < ndim; ++dim, ++curcenter, ++curdata) {
-                *curcenter += *curdata;
-            }
+            add_point_to_cluster(obs, ic1[obs]);
         }
-
         for (int cen = 0; cen < ncenters; ++cen) {
-            auto curcenter = centers + cen * ndim;
-            for (int dim = 0; dim < ndim; ++dim, ++curcenter) {
-                *curcenter /= nc[cen];
-            }
+            divide_by_cluster_size(cen);
         }
 
         for (int obs = 0; obs < nobs; ++obs) {
