@@ -61,11 +61,13 @@ double uniform01 (ENGINE& eng) {
  */
 template<typename DATA_t = double, typename INDEX_t = int, typename CLUSTER_t = int, class ENGINE>
 std::vector<INDEX_t> weighted_initialization(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, ENGINE& eng) {
-    std::vector<INDEX_t> targets(nobs);
     std::vector<DATA_t> mindist(nobs, 1);
     std::vector<DATA_t> cumulative(nobs);
-    std::vector<uint8_t> chosen(nobs);
     std::vector<INDEX_t> sofar;
+
+    if (!nobs) {
+        return sofar;
+    }
     sofar.reserve(ncenters);
 
     for (CLUSTER_t cen = 0; cen < ncenters; ++cen) {
@@ -75,7 +77,7 @@ std::vector<INDEX_t> weighted_initialization(int ndim, INDEX_t nobs, const DATA_
             INDEX_t prevcounter = 0;
 
             for (INDEX_t obs = 0; obs < nobs; ++obs) {
-                if (!chosen[obs]) {
+                if (mindist[obs]) {
                     const DATA_t* acopy = data + obs * ndim;
                     const DATA_t* scopy = data + last * ndim;
                     DATA_t r2 = 0;
@@ -83,41 +85,29 @@ std::vector<INDEX_t> weighted_initialization(int ndim, INDEX_t nobs, const DATA_
                         r2 += (*acopy - *scopy) * (*acopy - *scopy);
                     }
 
-                    if (cen == 1 || r2 < mindist[prevcounter]) {
-                        mindist[counter] = r2;
-                    } else if (counter != prevcounter) {
-                        mindist[counter] = mindist[prevcounter];
+                    if (cen == 1 || r2 < mindist[obs]) {
+                        mindist[obs] = r2;
                     }
-                    targets[counter] = obs;
-                    ++counter;
-                    ++prevcounter;
-                } else if (obs == last) {
-                    ++prevcounter;
                 }
             }
         } else {
-            std::iota(targets.begin(), targets.end(), 0);
             counter = nobs;
         }
 
-        if (!counter) {
-            break;
-        }
-
         cumulative[0] = mindist[0];
-        for (INDEX_t i = 1; i < counter; ++i) {
+        for (INDEX_t i = 1; i < nobs; ++i) {
             cumulative[i] = cumulative[i-1] + mindist[i];
         }
 
-        const DATA_t total = cumulative[counter-1];
-        if (total == 0) { // a.k.a. duplicates.
+        const auto total = cumulative[nobs-1];
+        if (total == 0) { // a.k.a. only duplicates left.
             break;
         }
 
         const DATA_t chosen_weight = total * uniform01(eng);
-        auto chosen_pos = std::lower_bound(cumulative.begin(), cumulative.begin() + counter, chosen_weight);
-        auto chosen_id = targets[chosen_pos - cumulative.begin()];
-        chosen[chosen_id] = true;
+        auto chosen_pos = std::lower_bound(cumulative.begin(), cumulative.begin() + nobs, chosen_weight);
+        auto chosen_id = chosen_pos - cumulative.begin();
+        mindist[chosen_id] = 0;
         sofar.push_back(chosen_id);
     }
 
