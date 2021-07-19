@@ -20,7 +20,7 @@ namespace kmeans {
 template<class ENGINE>
 double uniform01 (ENGINE& eng) {
     // Stolen from Boost.
-    constexpr double factor = 1.0 / static_cast<double>((eng.max)()-(eng.min)());
+    const double factor = 1.0 / static_cast<double>((eng.max)()-(eng.min)());
     double result;
     do {
         result = static_cast<double>(eng() - (eng.min)()) * factor;
