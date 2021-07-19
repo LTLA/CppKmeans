@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['run_28',['run',['../classkmeans_1_1HartiganWong.html#ac11e2787f8f7cf8ab06f474d40cc8172',1,'kmeans::HartiganWong::run()'],['../classkmeans_1_1Kmeans.html#a6c32cd0c3ea97278b27df0bb7cd2a8e2',1,'kmeans::Kmeans::run(int ndim, int nobs, const double *data, int ncenters, double *centers, int *clusters)'],['../classkmeans_1_1Kmeans.html#a7e95e6946944a53f8b379956968a5497',1,'kmeans::Kmeans::run(int ndim, int nobs, const double *data, int ncenters)']]]
+  ['run_32',['run',['../classkmeans_1_1HartiganWong.html#ae7e300788c1ae8adb282cbf4c0877854',1,'kmeans::HartiganWong::run()'],['../classkmeans_1_1Kmeans.html#a4c1ff20c81de805fb8774eb092d9cda1',1,'kmeans::Kmeans::run(int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters)'],['../classkmeans_1_1Kmeans.html#a9f47a01c8bdaec54f4212e24a1a2e47f',1,'kmeans::Kmeans::run(int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters)']]]
 ];

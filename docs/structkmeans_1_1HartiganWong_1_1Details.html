@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans::HartiganWong::Details Struct Reference</title>
+<title>kmeans: kmeans::HartiganWong&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Details Struct Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -71,7 +71,7 @@ $(function() {
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structkmeans_1_1HartiganWong_1_1Details-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">kmeans::HartiganWong::Details Struct Reference</div>  </div>
+<div class="title">kmeans::HartiganWong&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Details Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -82,26 +82,31 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a76fc1d7b25ac2833508dbefe4fc1b9ba"><td class="memItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#a76fc1d7b25ac2833508dbefe4fc1b9ba">sizes</a></td></tr>
-<tr class="separator:a76fc1d7b25ac2833508dbefe4fc1b9ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5413274329d9833d29b94345fb63e83"><td class="memItemLeft" align="right" valign="top">std::vector&lt; double &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#ac5413274329d9833d29b94345fb63e83">withinss</a></td></tr>
-<tr class="separator:ac5413274329d9833d29b94345fb63e83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec5eab01f17051c8b29d5b25b46542a9"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#aec5eab01f17051c8b29d5b25b46542a9">iterations</a></td></tr>
-<tr class="separator:aec5eab01f17051c8b29d5b25b46542a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3f2354c8bde030f0e71c3639f9c5158"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#aa3f2354c8bde030f0e71c3639f9c5158">status</a></td></tr>
-<tr class="separator:aa3f2354c8bde030f0e71c3639f9c5158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5315c98cf44ee691cb51430ae4a9f4f3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; INDEX_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#a5315c98cf44ee691cb51430ae4a9f4f3">sizes</a></td></tr>
+<tr class="separator:a5315c98cf44ee691cb51430ae4a9f4f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae843ea94d994a89847a4b1278ea03511"><td class="memItemLeft" align="right" valign="top">std::vector&lt; DATA_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#ae843ea94d994a89847a4b1278ea03511">withinss</a></td></tr>
+<tr class="separator:ae843ea94d994a89847a4b1278ea03511"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06474d03b9349db9f88abca58616be52"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#a06474d03b9349db9f88abca58616be52">iterations</a></td></tr>
+<tr class="separator:a06474d03b9349db9f88abca58616be52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf0641eeef4227b2876753a1b1d7768b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#adf0641eeef4227b2876753a1b1d7768b">status</a></td></tr>
+<tr class="separator:adf0641eeef4227b2876753a1b1d7768b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Additional statistics from the Hartigan-Wong algorithm. </p>
+<div class="textblock"><h3>template&lt;typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int&gt;<br />
+struct kmeans::HartiganWong&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Details</h3>
+
+<p>Additional statistics from the Hartigan-Wong algorithm. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="aec5eab01f17051c8b29d5b25b46542a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec5eab01f17051c8b29d5b25b46542a9">&#9670;&nbsp;</a></span>iterations</h2>
+<a id="a06474d03b9349db9f88abca58616be52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06474d03b9349db9f88abca58616be52">&#9670;&nbsp;</a></span>iterations</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int kmeans::HartiganWong::Details::iterations</td>
+          <td class="memname">int <a class="el" href="classkmeans_1_1HartiganWong.html">kmeans::HartiganWong</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Details::iterations</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -109,14 +114,16 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a76fc1d7b25ac2833508dbefe4fc1b9ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76fc1d7b25ac2833508dbefe4fc1b9ba">&#9670;&nbsp;</a></span>sizes</h2>
+<a id="a5315c98cf44ee691cb51430ae4a9f4f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5315c98cf44ee691cb51430ae4a9f4f3">&#9670;&nbsp;</a></span>sizes</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;int&gt; kmeans::HartiganWong::Details::sizes</td>
+          <td class="memname">std::vector&lt;INDEX_t&gt; <a class="el" href="classkmeans_1_1HartiganWong.html">kmeans::HartiganWong</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Details::sizes</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -124,14 +131,16 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa3f2354c8bde030f0e71c3639f9c5158"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3f2354c8bde030f0e71c3639f9c5158">&#9670;&nbsp;</a></span>status</h2>
+<a id="adf0641eeef4227b2876753a1b1d7768b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf0641eeef4227b2876753a1b1d7768b">&#9670;&nbsp;</a></span>status</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int kmeans::HartiganWong::Details::status</td>
+          <td class="memname">int <a class="el" href="classkmeans_1_1HartiganWong.html">kmeans::HartiganWong</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Details::status</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -146,14 +155,16 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac5413274329d9833d29b94345fb63e83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac5413274329d9833d29b94345fb63e83">&#9670;&nbsp;</a></span>withinss</h2>
+<a id="ae843ea94d994a89847a4b1278ea03511"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae843ea94d994a89847a4b1278ea03511">&#9670;&nbsp;</a></span>withinss</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;double&gt; kmeans::HartiganWong::Details::withinss</td>
+          <td class="memname">std::vector&lt;DATA_t&gt; <a class="el" href="classkmeans_1_1HartiganWong.html">kmeans::HartiganWong</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Details::withinss</td>
         </tr>
       </table>
 </div><div class="memdoc">

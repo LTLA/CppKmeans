@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans::Kmeans Class Reference</title>
+<title>kmeans: kmeans::Kmeans&lt; DATA_t, CLUSTER_t, INDEX_t &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -72,7 +72,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classkmeans_1_1Kmeans-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">kmeans::Kmeans Class Reference</div>  </div>
+<div class="title">kmeans::Kmeans&lt; DATA_t, CLUSTER_t, INDEX_t &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -89,34 +89,47 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa90da55ddd4c993d3930508d43e2baa5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#aa90da55ddd4c993d3930508d43e2baa5">set_weighted</a> (bool w=true)</td></tr>
-<tr class="separator:aa90da55ddd4c993d3930508d43e2baa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab911744c63e37439104a8c72e914557a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#ab911744c63e37439104a8c72e914557a">set_seed</a> (bool s=5489u)</td></tr>
-<tr class="separator:ab911744c63e37439104a8c72e914557a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6214b5cf164acc33c1d9ad447cfb498b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a6214b5cf164acc33c1d9ad447cfb498b">set_max_iterations</a> ()</td></tr>
-<tr class="separator:a6214b5cf164acc33c1d9ad447cfb498b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af44ff598bb0b8989e1029baf63e31b72"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#af44ff598bb0b8989e1029baf63e31b72">set_max_iterations</a> (int m)</td></tr>
-<tr class="separator:af44ff598bb0b8989e1029baf63e31b72"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c32cd0c3ea97278b27df0bb7cd2a8e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html">HartiganWong::Details</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a6c32cd0c3ea97278b27df0bb7cd2a8e2">run</a> (int ndim, int nobs, const double *data, int ncenters, double *centers, int *clusters)</td></tr>
-<tr class="separator:a6c32cd0c3ea97278b27df0bb7cd2a8e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e95e6946944a53f8b379956968a5497"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a7e95e6946944a53f8b379956968a5497">run</a> (int ndim, int nobs, const double *data, int ncenters)</td></tr>
-<tr class="separator:a7e95e6946944a53f8b379956968a5497"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0719589431c642fecff63d317862ffe7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a0719589431c642fecff63d317862ffe7">set_weighted</a> (bool w=true)</td></tr>
+<tr class="separator:a0719589431c642fecff63d317862ffe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fdd3a028f1d5867873a93e3777352e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a4fdd3a028f1d5867873a93e3777352e9">set_seed</a> (bool s=5489u)</td></tr>
+<tr class="separator:a4fdd3a028f1d5867873a93e3777352e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0854883105da400bda1285bdc2e6cb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#ad0854883105da400bda1285bdc2e6cb2">set_max_iterations</a> ()</td></tr>
+<tr class="separator:ad0854883105da400bda1285bdc2e6cb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8eb1ab5f096402596eff5e6e9c0ab57a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a8eb1ab5f096402596eff5e6e9c0ab57a">set_max_iterations</a> (int m)</td></tr>
+<tr class="separator:a8eb1ab5f096402596eff5e6e9c0ab57a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c1ff20c81de805fb8774eb092d9cda1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1HartiganWong.html">HartiganWong</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Details&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a4c1ff20c81de805fb8774eb092d9cda1">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters)</td></tr>
+<tr class="separator:a4c1ff20c81de805fb8774eb092d9cda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f47a01c8bdaec54f4212e24a1a2e47f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a9f47a01c8bdaec54f4212e24a1a2e47f">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters)</td></tr>
+<tr class="separator:a9f47a01c8bdaec54f4212e24a1a2e47f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Top-level class to run k-means clustering. </p>
-<p>k-means clustering aims to partition a dataset of <code>nobs</code> observations into <code>ncenters</code> clusters where <code>ncenters</code> is specified in advance. Each observation is assigned to its closest cluster based on the distance to the cluster centroids. The cluster centroids themselves are chosen to minimize the sum of squared Euclidean distances from each observation to its assigned cluster. This procedure involves some heuristics to choose a good initial set of centroids (see <code><a class="el" href="initialization_8hpp.html#a7c2b486f25d954fd2a90846ea658e4c6">weighted_initialization()</a></code> for details) and to converge to a local minimum (see <code><a class="el" href="classkmeans_1_1HartiganWong.html" title="Implements the Hartigan-Wong algorithm for k-means clustering.">HartiganWong</a></code> for details). </p>
+<div class="textblock"><h3>template&lt;typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int&gt;<br />
+class kmeans::Kmeans&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</h3>
+
+<p>Top-level class to run k-means clustering. </p>
+<p>k-means clustering aims to partition a dataset of <code>nobs</code> observations into <code>ncenters</code> clusters where <code>ncenters</code> is specified in advance. Each observation is assigned to its closest cluster based on the distance to the cluster centroids. The cluster centroids themselves are chosen to minimize the sum of squared Euclidean distances from each observation to its assigned cluster. This procedure involves some heuristics to choose a good initial set of centroids (see <code><a class="el" href="initialization_8hpp.html#add61beabe6826e33e0a668523ea93b5f">weighted_initialization()</a></code> for details) and to converge to a local minimum (see <code><a class="el" href="classkmeans_1_1HartiganWong.html" title="Implements the Hartigan-Wong algorithm for k-means clustering.">HartiganWong</a></code> for details).</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DATA_t</td><td>Floating-point type for the data and centroids. </td></tr>
+    <tr><td class="paramname">CLUSTER_t</td><td>Integer type for the cluster assignments. </td></tr>
+    <tr><td class="paramname">INDEX_t</td><td>Integer type for the observation index. This should have a maximum positive value that is at least 50 times greater than the maximum expected number of observations. </td></tr>
+  </table>
+  </dd>
+</dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a7e95e6946944a53f8b379956968a5497"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e95e6946944a53f8b379956968a5497">&#9670;&nbsp;</a></span>run() <span class="overload">[1/2]</span></h2>
+<a id="a9f47a01c8bdaec54f4212e24a1a2e47f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f47a01c8bdaec54f4212e24a1a2e47f">&#9670;&nbsp;</a></span>run() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html">Results</a> kmeans::Kmeans::run </td>
+          <td class="memname"><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html">Results</a> <a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::run </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>ndim</em>, </td>
@@ -124,19 +137,19 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">INDEX_t&#160;</td>
           <td class="paramname"><em>nobs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double *&#160;</td>
+          <td class="paramtype">const DATA_t *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">CLUSTER_t&#160;</td>
           <td class="paramname"><em>ncenters</em>&#160;</td>
         </tr>
         <tr>
@@ -160,21 +173,23 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html" title="Full statistics from k-means clustering.">Results</a></code> object is returned containing clustering statistics. See <code><a class="el" href="classkmeans_1_1Kmeans.html#a6c32cd0c3ea97278b27df0bb7cd2a8e2">run()</a></code> for more details. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html" title="Full statistics from k-means clustering.">Results</a></code> object is returned containing clustering statistics. See <code><a class="el" href="classkmeans_1_1Kmeans.html#a4c1ff20c81de805fb8774eb092d9cda1">run()</a></code> for more details. </dd></dl>
 
 </div>
 </div>
-<a id="a6c32cd0c3ea97278b27df0bb7cd2a8e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6c32cd0c3ea97278b27df0bb7cd2a8e2">&#9670;&nbsp;</a></span>run() <span class="overload">[2/2]</span></h2>
+<a id="a4c1ff20c81de805fb8774eb092d9cda1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c1ff20c81de805fb8774eb092d9cda1">&#9670;&nbsp;</a></span>run() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html">HartiganWong::Details</a> kmeans::Kmeans::run </td>
+          <td class="memname"><a class="el" href="classkmeans_1_1HartiganWong.html">HartiganWong</a>&lt;DATA_t, CLUSTER_t, INDEX_t&gt;::Details <a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::run </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>ndim</em>, </td>
@@ -182,31 +197,31 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">INDEX_t&#160;</td>
           <td class="paramname"><em>nobs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double *&#160;</td>
+          <td class="paramtype">const DATA_t *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">CLUSTER_t&#160;</td>
           <td class="paramname"><em>ncenters</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">double *&#160;</td>
+          <td class="paramtype">DATA_t *&#160;</td>
           <td class="paramname"><em>centers</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int *&#160;</td>
+          <td class="paramtype">CLUSTER_t *&#160;</td>
           <td class="paramname"><em>clusters</em>&#160;</td>
         </tr>
         <tr>
@@ -232,21 +247,23 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html" title="Additional statistics from the Hartigan-Wong algorithm.">HartiganWong::Details</a></code> object is returned containing clustering statistics. Note that the actual number of clusters may be less than <code>ncenters</code> in pathological cases - check the length of <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#a76fc1d7b25ac2833508dbefe4fc1b9ba">HartiganWong::Details::sizes</a></code> and the value of <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#aa3f2354c8bde030f0e71c3639f9c5158">HartiganWong::Details::status</a></code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html" title="Additional statistics from the Hartigan-Wong algorithm.">HartiganWong::Details</a></code> object is returned containing clustering statistics. Note that the actual number of clusters may be less than <code>ncenters</code> in pathological cases - check the length of <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#a5315c98cf44ee691cb51430ae4a9f4f3">HartiganWong::Details::sizes</a></code> and the value of <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#adf0641eeef4227b2876753a1b1d7768b">HartiganWong::Details::status</a></code>. </dd></dl>
 
 </div>
 </div>
-<a id="a6214b5cf164acc33c1d9ad447cfb498b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6214b5cf164acc33c1d9ad447cfb498b">&#9670;&nbsp;</a></span>set_max_iterations() <span class="overload">[1/2]</span></h2>
+<a id="ad0854883105da400bda1285bdc2e6cb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0854883105da400bda1285bdc2e6cb2">&#9670;&nbsp;</a></span>set_max_iterations() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a>&amp; kmeans::Kmeans::set_max_iterations </td>
+          <td class="memname"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a>&amp; <a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::set_max_iterations </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -258,22 +275,24 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Set the maximum number of iterations to the default in <code><a class="el" href="classkmeans_1_1HartiganWong.html#af31e77e7272efb3287cfa4bdeffc2824">HartiganWong::set_max_iterations()</a></code>.</p>
+<p>Set the maximum number of iterations to the default in <code><a class="el" href="classkmeans_1_1HartiganWong.html#a2e71128f1f83631f09b685b00f360635">HartiganWong::set_max_iterations()</a></code>.</p>
 <dl class="section return"><dt>Returns</dt><dd>A reference to this <code><a class="el" href="classkmeans_1_1Kmeans.html" title="Top-level class to run k-means clustering.">Kmeans</a></code> object. </dd></dl>
 
 </div>
 </div>
-<a id="af44ff598bb0b8989e1029baf63e31b72"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af44ff598bb0b8989e1029baf63e31b72">&#9670;&nbsp;</a></span>set_max_iterations() <span class="overload">[2/2]</span></h2>
+<a id="a8eb1ab5f096402596eff5e6e9c0ab57a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8eb1ab5f096402596eff5e6e9c0ab57a">&#9670;&nbsp;</a></span>set_max_iterations() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a>&amp; kmeans::Kmeans::set_max_iterations </td>
+          <td class="memname"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a>&amp; <a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::set_max_iterations </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>m</em></td><td>)</td>
@@ -296,17 +315,19 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab911744c63e37439104a8c72e914557a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab911744c63e37439104a8c72e914557a">&#9670;&nbsp;</a></span>set_seed()</h2>
+<a id="a4fdd3a028f1d5867873a93e3777352e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4fdd3a028f1d5867873a93e3777352e9">&#9670;&nbsp;</a></span>set_seed()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a>&amp; kmeans::Kmeans::set_seed </td>
+          <td class="memname"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a>&amp; <a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::set_seed </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>s</em> = <code>5489u</code></td><td>)</td>
@@ -329,17 +350,19 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="aa90da55ddd4c993d3930508d43e2baa5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa90da55ddd4c993d3930508d43e2baa5">&#9670;&nbsp;</a></span>set_weighted()</h2>
+<a id="a0719589431c642fecff63d317862ffe7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0719589431c642fecff63d317862ffe7">&#9670;&nbsp;</a></span>set_weighted()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a>&amp; kmeans::Kmeans::set_weighted </td>
+          <td class="memname"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a>&amp; <a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::set_weighted </td>
           <td>(</td>
           <td class="paramtype">bool&#160;</td>
           <td class="paramname"><em>w</em> = <code>true</code></td><td>)</td>
@@ -354,7 +377,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">w</td><td>Should we use weighted initialization (see <code><a class="el" href="initialization_8hpp.html#a7c2b486f25d954fd2a90846ea658e4c6">weighted_initialization()</a></code>)? If <code>false</code>, simple initialization is used instead (see <code><a class="el" href="initialization_8hpp.html#a3c109f946286d0ec3a0d0d5de063d1ac">simple_initialization()</a></code>).</td></tr>
+    <tr><td class="paramname">w</td><td>Should we use weighted initialization (see <code><a class="el" href="initialization_8hpp.html#add61beabe6826e33e0a668523ea93b5f">weighted_initialization()</a></code>)? If <code>false</code>, simple initialization is used instead (see <code><a class="el" href="initialization_8hpp.html#a2049a1ba314e8f8da4a9ae224f8e3a48">simple_initialization()</a></code>).</td></tr>
   </table>
   </dd>
 </dl>

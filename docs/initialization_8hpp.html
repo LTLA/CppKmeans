@@ -106,46 +106,34 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a7c2b486f25d954fd2a90846ea658e4c6"><td class="memTemplParams" colspan="2">template&lt;class ENGINE &gt; </td></tr>
-<tr class="memitem:a7c2b486f25d954fd2a90846ea658e4c6"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="initialization_8hpp.html#a7c2b486f25d954fd2a90846ea658e4c6">kmeans::weighted_initialization</a> (int nd, int no, const double *data, int ncenters, ENGINE &amp;eng)</td></tr>
-<tr class="separator:a7c2b486f25d954fd2a90846ea658e4c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c109f946286d0ec3a0d0d5de063d1ac"><td class="memTemplParams" colspan="2">template&lt;class ENGINE &gt; </td></tr>
-<tr class="memitem:a3c109f946286d0ec3a0d0d5de063d1ac"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; int &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="initialization_8hpp.html#a3c109f946286d0ec3a0d0d5de063d1ac">kmeans::simple_initialization</a> (int nd, int no, const double *data, int ncenters, ENGINE &amp;eng)</td></tr>
-<tr class="separator:a3c109f946286d0ec3a0d0d5de063d1ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add61beabe6826e33e0a668523ea93b5f"><td class="memTemplParams" colspan="2">template&lt;typename DATA_t  = double, typename INDEX_t  = int, typename CLUSTER_t  = int, class ENGINE &gt; </td></tr>
+<tr class="memitem:add61beabe6826e33e0a668523ea93b5f"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; INDEX_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="initialization_8hpp.html#add61beabe6826e33e0a668523ea93b5f">kmeans::weighted_initialization</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, ENGINE &amp;eng)</td></tr>
+<tr class="separator:add61beabe6826e33e0a668523ea93b5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2049a1ba314e8f8da4a9ae224f8e3a48"><td class="memTemplParams" colspan="2">template&lt;typename INDEX_t  = int, typename CLUSTER_t  = int, class ENGINE &gt; </td></tr>
+<tr class="memitem:a2049a1ba314e8f8da4a9ae224f8e3a48"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; INDEX_t &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="initialization_8hpp.html#a2049a1ba314e8f8da4a9ae224f8e3a48">kmeans::simple_initialization</a> (INDEX_t nobs, CLUSTER_t ncenters, ENGINE &amp;eng)</td></tr>
+<tr class="separator:a2049a1ba314e8f8da4a9ae224f8e3a48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Initialization methods to choose the starting centroids. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a3c109f946286d0ec3a0d0d5de063d1ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c109f946286d0ec3a0d0d5de063d1ac">&#9670;&nbsp;</a></span>simple_initialization()</h2>
+<a id="a2049a1ba314e8f8da4a9ae224f8e3a48"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2049a1ba314e8f8da4a9ae224f8e3a48">&#9670;&nbsp;</a></span>simple_initialization()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ENGINE &gt; </div>
+template&lt;typename INDEX_t  = int, typename CLUSTER_t  = int, class ENGINE &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;int&gt; kmeans::simple_initialization </td>
+          <td class="memname">std::vector&lt;INDEX_t&gt; kmeans::simple_initialization </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>nd</em>, </td>
+          <td class="paramtype">INDEX_t&#160;</td>
+          <td class="paramname"><em>nobs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>no</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double *&#160;</td>
-          <td class="paramname"><em>data</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">CLUSTER_t&#160;</td>
           <td class="paramname"><em>ncenters</em>, </td>
         </tr>
         <tr>
@@ -164,16 +152,16 @@ template&lt;class ENGINE &gt; </div>
 <p>Implements a simple initialization of the starting points where random observations are sampled without replacement.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
+    <tr><td class="paramname">INDEX_t_t</td><td>Integer type for the observation index. This should be at least 50 times greater than the maximum expected number of observations. </td></tr>
+    <tr><td class="paramname">CLUSTER_t</td><td>Integer type for the cluster index. </td></tr>
     <tr><td class="paramname">ENGINE</td><td>A random number engine, e.g., <code>std::mt19937</code>.</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">nd</td><td>Number of dimensions. </td></tr>
-    <tr><td class="paramname">no</td><td>Number of observations. </td></tr>
-    <tr><td class="paramname">data</td><td>Pointer to an array where the dimensions are rows and the observations are columns. Data should be stored in column-major format. </td></tr>
-    <tr><td class="paramname">ncenters</td><td>Number of centers to pick. </td></tr>
+    <tr><td class="paramname">nobs</td><td>Number of observations. </td></tr>
+    <tr><td class="paramname">ncenters</td><td>Number of centers for which to pick starting points. </td></tr>
     <tr><td class="paramname">eng</td><td>An instance of a random number engine.</td></tr>
   </table>
   </dd>
@@ -182,36 +170,36 @@ template&lt;class ENGINE &gt; </div>
 
 </div>
 </div>
-<a id="a7c2b486f25d954fd2a90846ea658e4c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7c2b486f25d954fd2a90846ea658e4c6">&#9670;&nbsp;</a></span>weighted_initialization()</h2>
+<a id="add61beabe6826e33e0a668523ea93b5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add61beabe6826e33e0a668523ea93b5f">&#9670;&nbsp;</a></span>weighted_initialization()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class ENGINE &gt; </div>
+template&lt;typename DATA_t  = double, typename INDEX_t  = int, typename CLUSTER_t  = int, class ENGINE &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;int&gt; kmeans::weighted_initialization </td>
+          <td class="memname">std::vector&lt;INDEX_t&gt; kmeans::weighted_initialization </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>nd</em>, </td>
+          <td class="paramname"><em>ndim</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>no</em>, </td>
+          <td class="paramtype">INDEX_t&#160;</td>
+          <td class="paramname"><em>nobs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const double *&#160;</td>
+          <td class="paramtype">const DATA_t *&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">CLUSTER_t&#160;</td>
           <td class="paramname"><em>ncenters</em>, </td>
         </tr>
         <tr>
@@ -228,19 +216,22 @@ template&lt;class ENGINE &gt; </div>
       </table>
 </div><div class="memdoc">
 <p>Implements the <b>k-means++</b> initialization described by Arthur and Vassilvitskii (2007). This approach involves the selection of starting points via iterations of weighted sampling, where the sampling probability for each point is defined as the squared distance to the closest starting point that was chosen in any of the previous iterations. The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">ENGINE</td><td>A random number engine, e.g., <code>std::mt19937</code>.</td></tr>
-  </table>
-  </dd>
-</dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">nd</td><td>Number of dimensions. </td></tr>
-    <tr><td class="paramname">no</td><td>Number of observations. </td></tr>
+    <tr><td class="paramname">ndim</td><td>Number of dimensions. </td></tr>
+    <tr><td class="paramname">nobs</td><td>Number of observations. </td></tr>
     <tr><td class="paramname">data</td><td>Pointer to an array where the dimensions are rows and the observations are columns. Data should be stored in column-major format. </td></tr>
     <tr><td class="paramname">ncenters</td><td>Number of centers to pick. </td></tr>
     <tr><td class="paramname">eng</td><td>An instance of a random number engine.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DATA_t</td><td>Floating-point type for the data and centroids. </td></tr>
+    <tr><td class="paramname">INDEX_t_t</td><td>Integer type for the observation index. This should be at least 50 times greater than the maximum expected number of observations. </td></tr>
+    <tr><td class="paramname">CLUSTER_t</td><td>Integer type for the cluster index. </td></tr>
+    <tr><td class="paramname">ENGINE</td><td>A random number engine, e.g., <code>std::mt19937</code>.</td></tr>
   </table>
   </dd>
 </dl>

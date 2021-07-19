@@ -91,98 +91,98 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    } <span class="keywordflow">while</span> (result == 1.0);</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordflow">return</span> result;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;}</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ENGINE&gt;</div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="initialization_8hpp.html#a7c2b486f25d954fd2a90846ea658e4c6">   59</a></span>&#160;std::vector&lt;int&gt; <a class="code" href="initialization_8hpp.html#a7c2b486f25d954fd2a90846ea658e4c6">weighted_initialization</a>(<span class="keywordtype">int</span> nd, <span class="keywordtype">int</span> no, <span class="keyword">const</span> <span class="keywordtype">double</span>* data, <span class="keywordtype">int</span> ncenters, ENGINE&amp; eng) {</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    std::vector&lt;int&gt; targets(no);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    std::vector&lt;double&gt; mindist(no, 1);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    std::vector&lt;double&gt; cumulative(no);</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    std::vector&lt;uint8_t&gt; chosen(no);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    std::vector&lt;int&gt; sofar;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    sofar.reserve(ncenters);</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> cen = 0; cen &lt; ncenters; ++cen) {</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="keywordtype">int</span> counter = 0;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keywordflow">if</span> (!sofar.empty()) {</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;            <span class="keyword">auto</span> last = sofar.back();</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keywordtype">int</span> prevcounter = 0;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> obs = 0; obs &lt; no; ++obs) {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;                <span class="keywordflow">if</span> (!chosen[obs]) {</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">double</span>* acopy = data + obs * nd;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;                    <span class="keyword">const</span> <span class="keywordtype">double</span>* scopy = data + last * nd;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;                    <span class="keywordtype">double</span> r2 = 0;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> dim = 0; dim &lt; nd; ++dim, ++acopy, ++scopy) {</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                        r2 += (*acopy - *scopy) * (*acopy - *scopy);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                    }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                    <span class="keywordflow">if</span> (cen == 1 || r2 &lt; mindist[prevcounter]) {</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                        mindist[counter] = r2;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (counter != prevcounter) {</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                        mindist[counter] = mindist[prevcounter];</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                    }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                    targets[counter] = obs;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                    ++counter;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                    ++prevcounter;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (obs == last) {</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                    ++prevcounter;</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                }</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            }</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            std::iota(targets.begin(), targets.end(), 0);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            counter = no;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">if</span> (!counter) {</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> DATA_t = <span class="keywordtype">double</span>, <span class="keyword">typename</span> INDEX_t = <span class="keywordtype">int</span>, <span class="keyword">typename</span> CLUSTER_t = <span class="keywordtype">int</span>, <span class="keyword">class</span> ENGINE&gt;</div>
+<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="initialization_8hpp.html#add61beabe6826e33e0a668523ea93b5f">   63</a></span>&#160;std::vector&lt;INDEX_t&gt; <a class="code" href="initialization_8hpp.html#add61beabe6826e33e0a668523ea93b5f">weighted_initialization</a>(<span class="keywordtype">int</span> ndim, INDEX_t nobs, <span class="keyword">const</span> DATA_t* data, CLUSTER_t ncenters, ENGINE&amp; eng) {</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    std::vector&lt;INDEX_t&gt; targets(nobs);</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    std::vector&lt;DATA_t&gt; mindist(nobs, 1);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    std::vector&lt;DATA_t&gt; cumulative(nobs);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    std::vector&lt;uint8_t&gt; chosen(nobs);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    std::vector&lt;INDEX_t&gt; sofar;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    sofar.reserve(ncenters);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordflow">for</span> (CLUSTER_t cen = 0; cen &lt; ncenters; ++cen) {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        INDEX_t counter = 0;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">if</span> (!sofar.empty()) {</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <span class="keyword">auto</span> last = sofar.back();</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;            INDEX_t prevcounter = 0;</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="keywordflow">for</span> (INDEX_t obs = 0; obs &lt; nobs; ++obs) {</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;                <span class="keywordflow">if</span> (!chosen[obs]) {</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                    <span class="keyword">const</span> DATA_t* acopy = data + obs * ndim;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                    <span class="keyword">const</span> DATA_t* scopy = data + last * ndim;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                    DATA_t r2 = 0;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> dim = 0; dim &lt; ndim; ++dim, ++acopy, ++scopy) {</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                        r2 += (*acopy - *scopy) * (*acopy - *scopy);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                    }</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                    <span class="keywordflow">if</span> (cen == 1 || r2 &lt; mindist[prevcounter]) {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;                        mindist[counter] = r2;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;                    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (counter != prevcounter) {</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                        mindist[counter] = mindist[prevcounter];</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                    }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                    targets[counter] = obs;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;                    ++counter;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;                    ++prevcounter;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (obs == last) {</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                    ++prevcounter;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                }</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            }</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            std::iota(targets.begin(), targets.end(), 0);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            counter = nobs;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        }</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        cumulative[0] = mindist[0];</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt; counter; ++i) {</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;            cumulative[i] = cumulative[i-1] + mindist[i];</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        }</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> total = cumulative[counter-1];</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keywordflow">if</span> (total == 0) { <span class="comment">// a.k.a. duplicates.</span></div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        }</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">double</span> chosen_weight = total * uniform01(eng);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        <span class="keyword">auto</span> chosen_pos = std::lower_bound(cumulative.begin(), cumulative.begin() + counter, chosen_weight);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keyword">auto</span> chosen_id = targets[chosen_pos - cumulative.begin()];</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        chosen[chosen_id] = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        sofar.push_back(chosen_id);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    }</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keywordflow">return</span> sofar;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> ENGINE&gt;</div>
-<div class="line"><a name="l00139"></a><span class="lineno"><a class="line" href="initialization_8hpp.html#a3c109f946286d0ec3a0d0d5de063d1ac">  139</a></span>&#160;std::vector&lt;int&gt; <a class="code" href="initialization_8hpp.html#a3c109f946286d0ec3a0d0d5de063d1ac">simple_initialization</a>(<span class="keywordtype">int</span> nd, <span class="keywordtype">int</span> no, <span class="keyword">const</span> <span class="keywordtype">double</span>* data, <span class="keywordtype">int</span> ncenters, ENGINE&amp; eng) {</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    std::vector&lt;int&gt; sofar;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordflow">if</span> (ncenters &gt;= no) {</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        sofar.resize(no);</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        std::iota(sofar.begin(), sofar.end(), 0);</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        sofar.reserve(ncenters);</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keywordtype">int</span> traversed = 0;</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        <span class="keywordflow">while</span> (sofar.size() &lt; <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(ncenters)) {</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            <span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(ncenters - sofar.size()) &gt; <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(no - traversed) * uniform01(eng)) {</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                sofar.push_back(traversed);</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;            }</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;            ++traversed;</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;        }</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    }</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keywordflow">return</span> sofar;</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;}</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160; </div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;}</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="ainitialization_8hpp_html_a3c109f946286d0ec3a0d0d5de063d1ac"><div class="ttname"><a href="initialization_8hpp.html#a3c109f946286d0ec3a0d0d5de063d1ac">kmeans::simple_initialization</a></div><div class="ttdeci">std::vector&lt; int &gt; simple_initialization(int nd, int no, const double *data, int ncenters, ENGINE &amp;eng)</div><div class="ttdef"><b>Definition:</b> initialization.hpp:139</div></div>
-<div class="ttc" id="ainitialization_8hpp_html_a7c2b486f25d954fd2a90846ea658e4c6"><div class="ttname"><a href="initialization_8hpp.html#a7c2b486f25d954fd2a90846ea658e4c6">kmeans::weighted_initialization</a></div><div class="ttdeci">std::vector&lt; int &gt; weighted_initialization(int nd, int no, const double *data, int ncenters, ENGINE &amp;eng)</div><div class="ttdef"><b>Definition:</b> initialization.hpp:59</div></div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keywordflow">if</span> (!counter) {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        }</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        cumulative[0] = mindist[0];</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;        <span class="keywordflow">for</span> (INDEX_t i = 1; i &lt; counter; ++i) {</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            cumulative[i] = cumulative[i-1] + mindist[i];</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        }</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keyword">const</span> DATA_t total = cumulative[counter-1];</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        <span class="keywordflow">if</span> (total == 0) { <span class="comment">// a.k.a. duplicates.</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        }</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <span class="keyword">const</span> DATA_t chosen_weight = total * uniform01(eng);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keyword">auto</span> chosen_pos = std::lower_bound(cumulative.begin(), cumulative.begin() + counter, chosen_weight);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <span class="keyword">auto</span> chosen_id = targets[chosen_pos - cumulative.begin()];</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        chosen[chosen_id] = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        sofar.push_back(chosen_id);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    }</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160; </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordflow">return</span> sofar;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160; </div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> INDEX_t = <span class="keywordtype">int</span>, <span class="keyword">typename</span> CLUSTER_t = <span class="keywordtype">int</span>, <span class="keyword">class</span> ENGINE&gt;</div>
+<div class="line"><a name="l00143"></a><span class="lineno"><a class="line" href="initialization_8hpp.html#a2049a1ba314e8f8da4a9ae224f8e3a48">  143</a></span>&#160;std::vector&lt;INDEX_t&gt; <a class="code" href="initialization_8hpp.html#a2049a1ba314e8f8da4a9ae224f8e3a48">simple_initialization</a>(INDEX_t nobs, CLUSTER_t ncenters, ENGINE&amp; eng) {</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    std::vector&lt;INDEX_t&gt; sofar;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    <span class="keywordflow">if</span> (ncenters &gt;= nobs) {</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        sofar.resize(nobs);</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        std::iota(sofar.begin(), sofar.end(), 0);</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        sofar.reserve(ncenters);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        INDEX_t traversed = 0;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        <span class="keywordflow">while</span> (sofar.size() &lt; <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(ncenters)) {</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;            <span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(ncenters - sofar.size()) &gt; <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(nobs - traversed) * uniform01(eng)) {</div>
+<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                sofar.push_back(traversed);</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;            }</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;            ++traversed;</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        }</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    }</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keywordflow">return</span> sofar;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;}</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160; </div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;}</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="ainitialization_8hpp_html_a2049a1ba314e8f8da4a9ae224f8e3a48"><div class="ttname"><a href="initialization_8hpp.html#a2049a1ba314e8f8da4a9ae224f8e3a48">kmeans::simple_initialization</a></div><div class="ttdeci">std::vector&lt; INDEX_t &gt; simple_initialization(INDEX_t nobs, CLUSTER_t ncenters, ENGINE &amp;eng)</div><div class="ttdef"><b>Definition:</b> initialization.hpp:143</div></div>
+<div class="ttc" id="ainitialization_8hpp_html_add61beabe6826e33e0a668523ea93b5f"><div class="ttname"><a href="initialization_8hpp.html#add61beabe6826e33e0a668523ea93b5f">kmeans::weighted_initialization</a></div><div class="ttdeci">std::vector&lt; INDEX_t &gt; weighted_initialization(int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, ENGINE &amp;eng)</div><div class="ttdef"><b>Definition:</b> initialization.hpp:63</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
