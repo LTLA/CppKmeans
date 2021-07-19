@@ -5,8 +5,23 @@
 #include "initialization.hpp"
 #include <random>
 
+/** 
+ * @file Kmeans.hpp
+ *
+ * @brief Implements the full k-means clustering procedure.
+ */
+
 namespace kmeans {
 
+/**
+ * @brief Top-level class to run k-means clustering.
+ *
+ * k-means clustering aims to partition a dataset of `nobs` observations into `ncenters` clusters where `ncenters` is specified in advance.
+ * Each observation is assigned to its closest cluster based on the distance to the cluster centroids.
+ * The cluster centroids themselves are chosen to minimize the sum of squared Euclidean distances from each observation to its assigned cluster.
+ * This procedure involves some heuristics to choose a good initial set of centroids (see `weighted_initialization()` for details) 
+ * and to converge to a local minimum (see `HartiganWong` for details).
+ */
 class Kmeans {
     bool weighted_init = true;
     uint64_t seed = 5489u;
