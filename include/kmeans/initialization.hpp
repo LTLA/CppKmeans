@@ -45,7 +45,7 @@ double uniform01 (ENGINE& eng) {
  * @param eng An instance of a random number engine.
  *
  * @tparam DATA_t Floating-point type for the data and centroids.
- * @tparam INDEX_t_t Integer type for the observation index.
+ * @tparam INDEX_t Integer type for the observation index.
  * This should be at least 50 times greater than the maximum expected number of observations.
  * @tparam CLUSTER_t Integer type for the cluster index.
  * @tparam ENGINE A random number engine, e.g., `std::mt19937`.
@@ -127,7 +127,7 @@ std::vector<INDEX_t> weighted_initialization(int ndim, INDEX_t nobs, const DATA_
 /**
  * Implements a simple initialization of the starting points where random observations are sampled without replacement.
  *
- * @tparam INDEX_t_t Integer type for the observation index.
+ * @tparam INDEX_t Integer type for the observation index.
  * This should be at least 50 times greater than the maximum expected number of observations.
  * @tparam CLUSTER_t Integer type for the cluster index.
  * @tparam ENGINE A random number engine, e.g., `std::mt19937`.

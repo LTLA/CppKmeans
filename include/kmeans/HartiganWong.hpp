@@ -30,7 +30,7 @@ namespace kmeans {
  * which in turn is derived from Hartigan and Wong (1979).
  * 
  * @tparam DATA_t Floating-point type for the data and centroids.
- * @tparam CLUSTER_t Integer type for the cluster index.
+ * @tparam CLUSTER_t Integer type for the cluster assignments.
  * @tparam INDEX_t Integer type for the observation index.
  * This should have a maximum positive value that is at least 50 times greater than the maximum expected number of observations.
  *
