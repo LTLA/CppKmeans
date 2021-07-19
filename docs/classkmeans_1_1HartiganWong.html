@@ -83,14 +83,16 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Results.html">Results</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Statistics from the Hartigan-Wong algorithm.  <a href="structkmeans_1_1HartiganWong_1_1Results.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html">Details</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional statistics from the Hartigan-Wong algorithm.  <a href="structkmeans_1_1HartiganWong_1_1Details.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a499632afebe74698832e8608b46537b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1HartiganWong_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#a499632afebe74698832e8608b46537b1">run</a> (int ndim, int nobs, const double *data, int ncenters, double *centers, int *clusters, int maxit=10)</td></tr>
-<tr class="separator:a499632afebe74698832e8608b46537b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af31e77e7272efb3287cfa4bdeffc2824"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1HartiganWong.html">HartiganWong</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#af31e77e7272efb3287cfa4bdeffc2824">set_max_iterations</a> (int m=10)</td></tr>
+<tr class="separator:af31e77e7272efb3287cfa4bdeffc2824"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac11e2787f8f7cf8ab06f474d40cc8172"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html">Details</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#ac11e2787f8f7cf8ab06f474d40cc8172">run</a> (int ndim, int nobs, const double *data, int ncenters, double *centers, int *clusters)</td></tr>
+<tr class="separator:ac11e2787f8f7cf8ab06f474d40cc8172"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implements the Hartigan-Wong algorithm for k-means clustering. </p>
@@ -98,8 +100,8 @@ Public Member Functions</h2></td></tr>
 <p>This implementation is derived from the Fortran code underlying the <code>kmeans</code> function in the <b>stats</b> R package, which in turn is derived from Hartigan and Wong (1979).</p>
 <dl class="section see"><dt>See also</dt><dd>Hartigan, J. A. and Wong, M. A. (1979). Algorithm AS 136: A K-means clustering algorithm. <em>Applied Statistics</em>, 28, 100-108. </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a499632afebe74698832e8608b46537b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a499632afebe74698832e8608b46537b1">&#9670;&nbsp;</a></span>run()</h2>
+<a id="ac11e2787f8f7cf8ab06f474d40cc8172"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac11e2787f8f7cf8ab06f474d40cc8172">&#9670;&nbsp;</a></span>run()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -108,7 +110,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1HartiganWong_1_1Results.html">Results</a> kmeans::HartiganWong::run </td>
+          <td class="memname"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html">Details</a> kmeans::HartiganWong::run </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>ndim</em>, </td>
@@ -141,13 +143,7 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int *&#160;</td>
-          <td class="paramname"><em>clusters</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>maxit</em> = <code>10</code>&#160;</td>
+          <td class="paramname"><em>clusters</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -168,12 +164,44 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to a <code>ndim</code>-by-<code>nobs</code> array where columns are observations and rows are dimensions. Data should be stored in column-major order. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">ncenters</td><td>Number of cluster centers. </td></tr>
     <tr><td class="paramdir">[in,out]</td><td class="paramname">centers</td><td>Pointer to a <code>ndim</code>-by-<code>ncenters</code> array where columns are cluster centers and rows are dimensions. On input, this should contain the initial centroid locations for each cluster. Data should be stored in column-major order. On output, this will contain the final centroid locations for each cluster. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length <code>nobs</code>. Om output, this will contain the cluster assignment for each observation. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">maxit</td><td>Maximum number of iterations.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length <code>nobs</code>. On output, this will contain the cluster assignment for each observation.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Results.html" title="Statistics from the Hartigan-Wong algorithm.">Results</a></code> object is returned containing clustering statistics. If <code>ncenters &gt; nobs</code>, only the first <code>nobs</code> columns of the <code>centers</code> array will be filled. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html" title="Additional statistics from the Hartigan-Wong algorithm.">Details</a></code> object is returned containing clustering statistics. If <code>ncenters &gt; nobs</code>, only the first <code>nobs</code> columns of the <code>centers</code> array will be filled. </dd></dl>
+
+</div>
+</div>
+<a id="af31e77e7272efb3287cfa4bdeffc2824"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af31e77e7272efb3287cfa4bdeffc2824">&#9670;&nbsp;</a></span>set_max_iterations()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classkmeans_1_1HartiganWong.html">HartiganWong</a>&amp; kmeans::HartiganWong::set_max_iterations </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>m</em> = <code>10</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">m</td><td>Maximum number of iterations. More iterations increase the opportunity for convergence at the cost of more computational time.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <code><a class="el" href="classkmeans_1_1HartiganWong.html" title="Implements the Hartigan-Wong algorithm for k-means clustering.">HartiganWong</a></code> object. </dd></dl>
 
 </div>
 </div>

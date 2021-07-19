@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hartiganwong_12',['HartiganWong',['../classkmeans_1_1HartiganWong.html',1,'kmeans']]]
+  ['details_17',['Details',['../structkmeans_1_1HartiganWong_1_1Details.html',1,'kmeans::HartiganWong']]]
 ];

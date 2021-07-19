@@ -71,7 +71,29 @@ $(function() {
 <h1>Overview</h1>
 <p>This repository contains a header-only C++ library for k-means clustering with the Hartigan-Wong algorithm. Initialization is performed using the kmeans++ approach from Arthur and Vassilvitskii (2007). The Hartigan-Wong implementation is derived from the Fortran code in the R <b>stats</b> package, heavily refactored for more idiomatic C++.</p>
 <h1>Quick start</h1>
-<p>See the <a href="https://ltla.github.io/CppKmeans">reference documentation</a> for more details.</p>
+<p><b>kmeans</b> is a header-only library, so it can be easily used by just <code>#include</code>ing the relevant source files:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;kmeans/Kmeans.hpp&quot;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// assorted boilerplate here...</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">auto</span> res = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters);</div>
+<div class="line">res.centers;</div>
+<div class="line">res.clusters;</div>
+<div class="line">res.details;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Or, if you already allocated the relevant memory:</span></div>
+<div class="line">std::vector&lt;double&gt; centers(ndim * ncenters);</div>
+<div class="line">std::vector&lt;int&gt; clusters(nobs);</div>
+<div class="line"><span class="keyword">auto</span> deets = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters, </div>
+<div class="line">                                  centers.data(), clusters.data());</div>
+<div class="line">deets.withinss;</div>
+<div class="line">deets.sizes;</div>
+<div class="line"> </div>
+<div class="line"><span class="comment">// Or if you want to fiddle with some parameters:</span></div>
+<div class="line">kmeans::Kmeans km;</div>
+<div class="line">km.set_seed(42).set_weighted(<span class="keyword">false</span>);</div>
+<div class="line"><span class="keyword">auto</span> res2 = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters);</div>
+</div><!-- fragment --><p>See the <a href="https://ltla.github.io/CppKmeans">reference documentation</a> for more details.</p>
 <h1>Building projects</h1>
 <p>If you're using CMake, you just need to add something like this to your <code>CMakeLists.txt</code>:</p>
 <div class="fragment"><div class="line">include(FetchContent)</div>
@@ -91,9 +113,7 @@ $(function() {
 <div class="line">target_link_libraries(mylib INTERFACE kmeans)</div>
 </div><!-- fragment --><p>If you're not using CMake, the simple approach is to just copy the files - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's <code>-I</code>.</p>
 <h1>References</h1>
-<p>Hartigan, J. A. and Wong, M. A. (1979). <br  />
- Algorithm AS 136: A K-means clustering algorithm. <br  />
- <em>Applied Statistics</em>, 28, 100-108.</p>
+<p>Hartigan, J. A. and Wong, M. A. (1979). Algorithm AS 136: A K-means clustering algorithm. <em>Applied Statistics</em>, 28, 100-108.</p>
 <p>Arthur, D. and Vassilvitskii, S. (2007). k-means++: the advantages of careful seeding. <em>Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms</em>, 1027-1035. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
