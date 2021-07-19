@@ -49,5 +49,5 @@ Algorithm AS 136: A K-means clustering algorithm.
 _Applied Statistics_, 28, 100-108. 
 
 Arthur, D. and Vassilvitskii, S. (2007). 
-k-means++: the advantages of careful seeding" (PDF). 
+k-means++: the advantages of careful seeding.
 _Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms_, 1027-1035.
