@@ -99,14 +99,25 @@ std::vector<INDEX_t> weighted_initialization(int ndim, INDEX_t nobs, const DATA_
             cumulative[i] = cumulative[i-1] + mindist[i];
         }
 
-        const auto total = cumulative[nobs-1];
+        const auto total = cumulative.back();
         if (total == 0) { // a.k.a. only duplicates left.
             break;
         }
 
-        const DATA_t chosen_weight = total * uniform01(eng);
-        auto chosen_pos = std::lower_bound(cumulative.begin(), cumulative.begin() + nobs, chosen_weight);
-        auto chosen_id = chosen_pos - cumulative.begin();
+        INDEX_t chosen_id = 0;
+        do {
+            const DATA_t sampled_weight = total * uniform01(eng);
+            chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();
+
+            // We wrap this in a do/while to defend against edge cases where
+            // ties are chosen. The most obvious of these is when you get a
+            // `sampled_weight` of zero _and_ there exists a bunch of zeros at
+            // the start of `cumulative`. One could also get unexpected ties
+            // from limited precision in floating point comparisons, so we'll
+            // just be safe and implement a loop here, in the same vein as
+            // uniform01.
+        } while (chosen_id == nobs || mindist[chosen_id] == 0);
+
         mindist[chosen_id] = 0;
         sofar.push_back(chosen_id);
     }
