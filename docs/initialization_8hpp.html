@@ -152,7 +152,7 @@ template&lt;typename INDEX_t  = int, typename CLUSTER_t  = int, class ENGINE &gt
 <p>Implements a simple initialization of the starting points where random observations are sampled without replacement.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">INDEX_t_t</td><td>Integer type for the observation index. This should be at least 50 times greater than the maximum expected number of observations. </td></tr>
+    <tr><td class="paramname">INDEX_t</td><td>Integer type for the observation index. This should be at least 50 times greater than the maximum expected number of observations. </td></tr>
     <tr><td class="paramname">CLUSTER_t</td><td>Integer type for the cluster index. </td></tr>
     <tr><td class="paramname">ENGINE</td><td>A random number engine, e.g., <code>std::mt19937</code>.</td></tr>
   </table>
@@ -229,7 +229,7 @@ template&lt;typename DATA_t  = double, typename INDEX_t  = int, typename CLUSTER
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">DATA_t</td><td>Floating-point type for the data and centroids. </td></tr>
-    <tr><td class="paramname">INDEX_t_t</td><td>Integer type for the observation index. This should be at least 50 times greater than the maximum expected number of observations. </td></tr>
+    <tr><td class="paramname">INDEX_t</td><td>Integer type for the observation index. This should be at least 50 times greater than the maximum expected number of observations. </td></tr>
     <tr><td class="paramname">CLUSTER_t</td><td>Integer type for the cluster index. </td></tr>
     <tr><td class="paramname">ENGINE</td><td>A random number engine, e.g., <code>std::mt19937</code>.</td></tr>
   </table>
