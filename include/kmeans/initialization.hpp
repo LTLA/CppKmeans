@@ -4,6 +4,7 @@
 #include <vector>
 #include <cstdint>
 #include <numeric>
+#include <iostream>
 
 /**
  * @file initialization.hpp
@@ -66,26 +67,28 @@ std::vector<int> weighted_initialization(int nd, int no, const double* data, int
     for (int cen = 0; cen < ncenters; ++cen) {
         int counter = 0;
         if (!sofar.empty()) {
+            auto last = sofar.back();
+            int prevcounter = 0;
+
             for (int obs = 0; obs < no; ++obs) {
                 if (!chosen[obs]) {
-                    targets[counter] = obs;
-                    double& curmin = mindist[counter];
-                    curmin = -1;
-
-                    for (auto so : sofar) {
-                        const double* acopy = data + obs * nd;
-                        const double* scopy = data + so * nd;
-                        double r2 = 0;
-                        for (int dim = 0; dim < nd; ++dim, ++acopy, ++scopy) {
-                            r2 += (*acopy - *scopy) * (*acopy - *scopy);
-                        }
-
-                        if (curmin < 0 || r2 < curmin) {
-                            curmin = r2;
-                        }
+                    const double* acopy = data + obs * nd;
+                    const double* scopy = data + last * nd;
+                    double r2 = 0;
+                    for (int dim = 0; dim < nd; ++dim, ++acopy, ++scopy) {
+                        r2 += (*acopy - *scopy) * (*acopy - *scopy);
                     }
 
+                    if (cen == 1 || r2 < mindist[prevcounter]) {
+                        mindist[counter] = r2;
+                    } else if (counter != prevcounter) {
+                        mindist[counter] = mindist[prevcounter];
+                    }
+                    targets[counter] = obs;
                     ++counter;
+                    ++prevcounter;
+                } else if (obs == last) {
+                    ++prevcounter;
                 }
             }
         } else {
