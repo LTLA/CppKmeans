@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans/HartiganWong.hpp File Reference</title>
+<title>kmeans: kmeans/Kmeans.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,55 +70,46 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
-<div class="title">HartiganWong.hpp File Reference</div>  </div>
+<div class="title">Kmeans.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Implements the Hartigan-Wong algorithm for k-means clustering.  
+<p>Implements the full k-means clustering procedure.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;algorithm&gt;</code><br />
-<code>#include &lt;numeric&gt;</code><br />
-<code>#include &lt;cstdint&gt;</code><br />
-<code>#include &lt;stdexcept&gt;</code><br />
-<code>#include &lt;iostream&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="HartiganWong_8hpp_source.html">HartiganWong.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="initialization_8hpp_source.html">initialization.hpp</a>&quot;</code><br />
+<code>#include &lt;random&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
-Include dependency graph for HartiganWong.hpp:</div>
+Include dependency graph for Kmeans.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="HartiganWong_8hpp__incl.png" border="0" usemap="#akmeans_2HartiganWong_8hpp" alt=""/></div>
-<map name="akmeans_2HartiganWong_8hpp" id="akmeans_2HartiganWong_8hpp">
-<area shape="rect" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="176,5,355,32"/>
-<area shape="rect" title=" " alt="" coords="5,80,64,107"/>
-<area shape="rect" title=" " alt="" coords="88,80,163,107"/>
-<area shape="rect" title=" " alt="" coords="187,80,255,107"/>
-<area shape="rect" title=" " alt="" coords="280,80,341,107"/>
-<area shape="rect" title=" " alt="" coords="366,80,445,107"/>
-<area shape="rect" title=" " alt="" coords="469,80,541,107"/>
-</map>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><img src="HartiganWong_8hpp__dep__incl.png" border="0" usemap="#akmeans_2HartiganWong_8hppdep" alt=""/></div>
-<map name="akmeans_2HartiganWong_8hppdep" id="akmeans_2HartiganWong_8hppdep">
-<area shape="rect" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="5,5,184,32"/>
-<area shape="rect" href="Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="23,80,167,107"/>
+<div class="center"><img src="Kmeans_8hpp__incl.png" border="0" usemap="#akmeans_2Kmeans_8hpp" alt=""/></div>
+<map name="akmeans_2Kmeans_8hpp" id="akmeans_2Kmeans_8hpp">
+<area shape="rect" title="Implements the full k&#45;means clustering procedure." alt="" coords="196,5,340,32"/>
+<area shape="rect" href="HartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="204,80,332,107"/>
+<area shape="rect" href="initialization_8hpp.html" title="Initialization methods to choose the starting centroids." alt="" coords="66,80,179,107"/>
+<area shape="rect" title=" " alt="" coords="357,80,422,107"/>
+<area shape="rect" title=" " alt="" coords="5,155,64,181"/>
+<area shape="rect" title=" " alt="" coords="267,155,341,181"/>
+<area shape="rect" title=" " alt="" coords="89,155,157,181"/>
+<area shape="rect" title=" " alt="" coords="181,155,243,181"/>
+<area shape="rect" title=" " alt="" coords="366,155,445,181"/>
+<area shape="rect" title=" " alt="" coords="469,155,541,181"/>
 </map>
 </div>
 </div>
-<p><a href="HartiganWong_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="Kmeans_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html">kmeans::HartiganWong</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the Hartigan-Wong algorithm for k-means clustering.  <a href="classkmeans_1_1HartiganWong.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Top-level class to run k-means clustering.  <a href="classkmeans_1_1Kmeans.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html">kmeans::HartiganWong::Details</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional statistics from the Hartigan-Wong algorithm.  <a href="structkmeans_1_1HartiganWong_1_1Details.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html">kmeans::Kmeans::Results</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Full statistics from k-means clustering.  <a href="structkmeans_1_1Kmeans_1_1Results.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implements the Hartigan-Wong algorithm for k-means clustering. </p>
+<div class="textblock"><p>Implements the full k-means clustering procedure. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

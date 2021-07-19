@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['set_5fmax_5fiterations_11',['set_max_iterations',['../classkmeans_1_1HartiganWong.html#af31e77e7272efb3287cfa4bdeffc2824',1,'kmeans::HartiganWong']]],
-  ['simple_5finitialization_12',['simple_initialization',['../initialization_8hpp.html#a3c109f946286d0ec3a0d0d5de063d1ac',1,'kmeans']]],
-  ['sizes_13',['sizes',['../structkmeans_1_1HartiganWong_1_1Details.html#a76fc1d7b25ac2833508dbefe4fc1b9ba',1,'kmeans::HartiganWong::Details']]],
-  ['status_14',['status',['../structkmeans_1_1HartiganWong_1_1Details.html#aa3f2354c8bde030f0e71c3639f9c5158',1,'kmeans::HartiganWong::Details']]]
+  ['results_11',['Results',['../structkmeans_1_1Kmeans_1_1Results.html',1,'kmeans::Kmeans']]],
+  ['run_12',['run',['../classkmeans_1_1HartiganWong.html#ac11e2787f8f7cf8ab06f474d40cc8172',1,'kmeans::HartiganWong::run()'],['../classkmeans_1_1Kmeans.html#a6c32cd0c3ea97278b27df0bb7cd2a8e2',1,'kmeans::Kmeans::run(int ndim, int nobs, const double *data, int ncenters, double *centers, int *clusters)'],['../classkmeans_1_1Kmeans.html#a7e95e6946944a53f8b379956968a5497',1,'kmeans::Kmeans::run(int ndim, int nobs, const double *data, int ncenters)']]]
 ];

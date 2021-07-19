@@ -72,11 +72,11 @@ $(function() {
 <p>This repository contains a header-only C++ library for k-means clustering with the Hartigan-Wong algorithm. Initialization is performed using the kmeans++ approach from Arthur and Vassilvitskii (2007). The Hartigan-Wong implementation is derived from the Fortran code in the R <b>stats</b> package, heavily refactored for more idiomatic C++.</p>
 <h1>Quick start</h1>
 <p><b>kmeans</b> is a header-only library, so it can be easily used by just <code>#include</code>ing the relevant source files:</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;kmeans/Kmeans.hpp&quot;</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="Kmeans_8hpp.html">kmeans/Kmeans.hpp</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// assorted boilerplate here...</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">auto</span> res = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters);</div>
+<div class="line"><span class="keyword">auto</span> res = <a class="code" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code" href="classkmeans_1_1Kmeans.html#a6c32cd0c3ea97278b27df0bb7cd2a8e2">run</a>(ndim, nobs, matrix.data(), ncenters);</div>
 <div class="line">res.centers;</div>
 <div class="line">res.clusters;</div>
 <div class="line">res.details;</div>
@@ -84,15 +84,21 @@ $(function() {
 <div class="line"><span class="comment">// Or, if you already allocated the relevant memory:</span></div>
 <div class="line">std::vector&lt;double&gt; centers(ndim * ncenters);</div>
 <div class="line">std::vector&lt;int&gt; clusters(nobs);</div>
-<div class="line"><span class="keyword">auto</span> deets = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters, </div>
+<div class="line"><span class="keyword">auto</span> deets = <a class="code" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code" href="classkmeans_1_1Kmeans.html#a6c32cd0c3ea97278b27df0bb7cd2a8e2">run</a>(ndim, nobs, matrix.data(), ncenters, </div>
 <div class="line">                                  centers.data(), clusters.data());</div>
-<div class="line">deets.withinss;</div>
+<div class="line">deets.<a class="code" href="structkmeans_1_1HartiganWong_1_1Details.html#ac5413274329d9833d29b94345fb63e83">withinss</a>;</div>
 <div class="line">deets.sizes;</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Or if you want to fiddle with some parameters:</span></div>
-<div class="line">kmeans::Kmeans km;</div>
-<div class="line">km.set_seed(42).set_weighted(<span class="keyword">false</span>);</div>
-<div class="line"><span class="keyword">auto</span> res2 = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters);</div>
+<div class="line"><a class="code" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a> km;</div>
+<div class="line">km.<a class="code" href="classkmeans_1_1Kmeans.html#ab911744c63e37439104a8c72e914557a">set_seed</a>(42).<a class="code" href="classkmeans_1_1Kmeans.html#aa90da55ddd4c993d3930508d43e2baa5">set_weighted</a>(<span class="keyword">false</span>);</div>
+<div class="line"><span class="keyword">auto</span> res2 = <a class="code" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code" href="classkmeans_1_1Kmeans.html#a6c32cd0c3ea97278b27df0bb7cd2a8e2">run</a>(ndim, nobs, matrix.data(), ncenters);</div>
+<div class="ttc" id="aKmeans_8hpp_html"><div class="ttname"><a href="Kmeans_8hpp.html">Kmeans.hpp</a></div><div class="ttdoc">Implements the full k-means clustering procedure.</div></div>
+<div class="ttc" id="aclasskmeans_1_1Kmeans_html"><div class="ttname"><a href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a></div><div class="ttdoc">Top-level class to run k-means clustering.</div><div class="ttdef"><b>Definition:</b> Kmeans.hpp:25</div></div>
+<div class="ttc" id="aclasskmeans_1_1Kmeans_html_a6c32cd0c3ea97278b27df0bb7cd2a8e2"><div class="ttname"><a href="classkmeans_1_1Kmeans.html#a6c32cd0c3ea97278b27df0bb7cd2a8e2">kmeans::Kmeans::run</a></div><div class="ttdeci">HartiganWong::Details run(int ndim, int nobs, const double *data, int ncenters, double *centers, int *clusters)</div><div class="ttdef"><b>Definition:</b> Kmeans.hpp:110</div></div>
+<div class="ttc" id="aclasskmeans_1_1Kmeans_html_aa90da55ddd4c993d3930508d43e2baa5"><div class="ttname"><a href="classkmeans_1_1Kmeans.html#aa90da55ddd4c993d3930508d43e2baa5">kmeans::Kmeans::set_weighted</a></div><div class="ttdeci">Kmeans &amp; set_weighted(bool w=true)</div><div class="ttdef"><b>Definition:</b> Kmeans.hpp:38</div></div>
+<div class="ttc" id="aclasskmeans_1_1Kmeans_html_ab911744c63e37439104a8c72e914557a"><div class="ttname"><a href="classkmeans_1_1Kmeans.html#ab911744c63e37439104a8c72e914557a">kmeans::Kmeans::set_seed</a></div><div class="ttdeci">Kmeans &amp; set_seed(bool s=5489u)</div><div class="ttdef"><b>Definition:</b> Kmeans.hpp:49</div></div>
+<div class="ttc" id="astructkmeans_1_1HartiganWong_1_1Details_html_ac5413274329d9833d29b94345fb63e83"><div class="ttname"><a href="structkmeans_1_1HartiganWong_1_1Details.html#ac5413274329d9833d29b94345fb63e83">kmeans::HartiganWong::Details::withinss</a></div><div class="ttdeci">std::vector&lt; double &gt; withinss</div><div class="ttdef"><b>Definition:</b> HartiganWong.hpp:95</div></div>
 </div><!-- fragment --><p>See the <a href="https://ltla.github.io/CppKmeans">reference documentation</a> for more details.</p>
 <h1>Building projects</h1>
 <p>If you're using CMake, you just need to add something like this to your <code>CMakeLists.txt</code>:</p>
