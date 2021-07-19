@@ -11,7 +11,7 @@ TEST_P(InitializationTest, Simple) {
     auto ncenters = std::get<2>(param);
 
     std::mt19937_64 rng(ncenters * 10);
-    auto output = kmeans::simple_initialization(nr, nc, data.data(), ncenters, rng);
+    auto output = kmeans::simple_initialization(nc, ncenters, rng);
     auto copy = output;
 
     EXPECT_EQ(output.size(), ncenters);
@@ -25,12 +25,12 @@ TEST_P(InitializationTest, Simple) {
 
     // Consistent results with the same initialization.
     std::mt19937_64 rng2(ncenters * 10);
-    auto output2 = kmeans::simple_initialization(nr, nc, data.data(), ncenters, rng2);
+    auto output2 = kmeans::simple_initialization(nc, ncenters, rng2);
     EXPECT_EQ(copy, output2);
 
     // Different results with a different seed (only works if num obs is reasonably larger than num centers).
     std::mt19937_64 rng3(ncenters * 11);
-    auto output3 = kmeans::simple_initialization(nr, nc, data.data(), ncenters, rng3);
+    auto output3 = kmeans::simple_initialization(nc, ncenters, rng3);
     EXPECT_NE(copy, output3);
 }
 
@@ -137,10 +137,10 @@ TEST_P(InitializationEdgeTest, TooManyClusters) {
     assemble(param);
     std::mt19937_64 rng(nc* 10);
 
-    auto soutput = kmeans::simple_initialization(nr, nc, data.data(), nc, rng);
+    auto soutput = kmeans::simple_initialization(nc, nc, rng);
     EXPECT_EQ(soutput, one_to_n(nc));
 
-    auto soutput2 = kmeans::simple_initialization(nr, nc, data.data(), nc + 1, rng);
+    auto soutput2 = kmeans::simple_initialization(nc, nc + 1, rng);
     EXPECT_EQ(soutput2, one_to_n(nc));
 
     auto woutput = kmeans::weighted_initialization(nr, nc, data.data(), nc, rng);

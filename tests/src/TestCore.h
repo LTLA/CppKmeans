@@ -38,7 +38,7 @@ protected:
         return output;
     }
         
-    size_t nr, nc;
+    int nr, nc;
     std::vector<double> data;
 };
 

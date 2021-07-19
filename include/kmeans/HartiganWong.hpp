@@ -6,7 +6,7 @@
 #include <numeric>
 #include <cstdint>
 #include <stdexcept>
-#include <iostream>
+#include <limits>
 
 /**
  * @file HartiganWong.hpp
@@ -28,33 +28,73 @@ namespace kmeans {
  *
  * This implementation is derived from the Fortran code underlying the `kmeans` function in the **stats** R package,
  * which in turn is derived from Hartigan and Wong (1979).
+ * 
+ * @tparam DATA_t Floating-point type for the data and centroids.
+ * @tparam CLUSTER_t Integer type for the cluster index.
+ * @tparam INDEX_t Integer type for the observation index.
+ * This should have a maximum positive value that is at least 50 times greater than the maximum expected number of observations.
  *
  * @see
  * Hartigan, J. A. and Wong, M. A. (1979).
  * Algorithm AS 136: A K-means clustering algorithm.
  * _Applied Statistics_, 28, 100-108.
  */
+template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
 class HartiganWong {
-    int num_dim, num_obs;
-    const double* data_ptr;
+    int num_dim;
+    INDEX_t num_obs;
+    const DATA_t* data_ptr;
 
-    int num_centers;
-    double* centers_ptr;
+    CLUSTER_t num_centers;
+    DATA_t* centers_ptr;
 
     // Array arguments in the same order as supplied to R's kmns_ function.
-    int * ic1;
-    std::vector<int> ic2, nc;
-    std::vector<double> an1, an2;
-    std::vector<int> ncp;
-    std::vector<double> d;
+    CLUSTER_t * ic1;
+    std::vector<CLUSTER_t> ic2;
+    std::vector<INDEX_t> nc;
+    std::vector<DATA_t> an1, an2;
+    std::vector<INDEX_t> ncp;
+    std::vector<DATA_t> d;
     std::vector<uint8_t> itran;
-    std::vector<int> live;
-
-    static constexpr double big = 1e30; // Define BIG to be a very large positive number
-    static constexpr int ncp_init = -2;
-    static constexpr int ncp_unchanged = -1;
+    std::vector<INDEX_t> live;
 
     int maxiter = 10;
+private:
+    static constexpr double big = 1e30; // Define BIG to be a very large positive number
+
+    /* The following comparisons to 'ncp' are wrapped in functions to account
+     * for the fact that we need to shift all the 'ncp' values by two to give
+     * some space for the error codes when dealing with unsigned integers in
+     * 'INDEX_t'. All interactions with 'ncp' should occur via these utilities.
+     */
+    static constexpr INDEX_t ncp_init = 0;
+    static constexpr INDEX_t ncp_unchanged = 1;
+    static constexpr INDEX_t ncp_shift = 2;
+
+    void initialize_ncp() {
+        std::fill(ncp.begin(), ncp.end(), ncp_init);
+    }
+
+    void reset_ncp() {
+        std::fill(ncp.begin(), ncp.end(), ncp_unchanged);
+    }
+       
+    void set_ncp(INDEX_t obs, INDEX_t val) {
+        ncp[obs] = val + ncp_shift;
+    }
+
+    bool unchanged_ncp(INDEX_t obs) const {
+        return ncp[obs] == ncp_unchanged;
+    }
+
+    bool lt_ncp(INDEX_t obs, INDEX_t val) const {
+        return ncp[obs] > val + ncp_shift;
+    }
+
+    bool le_ncp(INDEX_t obs, INDEX_t val) const {
+        return ncp[obs] >= val + ncp_shift;
+    }
+
 public:
     /**
      * @param m Maximum number of iterations.
@@ -76,7 +116,7 @@ public:
          */
         Details() {}
 
-        Details(std::vector<int> s, std::vector<double> w, int it, int st) : sizes(std::move(s)), withinss(std::move(w)), iterations(it), status(st) {} 
+        Details(std::vector<INDEX_t> s, std::vector<DATA_t> w, int it, int st) : sizes(std::move(s)), withinss(std::move(w)), iterations(it), status(st) {} 
         /**
          * @endcond
          */
@@ -85,14 +125,14 @@ public:
          * The number of observations in each cluster.
          * All values are guaranteed to be positive for non-zero numbers of observations unless `status == 1` or `3`.
          */
-        std::vector<int> sizes;
+        std::vector<INDEX_t> sizes;
 
         /**
          * The within-cluster sum of squares for each cluster.
          * All values are guaranteed to be non-negative.
          * Values may be zero for clusters with only one observation.
          */
-        std::vector<double> withinss;
+        std::vector<DATA_t> withinss;
 
         /**
          * The number of iterations used to achieve convergence.
@@ -131,7 +171,7 @@ public:
      * @return `centers` and `clusters` are filled, and a `Details` object is returned containing clustering statistics.
      * If `ncenters > nobs`, only the first `nobs` columns of the `centers` array will be filled.
      */
-    Details run(int ndim, int nobs, const double* data, int ncenters, double* centers, int* clusters) {
+    Details run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
         num_dim = ndim;
         num_obs = nobs;
         data_ptr = data;
@@ -164,7 +204,7 @@ public:
 
 private:
     // Returns the WCSS, modifies 'iter' and 'ifault'.
-    std::vector<double> kmeans(int& iter, int& ifault) {
+    std::vector<DATA_t> kmeans(int& iter, int& ifault) {
         iter = 0;
         ifault = 0;
 
@@ -188,28 +228,28 @@ private:
             // No need to fill 'nc', it's already all-zero on input.
             ifault = 3;
             std::fill(ic1, ic1 + num_obs, 0);
-            return std::vector<double>();
+            return std::vector<DATA_t>();
         }
 
         /* For each point I, find its two closest centres, IC1(I) and 
          * IC2(I). Assign it to IC1(I). 
          */
-        for (int obs = 0; obs < num_obs; ++obs) {
+        for (INDEX_t obs = 0; obs < num_obs; ++obs) {
             auto& best = ic1[obs];
             best = 0;
-            double best_dist = squared_distance_from_cluster(obs, best);
+            DATA_t best_dist = squared_distance_from_cluster(obs, best);
 
             auto& second = ic2[obs];
             second = 1;
-            double second_dist = squared_distance_from_cluster(obs, second);
+            DATA_t second_dist = squared_distance_from_cluster(obs, second);
 
             if (best_dist > second_dist) {
                 std::swap(best, second);
                 std::swap(best_dist, second_dist);
             }
 
-            for (int cen = 2; cen < num_centers; ++cen) {
-                double candidate_dist = squared_distance_from_cluster(obs, cen);
+            for (CLUSTER_t cen = 2; cen < num_centers; ++cen) {
+                DATA_t candidate_dist = squared_distance_from_cluster(obs, cen);
                 if (candidate_dist < best_dist) {
                     std::swap(best_dist, second_dist);
                     std::swap(best, second);
@@ -228,14 +268,14 @@ private:
          */
         std::fill(centers_ptr, centers_ptr + num_dim * num_centers, 0);
         std::fill(nc.begin(), nc.end(), 0);
-        for (int obs = 0; obs < num_obs; ++obs) {
+        for (INDEX_t obs = 0; obs < num_obs; ++obs) {
             auto cen = ic1[obs];
             ++nc[cen];
             add_point_to_cluster(obs, cen);
         }
 
         // Check to see if there is any empty cluster at this stage 
-        for (int cen = 0; cen < num_centers; ++cen) {
+        for (CLUSTER_t cen = 0; cen < num_centers; ++cen) {
             if (nc[cen] == 0) {
                 ifault = 1;
                 return compute_wcss();
@@ -247,14 +287,18 @@ private:
              * AN1(L) = NC(L) / (NC(L) - 1)
              * AN2(L) = NC(L) / (NC(L) + 1)
              */
-            const double num = nc[cen];
+            const DATA_t num = nc[cen];
             an2[cen] = num / (num + 1);
             an1[cen] = (num > 1 ? num / (num - 1) : big);
         }
 
-        int indx = 0;
-        int imaxqtr = num_obs * 50; // default derived from stats::kmeans()
-        std::fill(ncp.begin(), ncp.end(), ncp_init);
+        INDEX_t indx = 0;
+        if (std::numeric_limits<INDEX_t>::max() / 50 < num_obs) {
+            throw std::runtime_error("too many observations for the index integer type");
+        }
+        INDEX_t imaxqtr = num_obs * 50; // default derived from stats::kmeans()
+
+        initialize_ncp();
         std::fill(itran.begin(), itran.end(), true);
         std::fill(live.begin(), live.end(), 0);
 
@@ -289,7 +333,7 @@ private:
             }
 
             // NCP has to be reset before entering optimal_transfer().
-            std::fill(ncp.begin(), ncp.end(), ncp_unchanged);
+            reset_ncp();
         }
 
         /* Since the specified number of iterations has been exceeded, set
@@ -314,7 +358,7 @@ private:
     }
 #endif
 
-    void add_point_to_cluster(int obs, int cen) {
+    void add_point_to_cluster(INDEX_t obs, CLUSTER_t cen) {
         auto copy = centers_ptr + cen * num_dim;
         auto mine = data_ptr + obs * num_dim;
         for (int dim = 0; dim < num_dim; ++dim, ++copy, ++mine) {
@@ -322,7 +366,7 @@ private:
         }
     }
 
-    void divide_by_cluster_size(int cen) {
+    void divide_by_cluster_size(CLUSTER_t cen) {
         if (nc[cen]) {
             auto curcenter = centers_ptr + cen * num_dim;
             for (int dim = 0; dim < num_dim; ++dim, ++curcenter) {
@@ -332,19 +376,19 @@ private:
     }
 
     // Assumes that 'ic1' and 'nc' have been filled.
-    std::vector<double> compute_wcss() {
+    std::vector<DATA_t> compute_wcss() {
         std::fill(centers_ptr, centers_ptr + num_centers * num_dim, 0);
-        std::vector<double> wcss(num_centers);
+        std::vector<DATA_t> wcss(num_centers);
         std::fill(wcss.begin(), wcss.end(), 0);
 
-        for (int obs = 0; obs < num_obs; ++obs) {
+        for (INDEX_t obs = 0; obs < num_obs; ++obs) {
             add_point_to_cluster(obs, ic1[obs]);
         }
-        for (int cen = 0; cen < num_centers; ++cen) {
+        for (CLUSTER_t cen = 0; cen < num_centers; ++cen) {
             divide_by_cluster_size(cen);
         }
 
-        for (int obs = 0; obs < num_obs; ++obs) {
+        for (INDEX_t obs = 0; obs < num_obs; ++obs) {
             auto cen = ic1[obs];
             auto curcenter = centers_ptr + cen * num_dim;
             auto& curwcss = wcss[cen];
@@ -358,10 +402,10 @@ private:
         return wcss;
     }
 
-    double squared_distance_from_cluster(int pt, int clust) const {
-        const double* acopy = data_ptr + pt * num_dim;
-        const double* ccopy = centers_ptr + clust * num_dim;
-        double output = 0;
+    DATA_t squared_distance_from_cluster(INDEX_t pt, CLUSTER_t clust) const {
+        const DATA_t* acopy = data_ptr + pt * num_dim;
+        const DATA_t* ccopy = centers_ptr + clust * num_dim;
+        DATA_t output = 0;
         for (int dim = 0; dim < num_dim; ++dim, ++acopy, ++ccopy) {
             output += (*acopy - *ccopy) * (*acopy - *ccopy);
         }
@@ -376,36 +420,36 @@ private:
      * will induce a maximum reduction in the within-cluster sum of
      * squares. 
      */
-    void optimal_transfer(int& indx) {
+    void optimal_transfer(INDEX_t& indx) {
         /* If cluster L is updated in the last quick-transfer stage, it 
          * belongs to the live set throughout this stage. Otherwise, at 
          * each step, it is not in the live set if it has not been updated 
          * in the last M optimal transfer steps. (AL: M being a synonym for
          * the number of observations, here and in other functions.)
          */
-        for (int cen = 0; cen < num_centers; ++cen) {
+        for (CLUSTER_t cen = 0; cen < num_centers; ++cen) {
             if (itran[cen]) {
                 live[cen] = num_obs; // AL: using 0-index, so no need for +1.
             }
         }
 
-        for (int obs = 0; obs < num_obs; ++obs) { 
+        for (INDEX_t obs = 0; obs < num_obs; ++obs) { 
             ++indx;
             auto l1 = ic1[obs];
 
             // If point I is the only member of cluster L1, no transfer.
             if (nc[l1] != 1) {
                 // If L1 has not yet been updated in this stage, no need to re-compute D(I).
-                if (ncp[l1] != ncp_unchanged) {
+                if (!unchanged_ncp(l1)) {
                     d[obs] = squared_distance_from_cluster(obs, l1) * an1[l1];
                 }
 
                 // Find the cluster with minimum R2.
                 auto l2 = ic2[obs];
                 auto ll = l2;
-                double r2 = squared_distance_from_cluster(obs, l2) * an2[l2];
+                DATA_t r2 = squared_distance_from_cluster(obs, l2) * an2[l2];
             
-                for (int cen = 0; cen < num_centers; ++cen) {
+                for (CLUSTER_t cen = 0; cen < num_centers; ++cen) {
                     /* If I >= LIVE(L1), then L1 is not in the live set. If this is
                      * true, we only need to consider clusters that are in the live
                      * set for possible transfer of point I. Otherwise, we need to
@@ -415,8 +459,8 @@ private:
                         continue;
                     }
 
-                    double rr = r2 / an2[cen];
-                    double dc = squared_distance_from_cluster(obs, cen);
+                    DATA_t rr = r2 / an2[cen];
+                    DATA_t dc = squared_distance_from_cluster(obs, cen);
                     if (dc < rr) {
                         r2 = dc * an2[cen];
                         l2 = cen;
@@ -434,8 +478,8 @@ private:
                     indx = 0;
                     live[l1] = num_obs + obs;
                     live[l2] = num_obs + obs;
-                    ncp[l1] = obs;
-                    ncp[l2] = obs;
+                    set_ncp(l1, obs);
+                    set_ncp(l2, obs);
 
                     transfer_point(obs, l1, l2);
                 }
@@ -446,7 +490,7 @@ private:
             }
         }
 
-        for (int cen = 0; cen < num_centers; ++cen) {
+        for (CLUSTER_t cen = 0; cen < num_centers; ++cen) {
             itran[cen] = false;
 
             // LIVE(L) has to be decreased by M before re-entering OPTRA.
@@ -471,12 +515,12 @@ private:
      *     reduce within-cluster sum of squares.  The cluster centres are 
      *     updated after each step. 
      */
-    void quick_transfer (int& indx, int& imaxqtr) {
-        int icoun = 0;
-        int istep = 0;
+    void quick_transfer (INDEX_t& indx, INDEX_t& imaxqtr) {
+        INDEX_t icoun = 0;
+        INDEX_t istep = 0;
 
         while (1) {
-           for (int obs = 0; obs < num_obs; ++obs) { 
+           for (INDEX_t obs = 0; obs < num_obs; ++obs) { 
                ++icoun;
                auto l1 = ic1[obs];
 
@@ -491,13 +535,13 @@ private:
                     * steps ago, we still need to compute the distance from point I to 
                     * cluster L1.
                     */
-                   if (istep <= ncp[l1]) {
+                   if (le_ncp(l1, istep)) {
                        d[obs] = squared_distance_from_cluster(obs, l1) * an1[l1];
                    }
 
                    // If ISTEP >= both NCP(L1) & NCP(L2) there will be no transfer of point I at this step. 
                    auto l2 = ic2[obs];
-                   if (istep < ncp[l1] || istep < ncp[l2]) {
+                   if (lt_ncp(l1, istep) || lt_ncp(l2, istep)) {
                        if (squared_distance_from_cluster(obs, l2) < d[obs] / an2[l2]) {
                            /* Update cluster centres, NCP, NC, ITRAN, AN1 & AN2 for clusters
                             * L1 & L2.   Also update IC1(I) & IC2(I).   Note that if any
@@ -508,8 +552,8 @@ private:
 
                            itran[l1] = true;
                            itran[l2] = true;
-                           ncp[l1] = istep + num_obs;
-                           ncp[l2] = istep + num_obs;
+                           set_ncp(l1, istep + num_obs);
+                           set_ncp(l2, istep + num_obs);
                            transfer_point(obs, l1, l2);
                        }
                    }
@@ -532,9 +576,9 @@ private:
     }
 
 private:
-    void transfer_point(int obs, int l1, int l2) {
-        const double al1 = nc[l1], alw = al1 - 1;
-        const double al2 = nc[l2], alt = al2 + 1;
+    void transfer_point(INDEX_t obs, CLUSTER_t l1, CLUSTER_t l2) {
+        const DATA_t al1 = nc[l1], alw = al1 - 1;
+        const DATA_t al2 = nc[l2], alt = al2 + 1;
 
         auto copy1 = centers_ptr + l1 * num_dim;
         auto copy2 = centers_ptr + l2 * num_dim;

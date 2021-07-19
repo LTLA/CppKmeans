@@ -37,14 +37,18 @@ double uniform01 (ENGINE& eng) {
  * where the sampling probability for each point is defined as the squared distance to the closest starting point that was chosen in any of the previous iterations.
  * The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.
  *
- * @tparam ENGINE A random number engine, e.g., `std::mt19937`.
- *
- * @param nd Number of dimensions.
- * @param no Number of observations.
+ * @param ndim Number of dimensions.
+ * @param nobs Number of observations.
  * @param data Pointer to an array where the dimensions are rows and the observations are columns.
  * Data should be stored in column-major format.
  * @param ncenters Number of centers to pick.
  * @param eng An instance of a random number engine.
+ *
+ * @tparam DATA_t Floating-point type for the data and centroids.
+ * @tparam INDEX_t_t Integer type for the observation index.
+ * This should be at least 50 times greater than the maximum expected number of observations.
+ * @tparam CLUSTER_t Integer type for the cluster index.
+ * @tparam ENGINE A random number engine, e.g., `std::mt19937`.
  *
  * @return A vector of indices for the observations that were selected as starting points.
  * Note that the length may be less than `ncenters` if `ncenters > no` (in which case each observation is chosen as a starting point)
@@ -55,27 +59,27 @@ double uniform01 (ENGINE& eng) {
  * k-means++: the advantages of careful seeding.
  * _Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms_, 1027-1035.
  */
-template<class ENGINE>
-std::vector<int> weighted_initialization(int nd, int no, const double* data, int ncenters, ENGINE& eng) {
-    std::vector<int> targets(no);
-    std::vector<double> mindist(no, 1);
-    std::vector<double> cumulative(no);
-    std::vector<uint8_t> chosen(no);
-    std::vector<int> sofar;
+template<typename DATA_t = double, typename INDEX_t = int, typename CLUSTER_t = int, class ENGINE>
+std::vector<INDEX_t> weighted_initialization(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, ENGINE& eng) {
+    std::vector<INDEX_t> targets(nobs);
+    std::vector<DATA_t> mindist(nobs, 1);
+    std::vector<DATA_t> cumulative(nobs);
+    std::vector<uint8_t> chosen(nobs);
+    std::vector<INDEX_t> sofar;
     sofar.reserve(ncenters);
 
-    for (int cen = 0; cen < ncenters; ++cen) {
-        int counter = 0;
+    for (CLUSTER_t cen = 0; cen < ncenters; ++cen) {
+        INDEX_t counter = 0;
         if (!sofar.empty()) {
             auto last = sofar.back();
-            int prevcounter = 0;
+            INDEX_t prevcounter = 0;
 
-            for (int obs = 0; obs < no; ++obs) {
+            for (INDEX_t obs = 0; obs < nobs; ++obs) {
                 if (!chosen[obs]) {
-                    const double* acopy = data + obs * nd;
-                    const double* scopy = data + last * nd;
-                    double r2 = 0;
-                    for (int dim = 0; dim < nd; ++dim, ++acopy, ++scopy) {
+                    const DATA_t* acopy = data + obs * ndim;
+                    const DATA_t* scopy = data + last * ndim;
+                    DATA_t r2 = 0;
+                    for (int dim = 0; dim < ndim; ++dim, ++acopy, ++scopy) {
                         r2 += (*acopy - *scopy) * (*acopy - *scopy);
                     }
 
@@ -93,7 +97,7 @@ std::vector<int> weighted_initialization(int nd, int no, const double* data, int
             }
         } else {
             std::iota(targets.begin(), targets.end(), 0);
-            counter = no;
+            counter = nobs;
         }
 
         if (!counter) {
@@ -101,16 +105,16 @@ std::vector<int> weighted_initialization(int nd, int no, const double* data, int
         }
 
         cumulative[0] = mindist[0];
-        for (int i = 1; i < counter; ++i) {
+        for (INDEX_t i = 1; i < counter; ++i) {
             cumulative[i] = cumulative[i-1] + mindist[i];
         }
 
-        const double total = cumulative[counter-1];
+        const DATA_t total = cumulative[counter-1];
         if (total == 0) { // a.k.a. duplicates.
             break;
         }
 
-        const double chosen_weight = total * uniform01(eng);
+        const DATA_t chosen_weight = total * uniform01(eng);
         auto chosen_pos = std::lower_bound(cumulative.begin(), cumulative.begin() + counter, chosen_weight);
         auto chosen_id = targets[chosen_pos - cumulative.begin()];
         chosen[chosen_id] = true;
@@ -123,31 +127,31 @@ std::vector<int> weighted_initialization(int nd, int no, const double* data, int
 /**
  * Implements a simple initialization of the starting points where random observations are sampled without replacement.
  *
+ * @tparam INDEX_t_t Integer type for the observation index.
+ * This should be at least 50 times greater than the maximum expected number of observations.
+ * @tparam CLUSTER_t Integer type for the cluster index.
  * @tparam ENGINE A random number engine, e.g., `std::mt19937`.
  *
- * @param nd Number of dimensions.
- * @param no Number of observations.
- * @param data Pointer to an array where the dimensions are rows and the observations are columns.
- * Data should be stored in column-major format.
- * @param ncenters Number of centers to pick.
+ * @param nobs Number of observations.
+ * @param ncenters Number of centers for which to pick starting points.
  * @param eng An instance of a random number engine.
- *
+ * 
  * @return A vector of indices for the observations that were selected as starting points.
  * Note that the length may be less than `ncenters` if `ncenters > no`, in which case each observation is chosen as a starting point.
  */
-template<class ENGINE>
-std::vector<int> simple_initialization(int nd, int no, const double* data, int ncenters, ENGINE& eng) {
-    std::vector<int> sofar;
+template<typename INDEX_t = int, typename CLUSTER_t = int, class ENGINE>
+std::vector<INDEX_t> simple_initialization(INDEX_t nobs, CLUSTER_t ncenters, ENGINE& eng) {
+    std::vector<INDEX_t> sofar;
 
-    if (ncenters >= no) {
-        sofar.resize(no);
+    if (ncenters >= nobs) {
+        sofar.resize(nobs);
         std::iota(sofar.begin(), sofar.end(), 0);
     } else {
         sofar.reserve(ncenters);
-        int traversed = 0;
+        INDEX_t traversed = 0;
 
         while (sofar.size() < static_cast<size_t>(ncenters)) {
-            if (static_cast<double>(ncenters - sofar.size()) > static_cast<double>(no - traversed) * uniform01(eng)) {
+            if (static_cast<double>(ncenters - sofar.size()) > static_cast<double>(nobs - traversed) * uniform01(eng)) {
                 sofar.push_back(traversed);
             }
             ++traversed;
