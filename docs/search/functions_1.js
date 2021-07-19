@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hartiganwong_11',['HartiganWong',['../classkmeans_1_1HartiganWong.html#a36399f647796273a052f1be0830500fe',1,'kmeans::HartiganWong']]]
+  ['simple_5finitialization_17',['simple_initialization',['../initialization_8hpp.html#a3c109f946286d0ec3a0d0d5de063d1ac',1,'kmeans']]]
 ];

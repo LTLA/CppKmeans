@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['sizes_5',['sizes',['../classkmeans_1_1HartiganWong.html#afc692f921a976867e588c0476cc9c4bc',1,'kmeans::HartiganWong']]],
-  ['status_6',['status',['../classkmeans_1_1HartiganWong.html#ac1c0e2f19e480f598c8a77614c2f3fd4',1,'kmeans::HartiganWong']]]
+  ['results_5',['Results',['../structkmeans_1_1HartiganWong_1_1Results.html',1,'kmeans::HartiganWong']]],
+  ['run_6',['run',['../classkmeans_1_1HartiganWong.html#a499632afebe74698832e8608b46537b1',1,'kmeans::HartiganWong']]]
 ];

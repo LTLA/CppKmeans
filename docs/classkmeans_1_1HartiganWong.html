@@ -68,6 +68,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classkmeans_1_1HartiganWong-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -80,29 +81,25 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="HartiganWong_8hpp_source.html">HartiganWong.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Results.html">Results</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Statistics from the Hartigan-Wong algorithm.  <a href="structkmeans_1_1HartiganWong_1_1Results.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a36399f647796273a052f1be0830500fe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#a36399f647796273a052f1be0830500fe">HartiganWong</a> (int nd, int no, const double *d, int nc, double *c, int maxit=10)</td></tr>
-<tr class="separator:a36399f647796273a052f1be0830500fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4d4fad52ee2c1761b4ce2288e6baaab"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; int &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#aa4d4fad52ee2c1761b4ce2288e6baaab">clusters</a> () const</td></tr>
-<tr class="separator:aa4d4fad52ee2c1761b4ce2288e6baaab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc692f921a976867e588c0476cc9c4bc"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; int &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#afc692f921a976867e588c0476cc9c4bc">sizes</a> () const</td></tr>
-<tr class="separator:afc692f921a976867e588c0476cc9c4bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa91e2ade6e1f02918612de2584f09727"><td class="memItemLeft" align="right" valign="top">const std::vector&lt; double &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#aa91e2ade6e1f02918612de2584f09727">withinss</a> () const</td></tr>
-<tr class="separator:aa91e2ade6e1f02918612de2584f09727"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a6885e85d4ad058a0c63bf4b370756e"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#a2a6885e85d4ad058a0c63bf4b370756e">iterations</a> () const</td></tr>
-<tr class="separator:a2a6885e85d4ad058a0c63bf4b370756e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1c0e2f19e480f598c8a77614c2f3fd4"><td class="memItemLeft" align="right" valign="top">const int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#ac1c0e2f19e480f598c8a77614c2f3fd4">status</a> () const</td></tr>
-<tr class="separator:ac1c0e2f19e480f598c8a77614c2f3fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a499632afebe74698832e8608b46537b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1HartiganWong_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#a499632afebe74698832e8608b46537b1">run</a> (int ndim, int nobs, const double *data, int ncenters, double *centers, int *clusters, int maxit=10)</td></tr>
+<tr class="separator:a499632afebe74698832e8608b46537b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implements the Hartigan-Wong algorithm for k-means clustering. </p>
 <p>The Hartigan-Wong algorithm performs several iterations of transferring points between clusters, involving a computationally expensive "optimal transfer" step that checks each observation against each cluster for the lowest squared distance; followed by a cheaper "quick transfer" step, which iterates between the best and second-best cluster choices for each observation. The latter enables rapid exploration of the local solution space without the unnecessary expense of repeatedly comparing to all clusters for all observations. In addition, each distance calculation to a cluster accounts for the shift in the means when a point is transferred. The algorithm terminates when no observation wishes to transfer between clusters.</p>
 <p>This implementation is derived from the Fortran code underlying the <code>kmeans</code> function in the <b>stats</b> R package, which in turn is derived from Hartigan and Wong (1979).</p>
 <dl class="section see"><dt>See also</dt><dd>Hartigan, J. A. and Wong, M. A. (1979). Algorithm AS 136: A K-means clustering algorithm. <em>Applied Statistics</em>, 28, 100-108. </dd></dl>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a36399f647796273a052f1be0830500fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36399f647796273a052f1be0830500fe">&#9670;&nbsp;</a></span>HartiganWong()</h2>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a499632afebe74698832e8608b46537b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a499632afebe74698832e8608b46537b1">&#9670;&nbsp;</a></span>run()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -111,34 +108,40 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">kmeans::HartiganWong::HartiganWong </td>
+          <td class="memname"><a class="el" href="structkmeans_1_1HartiganWong_1_1Results.html">Results</a> kmeans::HartiganWong::run </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>nd</em>, </td>
+          <td class="paramname"><em>ndim</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>no</em>, </td>
+          <td class="paramname"><em>nobs</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const double *&#160;</td>
-          <td class="paramname"><em>d</em>, </td>
+          <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>nc</em>, </td>
+          <td class="paramname"><em>ncenters</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double *&#160;</td>
-          <td class="paramname"><em>c</em>, </td>
+          <td class="paramname"><em>centers</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>clusters</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -160,157 +163,17 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">nd</td><td>Number of dimensions. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">no</td><td>Number of observations. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">d</td><td>Pointer to an array where columns are observations and rows are dimensions. Data should be stored in column-major order. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">nc</td><td>Number of cluster centers. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">d</td><td>Pointer to an array where columns are cluster centers and rows are dimensions. On input, this should contain the initial centroid locations for each cluster. Data should be stored in column-major order. On output, this will contain the final centroid locations for each cluster. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">maxit</td><td>Maximum number of iterations. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">ndim</td><td>Number of dimensions. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">nobs</td><td>Number of observations. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to a <code>ndim</code>-by-<code>nobs</code> array where columns are observations and rows are dimensions. Data should be stored in column-major order. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">ncenters</td><td>Number of cluster centers. </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">centers</td><td>Pointer to a <code>ndim</code>-by-<code>ncenters</code> array where columns are cluster centers and rows are dimensions. On input, this should contain the initial centroid locations for each cluster. Data should be stored in column-major order. On output, this will contain the final centroid locations for each cluster. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length <code>nobs</code>. Om output, this will contain the cluster assignment for each observation. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">maxit</td><td>Maximum number of iterations.</td></tr>
   </table>
   </dd>
 </dl>
-
-</div>
-</div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa4d4fad52ee2c1761b4ce2288e6baaab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa4d4fad52ee2c1761b4ce2288e6baaab">&#9670;&nbsp;</a></span>clusters()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::vector&lt;int&gt;&amp; kmeans::HartiganWong::clusters </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The cluster assignments for each observation.</dd></dl>
-<p>Entries are guaranteed to exist for clusters 0 to <code>nc - 1</code>, where <code>nc</code> is as supplied in the <code><a class="el" href="classkmeans_1_1HartiganWong.html#a36399f647796273a052f1be0830500fe">HartiganWong()</a></code> constructor. </p>
-
-</div>
-</div>
-<a id="a2a6885e85d4ad058a0c63bf4b370756e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a6885e85d4ad058a0c63bf4b370756e">&#9670;&nbsp;</a></span>iterations()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int kmeans::HartiganWong::iterations </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The number of iterations used to achieve convergence.</dd></dl>
-<p>This value may be greater than the <code>maxit</code> if convergence was not achieved. </p>
-
-</div>
-</div>
-<a id="afc692f921a976867e588c0476cc9c4bc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc692f921a976867e588c0476cc9c4bc">&#9670;&nbsp;</a></span>sizes()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::vector&lt;int&gt;&amp; kmeans::HartiganWong::sizes </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The number of observations in each cluster.</dd></dl>
-<p>All values are guaranteed to be positive. </p>
-
-</div>
-</div>
-<a id="ac1c0e2f19e480f598c8a77614c2f3fd4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1c0e2f19e480f598c8a77614c2f3fd4">&#9670;&nbsp;</a></span>status()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const int kmeans::HartiganWong::status </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The status of the algorithm. This may be:</dd></dl>
-<ul>
-<li>0: convergence achieved.</li>
-<li>1: empty cluster detected. This usually indicates a problem with the initial choic of centroids. It can also occur in pathological situations with duplicate points.</li>
-<li>2: maximum iterations reached without convergence.</li>
-<li>3: this previously indicated situations where the number of centers is not positive or greater than the number of observations. Now, both will cause exceptions to be thrown, so this error code is no longer in use.</li>
-<li>4: maximum number of quick transfer steps exceeded. </li>
-</ul>
-
-</div>
-</div>
-<a id="aa91e2ade6e1f02918612de2584f09727"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa91e2ade6e1f02918612de2584f09727">&#9670;&nbsp;</a></span>withinss()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::vector&lt;double&gt;&amp; kmeans::HartiganWong::withinss </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>The within-cluster sum of squares for each cluster.</dd></dl>
-<p>All values are guaranteed to be non-negative. Note that they may be zero for clusters with only one observation. </p>
+<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Results.html" title="Statistics from the Hartigan-Wong algorithm.">Results</a></code> object is returned containing clustering statistics. </dd></dl>
 
 </div>
 </div>
