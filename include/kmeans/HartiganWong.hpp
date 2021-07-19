@@ -41,13 +41,12 @@ class HartiganWong {
     int num_centers;
     double* centers_ptr;
 
-    // Subsequent arguments in the same order as supplied to R's kmns_ function.
+    // Array arguments in the same order as supplied to R's kmns_ function.
     int * ic1;
     std::vector<int> ic2, nc;
     std::vector<double> an1, an2;
     std::vector<int> ncp;
     std::vector<double> d;
-
     std::vector<uint8_t> itran;
     std::vector<int> live;
 
@@ -116,6 +115,7 @@ public:
      * @param maxit Maximum number of iterations.
      *
      * @return `centers` and `clusters` are filled, and a `Results` object is returned containing clustering statistics.
+     * If `ncenters > nobs`, only the first `nobs` columns of the `centers` array will be filled.
      */
     Results run(int ndim, int nobs, const double* data, int ncenters, double* centers, int* clusters, int maxit = 10) {
         num_dim = ndim;
@@ -317,6 +317,7 @@ private:
         }
     }
 
+    // Assumes that 'ic1' and 'nc' have been filled.
     std::vector<double> compute_wcss() {
         std::fill(centers_ptr, centers_ptr + num_centers * num_dim, 0);
         std::vector<double> wcss(num_centers);
