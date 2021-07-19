@@ -13,6 +13,7 @@ enable_testing()
 add_executable(
     libtest 
     src/HartiganWong.cpp
+    src/initialization.cpp
 )
 
 target_link_libraries(
