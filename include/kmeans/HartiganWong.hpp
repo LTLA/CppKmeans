@@ -35,56 +35,102 @@ namespace kmeans {
  * _Applied Statistics_, 28, 100-108.
  */
 class HartiganWong {
-    const int ndim, nobs;
-    const double* data;
+    int num_dim, num_obs;
+    const double* data_ptr;
 
-    const int ncenters;
-    double* centers;
+    int num_centers;
+    double* centers_ptr;
 
     // Subsequent arguments in the same order as supplied to R's kmns_ function.
-    std::vector<int> ic1, ic2, nc;
+    int * ic1;
+    std::vector<int> ic2, nc;
     std::vector<double> an1, an2;
     std::vector<int> ncp;
     std::vector<double> d;
 
     std::vector<uint8_t> itran;
     std::vector<int> live;
-    const int maxiter;
-    std::vector<double> wcss;
-
-    int ifault = 0;
-    int iter = 0;
 
     static constexpr double big = 1e30; // Define BIG to be a very large positive number
     static constexpr int ncp_init = -2;
     static constexpr int ncp_unchanged = -1;
 public:
     /**
-     * @param nd Number of dimensions.
-     * @param no Number of observations.
-     * @param[in] d Pointer to an array where columns are observations and rows are dimensions. 
+     * @brief Statistics from the Hartigan-Wong algorithm.
+     */
+    struct Results {
+        /**
+         * @cond
+         */
+        Results(std::vector<int> s, std::vector<double> w, int it, int st) : sizes(std::move(s)), withinss(std::move(w)), iterations(it), status(st) {} 
+        /**
+         * @endcond
+         */
+
+        /**
+         * The number of observations in each cluster.
+         * All values are guaranteed to be positive for non-zero numbers of observations unless `status == 1` or `3`.
+         */
+        std::vector<int> sizes;
+
+        /**
+         * The within-cluster sum of squares for each cluster.
+         * All values are guaranteed to be non-negative.
+         * Values may be zero for clusters with only one observation.
+         */
+        std::vector<double> withinss;
+
+        /**
+         * The number of iterations used to achieve convergence.
+         * This value may be greater than the `maxit` if convergence was not achieved.
+         */
+        int iterations;
+
+        /**
+         * The status of the algorithm.
+         *
+         * - 0: convergence achieved.
+         * - 1: empty cluster detected.
+         * This usually indicates a problem with the initial choice of centroids.
+         * It can also occur in pathological situations with duplicate points.
+         * - 2: maximum iterations reached without convergence. 
+         * - 3: the number of centers is not positive or greater than the number of observations.
+         * - 4: maximum number of quick transfer steps exceeded.
+         */
+        int status;
+    };
+
+public:
+    /**
+     * @param ndim Number of dimensions.
+     * @param nobs Number of observations.
+     * @param[in] data Pointer to a `ndim`-by-`nobs` array where columns are observations and rows are dimensions. 
      * Data should be stored in column-major order.
-     * @param nc Number of cluster centers.
-     * @param[in, out] d Pointer to an array where columns are cluster centers and rows are dimensions. 
+     * @param ncenters Number of cluster centers.
+     * @param[in, out] centers Pointer to a `ndim`-by-`ncenters` array where columns are cluster centers and rows are dimensions. 
      * On input, this should contain the initial centroid locations for each cluster.
      * Data should be stored in column-major order.
      * On output, this will contain the final centroid locations for each cluster.
+     * @param[out] clusters Pointer to an array of length `nobs`.
+     * Om output, this will contain the cluster assignment for each observation.
      * @param maxit Maximum number of iterations.
+     *
+     * @return `centers` and `clusters` are filled, and a `Results` object is returned containing clustering statistics.
      */
-    HartiganWong(int nd, int no, const double* d, int nc, double* c, int maxit = 10) :
-        ndim(nd), 
-        nobs(no), 
-        data(d), 
-        ncenters(nc), 
-        centers(c), 
+    Results run(int ndim, int nobs, const double* data, int ncenters, double* centers, int* clusters, int maxit = 10) {
+        num_dim = ndim;
+        num_obs = nobs;
+        data_ptr = data;
+        num_centers = ncenters;
+        centers_ptr = centers; 
+        ic1 = clusters;
 
         // Sizes taken from the .Fortran() call in stats::kmeans(). 
-        ic1(nobs),
-        ic2(nobs),
-        nc(ncenters),
-        an1(ncenters),
-        an2(ncenters),
-        d(nobs),
+        ic2.resize(num_obs);
+        nc.resize(num_centers);
+        an1.resize(num_centers);
+        an2.resize(num_centers);
+        d.resize(num_obs);
 
         /* ITRAN(L) = 1 if cluster L is updated in the quick-transfer stage,
          *          = 0 otherwise
@@ -93,95 +139,48 @@ public:
          * In the quick-transfer stage, NCP(L) stores the step at which
          * cluster L is last updated plus M. 
          */
-        ncp(ncenters, ncp_init),
-        itran(ncenters, true),
+        ncp.resize(num_centers);
+        itran.resize(num_centers);
+        live.resize(num_centers);
 
-        live(ncenters),
-        maxiter(maxit),
-        wcss(ncenters)
-    {
-        kmeans();
+        int iter, ifault;
+        auto wcss = kmeans(maxit, iter, ifault);
+        return Results(std::move(nc), std::move(wcss), iter, ifault);
     } 
 
-    /**
-     * @return The cluster assignments for each observation.
-     *
-     * Entries are guaranteed to exist for clusters 0 to `nc - 1`, where `nc` is as supplied in the `HartiganWong()` constructor.
-     */
-    const std::vector<int>& clusters () const {
-        return ic1;
-    }
-
-    /**
-     * @return The number of observations in each cluster.
-     *
-     * All values are guaranteed to be positive.
-     */
-    const std::vector<int>& sizes() const {
-        return nc;
-    }
-
-    /**
-     * @return The within-cluster sum of squares for each cluster.
-     *
-     * All values are guaranteed to be non-negative.
-     * Note that they may be zero for clusters with only one observation.
-     */
-    const std::vector<double>& withinss() const {
-        return wcss;
-    }
-
-    /**
-     * @return The number of iterations used to achieve convergence.
-     *
-     * This value may be greater than the `maxit` if convergence was not achieved.
-     */
-    const int iterations() const {
-        return iter;
-    }
-
-    /**
-     * @return The status of the algorithm.
-     * This may be:
-     *
-     * - 0: convergence achieved.
-     * - 1: empty cluster detected.
-     * This usually indicates a problem with the initial choic of centroids.
-     * It can also occur in pathological situations with duplicate points.
-     * - 2: maximum iterations reached without convergence. 
-     * - 3: this previously indicated situations where the number of centers is not positive or greater than the number of observations.
-     * Now, both will cause exceptions to be thrown, so this error code is no longer in use.
-     * - 4: maximum number of quick transfer steps exceeded.
-     */
-    const int status() const {
-        return ifault;
-    }
-
 private:
-    void kmeans() {
-        if (ncenters == 1) {
+    // Returns the WCSS, modifies 'iter' and 'ifault'.
+    std::vector<double> kmeans(int maxiter, int& iter, int& ifault) {
+        iter = 0;
+        ifault = 0;
+
+        if (num_centers == 1) {
             // All points in cluster 0.
-            nc[0] = nobs;
-            compute_wcss();
-            return;
+            std::fill(ic1, ic1 + num_obs, 0);
+            nc[0] = num_obs;
+            return compute_wcss();
 
-        } else if (ncenters == nobs) {
+        } else if (num_centers >= num_obs) {
             // Special case, each observation is a center.
-            std::iota(ic1.begin(), ic1.end(), 0);
-            std::fill(nc.begin(), nc.end(), 1);
-            compute_wcss();
-            return;
+            std::iota(ic1, ic1 + num_obs, 0);            
+            std::fill(nc.begin(), nc.begin() + num_obs, 1);
+            if (num_centers > num_obs) {
+                std::fill(nc.begin() + num_obs, nc.end(), 0);
+                ifault = 3;
+            }
+            return compute_wcss();
 
-        } else if (ncenters > nobs) {
-            throw std::runtime_error("number of centers must be less than number of observations"); 
-        } else if (ncenters <= 0) {
-            throw std::runtime_error("number of centers must be positive");
+        } else if (num_centers == 0) {
+            // No need to fill 'nc', it's already all-zero on input.
+            ifault = 3;
+            std::fill(ic1, ic1 + num_obs, 0);
+            return std::vector<double>();
         }
 
         /* For each point I, find its two closest centres, IC1(I) and 
          * IC2(I). Assign it to IC1(I). 
          */
-        for (int obs = 0; obs < nobs; ++obs) {
+        for (int obs = 0; obs < num_obs; ++obs) {
             auto& best = ic1[obs];
             best = 0;
             double best_dist = squared_distance_from_cluster(obs, best);
@@ -195,7 +194,7 @@ private:
                 std::swap(best_dist, second_dist);
             }
 
-            for (int cen = 2; cen < ncenters; ++cen) {
+            for (int cen = 2; cen < num_centers; ++cen) {
                 double candidate_dist = squared_distance_from_cluster(obs, cen);
                 if (candidate_dist < best_dist) {
                     std::swap(best_dist, second_dist);
@@ -213,18 +212,19 @@ private:
          * within them. 
          * NC(L) := #{units in cluster L},  L = 1..K 
          */
-        std::fill(centers, centers + ndim * ncenters, 0);
-        for (int obs = 0; obs < nobs; ++obs) {
+        std::fill(centers_ptr, centers_ptr + num_dim * num_centers, 0);
+        std::fill(nc.begin(), nc.end(), 0);
+        for (int obs = 0; obs < num_obs; ++obs) {
             auto cen = ic1[obs];
             ++nc[cen];
             add_point_to_cluster(obs, cen);
         }
 
         // Check to see if there is any empty cluster at this stage 
-        for (int cen = 0; cen < ncenters; ++cen) {
+        for (int cen = 0; cen < num_centers; ++cen) {
             if (nc[cen] == 0) {
                 ifault = 1;
-                return;
+                return compute_wcss();
             }
 
             divide_by_cluster_size(cen);
@@ -239,7 +239,10 @@ private:
         }
 
         int indx = 0;
-        int imaxqtr = nobs * 50; // default derived from stats::kmeans()
+        int imaxqtr = num_obs * 50; // default derived from stats::kmeans()
+        std::fill(ncp.begin(), ncp.end(), ncp_init);
+        std::fill(itran.begin(), itran.end(), true);
+        std::fill(live.begin(), live.end(), 0);
 
         for (iter = 1; iter <= maxiter; ++iter) {
 
@@ -250,7 +253,7 @@ private:
             optimal_transfer(indx);
 
             // Stop if no transfer took place in the last M optimal transfer steps.
-            if (indx == nobs) {
+            if (indx == num_obs) {
                 break;
             }
 
@@ -267,7 +270,7 @@ private:
             }
 
             // If there are only two clusters, there is no need to re-enter the optimal transfer stage. 
-            if (ncenters == 2) {
+            if (num_centers == 2) {
                 break;
             }
 
@@ -282,7 +285,7 @@ private:
             ifault = 2;
         }
 
-        compute_wcss();
+        return compute_wcss();
     }
 
 private:
@@ -298,50 +301,53 @@ private:
 #endif
 
     void add_point_to_cluster(int obs, int cen) {
-        auto copy = centers + cen * ndim;
-        auto mine = data + obs * ndim;
-        for (int dim = 0; dim < ndim; ++dim, ++copy, ++mine) {
+        auto copy = centers_ptr + cen * num_dim;
+        auto mine = data_ptr + obs * num_dim;
+        for (int dim = 0; dim < num_dim; ++dim, ++copy, ++mine) {
             *copy += *mine;
         }
     }
 
     void divide_by_cluster_size(int cen) {
-        auto curcenter = centers + cen * ndim;
-        for (int dim = 0; dim < ndim; ++dim, ++curcenter) {
-            *curcenter /= nc[cen];
+        if (nc[cen]) {
+            auto curcenter = centers_ptr + cen * num_dim;
+            for (int dim = 0; dim < num_dim; ++dim, ++curcenter) {
+                *curcenter /= nc[cen];
+            }
         }
     }
 
-    void compute_wcss() {
-        std::fill(centers, centers + ncenters * ndim, 0);
+    std::vector<double> compute_wcss() {
+        std::fill(centers_ptr, centers_ptr + num_centers * num_dim, 0);
+        std::vector<double> wcss(num_centers);
         std::fill(wcss.begin(), wcss.end(), 0);
 
-        for (int obs = 0; obs < nobs; ++obs) {
+        for (int obs = 0; obs < num_obs; ++obs) {
             add_point_to_cluster(obs, ic1[obs]);
         }
-        for (int cen = 0; cen < ncenters; ++cen) {
+        for (int cen = 0; cen < num_centers; ++cen) {
             divide_by_cluster_size(cen);
         }
 
-        for (int obs = 0; obs < nobs; ++obs) {
+        for (int obs = 0; obs < num_obs; ++obs) {
             auto cen = ic1[obs];
-            auto curcenter = centers + cen * ndim;
+            auto curcenter = centers_ptr + cen * num_dim;
             auto& curwcss = wcss[cen];
 
-            auto curdata = data + obs * ndim;
-            for (int dim = 0; dim < ndim; ++dim, ++curcenter, ++curdata) {
+            auto curdata = data_ptr + obs * num_dim;
+            for (int dim = 0; dim < num_dim; ++dim, ++curcenter, ++curdata) {
                 curwcss += (*curdata - *curcenter) * (*curdata - *curcenter);
             }
         }
 
-        return;
+        return wcss;
     }
 
     double squared_distance_from_cluster(int pt, int clust) const {
-        const double* acopy = data + pt * ndim;
-        const double* ccopy = centers + clust * ndim;
+        const double* acopy = data_ptr + pt * num_dim;
+        const double* ccopy = centers_ptr + clust * num_dim;
         double output = 0;
-        for (int dim = 0; dim < ndim; ++dim, ++acopy, ++ccopy) {
+        for (int dim = 0; dim < num_dim; ++dim, ++acopy, ++ccopy) {
             output += (*acopy - *ccopy) * (*acopy - *ccopy);
         }
         return output;
@@ -362,13 +368,13 @@ private:
          * in the last M optimal transfer steps. (AL: M being a synonym for
          * the number of observations, here and in other functions.)
          */
-        for (int cen = 0; cen < ncenters; ++cen) {
+        for (int cen = 0; cen < num_centers; ++cen) {
             if (itran[cen]) {
-                live[cen] = nobs; // AL: using 0-index, so no need for +1.
+                live[cen] = num_obs; // AL: using 0-index, so no need for +1.
             }
         }
 
-        for (int obs = 0; obs < nobs; ++obs) { 
+        for (int obs = 0; obs < num_obs; ++obs) { 
             ++indx;
             auto l1 = ic1[obs];
 
@@ -384,7 +390,7 @@ private:
                 auto ll = l2;
                 double r2 = squared_distance_from_cluster(obs, l2) * an2[l2];
             
-                for (int cen = 0; cen < ncenters; ++cen) {
+                for (int cen = 0; cen < num_centers; ++cen) {
                     /* If I >= LIVE(L1), then L1 is not in the live set. If this is
                      * true, we only need to consider clusters that are in the live
                      * set for possible transfer of point I. Otherwise, we need to
@@ -411,8 +417,8 @@ private:
                      * L2, and update IC1(I) & IC2(I). 
                      */
                     indx = 0;
-                    live[l1] = nobs + obs;
-                    live[l2] = nobs + obs;
+                    live[l1] = num_obs + obs;
+                    live[l2] = num_obs + obs;
                     ncp[l1] = obs;
                     ncp[l2] = obs;
 
@@ -420,19 +426,19 @@ private:
                 }
             }
 
-            if (indx == nobs) {
+            if (indx == num_obs) {
                 return;
             }
         }
 
-        for (int cen = 0; cen < ncenters; ++cen) {
+        for (int cen = 0; cen < num_centers; ++cen) {
             itran[cen] = false;
 
             // LIVE(L) has to be decreased by M before re-entering OPTRA.
             // This means that if I >= LIVE(L1) in the next OPTRA call,
             // the last update must be >= M steps ago, as we effectively
             // 'lapped' the previous update for this cluster.
-            live[cen] -= nobs;
+            live[cen] -= num_obs;
         }
 
         return;
@@ -455,7 +461,7 @@ private:
         int istep = 0;
 
         while (1) {
-           for (int obs = 0; obs < nobs; ++obs) { 
+           for (int obs = 0; obs < num_obs; ++obs) { 
                ++icoun;
                auto l1 = ic1[obs];
 
@@ -463,7 +469,7 @@ private:
                if (nc[l1] != 1) {
 
                    /* NCP(L) is equal to the step at which cluster L is last updated plus M.
-                    * (AL: M is the notation for the number of observations, a.k.a. 'nobs').
+                    * (AL: M is the notation for the number of observations, a.k.a. 'num_obs').
                     *
                     * If ISTEP > NCP(L1), no need to re-compute distance from point I to 
                     * cluster L1. Note that if cluster L1 is last updated exactly M 
@@ -487,15 +493,15 @@ private:
 
                            itran[l1] = true;
                            itran[l2] = true;
-                           ncp[l1] = istep + nobs;
-                           ncp[l2] = istep + nobs;
+                           ncp[l1] = istep + num_obs;
+                           ncp[l2] = istep + num_obs;
                            transfer_point(obs, l1, l2);
                        }
                    }
                }
 
                // If no re-allocation took place in the last M steps, return.
-               if (icoun == nobs) {
+               if (icoun == num_obs) {
                    return;
                }
 
@@ -515,10 +521,10 @@ private:
         const double al1 = nc[l1], alw = al1 - 1;
         const double al2 = nc[l2], alt = al2 + 1;
 
-        auto copy1 = centers + l1 * ndim;
-        auto copy2 = centers + l2 * ndim;
-        auto acopy = data + obs * ndim;
-        for (int dim = 0; dim < ndim; ++dim, ++copy1, ++copy2, ++acopy) {
+        auto copy1 = centers_ptr + l1 * num_dim;
+        auto copy2 = centers_ptr + l2 * num_dim;
+        auto acopy = data_ptr + obs * num_dim;
+        for (int dim = 0; dim < num_dim; ++dim, ++copy1, ++copy2, ++acopy) {
             *copy1 = (*copy1 * al1 - *acopy) / alw;
             *copy2 = (*copy2 * al2 + *acopy) / alt;
         }
