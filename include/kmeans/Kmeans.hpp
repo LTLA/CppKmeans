@@ -24,7 +24,7 @@ namespace kmeans {
  *
  * @tparam DATA_t Floating-point type for the data and centroids.
  * @tparam CLUSTER_t Integer type for the cluster assignments.
- * @tparam INDEX_t_t Integer type for the observation index.
+ * @tparam INDEX_t Integer type for the observation index.
  * This should have a maximum positive value that is at least 50 times greater than the maximum expected number of observations.
  */
 template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
@@ -32,7 +32,7 @@ class Kmeans {
     bool weighted_init = true;
     uint64_t seed = 5489u;
 
-    HartiganWong<DATA_t, INDEX_t, CLUSTER_t> hw;
+    HartiganWong<DATA_t, CLUSTER_t, INDEX_t> hw;
 
 public:
     /** 
@@ -113,7 +113,7 @@ public:
      * Note that the actual number of clusters may be less than `ncenters` in pathological cases - 
      * check the length of `HartiganWong::Details::sizes` and the value of `HartiganWong::Details::status`.
      */
-    typename HartiganWong<DATA_t, INDEX_t, CLUSTER_t>::Details run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
+    typename HartiganWong<DATA_t, CLUSTER_t, INDEX_t>::Details run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
         ncenters = initialize(ndim, nobs, data, ncenters, centers); 
         return hw.run(ndim, nobs, data, ncenters, centers, clusters);
     }
@@ -144,7 +144,7 @@ public:
         /**
          * Further details from the Hartigan-Wong algorithm.
          */
-        typename HartiganWong<DATA_t, INDEX_t, CLUSTER_t>::Details details;
+        typename HartiganWong<DATA_t, CLUSTER_t, INDEX_t>::Details details;
     };
 
     /**
