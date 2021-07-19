@@ -12,6 +12,32 @@ The Hartigan-Wong implementation is derived from the Fortran code in the R **sta
 
 ## Quick start
 
+**kmeans** is a header-only library, so it can be easily used by just `#include`ing the relevant source files:
+
+```cpp
+#include "kmeans/Kmeans.hpp"
+
+// assorted boilerplate here...
+
+auto res = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters);
+res.centers;
+res.clusters;
+res.details;
+
+// Or, if you already allocated the relevant memory:
+std::vector<double> centers(ndim * ncenters);
+std::vector<int> clusters(nobs);
+auto deets = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters, 
+                                  centers.data(), clusters.data());
+deets.withinss;
+deets.sizes;
+
+// Or if you want to fiddle with some parameters:
+kmeans::Kmeans km;
+km.set_seed(42).set_weighted(false);
+auto res2 = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters);
+```
+
 See the [reference documentation](https://ltla.github.io/CppKmeans) for more details.
 
 ## Building projects 
@@ -44,9 +70,9 @@ If you're not using CMake, the simple approach is to just copy the files - eithe
 
 ## References
 
-Hartigan, J. A. and Wong, M. A. (1979).  
-Algorithm AS 136: A K-means clustering algorithm.  
-_Applied Statistics_, 28, 100-108. 
+Hartigan, J. A. and Wong, M. A. (1979).
+Algorithm AS 136: A K-means clustering algorithm.
+_Applied Statistics_, 28, 100-108.
 
 Arthur, D. and Vassilvitskii, S. (2007). 
 k-means++: the advantages of careful seeding.
