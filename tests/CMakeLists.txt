@@ -14,6 +14,7 @@ add_executable(
     libtest 
     src/HartiganWong.cpp
     src/initialization.cpp
+    src/Kmeans.cpp
 )
 
 target_link_libraries(

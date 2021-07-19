@@ -53,15 +53,30 @@ class HartiganWong {
     static constexpr double big = 1e30; // Define BIG to be a very large positive number
     static constexpr int ncp_init = -2;
     static constexpr int ncp_unchanged = -1;
+
+    int maxiter = 10;
 public:
     /**
-     * @brief Statistics from the Hartigan-Wong algorithm.
+     * @param m Maximum number of iterations.
+     * More iterations increase the opportunity for convergence at the cost of more computational time.
+     *
+     * @return A reference to this `HartiganWong` object.
      */
-    struct Results {
+    HartiganWong& set_max_iterations(int m = 10) {
+        maxiter = m;
+        return *this;
+    }
+public:
+    /**
+     * @brief Additional statistics from the Hartigan-Wong algorithm.
+     */
+    struct Details {
         /**
          * @cond
          */
-        Results(std::vector<int> s, std::vector<double> w, int it, int st) : sizes(std::move(s)), withinss(std::move(w)), iterations(it), status(st) {} 
+        Details() {}
+
+        Details(std::vector<int> s, std::vector<double> w, int it, int st) : sizes(std::move(s)), withinss(std::move(w)), iterations(it), status(st) {} 
         /**
          * @endcond
          */
@@ -111,13 +126,12 @@ public:
      * Data should be stored in column-major order.
      * On output, this will contain the final centroid locations for each cluster.
      * @param[out] clusters Pointer to an array of length `nobs`.
-     * Om output, this will contain the cluster assignment for each observation.
-     * @param maxit Maximum number of iterations.
+     * On output, this will contain the cluster assignment for each observation.
      *
-     * @return `centers` and `clusters` are filled, and a `Results` object is returned containing clustering statistics.
+     * @return `centers` and `clusters` are filled, and a `Details` object is returned containing clustering statistics.
      * If `ncenters > nobs`, only the first `nobs` columns of the `centers` array will be filled.
      */
-    Results run(int ndim, int nobs, const double* data, int ncenters, double* centers, int* clusters, int maxit = 10) {
+    Details run(int ndim, int nobs, const double* data, int ncenters, double* centers, int* clusters) {
         num_dim = ndim;
         num_obs = nobs;
         data_ptr = data;
@@ -144,13 +158,13 @@ public:
         live.resize(num_centers);
 
         int iter, ifault;
-        auto wcss = kmeans(maxit, iter, ifault);
-        return Results(std::move(nc), std::move(wcss), iter, ifault);
+        auto wcss = kmeans(iter, ifault);
+        return Details(std::move(nc), std::move(wcss), iter, ifault);
     } 
 
 private:
     // Returns the WCSS, modifies 'iter' and 'ifault'.
-    std::vector<double> kmeans(int maxiter, int& iter, int& ifault) {
+    std::vector<double> kmeans(int& iter, int& ifault) {
         iter = 0;
         ifault = 0;
 

@@ -2,9 +2,8 @@
 #define KMEANS_INITIALIZATION_HPP 
 
 #include <vector>
-#include <random>
 #include <cstdint>
-#include <iostream>
+#include <numeric>
 
 /**
  * @file initialization.hpp
