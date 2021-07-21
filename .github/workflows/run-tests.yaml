@@ -35,10 +35,9 @@ jobs:
       if: ${{ matrix.config.cov == false }}
       run: cmake -S . -B build
 
-    # This needs to be done in-tree for the GCNO files to go to the right place.
     - name: Configure the build with coverage
       if: ${{ matrix.config.cov == true }}
-      run: cmake -S . -DCODE_COVERAGE=ON
+      run: cmake -S . -B build -DCODE_COVERAGE=ON
 
     - name: Run the build
       run: cmake --build build
@@ -50,10 +49,12 @@ jobs:
 
     - name: Generate code coverage
       if: ${{ matrix.config.cov == true }}
-      run: gcov tests/src/*.cpp
+      run: |
+        cd build/tests/CMakeFiles/libtest.dir/src/
+        gcov -abcfu *.gcno
 
     - name: Upload to Codecov
+      if: ${{ matrix.config.cov == true }}
       uses: codecov/codecov-action@v1
       with:
-        directory: tests/src
-      
+        directory: build/tests/CMakeFiles/libtest.dir/src/
