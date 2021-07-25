@@ -1,12 +1,5 @@
 var searchData=
 [
-  ['set_5fbatch_5fsize_20',['set_batch_size',['../classkmeans_1_1MiniBatch.html#a9ed71d9b3de42d081ff580d89e842599',1,'kmeans::MiniBatch']]],
-  ['set_5fconvergence_5fhistory_21',['set_convergence_history',['../classkmeans_1_1MiniBatch.html#a5a6e1aed6d6dc5034b4c2022bc15b368',1,'kmeans::MiniBatch']]],
-  ['set_5fmax_5fchange_5fproportion_22',['set_max_change_proportion',['../classkmeans_1_1MiniBatch.html#aa24b69a89b3cdec8b89f9354d4808b82',1,'kmeans::MiniBatch']]],
-  ['set_5fmax_5fiterations_23',['set_max_iterations',['../classkmeans_1_1HartiganWong.html#a2e71128f1f83631f09b685b00f360635',1,'kmeans::HartiganWong::set_max_iterations()'],['../classkmeans_1_1Kmeans.html#ad0854883105da400bda1285bdc2e6cb2',1,'kmeans::Kmeans::set_max_iterations()'],['../classkmeans_1_1Kmeans.html#a8eb1ab5f096402596eff5e6e9c0ab57a',1,'kmeans::Kmeans::set_max_iterations(int m)'],['../classkmeans_1_1Lloyd.html#a4f3ff37d6360392e8e4a33bcee2ad56c',1,'kmeans::Lloyd::set_max_iterations()'],['../classkmeans_1_1MiniBatch.html#ab6bd512ca9069ea6d93aa0a7a6cc1d5f',1,'kmeans::MiniBatch::set_max_iterations()']]],
-  ['set_5fseed_24',['set_seed',['../classkmeans_1_1Kmeans.html#a4fdd3a028f1d5867873a93e3777352e9',1,'kmeans::Kmeans']]],
-  ['set_5fweighted_25',['set_weighted',['../classkmeans_1_1Kmeans.html#a0719589431c642fecff63d317862ffe7',1,'kmeans::Kmeans']]],
-  ['simple_5finitialization_26',['simple_initialization',['../initialization_8hpp.html#a2049a1ba314e8f8da4a9ae224f8e3a48',1,'kmeans']]],
-  ['sizes_27',['sizes',['../structkmeans_1_1Details.html#a9f838f332d2a8386d821627182c3b925',1,'kmeans::Details']]],
-  ['status_28',['status',['../structkmeans_1_1Details.html#a29361ee235b51395589130e2787cbae2',1,'kmeans::Details']]]
+  ['results_25',['Results',['../structkmeans_1_1Kmeans_1_1Results.html',1,'kmeans::Kmeans']]],
+  ['run_26',['run',['../classkmeans_1_1Base.html#a24c9b9a4c895d30572fc744c45ba3e98',1,'kmeans::Base::run()'],['../classkmeans_1_1Kmeans.html#a50fee0a4f2d66af57426d1ecc0c123c7',1,'kmeans::Kmeans::run(int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters, Base&lt; DATA_t, CLUSTER_t, INDEX_t &gt; *algorithm=NULL)'],['../classkmeans_1_1Kmeans.html#a4017a3be86613188da238a3fb4c7bec6',1,'kmeans::Kmeans::run(int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, Base&lt; DATA_t, CLUSTER_t, INDEX_t &gt; *algorithm=NULL)'],['../classkmeans_1_1MiniBatch.html#a9a053e13a6c97108e92667cfe24b930a',1,'kmeans::MiniBatch::run()']]]
 ];

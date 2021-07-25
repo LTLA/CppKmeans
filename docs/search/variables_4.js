@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['withinss_60',['withinss',['../structkmeans_1_1Details.html#a74c558344971f15601342e2b5b51500a',1,'kmeans::Details']]]
+  ['max_5fchange_5fproportion_69',['max_change_proportion',['../structkmeans_1_1MiniBatch_1_1Defaults.html#ab394950ce8dfbf34307abdda70dc5356',1,'kmeans::MiniBatch::Defaults']]],
+  ['max_5fiterations_70',['max_iterations',['../structkmeans_1_1HartiganWong_1_1Defaults.html#aeecfd08b28ac8822fa747075427a66af',1,'kmeans::HartiganWong::Defaults::max_iterations()'],['../structkmeans_1_1Lloyd_1_1Defaults.html#a93a7abee6114638e44f344d901700079',1,'kmeans::Lloyd::Defaults::max_iterations()'],['../structkmeans_1_1MiniBatch_1_1Defaults.html#ac1a93819db11765ac40729b4ed3cb7cb',1,'kmeans::MiniBatch::Defaults::max_iterations()']]]
 ];

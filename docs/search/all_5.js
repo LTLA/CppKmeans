@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['lloyd_14',['Lloyd',['../classkmeans_1_1Lloyd.html',1,'kmeans']]],
-  ['lloyd_2ehpp_15',['Lloyd.hpp',['../Lloyd_8hpp.html',1,'']]]
+  ['kmeans_17',['Kmeans',['../classkmeans_1_1Kmeans.html',1,'kmeans']]],
+  ['kmeans_2ehpp_18',['Kmeans.hpp',['../Kmeans_8hpp.html',1,'']]]
 ];

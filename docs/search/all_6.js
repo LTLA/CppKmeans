@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['minibatch_16',['MiniBatch',['../classkmeans_1_1MiniBatch.html',1,'kmeans']]],
-  ['minibatch_2ehpp_17',['MiniBatch.hpp',['../MiniBatch_8hpp.html',1,'']]]
+  ['lloyd_19',['Lloyd',['../classkmeans_1_1Lloyd.html',1,'kmeans']]],
+  ['lloyd_2ehpp_20',['Lloyd.hpp',['../Lloyd_8hpp.html',1,'']]]
 ];

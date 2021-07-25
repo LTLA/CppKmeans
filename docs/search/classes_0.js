@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['details_31',['Details',['../structkmeans_1_1Details.html',1,'kmeans']]],
-  ['details_3c_20data_5ft_2c_20index_5ft_20_3e_32',['Details&lt; DATA_t, INDEX_t &gt;',['../structkmeans_1_1Details.html',1,'kmeans']]]
+  ['base_38',['Base',['../classkmeans_1_1Base.html',1,'kmeans']]],
+  ['base_3c_20double_2c_20int_2c_20int_20_3e_39',['Base&lt; double, int, int &gt;',['../classkmeans_1_1Base.html',1,'kmeans']]]
 ];

@@ -1,0 +1,4 @@
+<map id="kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;" name="kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;">
+<area shape="rect" id="node1" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="7,95,161,151"/>
+<area shape="rect" id="node2" href="$classkmeans_1_1Base.html" title=" " alt="" coords="5,5,163,47"/>
+</map>

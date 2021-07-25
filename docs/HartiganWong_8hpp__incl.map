@@ -1,13 +1,14 @@
 <map id="kmeans/HartiganWong.hpp" name="kmeans/HartiganWong.hpp">
-<area shape="rect" id="node1" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="478,5,657,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="101,229,159,256"/>
-<area shape="rect" id="node3" title=" " alt="" coords="419,229,494,256"/>
-<area shape="rect" id="node4" title=" " alt="" coords="559,155,627,181"/>
-<area shape="rect" id="node5" title=" " alt="" coords="691,80,753,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="777,80,856,107"/>
-<area shape="rect" id="node7" title=" " alt="" coords="881,80,934,107"/>
-<area shape="rect" id="node8" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="5,155,92,181"/>
-<area shape="rect" id="node9" href="$compute__centroids_8hpp_source.html" title=" " alt="" coords="379,155,535,181"/>
-<area shape="rect" id="node10" href="$compute__wcss_8hpp_source.html" title=" " alt="" coords="168,155,303,181"/>
-<area shape="rect" id="node11" href="$is__edge__case_8hpp_source.html" title=" " alt="" coords="377,80,504,107"/>
+<area shape="rect" id="node1" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="423,5,602,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="141,229,199,256"/>
+<area shape="rect" id="node3" title=" " alt="" coords="459,229,534,256"/>
+<area shape="rect" id="node4" title=" " alt="" coords="599,155,667,181"/>
+<area shape="rect" id="node5" title=" " alt="" coords="726,80,787,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="812,80,891,107"/>
+<area shape="rect" id="node7" title=" " alt="" coords="915,80,969,107"/>
+<area shape="rect" id="node8" href="$Base_8hpp_source.html" title=" " alt="" coords="5,80,81,107"/>
+<area shape="rect" id="node9" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="45,155,132,181"/>
+<area shape="rect" id="node10" href="$compute__centroids_8hpp_source.html" title=" " alt="" coords="419,155,575,181"/>
+<area shape="rect" id="node11" href="$compute__wcss_8hpp_source.html" title=" " alt="" coords="208,155,343,181"/>
+<area shape="rect" id="node12" href="$is__edge__case_8hpp_source.html" title=" " alt="" coords="348,80,475,107"/>
 </map>

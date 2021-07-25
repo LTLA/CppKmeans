@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['hartiganwong_33',['HartiganWong',['../classkmeans_1_1HartiganWong.html',1,'kmeans']]],
-  ['hartiganwong_3c_20double_2c_20int_2c_20int_20_3e_34',['HartiganWong&lt; double, int, int &gt;',['../classkmeans_1_1HartiganWong.html',1,'kmeans']]]
+  ['defaults_40',['Defaults',['../structkmeans_1_1HartiganWong_1_1Defaults.html',1,'kmeans::HartiganWong&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Defaults'],['../structkmeans_1_1Lloyd_1_1Defaults.html',1,'kmeans::Lloyd&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Defaults'],['../structkmeans_1_1MiniBatch_1_1Defaults.html',1,'kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Defaults']]],
+  ['details_41',['Details',['../structkmeans_1_1Details.html',1,'kmeans']]],
+  ['details_3c_20data_5ft_2c_20index_5ft_20_3e_42',['Details&lt; DATA_t, INDEX_t &gt;',['../structkmeans_1_1Details.html',1,'kmeans']]]
 ];

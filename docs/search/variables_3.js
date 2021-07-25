@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['sizes_58',['sizes',['../structkmeans_1_1Details.html#a9f838f332d2a8386d821627182c3b925',1,'kmeans::Details']]],
-  ['status_59',['status',['../structkmeans_1_1Details.html#a29361ee235b51395589130e2787cbae2',1,'kmeans::Details']]]
+  ['iterations_68',['iterations',['../structkmeans_1_1Details.html#a83defe41cd0ace522c1a2434f570337e',1,'kmeans::Details']]]
 ];

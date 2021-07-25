@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['results_18',['Results',['../structkmeans_1_1Kmeans_1_1Results.html',1,'kmeans::Kmeans']]],
-  ['run_19',['run',['../classkmeans_1_1HartiganWong.html#aa2135b14e226c29d05a6cb7f8f3bbea6',1,'kmeans::HartiganWong::run()'],['../classkmeans_1_1Kmeans.html#a7427acfb8c51af96e458277e959cc05b',1,'kmeans::Kmeans::run(int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters)'],['../classkmeans_1_1Kmeans.html#a9f47a01c8bdaec54f4212e24a1a2e47f',1,'kmeans::Kmeans::run(int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters)'],['../classkmeans_1_1Lloyd.html#a5311678df064c69747b377756bed3a27',1,'kmeans::Lloyd::run()'],['../classkmeans_1_1MiniBatch.html#a9a053e13a6c97108e92667cfe24b930a',1,'kmeans::MiniBatch::run()']]]
+  ['max_5fchange_5fproportion_21',['max_change_proportion',['../structkmeans_1_1MiniBatch_1_1Defaults.html#ab394950ce8dfbf34307abdda70dc5356',1,'kmeans::MiniBatch::Defaults']]],
+  ['max_5fiterations_22',['max_iterations',['../structkmeans_1_1HartiganWong_1_1Defaults.html#aeecfd08b28ac8822fa747075427a66af',1,'kmeans::HartiganWong::Defaults::max_iterations()'],['../structkmeans_1_1Lloyd_1_1Defaults.html#a93a7abee6114638e44f344d901700079',1,'kmeans::Lloyd::Defaults::max_iterations()'],['../structkmeans_1_1MiniBatch_1_1Defaults.html#ac1a93819db11765ac40729b4ed3cb7cb',1,'kmeans::MiniBatch::Defaults::max_iterations()']]],
+  ['minibatch_23',['MiniBatch',['../classkmeans_1_1MiniBatch.html',1,'kmeans']]],
+  ['minibatch_2ehpp_24',['MiniBatch.hpp',['../MiniBatch_8hpp.html',1,'']]]
 ];

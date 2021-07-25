@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['minibatch_2ehpp_44',['MiniBatch.hpp',['../MiniBatch_8hpp.html',1,'']]]
+  ['minibatch_2ehpp_53',['MiniBatch.hpp',['../MiniBatch_8hpp.html',1,'']]]
 ];

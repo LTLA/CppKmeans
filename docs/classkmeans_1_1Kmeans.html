@@ -93,14 +93,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0719589431c642fecff63d317862ffe7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fdd3a028f1d5867873a93e3777352e9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a4fdd3a028f1d5867873a93e3777352e9">set_seed</a> (bool s=5489u)</td></tr>
 <tr class="separator:a4fdd3a028f1d5867873a93e3777352e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0854883105da400bda1285bdc2e6cb2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#ad0854883105da400bda1285bdc2e6cb2">set_max_iterations</a> ()</td></tr>
-<tr class="separator:ad0854883105da400bda1285bdc2e6cb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8eb1ab5f096402596eff5e6e9c0ab57a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a8eb1ab5f096402596eff5e6e9c0ab57a">set_max_iterations</a> (int m)</td></tr>
-<tr class="separator:a8eb1ab5f096402596eff5e6e9c0ab57a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7427acfb8c51af96e458277e959cc05b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; DATA_t, INDEX_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a7427acfb8c51af96e458277e959cc05b">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters)</td></tr>
-<tr class="separator:a7427acfb8c51af96e458277e959cc05b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9f47a01c8bdaec54f4212e24a1a2e47f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a9f47a01c8bdaec54f4212e24a1a2e47f">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters)</td></tr>
-<tr class="separator:a9f47a01c8bdaec54f4212e24a1a2e47f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d6db46a69a3b6c17b0a411d68261ceb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a1d6db46a69a3b6c17b0a411d68261ceb">set_max_iterations</a> (int m=<a class="el" href="classkmeans_1_1HartiganWong.html">HartiganWong</a>&lt;&gt;::Defaults::max_iterations)</td></tr>
+<tr class="separator:a1d6db46a69a3b6c17b0a411d68261ceb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50fee0a4f2d66af57426d1ecc0c123c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; DATA_t, INDEX_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a50fee0a4f2d66af57426d1ecc0c123c7">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters, <a class="el" href="classkmeans_1_1Base.html">Base</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt; *algorithm=NULL)</td></tr>
+<tr class="separator:a50fee0a4f2d66af57426d1ecc0c123c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4017a3be86613188da238a3fb4c7bec6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a4017a3be86613188da238a3fb4c7bec6">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, <a class="el" href="classkmeans_1_1Base.html">Base</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt; *algorithm=NULL)</td></tr>
+<tr class="separator:a4017a3be86613188da238a3fb4c7bec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int&gt;<br />
@@ -117,8 +115,8 @@ class kmeans::Kmeans&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</h3>
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9f47a01c8bdaec54f4212e24a1a2e47f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9f47a01c8bdaec54f4212e24a1a2e47f">&#9670;&nbsp;</a></span>run() <span class="overload">[1/2]</span></h2>
+<a id="a4017a3be86613188da238a3fb4c7bec6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4017a3be86613188da238a3fb4c7bec6">&#9670;&nbsp;</a></span>run() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -150,7 +148,13 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">CLUSTER_t&#160;</td>
-          <td class="paramname"><em>ncenters</em>&#160;</td>
+          <td class="paramname"><em>ncenters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1Base.html">Base</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt; *&#160;</td>
+          <td class="paramname"><em>algorithm</em> = <code>NULL</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -169,16 +173,17 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
     <tr><td class="paramdir"></td><td class="paramname">ndim</td><td>Number of dimensions. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">nobs</td><td>Number of observations. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to a <code>ndim</code>-by-<code>nobs</code> array where columns are observations and rows are dimensions. Data should be stored in column-major order. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">ncenters</td><td>Number of cluster centers.</td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">ncenters</td><td>Number of cluster centers. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">algorithm</td><td>Pointer to a <code><a class="el" href="classkmeans_1_1Base.html" title="Base class for all k-means algorithms.">Base</a></code> object containing the desired k-means algorithm. If <code>NULL</code>, this defaults to a default <code><a class="el" href="classkmeans_1_1HartiganWong.html" title="Implements the Hartigan-Wong algorithm for k-means clustering.">HartiganWong</a></code> instance.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html" title="Full statistics from k-means clustering.">Results</a></code> object is returned containing clustering statistics. See <code><a class="el" href="classkmeans_1_1Kmeans.html#a7427acfb8c51af96e458277e959cc05b">run()</a></code> for more details. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html" title="Full statistics from k-means clustering.">Results</a></code> object is returned containing clustering statistics. See <code><a class="el" href="classkmeans_1_1Kmeans.html#a50fee0a4f2d66af57426d1ecc0c123c7">run()</a></code> for more details. </dd></dl>
 
 </div>
 </div>
-<a id="a7427acfb8c51af96e458277e959cc05b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7427acfb8c51af96e458277e959cc05b">&#9670;&nbsp;</a></span>run() <span class="overload">[2/2]</span></h2>
+<a id="a50fee0a4f2d66af57426d1ecc0c123c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50fee0a4f2d66af57426d1ecc0c123c7">&#9670;&nbsp;</a></span>run() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -222,7 +227,13 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">CLUSTER_t *&#160;</td>
-          <td class="paramname"><em>clusters</em>&#160;</td>
+          <td class="paramname"><em>clusters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1Base.html">Base</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt; *&#160;</td>
+          <td class="paramname"><em>algorithm</em> = <code>NULL</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -243,7 +254,8 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
     <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to a <code>ndim</code>-by-<code>nobs</code> array where columns are observations and rows are dimensions. Data should be stored in column-major order. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">ncenters</td><td>Number of cluster centers. </td></tr>
     <tr><td class="paramdir">[in,out]</td><td class="paramname">centers</td><td>Pointer to a <code>ndim</code>-by-<code>ncenters</code> array where columns are cluster centers and rows are dimensions. On input, this should contain the initial centroid locations for each cluster. Data should be stored in column-major order. On output, this will contain the final centroid locations for each cluster. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length <code>nobs</code>. Om output, this will contain the (0-indexed) cluster assignment for each observation.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length <code>nobs</code>. On output, this will contain the (0-indexed) cluster assignment for each observation. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">algorithm</td><td>Pointer to a <code><a class="el" href="classkmeans_1_1Base.html" title="Base class for all k-means algorithms.">Base</a></code> object containing the desired k-means algorithm. If <code>NULL</code>, this defaults to a default <code><a class="el" href="classkmeans_1_1HartiganWong.html" title="Implements the Hartigan-Wong algorithm for k-means clustering.">HartiganWong</a></code> instance.</td></tr>
   </table>
   </dd>
 </dl>
@@ -251,37 +263,8 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
 
 </div>
 </div>
-<a id="ad0854883105da400bda1285bdc2e6cb2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0854883105da400bda1285bdc2e6cb2">&#9670;&nbsp;</a></span>set_max_iterations() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a>&amp; <a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::set_max_iterations </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Set the maximum number of iterations to the default in <code><a class="el" href="classkmeans_1_1HartiganWong.html#a2e71128f1f83631f09b685b00f360635">HartiganWong::set_max_iterations()</a></code>.</p>
-<dl class="section return"><dt>Returns</dt><dd>A reference to this <code><a class="el" href="classkmeans_1_1Kmeans.html" title="Top-level class to run k-means clustering.">Kmeans</a></code> object. </dd></dl>
-
-</div>
-</div>
-<a id="a8eb1ab5f096402596eff5e6e9c0ab57a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8eb1ab5f096402596eff5e6e9c0ab57a">&#9670;&nbsp;</a></span>set_max_iterations() <span class="overload">[2/2]</span></h2>
+<a id="a1d6db46a69a3b6c17b0a411d68261ceb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d6db46a69a3b6c17b0a411d68261ceb">&#9670;&nbsp;</a></span>set_max_iterations()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -295,7 +278,7 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
           <td class="memname"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a>&amp; <a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::set_max_iterations </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>m</em></td><td>)</td>
+          <td class="paramname"><em>m</em> = <code><a class="el" href="classkmeans_1_1HartiganWong.html">HartiganWong</a>&lt;&gt;::Defaults::max_iterations</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -305,6 +288,8 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
   </tr>
 </table>
 </div><div class="memdoc">
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000001">Deprecated:</a></b></dt><dd></dd></dl>
+<p>Use the relevant <code><a class="el" href="classkmeans_1_1Kmeans.html#a50fee0a4f2d66af57426d1ecc0c123c7">run()</a></code> method with a pointer to a custom <code>HartiganWong()</code> object to set this instead.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">m</td><td>Maximum number of iterations to use in the Hartigan-Wong algorithm.</td></tr>
