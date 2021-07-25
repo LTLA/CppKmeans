@@ -11,7 +11,7 @@ TEST_P(HartiganWongBasicTest, Sweep) {
 
     auto centers = create_centers(data.data(), ncenters);
     std::vector<int> clusters(nc);
-    auto hw = kmeans::HartiganWong().run(nr, nc, data.data(), ncenters, centers.data(), clusters.data());
+    auto hw = kmeans::HartiganWong<>().run(nr, nc, data.data(), ncenters, centers.data(), clusters.data());
 
     // Checking that there's the specified number of clusters, and that they're all non-empty.
     std::vector<int> counts(ncenters);
@@ -55,7 +55,7 @@ TEST_P(HartiganWongConstantTest, TooMany) {
 
     std::vector<double> centers(data.size());
     std::vector<int> clusters(nc);
-    auto hw = kmeans::HartiganWong().run(nr, nc, data.data(), nc, centers.data(), clusters.data());
+    auto hw = kmeans::HartiganWong<>().run(nr, nc, data.data(), nc, centers.data(), clusters.data());
 
     // Checking that the averages are just equal to the points.
     EXPECT_EQ(data, centers);
@@ -68,7 +68,7 @@ TEST_P(HartiganWongConstantTest, TooMany) {
     EXPECT_EQ(ref, clusters);
 
     centers.resize(nr * (nc + 1));
-    auto hw2 = kmeans::HartiganWong().run(nr, nc, data.data(), nc + 1, centers.data(), clusters.data());
+    auto hw2 = kmeans::HartiganWong<>().run(nr, nc, data.data(), nc + 1, centers.data(), clusters.data());
     EXPECT_EQ(hw2.status, 3);
     EXPECT_EQ(clusters, ref); // unchanged.
     EXPECT_EQ(hw2.sizes[nc], 0); // last element is now zero.
@@ -80,7 +80,7 @@ TEST_P(HartiganWongConstantTest, TooFew) {
 
     std::vector<double> centers(nr);
     std::vector<int> clusters(nc);
-    auto hw = kmeans::HartiganWong().run(nr, nc, data.data(), 1, centers.data(), clusters.data());
+    auto hw = kmeans::HartiganWong<>().run(nr, nc, data.data(), 1, centers.data(), clusters.data());
 
     std::vector<double> averages(nr);
     size_t i = 0;
@@ -97,7 +97,7 @@ TEST_P(HartiganWongConstantTest, TooFew) {
     EXPECT_EQ(hw.iterations, 0);
 
     // no points at all.
-    auto hw2 = kmeans::HartiganWong().run(nr, nc, data.data(), 0, centers.data(), clusters.data());
+    auto hw2 = kmeans::HartiganWong<>().run(nr, nc, data.data(), 0, centers.data(), clusters.data());
     EXPECT_EQ(hw2.status, 3);
     EXPECT_EQ(hw2.sizes, std::vector<int>());
 }

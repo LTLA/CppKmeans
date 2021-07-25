@@ -10,7 +10,7 @@ TEST_P(KmeansTest, Sweep) {
     auto ncenters = std::get<2>(param);
 
     std::vector<int> centers(ncenters * nr), clusters(nc);
-    auto res = kmeans::Kmeans().run(nr, nc, data.data(), ncenters);
+    auto res = kmeans::Kmeans<>().run(nr, nc, data.data(), ncenters);
 
     // Checking that there's the specified number of clusters, and that they're all non-empty.
     std::vector<int> counts(ncenters);
@@ -52,7 +52,7 @@ TEST_P(KmeansTest, SanityCheck) {
     }
 
     // Checking that every 'ncenters'-th element is the same.
-    auto res = kmeans::Kmeans().run(nr, nc, data.data(), ncenters);
+    auto res = kmeans::Kmeans<>().run(nr, nc, data.data(), ncenters);
     std::vector<int> last_known(ncenters, -1);
     for (int c = 0; c < nc; ++c) {
         int& x = last_known[c % ncenters];
