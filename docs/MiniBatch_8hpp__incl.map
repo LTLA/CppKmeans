@@ -1,0 +1,19 @@
+<map id="kmeans/MiniBatch.hpp" name="kmeans/MiniBatch.hpp">
+<area shape="rect" id="node1" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="360,5,514,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="526,229,585,256"/>
+<area shape="rect" id="node3" title=" " alt="" coords="988,229,1062,256"/>
+<area shape="rect" id="node4" title=" " alt="" coords="644,155,712,181"/>
+<area shape="rect" id="node5" title=" " alt="" coords="185,80,246,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="271,80,350,107"/>
+<area shape="rect" id="node7" title=" " alt="" coords="121,155,174,181"/>
+<area shape="rect" id="node8" title=" " alt="" coords="199,155,264,181"/>
+<area shape="rect" id="node9" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="23,80,110,107"/>
+<area shape="rect" id="node10" href="$QuickSearch_8hpp_source.html" title=" " alt="" coords="426,80,547,107"/>
+<area shape="rect" id="node14" href="$compute__wcss_8hpp_source.html" title=" " alt="" coords="736,155,871,181"/>
+<area shape="rect" id="node15" href="$is__edge__case_8hpp_source.html" title=" " alt="" coords="787,80,914,107"/>
+<area shape="rect" id="node17" href="$random_8hpp_source.html" title=" " alt="" coords="571,80,660,107"/>
+<area shape="rect" id="node11" title=" " alt="" coords="385,155,444,181"/>
+<area shape="rect" id="node12" title=" " alt="" coords="468,155,518,181"/>
+<area shape="rect" id="node13" title=" " alt="" coords="289,155,361,181"/>
+<area shape="rect" id="node16" href="$compute__centroids_8hpp_source.html" title=" " alt="" coords="947,155,1103,181"/>
+</map>

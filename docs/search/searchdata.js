@@ -1,8 +1,8 @@
 var indexSectionsWithContent =
 {
-  0: "cdhiklrsw",
-  1: "dhklr",
-  2: "dhikl",
+  0: "cdhiklmrsw",
+  1: "dhklmr",
+  2: "dhiklm",
   3: "rsw",
   4: "cdisw",
   5: "c"

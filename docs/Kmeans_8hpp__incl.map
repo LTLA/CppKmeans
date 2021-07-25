@@ -1,16 +1,17 @@
 <map id="kmeans/Kmeans.hpp" name="kmeans/Kmeans.hpp">
-<area shape="rect" id="node1" title="Implements the full k&#45;means clustering procedure." alt="" coords="645,5,789,32"/>
-<area shape="rect" id="node2" href="$HartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="331,80,459,107"/>
-<area shape="rect" id="node9" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="623,155,710,181"/>
-<area shape="rect" id="node12" href="$initialization_8hpp.html" title="Initialization methods to choose the starting centroids." alt="" coords="742,80,855,107"/>
-<area shape="rect" id="node14" title=" " alt="" coords="879,80,945,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="569,229,628,256"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,229,80,256"/>
-<area shape="rect" id="node5" title=" " alt="" coords="161,229,229,256"/>
-<area shape="rect" id="node6" title=" " alt="" coords="735,155,796,181"/>
-<area shape="rect" id="node7" title=" " alt="" coords="233,155,311,181"/>
-<area shape="rect" id="node8" title=" " alt="" coords="336,155,389,181"/>
-<area shape="rect" id="node10" href="$compute__wcss_8hpp_source.html" title=" " alt="" coords="465,155,599,181"/>
-<area shape="rect" id="node11" href="$is__edge__case_8hpp_source.html" title=" " alt="" coords="30,155,157,181"/>
-<area shape="rect" id="node13" title=" " alt="" coords="921,155,993,181"/>
+<area shape="rect" id="node1" title="Implements the full k&#45;means clustering procedure." alt="" coords="652,5,796,32"/>
+<area shape="rect" id="node2" href="$HartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="325,80,453,107"/>
+<area shape="rect" id="node9" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="630,155,717,181"/>
+<area shape="rect" id="node13" href="$initialization_8hpp.html" title="Initialization methods to choose the starting centroids." alt="" coords="723,80,837,107"/>
+<area shape="rect" id="node15" title=" " alt="" coords="861,80,926,107"/>
+<area shape="rect" id="node3" title=" " alt="" coords="644,304,703,331"/>
+<area shape="rect" id="node4" title=" " alt="" coords="72,304,147,331"/>
+<area shape="rect" id="node5" title=" " alt="" coords="486,229,554,256"/>
+<area shape="rect" id="node6" title=" " alt="" coords="59,155,120,181"/>
+<area shape="rect" id="node7" title=" " alt="" coords="145,155,223,181"/>
+<area shape="rect" id="node8" title=" " alt="" coords="248,155,301,181"/>
+<area shape="rect" id="node10" href="$compute__centroids_8hpp_source.html" title=" " alt="" coords="31,229,187,256"/>
+<area shape="rect" id="node11" href="$compute__wcss_8hpp_source.html" title=" " alt="" coords="327,229,462,256"/>
+<area shape="rect" id="node12" href="$is__edge__case_8hpp_source.html" title=" " alt="" coords="326,155,453,181"/>
+<area shape="rect" id="node14" href="$random_8hpp_source.html" title=" " alt="" coords="741,155,830,181"/>
 </map>

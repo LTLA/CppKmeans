@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans/Details.hpp File Reference</title>
+<title>kmeans: Member List</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -63,53 +63,23 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_b4cd1770f3f86b4e7b02a49a44470eac.html">kmeans</a></li>  </ul>
+<li class="navelem"><b>kmeans</b></li><li class="navelem"><a class="el" href="classkmeans_1_1MiniBatch.html">MiniBatch</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
-<div class="title">Details.hpp File Reference</div>  </div>
+<div class="title">kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt; Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Report detailed clustering statistics.  
-<a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;vector&gt;</code><br />
-</div><div class="textblock"><div class="dynheader">
-Include dependency graph for Details.hpp:</div>
-<div class="dyncontent">
-<div class="center"><img src="Details_8hpp__incl.png" border="0" usemap="#akmeans_2Details_8hpp" alt=""/></div>
-<map name="akmeans_2Details_8hpp" id="akmeans_2Details_8hpp">
-<area shape="rect" title="Report detailed clustering statistics." alt="" coords="5,5,141,32"/>
-<area shape="rect" title=" " alt="" coords="44,80,103,107"/>
-</map>
-</div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><img src="Details_8hpp__dep__incl.png" border="0" usemap="#akmeans_2Details_8hppdep" alt=""/></div>
-<map name="akmeans_2Details_8hppdep" id="akmeans_2Details_8hppdep">
-<area shape="rect" title="Report detailed clustering statistics." alt="" coords="204,5,340,32"/>
-<area shape="rect" href="HartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="5,80,184,107"/>
-<area shape="rect" href="Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="85,155,229,181"/>
-<area shape="rect" href="Lloyd_8hpp.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="259,80,386,107"/>
-<area shape="rect" href="MiniBatch_8hpp.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="411,80,565,107"/>
-</map>
-</div>
-</div>
-<p><a href="Details_8hpp_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1Details.html">kmeans::Details&lt; DATA_t, INDEX_t &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional statistics from the k-means algorithm.  <a href="structkmeans_1_1Details.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Report detailed clustering statistics. </p>
-</div></div><!-- contents -->
+<p>This is the complete list of members for <a class="el" href="classkmeans_1_1MiniBatch.html">kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</a>, including all inherited members.</p>
+<table class="directory">
+  <tr class="even"><td class="entry"><a class="el" href="classkmeans_1_1MiniBatch.html#a9a053e13a6c97108e92667cfe24b930a">run</a>(int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters)</td><td class="entry"><a class="el" href="classkmeans_1_1MiniBatch.html">kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classkmeans_1_1MiniBatch.html#a9ed71d9b3de42d081ff580d89e842599">set_batch_size</a>(INDEX_t s=500)</td><td class="entry"><a class="el" href="classkmeans_1_1MiniBatch.html">kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classkmeans_1_1MiniBatch.html#a5a6e1aed6d6dc5034b4c2022bc15b368">set_convergence_history</a>(int h=10)</td><td class="entry"><a class="el" href="classkmeans_1_1MiniBatch.html">kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="classkmeans_1_1MiniBatch.html#aa24b69a89b3cdec8b89f9354d4808b82">set_max_change_proportion</a>(int m=0.01)</td><td class="entry"><a class="el" href="classkmeans_1_1MiniBatch.html">kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classkmeans_1_1MiniBatch.html#ab6bd512ca9069ea6d93aa0a7a6cc1d5f">set_max_iterations</a>(int i=100)</td><td class="entry"><a class="el" href="classkmeans_1_1MiniBatch.html">kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+</table></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1

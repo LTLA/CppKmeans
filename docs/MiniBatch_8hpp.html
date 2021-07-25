@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans/HartiganWong.hpp File Reference</title>
+<title>kmeans: kmeans/MiniBatch.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,11 +70,11 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a>  </div>
   <div class="headertitle">
-<div class="title">HartiganWong.hpp File Reference</div>  </div>
+<div class="title">MiniBatch.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Implements the Hartigan-Wong algorithm for k-means clustering.  
+<p>Implements the mini-batch algorithm for k-means clustering.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
@@ -82,48 +82,47 @@ $(function() {
 <code>#include &lt;cstdint&gt;</code><br />
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;limits&gt;</code><br />
+<code>#include &lt;random&gt;</code><br />
 <code>#include &quot;<a class="el" href="Details_8hpp_source.html">Details.hpp</a>&quot;</code><br />
-<code>#include &quot;compute_centroids.hpp&quot;</code><br />
+<code>#include &quot;QuickSearch.hpp&quot;</code><br />
 <code>#include &quot;compute_wcss.hpp&quot;</code><br />
 <code>#include &quot;is_edge_case.hpp&quot;</code><br />
+<code>#include &quot;random.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
-Include dependency graph for HartiganWong.hpp:</div>
+Include dependency graph for MiniBatch.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="HartiganWong_8hpp__incl.png" border="0" usemap="#akmeans_2HartiganWong_8hpp" alt=""/></div>
-<map name="akmeans_2HartiganWong_8hpp" id="akmeans_2HartiganWong_8hpp">
-<area shape="rect" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="478,5,657,32"/>
-<area shape="rect" title=" " alt="" coords="101,229,159,256"/>
-<area shape="rect" title=" " alt="" coords="419,229,494,256"/>
-<area shape="rect" title=" " alt="" coords="559,155,627,181"/>
-<area shape="rect" title=" " alt="" coords="691,80,753,107"/>
-<area shape="rect" title=" " alt="" coords="777,80,856,107"/>
-<area shape="rect" title=" " alt="" coords="881,80,934,107"/>
-<area shape="rect" href="Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="5,155,92,181"/>
-<area shape="rect" href="compute__centroids_8hpp_source.html" title=" " alt="" coords="379,155,535,181"/>
-<area shape="rect" href="compute__wcss_8hpp_source.html" title=" " alt="" coords="168,155,303,181"/>
-<area shape="rect" href="is__edge__case_8hpp_source.html" title=" " alt="" coords="377,80,504,107"/>
+<div class="center"><img src="MiniBatch_8hpp__incl.png" border="0" usemap="#akmeans_2MiniBatch_8hpp" alt=""/></div>
+<map name="akmeans_2MiniBatch_8hpp" id="akmeans_2MiniBatch_8hpp">
+<area shape="rect" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="360,5,514,32"/>
+<area shape="rect" title=" " alt="" coords="526,229,585,256"/>
+<area shape="rect" title=" " alt="" coords="988,229,1062,256"/>
+<area shape="rect" title=" " alt="" coords="644,155,712,181"/>
+<area shape="rect" title=" " alt="" coords="185,80,246,107"/>
+<area shape="rect" title=" " alt="" coords="271,80,350,107"/>
+<area shape="rect" title=" " alt="" coords="121,155,174,181"/>
+<area shape="rect" title=" " alt="" coords="199,155,264,181"/>
+<area shape="rect" href="Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="23,80,110,107"/>
+<area shape="rect" href="QuickSearch_8hpp_source.html" title=" " alt="" coords="426,80,547,107"/>
+<area shape="rect" href="compute__wcss_8hpp_source.html" title=" " alt="" coords="736,155,871,181"/>
+<area shape="rect" href="is__edge__case_8hpp_source.html" title=" " alt="" coords="787,80,914,107"/>
+<area shape="rect" href="random_8hpp_source.html" title=" " alt="" coords="571,80,660,107"/>
+<area shape="rect" title=" " alt="" coords="385,155,444,181"/>
+<area shape="rect" title=" " alt="" coords="468,155,518,181"/>
+<area shape="rect" title=" " alt="" coords="289,155,361,181"/>
+<area shape="rect" href="compute__centroids_8hpp_source.html" title=" " alt="" coords="947,155,1103,181"/>
 </map>
 </div>
-</div><div class="textblock"><div class="dynheader">
-This graph shows which files directly or indirectly include this file:</div>
-<div class="dyncontent">
-<div class="center"><img src="HartiganWong_8hpp__dep__incl.png" border="0" usemap="#akmeans_2HartiganWong_8hppdep" alt=""/></div>
-<map name="akmeans_2HartiganWong_8hppdep" id="akmeans_2HartiganWong_8hppdep">
-<area shape="rect" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="5,5,184,32"/>
-<area shape="rect" href="Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="23,80,167,107"/>
-</map>
 </div>
-</div>
-<p><a href="HartiganWong_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="MiniBatch_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html">kmeans::HartiganWong&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the Hartigan-Wong algorithm for k-means clustering.  <a href="classkmeans_1_1HartiganWong.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1MiniBatch.html">kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the mini-batch algorithm for k-means clustering.  <a href="classkmeans_1_1MiniBatch.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implements the Hartigan-Wong algorithm for k-means clustering. </p>
+<div class="textblock"><p>Implements the mini-batch algorithm for k-means clustering. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
