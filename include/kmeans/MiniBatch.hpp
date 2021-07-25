@@ -42,14 +42,40 @@ namespace kmeans {
  */
 template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
 class MiniBatch {
+public:
+    /** 
+     * @brief Default parameter values for `MiniBatch`.
+     */
+    struct Defaults {
+        /** 
+         * See `MiniBatch::set_max_iterations()`.
+         */
+        static constexpr int max_iterations = 100;
+
+        /** 
+         * See `MiniBatch::set_batch_size()`.
+         */
+        static constexpr INDEX_t batch_size = 500;
+
+        /** 
+         * See `MiniBatch::set_max_change_proportion()`.
+         */
+        static constexpr double max_change_proportion = 0.01;
+
+        /** 
+         * See `MiniBatch::set_convergence_history()`.
+         */
+        static constexpr int convergence_history = 10;
+    };
+
 private:
-    int maxiter = 100;
+    int maxiter = Defaults::max_iterations;
 
-    INDEX_t batch_size = 500;
+    INDEX_t batch_size = Defaults::batch_size;
 
-    int history = 10;
+    int history = Defaults::convergence_history;
 
-    double max_change = 0.01;
+    double max_change = Defaults::max_change_proportion;
 public:
     /**
      * @param i Maximum number of iterations.
@@ -57,7 +83,7 @@ public:
      *
      * @return A reference to this `MiniBatch` object.
      */
-    MiniBatch& set_max_iterations(int i = 100) {
+    MiniBatch& set_max_iterations(int i = Defaults::max_iterations) {
         maxiter = i;
         return *this;
     }
@@ -68,7 +94,7 @@ public:
      *
      * @return A reference to this `MiniBatch` object.
      */
-    MiniBatch& set_batch_size(INDEX_t s = 500) {
+    MiniBatch& set_batch_size(INDEX_t s = Defaults::batch_size) {
         batch_size = s;
         return *this;
     }
@@ -79,8 +105,8 @@ public:
      *
      * @return A reference to this `MiniBatch` object.
      */
-    MiniBatch& set_max_change_proportion(int m = 0.01) {
-        max_change = m;
+    MiniBatch& set_max_change_proportion(double p = Defaults::max_change_proportion) {
+        max_change = p;
         return *this;
     }
 
@@ -90,7 +116,7 @@ public:
      *
      * @return A reference to this `MiniBatch` object.
      */
-    MiniBatch& set_convergence_history(int h = 10) {
+    MiniBatch& set_convergence_history(int h = Defaults::convergence_history) {
         history = h;
         return *this;
     }

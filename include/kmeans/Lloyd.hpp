@@ -37,8 +37,20 @@ namespace kmeans {
  */
 template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
 class Lloyd {
+public:
+    /** 
+     * @brief Default parameter values for `Lloyd`.
+     */
+    struct Defaults {
+        /** 
+         * See `Lloyd::set_max_iterations()`.
+         */
+        static constexpr int max_iterations = 10;
+    };
+
 private:
-    int maxiter = 10;
+    int maxiter = Defaults::max_iterations;
+
 public:
     /**
      * @param m Maximum number of iterations.
@@ -46,7 +58,7 @@ public:
      *
      * @return A reference to this `Lloyd` object.
      */
-    Lloyd& set_max_iterations(int m = 10) {
+    Lloyd& set_max_iterations(int m = Defaults::max_iterations) {
         maxiter = m;
         return *this;
     }

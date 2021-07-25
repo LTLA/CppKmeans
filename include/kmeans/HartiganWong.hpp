@@ -63,7 +63,6 @@ class HartiganWong {
     std::vector<uint8_t> itran;
     std::vector<INDEX_t> live;
 
-    int maxiter = 10;
 private:
     static constexpr double big = 1e30; // Define BIG to be a very large positive number
 
@@ -101,13 +100,27 @@ private:
     }
 
 public:
+    /** 
+     * @brief Default parameter values for `HartiganWong`.
+     */
+    struct Defaults {
+        /** 
+         * See `HartiganWong::set_max_iterations()`.
+         */
+        static constexpr int max_iterations = 10;
+    };
+
+private:
+    int maxiter = Defaults::max_iterations;
+
+public:
     /**
      * @param m Maximum number of iterations.
      * More iterations increase the opportunity for convergence at the cost of more computational time.
      *
      * @return A reference to this `HartiganWong` object.
      */
-    HartiganWong& set_max_iterations(int m = 10) {
+    HartiganWong& set_max_iterations(int m = Defaults::max_iterations) {
         maxiter = m;
         return *this;
     }
