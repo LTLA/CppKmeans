@@ -13,6 +13,7 @@ enable_testing()
 add_executable(
     libtest 
     src/HartiganWong.cpp
+    src/Lloyd.cpp
     src/initialization.cpp
     src/Kmeans.cpp
 )
