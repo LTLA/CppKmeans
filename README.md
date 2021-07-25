@@ -24,19 +24,30 @@ auto res = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters);
 res.centers;
 res.clusters;
 res.details;
+```
 
-// Or, if you already allocated the relevant memory:
+If you already allocated the relevant memory, you can fill the arrays directly:
+
+```cpp
 std::vector<double> centers(ndim * ncenters);
 std::vector<int> clusters(nobs);
 auto deets = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters, 
                                   centers.data(), clusters.data());
 deets.withinss;
 deets.sizes;
+```
 
-// Or if you want to fiddle with some parameters:
+If you want to fiddle with some parameters, use the relevant setters:
+
+```cpp
 kmeans::Kmeans km;
 km.set_seed(42).set_weighted(false);
 auto res2 = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters);
+
+// Or change the underlying algorithm:
+kmeans::Lloyd ll;
+ll.set_max_iterations(100);
+auto res3 = kmeans::Kmeans.run(ndim, nobs, matrix.data(), ncenters, &ll);
 ```
 
 See the [reference documentation](https://ltla.github.io/CppKmeans) for more details.
