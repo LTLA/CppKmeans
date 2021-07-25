@@ -8,6 +8,10 @@
 #include <stdexcept>
 #include <limits>
 
+#include "Details.hpp"
+#include "compute_wcss.hpp"
+#include "is_edge_case.hpp"
+
 /**
  * @file HartiganWong.hpp
  *
@@ -106,53 +110,6 @@ public:
         maxiter = m;
         return *this;
     }
-public:
-    /**
-     * @brief Additional statistics from the Hartigan-Wong algorithm.
-     */
-    struct Details {
-        /**
-         * @cond
-         */
-        Details() {}
-
-        Details(std::vector<INDEX_t> s, std::vector<DATA_t> w, int it, int st) : sizes(std::move(s)), withinss(std::move(w)), iterations(it), status(st) {} 
-        /**
-         * @endcond
-         */
-
-        /**
-         * The number of observations in each cluster.
-         * All values are guaranteed to be positive for non-zero numbers of observations unless `status == 1` or `3`.
-         */
-        std::vector<INDEX_t> sizes;
-
-        /**
-         * The within-cluster sum of squares for each cluster.
-         * All values are guaranteed to be non-negative.
-         * Values may be zero for clusters with only one observation.
-         */
-        std::vector<DATA_t> withinss;
-
-        /**
-         * The number of iterations used to achieve convergence.
-         * This value may be greater than the `maxit` if convergence was not achieved.
-         */
-        int iterations;
-
-        /**
-         * The status of the algorithm.
-         *
-         * - 0: convergence achieved.
-         * - 1: empty cluster detected.
-         * This usually indicates a problem with the initial choice of centroids.
-         * It can also occur in pathological situations with duplicate points.
-         * - 2: maximum iterations reached without convergence. 
-         * - 3: the number of centers is not positive or greater than the number of observations.
-         * - 4: maximum number of quick transfer steps exceeded.
-         */
-        int status;
-    };
 
 public:
     /**
@@ -171,7 +128,7 @@ public:
      * @return `centers` and `clusters` are filled, and a `Details` object is returned containing clustering statistics.
      * If `ncenters > nobs`, only the first `nobs` columns of the `centers` array will be filled.
      */
-    Details run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
+    Details<DATA_t, INDEX_t> run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
         num_dim = ndim;
         num_obs = nobs;
         data_ptr = data;
@@ -197,38 +154,20 @@ public:
         itran.resize(num_centers);
         live.resize(num_centers);
 
-        int iter, ifault;
-        auto wcss = kmeans(iter, ifault);
-        return Details(std::move(nc), std::move(wcss), iter, ifault);
+        return kmeans();
     } 
 
 private:
-    // Returns the WCSS, modifies 'iter' and 'ifault'.
-    std::vector<DATA_t> kmeans(int& iter, int& ifault) {
-        iter = 0;
-        ifault = 0;
+    Details<DATA_t, INDEX_t> kmeans() {
+        int iter = 0;
+        int ifault = 0;
 
-        if (num_centers == 1) {
-            // All points in cluster 0.
-            std::fill(ic1, ic1 + num_obs, 0);
-            nc[0] = num_obs;
-            return compute_wcss();
-
-        } else if (num_centers >= num_obs) {
-            // Special case, each observation is a center.
-            std::iota(ic1, ic1 + num_obs, 0);            
-            std::fill(nc.begin(), nc.begin() + num_obs, 1);
-            if (num_centers > num_obs) {
-                std::fill(nc.begin() + num_obs, nc.end(), 0);
-                ifault = 3;
+        if (is_edge_case(num_obs, num_centers, ic1, nc, ifault)) {
+            if (num_centers) {
+                return finish(iter, ifault);
+            } else {
+                return Details<DATA_t, INDEX_t>(iter, ifault);
             }
-            return compute_wcss();
-
-        } else if (num_centers == 0) {
-            // No need to fill 'nc', it's already all-zero on input.
-            ifault = 3;
-            std::fill(ic1, ic1 + num_obs, 0);
-            return std::vector<DATA_t>();
         }
 
         /* For each point I, find its two closest centres, IC1(I) and 
@@ -278,7 +217,7 @@ private:
         for (CLUSTER_t cen = 0; cen < num_centers; ++cen) {
             if (nc[cen] == 0) {
                 ifault = 1;
-                return compute_wcss();
+                return finish(iter, ifault);
             }
 
             divide_by_cluster_size(cen);
@@ -343,7 +282,7 @@ private:
             ifault = 2;
         }
 
-        return compute_wcss();
+        return finish(iter, ifault);
     }
 
 private:
@@ -367,39 +306,29 @@ private:
     }
 
     void divide_by_cluster_size(CLUSTER_t cen) {
-        if (nc[cen]) {
-            auto curcenter = centers_ptr + cen * num_dim;
-            for (int dim = 0; dim < num_dim; ++dim, ++curcenter) {
-                *curcenter /= nc[cen];
-            }
+        auto curcenter = centers_ptr + cen * num_dim;
+        for (int dim = 0; dim < num_dim; ++dim, ++curcenter) {
+            *curcenter /= nc[cen];
         }
     }
 
     // Assumes that 'ic1' and 'nc' have been filled.
-    std::vector<DATA_t> compute_wcss() {
+    Details<DATA_t, INDEX_t> finish(int iter, int ifault) {
         std::fill(centers_ptr, centers_ptr + num_centers * num_dim, 0);
-        std::vector<DATA_t> wcss(num_centers);
-        std::fill(wcss.begin(), wcss.end(), 0);
-
         for (INDEX_t obs = 0; obs < num_obs; ++obs) {
             add_point_to_cluster(obs, ic1[obs]);
         }
         for (CLUSTER_t cen = 0; cen < num_centers; ++cen) {
-            divide_by_cluster_size(cen);
-        }
-
-        for (INDEX_t obs = 0; obs < num_obs; ++obs) {
-            auto cen = ic1[obs];
-            auto curcenter = centers_ptr + cen * num_dim;
-            auto& curwcss = wcss[cen];
-
-            auto curdata = data_ptr + obs * num_dim;
-            for (int dim = 0; dim < num_dim; ++dim, ++curcenter, ++curdata) {
-                curwcss += (*curdata - *curcenter) * (*curdata - *curcenter);
+            if (nc[cen]) {
+                divide_by_cluster_size(cen);
             }
         }
 
-        return wcss;
+        return Details(
+            std::move(nc),
+            compute_wcss(num_dim, num_obs, data_ptr, num_centers, centers_ptr, ic1),
+            iter,
+            ifault);
     }
 
     DATA_t squared_distance_from_cluster(INDEX_t pt, CLUSTER_t clust) const {

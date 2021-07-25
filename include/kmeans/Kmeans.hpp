@@ -3,6 +3,7 @@
 
 #include "HartiganWong.hpp"
 #include "initialization.hpp"
+#include "Details.hpp"
 #include <random>
 
 /** 
@@ -109,11 +110,11 @@ public:
      * @param[out] clusters Pointer to an array of length `nobs`.
      * Om output, this will contain the (0-indexed) cluster assignment for each observation.
      *
-     * @return `centers` and `clusters` are filled, and a `HartiganWong::Details` object is returned containing clustering statistics.
+     * @return `centers` and `clusters` are filled, and a `Details` object is returned containing clustering statistics.
      * Note that the actual number of clusters may be less than `ncenters` in pathological cases - 
-     * check the length of `HartiganWong::Details::sizes` and the value of `HartiganWong::Details::status`.
+     * check the length of `Details::sizes` and the value of `Details::status`.
      */
-    typename HartiganWong<DATA_t, CLUSTER_t, INDEX_t>::Details run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
+    Details<DATA_t, INDEX_t> run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
         ncenters = initialize(ndim, nobs, data, ncenters, centers); 
         return hw.run(ndim, nobs, data, ncenters, centers, clusters);
     }
@@ -144,7 +145,7 @@ public:
         /**
          * Further details from the Hartigan-Wong algorithm.
          */
-        typename HartiganWong<DATA_t, CLUSTER_t, INDEX_t>::Details details;
+        Details<DATA_t, INDEX_t> details;
     };
 
     /**
