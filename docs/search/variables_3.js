@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['sizes_42',['sizes',['../structkmeans_1_1HartiganWong_1_1Details.html#a5315c98cf44ee691cb51430ae4a9f4f3',1,'kmeans::HartiganWong::Details']]],
-  ['status_43',['status',['../structkmeans_1_1HartiganWong_1_1Details.html#adf0641eeef4227b2876753a1b1d7768b',1,'kmeans::HartiganWong::Details']]]
+  ['sizes_48',['sizes',['../structkmeans_1_1Details.html#a9f838f332d2a8386d821627182c3b925',1,'kmeans::Details']]],
+  ['status_49',['status',['../structkmeans_1_1Details.html#a29361ee235b51395589130e2787cbae2',1,'kmeans::Details']]]
 ];

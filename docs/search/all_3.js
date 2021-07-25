@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['initialization_2ehpp_9',['initialization.hpp',['../initialization_8hpp.html',1,'']]],
-  ['iterations_10',['iterations',['../structkmeans_1_1HartiganWong_1_1Details.html#a06474d03b9349db9f88abca58616be52',1,'kmeans::HartiganWong::Details']]]
+  ['initialization_2ehpp_10',['initialization.hpp',['../initialization_8hpp.html',1,'']]],
+  ['iterations_11',['iterations',['../structkmeans_1_1Details.html#a83defe41cd0ace522c1a2434f570337e',1,'kmeans::Details']]]
 ];

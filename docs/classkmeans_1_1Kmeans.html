@@ -97,8 +97,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ad0854883105da400bda1285bdc2e6cb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8eb1ab5f096402596eff5e6e9c0ab57a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a8eb1ab5f096402596eff5e6e9c0ab57a">set_max_iterations</a> (int m)</td></tr>
 <tr class="separator:a8eb1ab5f096402596eff5e6e9c0ab57a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c1ff20c81de805fb8774eb092d9cda1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1HartiganWong.html">HartiganWong</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Details&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a4c1ff20c81de805fb8774eb092d9cda1">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters)</td></tr>
-<tr class="separator:a4c1ff20c81de805fb8774eb092d9cda1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7427acfb8c51af96e458277e959cc05b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; DATA_t, INDEX_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a7427acfb8c51af96e458277e959cc05b">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters)</td></tr>
+<tr class="separator:a7427acfb8c51af96e458277e959cc05b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9f47a01c8bdaec54f4212e24a1a2e47f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a9f47a01c8bdaec54f4212e24a1a2e47f">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters)</td></tr>
 <tr class="separator:a9f47a01c8bdaec54f4212e24a1a2e47f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -173,12 +173,12 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html" title="Full statistics from k-means clustering.">Results</a></code> object is returned containing clustering statistics. See <code><a class="el" href="classkmeans_1_1Kmeans.html#a4c1ff20c81de805fb8774eb092d9cda1">run()</a></code> for more details. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html" title="Full statistics from k-means clustering.">Results</a></code> object is returned containing clustering statistics. See <code><a class="el" href="classkmeans_1_1Kmeans.html#a7427acfb8c51af96e458277e959cc05b">run()</a></code> for more details. </dd></dl>
 
 </div>
 </div>
-<a id="a4c1ff20c81de805fb8774eb092d9cda1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c1ff20c81de805fb8774eb092d9cda1">&#9670;&nbsp;</a></span>run() <span class="overload">[2/2]</span></h2>
+<a id="a7427acfb8c51af96e458277e959cc05b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7427acfb8c51af96e458277e959cc05b">&#9670;&nbsp;</a></span>run() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -189,7 +189,7 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1HartiganWong.html">HartiganWong</a>&lt;DATA_t, CLUSTER_t, INDEX_t&gt;::Details <a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::run </td>
+          <td class="memname"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt;DATA_t, INDEX_t&gt; <a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::run </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>ndim</em>, </td>
@@ -247,7 +247,7 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html" title="Additional statistics from the Hartigan-Wong algorithm.">HartiganWong::Details</a></code> object is returned containing clustering statistics. Note that the actual number of clusters may be less than <code>ncenters</code> in pathological cases - check the length of <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#a5315c98cf44ee691cb51430ae4a9f4f3">HartiganWong::Details::sizes</a></code> and the value of <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html#adf0641eeef4227b2876753a1b1d7768b">HartiganWong::Details::status</a></code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Details.html" title="Additional statistics from the k-means algorithm.">Details</a></code> object is returned containing clustering statistics. Note that the actual number of clusters may be less than <code>ncenters</code> in pathological cases - check the length of <code><a class="el" href="structkmeans_1_1Details.html#a9f838f332d2a8386d821627182c3b925">Details::sizes</a></code> and the value of <code><a class="el" href="structkmeans_1_1Details.html#a29361ee235b51395589130e2787cbae2">Details::status</a></code>. </dd></dl>
 
 </div>
 </div>

@@ -68,7 +68,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classkmeans_1_1HartiganWong-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -81,18 +80,12 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="HartiganWong_8hpp_source.html">HartiganWong.hpp</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html">Details</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional statistics from the Hartigan-Wong algorithm.  <a href="structkmeans_1_1HartiganWong_1_1Details.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2e71128f1f83631f09b685b00f360635"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1HartiganWong.html">HartiganWong</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#a2e71128f1f83631f09b685b00f360635">set_max_iterations</a> (int m=10)</td></tr>
 <tr class="separator:a2e71128f1f83631f09b685b00f360635"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7e300788c1ae8adb282cbf4c0877854"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html">Details</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#ae7e300788c1ae8adb282cbf4c0877854">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters)</td></tr>
-<tr class="separator:ae7e300788c1ae8adb282cbf4c0877854"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa2135b14e226c29d05a6cb7f8f3bbea6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; DATA_t, INDEX_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1HartiganWong.html#aa2135b14e226c29d05a6cb7f8f3bbea6">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters)</td></tr>
+<tr class="separator:aa2135b14e226c29d05a6cb7f8f3bbea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int&gt;<br />
@@ -111,8 +104,8 @@ class kmeans::HartiganWong&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</h3>
 </dl>
 <dl class="section see"><dt>See also</dt><dd>Hartigan, J. A. and Wong, M. A. (1979). Algorithm AS 136: A K-means clustering algorithm. <em>Applied Statistics</em>, 28, 100-108. </dd></dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="ae7e300788c1ae8adb282cbf4c0877854"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7e300788c1ae8adb282cbf4c0877854">&#9670;&nbsp;</a></span>run()</h2>
+<a id="aa2135b14e226c29d05a6cb7f8f3bbea6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2135b14e226c29d05a6cb7f8f3bbea6">&#9670;&nbsp;</a></span>run()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -123,7 +116,7 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html">Details</a> <a class="el" href="classkmeans_1_1HartiganWong.html">kmeans::HartiganWong</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::run </td>
+          <td class="memname"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt;DATA_t, INDEX_t&gt; <a class="el" href="classkmeans_1_1HartiganWong.html">kmeans::HartiganWong</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::run </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>ndim</em>, </td>
@@ -181,7 +174,7 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1HartiganWong_1_1Details.html" title="Additional statistics from the Hartigan-Wong algorithm.">Details</a></code> object is returned containing clustering statistics. If <code>ncenters &gt; nobs</code>, only the first <code>nobs</code> columns of the <code>centers</code> array will be filled. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Details.html" title="Additional statistics from the k-means algorithm.">Details</a></code> object is returned containing clustering statistics. If <code>ncenters &gt; nobs</code>, only the first <code>nobs</code> columns of the <code>centers</code> array will be filled. </dd></dl>
 
 </div>
 </div>

@@ -1,0 +1,6 @@
+<map id="kmeans/Details.hpp" name="kmeans/Details.hpp">
+<area shape="rect" id="node1" title="Report detailed clustering statistics." alt="" coords="153,5,289,32"/>
+<area shape="rect" id="node2" href="$HartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="5,80,184,107"/>
+<area shape="rect" id="node3" href="$Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="85,155,229,181"/>
+<area shape="rect" id="node4" href="$Lloyd_8hpp.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="259,80,386,107"/>
+</map>

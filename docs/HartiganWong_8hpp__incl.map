@@ -1,9 +1,12 @@
 <map id="kmeans/HartiganWong.hpp" name="kmeans/HartiganWong.hpp">
-<area shape="rect" id="node1" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="176,5,355,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,64,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="88,80,163,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="187,80,255,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="280,80,341,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="366,80,445,107"/>
-<area shape="rect" id="node7" title=" " alt="" coords="469,80,523,107"/>
+<area shape="rect" id="node1" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="267,5,445,32"/>
+<area shape="rect" id="node2" title=" " alt="" coords="563,155,621,181"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,155,80,181"/>
+<area shape="rect" id="node4" title=" " alt="" coords="107,155,175,181"/>
+<area shape="rect" id="node5" title=" " alt="" coords="231,80,292,107"/>
+<area shape="rect" id="node6" title=" " alt="" coords="317,80,395,107"/>
+<area shape="rect" id="node7" title=" " alt="" coords="420,80,473,107"/>
+<area shape="rect" id="node8" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="549,80,635,107"/>
+<area shape="rect" id="node9" href="$compute__wcss_8hpp_source.html" title=" " alt="" coords="659,80,794,107"/>
+<area shape="rect" id="node10" href="$is__edge__case_8hpp_source.html" title=" " alt="" coords="29,80,155,107"/>
 </map>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['hartiganwong_2ehpp_29',['HartiganWong.hpp',['../HartiganWong_8hpp.html',1,'']]]
+  ['details_2ehpp_33',['Details.hpp',['../Details_8hpp.html',1,'']]]
 ];
