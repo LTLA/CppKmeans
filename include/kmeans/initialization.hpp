@@ -2,9 +2,7 @@
 #define KMEANS_INITIALIZATION_HPP 
 
 #include <vector>
-#include <cstdint>
-#include <numeric>
-#include <iostream>
+#include "random.hpp"
 
 /**
  * @file initialization.hpp
@@ -13,23 +11,6 @@
  */
 
 namespace kmeans {
-
-/**
- * @cond
- */
-template<class ENGINE>
-double uniform01 (ENGINE& eng) {
-    // Stolen from Boost.
-    const double factor = 1.0 / static_cast<double>((eng.max)()-(eng.min)());
-    double result;
-    do {
-        result = static_cast<double>(eng() - (eng.min)()) * factor;
-    } while (result == 1.0);
-    return result;
-}
-/**
- * @endcond
- */
 
 /**
  * Implements the <b>k-means++</b> initialization described by Arthur and Vassilvitskii (2007).
@@ -142,24 +123,7 @@ std::vector<INDEX_t> weighted_initialization(int ndim, INDEX_t nobs, const DATA_
  */
 template<typename INDEX_t = int, typename CLUSTER_t = int, class ENGINE>
 std::vector<INDEX_t> simple_initialization(INDEX_t nobs, CLUSTER_t ncenters, ENGINE& eng) {
-    std::vector<INDEX_t> sofar;
-
-    if (ncenters >= nobs) {
-        sofar.resize(nobs);
-        std::iota(sofar.begin(), sofar.end(), 0);
-    } else {
-        sofar.reserve(ncenters);
-        INDEX_t traversed = 0;
-
-        while (sofar.size() < static_cast<size_t>(ncenters)) {
-            if (static_cast<double>(ncenters - sofar.size()) > static_cast<double>(nobs - traversed) * uniform01(eng)) {
-                sofar.push_back(traversed);
-            }
-            ++traversed;
-        }
-    }
-
-    return sofar;
+    return sample_without_replacement(nobs, ncenters, eng);
 }
 
 }
