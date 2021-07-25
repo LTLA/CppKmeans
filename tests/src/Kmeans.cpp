@@ -1,15 +1,19 @@
 #include "kmeans/Kmeans.hpp"
+#include "kmeans/Lloyd.hpp"
+#include "kmeans/MiniBatch.hpp"
 #include <gtest/gtest.h>
 #include "TestCore.h"
+#include <memory>
 
-using KmeansTest = TestParamCore<std::tuple<int, int, int> >;
+using KmeansBasicTest = TestParamCore<std::tuple<int, int, int> >;
 
-TEST_P(KmeansTest, Sweep) {
+TEST_P(KmeansBasicTest, Sweep) {
     auto param = GetParam();
     assemble(param);
     auto ncenters = std::get<2>(param);
 
     std::vector<int> centers(ncenters * nr), clusters(nc);
+
     auto res = kmeans::Kmeans<>().run(nr, nc, data.data(), ncenters);
 
     // Checking that there's the specified number of clusters, and that they're all non-empty.
@@ -36,7 +40,19 @@ TEST_P(KmeansTest, Sweep) {
     }
 }
 
-TEST_P(KmeansTest, SanityCheck) {
+INSTANTIATE_TEST_CASE_P(
+    Kmeans,
+    KmeansBasicTest,
+    ::testing::Combine(
+        ::testing::Values(10, 20), // number of dimensions
+        ::testing::Values(20, 200, 2000), // number of observations 
+        ::testing::Values(2, 5, 10) // number of clusters 
+    )
+);
+
+using KmeansSanityTest = TestParamCore<std::tuple<int, int, int, int> >;
+
+TEST_P(KmeansSanityTest, SanityCheck) {
     auto param = GetParam();
     assemble(param);
     auto ncenters = std::get<2>(param);
@@ -51,8 +67,22 @@ TEST_P(KmeansTest, SanityCheck) {
         }
     }
 
+    // Switching between algorithms.
+    std::unique_ptr<kmeans::Base<>> ptr;
+    auto algo = std::get<3>(param);
+    if (algo == 1) {
+        auto xptr = new kmeans::HartiganWong<>();
+        ptr.reset(xptr);
+    } else if (algo == 2) {
+        auto xptr = new kmeans::Lloyd<>();
+        ptr.reset(xptr);
+    } else if (algo == 3) {
+        auto xptr = new kmeans::MiniBatch<>();
+        ptr.reset(xptr);
+    }
+    auto res = kmeans::Kmeans<>().run(nr, nc, data.data(), ncenters, ptr.get());
+
     // Checking that every 'ncenters'-th element is the same.
-    auto res = kmeans::Kmeans<>().run(nr, nc, data.data(), ncenters);
     std::vector<int> last_known(ncenters, -1);
     for (int c = 0; c < nc; ++c) {
         int& x = last_known[c % ncenters];
@@ -74,11 +104,12 @@ TEST_P(KmeansTest, SanityCheck) {
 
 INSTANTIATE_TEST_CASE_P(
     Kmeans,
-    KmeansTest,
+    KmeansSanityTest,
     ::testing::Combine(
         ::testing::Values(10, 20), // number of dimensions
         ::testing::Values(20, 200, 2000), // number of observations 
-        ::testing::Values(2, 5, 10) // number of clusters 
+        ::testing::Values(2, 5, 10), // number of clusters 
+        ::testing::Values(1, 2, 3) // algorithm
     )
 );
 

@@ -1,6 +1,7 @@
 #ifndef KMEANS_KMEANS_HPP
 #define KMEANS_KMEANS_HPP
 
+#include "Base.hpp"
 #include "HartiganWong.hpp"
 #include "initialization.hpp"
 #include "Details.hpp"
@@ -32,8 +33,7 @@ template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = 
 class Kmeans {
     bool weighted_init = true;
     uint64_t seed = 5489u;
-
-    HartiganWong<DATA_t, CLUSTER_t, INDEX_t> hw;
+    int maxiters = HartiganWong<>::Defaults::max_iterations;
 
 public:
     /** 
@@ -59,22 +59,16 @@ public:
     }
 
     /** 
-     * Set the maximum number of iterations to the default in `HartiganWong::set_max_iterations()`.
+     * @deprecated
      *
-     * @return A reference to this `Kmeans` object.
-     */
-    Kmeans& set_max_iterations() {
-        hw.set_max_iterations();
-        return *this;
-    }
-
-    /** 
+     * Use the relevant `run()` method with a pointer to a custom `HartiganWong()` object to set this instead.
+     *
      * @param m Maximum number of iterations to use in the Hartigan-Wong algorithm.
      *
      * @return A reference to this `Kmeans` object.
      */
-    Kmeans& set_max_iterations(int m) {
-        hw.set_max_iterations(m);
+    Kmeans& set_max_iterations(int m = HartiganWong<>::Defaults::max_iterations) {
+        maxiters = m;
         return *this;
     }
 
@@ -108,15 +102,24 @@ public:
      * Data should be stored in column-major order.
      * On output, this will contain the final centroid locations for each cluster.
      * @param[out] clusters Pointer to an array of length `nobs`.
-     * Om output, this will contain the (0-indexed) cluster assignment for each observation.
+     * On output, this will contain the (0-indexed) cluster assignment for each observation.
+     * @param algorithm Pointer to a `Base` object containing the desired k-means algorithm.
+     * If `NULL`, this defaults to a default `HartiganWong` instance.
      *
      * @return `centers` and `clusters` are filled, and a `Details` object is returned containing clustering statistics.
      * Note that the actual number of clusters may be less than `ncenters` in pathological cases - 
      * check the length of `Details::sizes` and the value of `Details::status`.
      */
-    Details<DATA_t, INDEX_t> run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
+    Details<DATA_t, INDEX_t> run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters,  Base<DATA_t, CLUSTER_t, INDEX_t>* algorithm = NULL) {
         ncenters = initialize(ndim, nobs, data, ncenters, centers); 
-        return hw.run(ndim, nobs, data, ncenters, centers, clusters);
+
+        if (algorithm == NULL) {
+            HartiganWong<DATA_t, CLUSTER_t, INDEX_t> hw;
+            hw.set_max_iterations(maxiters);
+            return hw.run(ndim, nobs, data, ncenters, centers, clusters);
+        } else {
+            return algorithm->run(ndim, nobs, data, ncenters, centers, clusters);
+        }
     }
 
 public:
@@ -154,14 +157,16 @@ public:
      * @param[in] data Pointer to a `ndim`-by-`nobs` array where columns are observations and rows are dimensions. 
      * Data should be stored in column-major order.
      * @param ncenters Number of cluster centers.
+     * @param algorithm Pointer to a `Base` object containing the desired k-means algorithm.
+     * If `NULL`, this defaults to a default `HartiganWong` instance.
      *
      * @return `centers` and `clusters` are filled, and a `Results` object is returned containing clustering statistics.
      * See `run()` for more details.
      */
-    Results run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters) {
+    Results run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, Base<DATA_t, CLUSTER_t, INDEX_t>* algorithm = NULL) {
         Results output(ndim, nobs, ncenters);
         ncenters = initialize(ndim, nobs, data, ncenters, output.centers.data()); 
-        output.details = hw.run(ndim, nobs, data, ncenters, output.centers.data(), output.clusters.data());
+        output.details = run(ndim, nobs, data, ncenters, output.centers.data(), output.clusters.data(), algorithm);
         return output;
     }
 };
