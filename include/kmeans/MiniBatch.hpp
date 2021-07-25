@@ -1,5 +1,5 @@
-#ifndef KMEANS_LLOYD_HPP
-#define KMEANS_LLOYD_HPP
+#ifndef KMEANS_MINIBATCH_HPP
+#define KMEANS_MINIBATCH_HPP
 
 #include <vector>
 #include <algorithm>
@@ -9,6 +9,7 @@
 #include <limits>
 #include <random>
 
+#include "Base.hpp"
 #include "Details.hpp"
 #include "QuickSearch.hpp"
 #include "compute_wcss.hpp"
@@ -39,9 +40,13 @@ namespace kmeans {
  * We may stop the algorithm before the maximum number of iterations if only a few observations are reassigned at each iteration. 
  * Specifically, every \f$h\f$ iterations, we compute the proportion of sampled observations for each cluster in the past \f$h\f$ mini-batches that were reassigned to/from that cluster.
  * If this proportion is less than some threshold \f$p\f$ for all clusters, we consider that the algorithm has converged.
+ *
+ * @tparam DATA_t Floating-point type for the data and centroids.
+ * @tparam CLUSTER_t Integer type for the cluster assignments.
+ * @tparam INDEX_t Integer type for the observation index.
  */
 template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
-class MiniBatch {
+class MiniBatch : public Base<DATA_t, CLUSTER_t, INDEX_t> {
 public:
     /** 
      * @brief Default parameter values for `MiniBatch`.
