@@ -91,9 +91,8 @@ $(function() {
 <div class="line">deets.<a class="code" href="structkmeans_1_1Details.html#a74c558344971f15601342e2b5b51500a">withinss</a>;</div>
 <div class="line">deets.sizes;</div>
 <div class="ttc" id="astructkmeans_1_1Details_html_a74c558344971f15601342e2b5b51500a"><div class="ttname"><a href="structkmeans_1_1Details.html#a74c558344971f15601342e2b5b51500a">kmeans::Details::withinss</a></div><div class="ttdeci">std::vector&lt; DATA_t &gt; withinss</div><div class="ttdef"><b>Definition:</b> Details.hpp:46</div></div>
-</div><!-- fragment --><p>If you want to fiddle with some parameters, use the relevant getters:</p>
-<div class="fragment"><div class="line"><span class="comment">// Or if you want to fiddle with some parameters:</span></div>
-<div class="line"><a class="code" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a> km;</div>
+</div><!-- fragment --><p>If you want to fiddle with some parameters, use the relevant setters:</p>
+<div class="fragment"><div class="line"><a class="code" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a> km;</div>
 <div class="line">km.<a class="code" href="classkmeans_1_1Kmeans.html#a4fdd3a028f1d5867873a93e3777352e9">set_seed</a>(42).<a class="code" href="classkmeans_1_1Kmeans.html#a0719589431c642fecff63d317862ffe7">set_weighted</a>(<span class="keyword">false</span>);</div>
 <div class="line"><span class="keyword">auto</span> res2 = <a class="code" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code" href="classkmeans_1_1Kmeans.html#a50fee0a4f2d66af57426d1ecc0c123c7">run</a>(ndim, nobs, matrix.data(), ncenters);</div>
 <div class="line"> </div>
