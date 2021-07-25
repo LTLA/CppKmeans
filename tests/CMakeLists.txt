@@ -14,6 +14,7 @@ add_executable(
     libtest 
     src/HartiganWong.cpp
     src/Lloyd.cpp
+    src/MiniBatch.cpp
     src/initialization.cpp
     src/Kmeans.cpp
 )
