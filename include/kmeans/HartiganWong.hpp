@@ -9,6 +9,7 @@
 #include <limits>
 
 #include "Details.hpp"
+#include "compute_centroids.hpp"
 #include "compute_wcss.hpp"
 #include "is_edge_case.hpp"
 
@@ -159,15 +160,8 @@ public:
 
 private:
     Details<DATA_t, INDEX_t> kmeans() {
-        int iter = 0;
-        int ifault = 0;
-
-        if (is_edge_case(num_obs, num_centers, ic1, nc, ifault)) {
-            if (num_centers) {
-                return finish(iter, ifault);
-            } else {
-                return Details<DATA_t, INDEX_t>(iter, ifault);
-            }
+        if (is_edge_case(num_obs, num_centers)) {
+            return process_edge_case(num_dim, num_obs, data_ptr, num_centers, centers_ptr, ic1);
         }
 
         /* For each point I, find its two closest centres, IC1(I) and 
@@ -189,14 +183,13 @@ private:
 
             for (CLUSTER_t cen = 2; cen < num_centers; ++cen) {
                 DATA_t candidate_dist = squared_distance_from_cluster(obs, cen);
-                if (candidate_dist < best_dist) {
-                    std::swap(best_dist, second_dist);
-                    std::swap(best, second);
-                    best_dist = candidate_dist;
-                    best = cen;
-                } else if (candidate_dist < second_dist) {
+                if (candidate_dist < second_dist) {
                     second_dist = candidate_dist;
                     second = cen;                    
+                    if (candidate_dist < best_dist) {
+                        std::swap(best_dist, second_dist);
+                        std::swap(best, second);
+                    }
                 }
             }
         }
@@ -205,22 +198,18 @@ private:
          * within them. 
          * NC(L) := #{units in cluster L},  L = 1..K 
          */
-        std::fill(centers_ptr, centers_ptr + num_dim * num_centers, 0);
         std::fill(nc.begin(), nc.end(), 0);
         for (INDEX_t obs = 0; obs < num_obs; ++obs) {
-            auto cen = ic1[obs];
-            ++nc[cen];
-            add_point_to_cluster(obs, cen);
+            ++nc[ic1[obs]];
         }
+
+        compute_centroids(num_dim, num_obs, data_ptr, num_centers, centers_ptr, ic1, nc);
 
         // Check to see if there is any empty cluster at this stage 
         for (CLUSTER_t cen = 0; cen < num_centers; ++cen) {
             if (nc[cen] == 0) {
-                ifault = 1;
-                return finish(iter, ifault);
+                return Details(0, 1); // i.e., ifault = 1 here.
             }
-
-            divide_by_cluster_size(cen);
 
             /* Initialize AN1, AN2.
              * AN1(L) = NC(L) / (NC(L) - 1)
@@ -240,6 +229,8 @@ private:
         initialize_ncp();
         std::fill(itran.begin(), itran.end(), true);
         std::fill(live.begin(), live.end(), 0);
+        int iter = 0;
+        int ifault = 0;
 
         for (iter = 1; iter <= maxiter; ++iter) {
 
@@ -282,7 +273,13 @@ private:
             ifault = 2;
         }
 
-        return finish(iter, ifault);
+        compute_centroids(num_dim, num_obs, data_ptr, num_centers, centers_ptr, ic1, nc);
+        return Details(
+            std::move(nc),
+            compute_wcss(num_dim, num_obs, data_ptr, num_centers, centers_ptr, ic1),
+            iter,
+            ifault
+        );
     }
 
 private:
@@ -296,40 +293,6 @@ private:
         std::cout << std::endl;
     }
 #endif
-
-    void add_point_to_cluster(INDEX_t obs, CLUSTER_t cen) {
-        auto copy = centers_ptr + cen * num_dim;
-        auto mine = data_ptr + obs * num_dim;
-        for (int dim = 0; dim < num_dim; ++dim, ++copy, ++mine) {
-            *copy += *mine;
-        }
-    }
-
-    void divide_by_cluster_size(CLUSTER_t cen) {
-        auto curcenter = centers_ptr + cen * num_dim;
-        for (int dim = 0; dim < num_dim; ++dim, ++curcenter) {
-            *curcenter /= nc[cen];
-        }
-    }
-
-    // Assumes that 'ic1' and 'nc' have been filled.
-    Details<DATA_t, INDEX_t> finish(int iter, int ifault) {
-        std::fill(centers_ptr, centers_ptr + num_centers * num_dim, 0);
-        for (INDEX_t obs = 0; obs < num_obs; ++obs) {
-            add_point_to_cluster(obs, ic1[obs]);
-        }
-        for (CLUSTER_t cen = 0; cen < num_centers; ++cen) {
-            if (nc[cen]) {
-                divide_by_cluster_size(cen);
-            }
-        }
-
-        return Details(
-            std::move(nc),
-            compute_wcss(num_dim, num_obs, data_ptr, num_centers, centers_ptr, ic1),
-            iter,
-            ifault);
-    }
 
     DATA_t squared_distance_from_cluster(INDEX_t pt, CLUSTER_t clust) const {
         const DATA_t* acopy = data_ptr + pt * num_dim;

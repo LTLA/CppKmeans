@@ -9,9 +9,10 @@
 #include <limits>
 
 #include "Details.hpp"
-#include "compute_wcss.hpp"
 #include "QuickSearch.hpp"
 #include "is_edge_case.hpp"
+#include "compute_centroids.hpp"
+#include "compute_wcss.hpp"
 
 /**
  * @file Lloyd.hpp
@@ -50,28 +51,6 @@ public:
         return *this;
     }
 
-private:
-    void recompute_centroids(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, const CLUSTER_t* clusters, const std::vector<INDEX_t>& sizes) {
-        // Computing the average of each cluster.
-        std::fill(centers, centers + ncenters * ndim, 0);
-        for (INDEX_t obs = 0; obs < nobs; ++obs) {
-            auto copy = centers + clusters[obs] * ndim;
-            auto mine = data + obs * ndim;
-            for (int dim = 0; dim < ndim; ++dim, ++copy, ++mine) {
-                *copy += *mine;
-            }
-        }
-        
-        for (CLUSTER_t c = 0; c < ncenters; ++ c) {
-            if (sizes[c]) {
-                auto loc = centers + c * ndim;
-                for (int d = 0; d < ndim; ++d, ++loc) {
-                    *loc /= sizes[c];
-                }
-            }
-        }
-    }
-
 public:
     /**
      * @param ndim Number of dimensions.
@@ -90,24 +69,14 @@ public:
      * If `ncenters > nobs`, only the first `nobs` columns of the `centers` array will be filled.
      */
     Details<DATA_t, INDEX_t> run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
-        int iter = 0, status = 0;
-        std::vector<INDEX_t> sizes(ncenters);
-
-        if (is_edge_case(nobs, ncenters, clusters, sizes, status)) {
-            if (ncenters) {
-                recompute_centroids(ndim, nobs, data, ncenters, centers, clusters, sizes);
-                return Details<DATA_t, INDEX_t>(
-                    std::move(sizes),
-                    compute_wcss(ndim, nobs, data, ncenters, centers, clusters),
-                    iter, 
-                    status
-                );
-            } else {
-                return Details<DATA_t, INDEX_t>(iter, status);
-            }
+        if (is_edge_case(nobs, ncenters)) {
+            return process_edge_case(ndim, nobs, data, ncenters, centers, clusters);
         }
 
+        int iter = 0, status = 0;
+        std::vector<INDEX_t> sizes(ncenters);
         std::vector<CLUSTER_t> copy(nobs);
+
         for (iter = 1; iter <= maxiter; ++iter) {
             // Nearest-neighbor search to assign to the closest cluster.
             // Note that we move the `updated` check outside of this loop
@@ -142,7 +111,7 @@ public:
                 }
             }
             
-            recompute_centroids(ndim, nobs, data, ncenters, centers, clusters, sizes);
+            compute_centroids(ndim, nobs, data, ncenters, centers, clusters, sizes);
         }
 
         if (iter == maxiter + 1) {
