@@ -160,6 +160,7 @@ public:
         /* For each point I, find its two closest centres, IC1(I) and 
          * IC2(I). Assign it to IC1(I). 
          */
+        #pragma omp parallel for
         for (INDEX_t obs = 0; obs < num_obs; ++obs) {
             auto& best = ic1[obs];
             best = 0;

@@ -83,6 +83,7 @@ public:
             // Note that we move the `updated` check outside of this loop
             // so that, in the future, this is more easily parallelized.
             QuickSearch<DATA_t, CLUSTER_t> index(ndim, ncenters, centers);
+            #pragma omp parallel for
             for (INDEX_t obs = 0; obs < nobs; ++obs) {
                 copy[obs] = index.find(data + obs * ndim);
             }

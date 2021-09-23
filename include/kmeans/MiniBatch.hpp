@@ -166,8 +166,9 @@ public:
             }
 
             QuickSearch<DATA_t, CLUSTER_t> index(ndim, ncenters, centers);
-            for (auto o : chosen) {
-                clusters[o] = index.find(data + o * ndim);
+            #pragma omp parallel for
+            for (size_t i = 0; i < chosen.size(); ++i) {
+                clusters[chosen[i]] = index.find(data + chosen[i] * ndim);
             }
 
             // Updating the means for each cluster.
@@ -218,6 +219,7 @@ public:
 
         // Run through all observations to make sure they have the latest cluster assignments.
         QuickSearch<DATA_t, CLUSTER_t> index(ndim, ncenters, centers);
+        #pragma omp parallel for
         for (INDEX_t o = 0; o < nobs; ++o) {
             clusters[o] = index.find(data + o * ndim);
         }

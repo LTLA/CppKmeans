@@ -55,8 +55,8 @@ std::vector<INDEX_t> weighted_initialization(int ndim, INDEX_t nobs, const DATA_
         INDEX_t counter = 0;
         if (!sofar.empty()) {
             auto last = sofar.back();
-            INDEX_t prevcounter = 0;
 
+            #pragma omp parallel for
             for (INDEX_t obs = 0; obs < nobs; ++obs) {
                 if (mindist[obs]) {
                     const DATA_t* acopy = data + obs * ndim;
