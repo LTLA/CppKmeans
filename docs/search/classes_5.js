@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['minibatch_46',['MiniBatch',['../classkmeans_1_1MiniBatch.html',1,'kmeans']]]
+  ['minibatch_0',['MiniBatch',['../classkmeans_1_1MiniBatch.html',1,'kmeans']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['details_67',['details',['../structkmeans_1_1Kmeans_1_1Results.html#ac23784760aa289e727b0029a2280ba0b',1,'kmeans::Kmeans::Results']]]
+  ['details_0',['details',['../structkmeans_1_1Kmeans_1_1Results.html#ac23784760aa289e727b0029a2280ba0b',1,'kmeans::Kmeans::Results']]]
 ];

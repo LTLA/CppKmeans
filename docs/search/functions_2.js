@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['weighted_5finitialization_62',['weighted_initialization',['../initialization_8hpp.html#add61beabe6826e33e0a668523ea93b5f',1,'kmeans']]]
+  ['weighted_5finitialization_0',['weighted_initialization',['../initialization_8hpp.html#a9edf36a5f0664ec5627d34ab71f13e27',1,'kmeans']]]
 ];
