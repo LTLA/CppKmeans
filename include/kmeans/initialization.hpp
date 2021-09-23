@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "random.hpp"
+#include "aarand/aarand.hpp"
 
 /**
  * @file initialization.hpp
@@ -87,7 +88,7 @@ std::vector<INDEX_t> weighted_initialization(int ndim, INDEX_t nobs, const DATA_
 
         INDEX_t chosen_id = 0;
         do {
-            const DATA_t sampled_weight = total * uniform01(eng);
+            const DATA_t sampled_weight = total * aarand::standard_uniform(eng);
             chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();
 
             // We wrap this in a do/while to defend against edge cases where
