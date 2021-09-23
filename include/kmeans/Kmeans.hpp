@@ -53,7 +53,7 @@ public:
      *
      * @return A reference to this `Kmeans` object.
      */
-    Kmeans& set_seed(bool s = 5489u) {
+    Kmeans& set_seed(uint64_t s = 5489u) {
         seed = s;
         return *this;
     }

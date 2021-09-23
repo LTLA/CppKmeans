@@ -71,6 +71,11 @@ public:
          * See `MiniBatch::set_convergence_history()`.
          */
         static constexpr int convergence_history = 10;
+
+        /** 
+         * See `MiniBatch::set_seed()`.
+         */
+        static constexpr uint64_t seed = 1234567890;
     };
 
 private:
@@ -81,6 +86,8 @@ private:
     int history = Defaults::convergence_history;
 
     double max_change = Defaults::max_change_proportion;
+
+    uint64_t seed = Defaults::seed;
 public:
     /**
      * @param i Maximum number of iterations.
@@ -126,6 +133,16 @@ public:
         return *this;
     }
 
+    /** 
+     * @param s Seed to use for PRNG when sampling observations to use in each mini-batch.
+     *
+     * @return A reference to this `MiniBatch` object.
+     */
+    MiniBatch& set_seed(uint64_t s = Defaults::seed) {
+        seed = s;
+        return *this;
+    }
+
 public:
     /**
      * @param ndim Number of dimensions.
@@ -155,7 +172,7 @@ public:
 
         auto actual_batch_size = std::min(batch_size, nobs);
         int last_updated = 0;
-        std::mt19937_64 eng(123456789);
+        std::mt19937_64 eng(seed);
 
         for (iter = 1; iter <= maxiter; ++iter) {
             auto chosen = sample_without_replacement(nobs, actual_batch_size, eng);
