@@ -22,7 +22,7 @@ namespace kmeans {
  * Each observation is assigned to its closest cluster based on the distance to the cluster centroids.
  * The cluster centroids themselves are chosen to minimize the sum of squared Euclidean distances from each observation to its assigned cluster.
  * This procedure involves some heuristics to choose a good initial set of centroids (see `weighted_initialization()` for details) 
- * and to converge to a local minimum (see `HartiganWong` for details).
+ * and to converge to a local minimum (see `HartiganWong`, `Lloyd` or `MiniBatch` for details).
  *
  * @tparam DATA_t Floating-point type for the data and centroids.
  * @tparam CLUSTER_t Integer type for the cluster assignments.
@@ -146,7 +146,7 @@ public:
         std::vector<CLUSTER_t> clusters;
 
         /**
-         * Further details from the Hartigan-Wong algorithm.
+         * Further details from the chosen k-means algorithm.
          */
         Details<DATA_t, INDEX_t> details;
     };

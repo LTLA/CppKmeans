@@ -21,12 +21,12 @@ The Hartigan-Wong implementation is derived from the Fortran code in the R **sta
 // assorted boilerplate here...
 
 auto res = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters);
-res.centers;
-res.clusters;
-res.details;
+res.centers; // Matrix of centroid coordinates, stored in column-major format
+res.clusters; // Vector of cluster assignments
+res.details; // Details from the clustering algorithm
 ```
 
-If you already allocated the relevant memory, you can fill the arrays directly:
+If you already allocated arrays for the centroids and clusters, you can fill the arrays directly:
 
 ```cpp
 std::vector<double> centers(ndim * ncenters);
@@ -37,7 +37,7 @@ deets.withinss;
 deets.sizes;
 ```
 
-If you want to fiddle with some parameters, use the relevant setters:
+If you want to fiddle with parameters, use the relevant setters:
 
 ```cpp
 kmeans::Kmeans km;
@@ -79,6 +79,7 @@ target_link_libraries(mylib INTERFACE kmeans)
 ```
 
 If you're not using CMake, the simple approach is to just copy the files - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's `-I`.
+This requires the additional [**aarand**](https://github.com/LTLA/aarand) library for some lightweight distribution functions.
 
 ## References
 
