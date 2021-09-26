@@ -234,7 +234,7 @@ $(function() {
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        <span class="comment">// Check to see if there is any empty cluster at this stage </span></div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        <span class="keywordflow">for</span> (CLUSTER_t cen = 0; cen &lt; num_centers; ++cen) {</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            <span class="keywordflow">if</span> (nc[cen] == 0) {</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                <span class="keywordflow">return</span> Details(0, 1); <span class="comment">// i.e., ifault = 1 here.</span></div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                <span class="keywordflow">return</span> Details&lt;DATA_t, INDEX_t&gt;(0, 1); <span class="comment">// i.e., ifault = 1 here.</span></div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            }</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            <span class="comment">/* Initialize AN1, AN2.</span></div>
