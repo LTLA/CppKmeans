@@ -33,7 +33,7 @@ Details<DATA_t, INDEX_t> process_edge_case(int ndim, INDEX_t nobs, const DATA_t*
         return Details(std::move(sizes), std::move(wcss), 0, (ncenters > nobs ? 3 : 0));
 
     } else { //i.e., ncenters == 0, provided is_edge_case is true.
-        return Details(0, 3);
+        return Details<DATA_t, INDEX_t>(0, 3);
     }
 }
 

@@ -202,7 +202,7 @@ public:
         // Check to see if there is any empty cluster at this stage 
         for (CLUSTER_t cen = 0; cen < num_centers; ++cen) {
             if (nc[cen] == 0) {
-                return Details(0, 1); // i.e., ifault = 1 here.
+                return Details<DATA_t, INDEX_t>(0, 1); // i.e., ifault = 1 here.
             }
 
             /* Initialize AN1, AN2.
