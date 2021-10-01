@@ -31,9 +31,25 @@ namespace kmeans {
  */
 template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
 class Kmeans {
-    bool weighted_init = true;
-    uint64_t seed = 5489u;
-    int maxiters = HartiganWong<>::Defaults::max_iterations;
+public:
+    /** 
+     * @brief Default parameter values for `Kmeans`.
+     */
+    struct Defaults {
+        /**
+         * See `set_weighted()` for more details.
+         */
+        static constexpr bool weighted = true;
+
+        /**
+         * See `set_seed()` for more details.
+         */
+        static constexpr uint64_t seed = 5489u;
+    };
+
+private:
+    bool weighted_init = Defaults::weighted; 
+    uint64_t seed = Defaults::seed;
 
 public:
     /** 
@@ -57,21 +73,6 @@ public:
         seed = s;
         return *this;
     }
-
-    /** 
-     * @deprecated
-     *
-     * Use the relevant `run()` method with a pointer to a custom `HartiganWong()` object to set this instead.
-     *
-     * @param m Maximum number of iterations to use in the Hartigan-Wong algorithm.
-     *
-     * @return A reference to this `Kmeans` object.
-     */
-    Kmeans& set_max_iterations(int m = HartiganWong<>::Defaults::max_iterations) {
-        maxiters = m;
-        return *this;
-    }
-
 private:
     CLUSTER_t initialize(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers) {
         std::vector<INDEX_t> chosen;
@@ -115,7 +116,6 @@ public:
 
         if (algorithm == NULL) {
             HartiganWong<DATA_t, CLUSTER_t, INDEX_t> hw;
-            hw.set_max_iterations(maxiters);
             return hw.run(ndim, nobs, data, ncenters, centers, clusters);
         } else {
             return algorithm->run(ndim, nobs, data, ncenters, centers, clusters);
