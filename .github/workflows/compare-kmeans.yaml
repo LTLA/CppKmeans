@@ -4,7 +4,7 @@ name: "stats::kmeans comparison"
 
 jobs:
   build:
-    name: Compare to irlba reference
+    name: Compare to kmeans reference
     runs-on: ubuntu-latest
     container: bioconductor/bioconductor_docker:devel
     steps:

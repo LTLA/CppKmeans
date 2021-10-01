@@ -9,6 +9,9 @@ library(Rcpp)
 if (!file.exists("kmeans")) {
     file.symlink("../../include/kmeans", "kmeans")
 }
+if (!file.exists("aarand")) {
+    file.symlink("../../build/_deps/aarand-src/include/aarand", "aarand")
+}
 sourceCpp("test.cpp")
 
 library(testthat)
