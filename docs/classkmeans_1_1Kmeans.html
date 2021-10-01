@@ -83,6 +83,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1Kmeans_1_1Defaults.html">Defaults</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default parameter values for <code><a class="el" href="classkmeans_1_1Kmeans.html" title="Top-level class to run k-means clustering.">Kmeans</a></code>.  <a href="structkmeans_1_1Kmeans_1_1Defaults.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html">Results</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Full statistics from k-means clustering.  <a href="structkmeans_1_1Kmeans_1_1Results.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -93,8 +96,6 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a08d63cf867c8778e59da4625c7928c35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08722656de2324a957f328c42f359748"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a08722656de2324a957f328c42f359748">set_seed</a> (uint64_t s=5489u)</td></tr>
 <tr class="separator:a08722656de2324a957f328c42f359748"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac901099b78cb6c7cca2a36c695a6a6e8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#ac901099b78cb6c7cca2a36c695a6a6e8">set_max_iterations</a> (int m=<a class="el" href="classkmeans_1_1HartiganWong.html">HartiganWong</a>&lt;&gt;::Defaults::max_iterations)</td></tr>
-<tr class="separator:ac901099b78cb6c7cca2a36c695a6a6e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac41e9f61a2541baa314faa559ffb2f2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; DATA_t, INDEX_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#ac41e9f61a2541baa314faa559ffb2f2a">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters, <a class="el" href="classkmeans_1_1Base.html">Base</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt; *algorithm=NULL)</td></tr>
 <tr class="separator:ac41e9f61a2541baa314faa559ffb2f2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4017a3be86613188da238a3fb4c7bec6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Kmeans_1_1Results.html">Results</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Kmeans.html#a4017a3be86613188da238a3fb4c7bec6">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, <a class="el" href="classkmeans_1_1Base.html">Base</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt; *algorithm=NULL)</td></tr>
@@ -261,43 +262,6 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
 
 </div>
 </div>
-<a id="ac901099b78cb6c7cca2a36c695a6a6e8" name="ac901099b78cb6c7cca2a36c695a6a6e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac901099b78cb6c7cca2a36c695a6a6e8">&#9670;&nbsp;</a></span>set_max_iterations()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1Kmeans.html">Kmeans</a> &amp; <a class="el" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::set_max_iterations </td>
-          <td>(</td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>m</em> = <code><a class="el" href="classkmeans_1_1HartiganWong.html">HartiganWong</a>&lt;&gt;::Defaults::max_iterations</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000001">Deprecated:</a></b></dt><dd></dd></dl>
-<p >Use the relevant <code><a class="el" href="classkmeans_1_1Kmeans.html#ac41e9f61a2541baa314faa559ffb2f2a">run()</a></code> method with a pointer to a custom <code>HartiganWong()</code> object to set this instead.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">m</td><td>Maximum number of iterations to use in the Hartigan-Wong algorithm.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to this <code><a class="el" href="classkmeans_1_1Kmeans.html" title="Top-level class to run k-means clustering.">Kmeans</a></code> object. </dd></dl>
-
-</div>
-</div>
 <a id="a08722656de2324a957f328c42f359748" name="a08722656de2324a957f328c42f359748"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a08722656de2324a957f328c42f359748">&#9670;&nbsp;</a></span>set_seed()</h2>
 
@@ -325,7 +289,7 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">s</td><td>Seed to use for PRNG. Defaults to default seed for the <code>std::mt19937_64</code> constructor.</td></tr>
+    <tr><td class="paramname">s</td><td>Seed to use for PRNG. <a class="el" href="structkmeans_1_1Kmeans_1_1Defaults.html" title="Default parameter values for Kmeans.">Defaults</a> to default seed for the <code>std::mt19937_64</code> constructor.</td></tr>
   </table>
   </dd>
 </dl>
