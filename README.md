@@ -42,12 +42,12 @@ If you want to fiddle with parameters, use the relevant setters:
 ```cpp
 kmeans::Kmeans km;
 km.set_seed(42).set_weighted(false);
-auto res2 = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters);
+auto res2 = km.run(ndim, nobs, matrix.data(), ncenters);
 
 // Or change the underlying algorithm:
 kmeans::Lloyd ll;
 ll.set_max_iterations(100);
-auto res3 = kmeans::Kmeans.run(ndim, nobs, matrix.data(), ncenters, &ll);
+auto res3 = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters, &ll);
 ```
 
 See the [reference documentation](https://ltla.github.io/CppKmeans) for more details.
