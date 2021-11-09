@@ -16,7 +16,7 @@ namespace kmeans {
 /**
  * Implements the <b>k-means++</b> initialization described by Arthur and Vassilvitskii (2007).
  * This approach involves the selection of starting points via iterations of weighted sampling, 
- * where the sampling probability for each point is defined as the squared distance to the closest starting point that was chosen in any of the previous iterations.
+ * where the sampling probability for each point is proportional to the squared distance to the closest starting point that was chosen in any of the previous iterations.
  * The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.
  *
  * @param ndim Number of dimensions.

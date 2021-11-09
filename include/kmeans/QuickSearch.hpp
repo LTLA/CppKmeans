@@ -165,6 +165,13 @@ public:
         search_nn(0, query, closest, tau);
         return closest;
     }
+
+    std::pair<CLUSTER_t, DATA_t> find_with_distance(const DATA_t* query) const {
+        DATA_t tau = std::numeric_limits<DATA_t>::max();
+        CLUSTER_t closest = 0;
+        search_nn(0, query, closest, tau);
+        return std::make_pair(closest, tau);
+    }
 };
 
 }
