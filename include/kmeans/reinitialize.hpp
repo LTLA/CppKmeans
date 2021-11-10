@@ -3,15 +3,18 @@
 
 #include <vector>
 #include <algorithm>
+#include "initialization.hpp"
+#include "QuickSearch.hpp"
 
 namespace kmeans {
 
 template<typename DATA_t = double, typename INDEX_t = int, typename CLUSTER_t = int, class ENGINE>
-void reinitialize (int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters, bool empty_clusters = true) {
-    std::vector<DATA_t> mindist(ndim);
+void reinitialize_centers(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters, ENGINE& eng, bool empty_clusters = true) {
+    std::vector<DATA_t> mindist(nobs);
     std::vector<DATA_t> cumulative(nobs);
 
     if (empty_clusters) {
+        QuickSearch x(ndim, ncenters, centers);
         #pragma omp parallel for
         for (INDEX_t obs = 0; obs < nobs; ++obs) {
             auto closest = x.find_with_distance(data + obs * ndim);
@@ -21,11 +24,11 @@ void reinitialize (int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenter
     } else {
         #pragma omp parallel for
         for (INDEX_t obs = 0; obs < nobs; ++obs) {
-            DATA_t* o = data + ndim * obs;
-            DATA_t* c = centers + ndim * clusters[obs];
+            const DATA_t* o = data + ndim * obs;
+            const DATA_t* c = centers + ndim * clusters[obs];
             auto& current = mindist[obs];
             for (int d = 0; d < ndim; ++d) {
-                current += d * d;
+                current += (o[d] - c[d]) * (o[d] - c[d]);
             }
         }
     }
@@ -57,35 +60,29 @@ void reinitialize (int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenter
         for (INDEX_t i = 1; i < nobs; ++i) {
             cumulative[i] = cumulative[i-1] + mindist[i];
         }
-        const auto total = cumulative.back();
+        auto chosen_id = weighted_sample(cumulative, mindist, nobs, eng);
+        auto chosen_ptr = data + chosen_id * ndim;
 
-        // See initialize.hpp for the logic around using a loop here.
-        INDEX_t chosen_id = 0;
-        do {
-            const DATA_t sampled_weight = total * aarand::standard_uniform(eng);
-            chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();
-        } while (chosen_id == nobs || mindist[chosen_id] == 0);
+        // Updating the minimum distances and the closest clusters.
+        #pragma omp parallel for
+        for (INDEX_t obs = 0; obs < nobs; ++obs) {
+            const DATA_t* o = data + ndim * obs;
+            DATA_t candidate = 0;
+            for (int d = 0; d < ndim; ++d) {
+                candidate += (chosen_ptr[d] - o[d]) * (chosen_ptr[d] - o[d]);
+            }
+            if (candidate < mindist[obs]) {
+                mindist[obs] = candidate;
+                clusters[obs] = c;
+            }
+        }
 
         if (c + 1 < ncenters) {
             // Implicit erasure happens here when we replace the center for the
             // next 'c' with the current sampled point. Note that we also update
             // the cluster assignments for good measure.
-            auto chosen_ptr = data + chosen_id * ndim;
             auto target_ptr = centers + (c + 1) * ndim;
             std::copy(chosen_ptr, chosen_ptr + ndim, target_ptr);
-
-            #pragma omp parallel for
-            for (INDEX_t obs = 0; obs < nobs; ++obs) {
-                DATA_t* o = data + ndim * obs;
-                DATA_t candidate = 0;
-                for (int d = 0; d < ndim; ++d) {
-                    candidate += (chosen_ptr[d] - o[d]) * (chosen_ptr[d] - o[d]);
-                }
-                if (candidate < mindist[obs]) {
-                    mindist[obs] = candidate;
-                    clusters[obs] = c;
-                }
-            }
         } else {
             // Undoing the frameshift on the cluster identities.
             for (CLUSTER_t c = 0; c < ncenters - 1; ++c) {
@@ -93,8 +90,6 @@ void reinitialize (int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenter
                 auto src = dest + ndim;
                 std::copy(src, src + ndim, dest);
             }
-
-            auto chosen_ptr = data + chosen_id * ndim;
             std::copy(chosen_ptr, chosen_ptr + ndim, centers + c * ndim);
         }
     }

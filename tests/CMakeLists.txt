@@ -17,6 +17,7 @@ add_executable(
     src/MiniBatch.cpp
     src/initialization.cpp
     src/Kmeans.cpp
+    src/reinitialize.cpp
 )
 
 target_link_libraries(
@@ -24,6 +25,9 @@ target_link_libraries(
     gtest_main
     kmeans
 )
+
+find_package(OpenMP REQUIRED)
+target_link_libraries(libtest OpenMP::OpenMP_CXX)
 
 set(CODE_COVERAGE "Enable coverage testing" OFF)
 if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
