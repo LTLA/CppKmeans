@@ -17,7 +17,7 @@ add_executable(
     src/MiniBatch.cpp
     src/initialization.cpp
     src/Kmeans.cpp
-    src/reinitialize.cpp
+    src/Reinitialize.cpp
 )
 
 target_link_libraries(
