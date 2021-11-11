@@ -22,5 +22,4 @@ jobs:
       shell: Rscript {0}
       run: |
         setwd("tests/R")
-        output <- testthat::test_file("run.R")
-        q(status=any(as.data.frame(output)$failed), save="no")
+        testthat::test_file("run.R", stop_on_failure=TRUE)

@@ -13,7 +13,7 @@ jobs:
         - {
             name: "Ubuntu Latest GCC", 
             os: ubuntu-latest,
-            cov: false
+            omp: true
           }
         - {
             name: "Ubuntu Latest GCC, coverage enabled", 
@@ -32,8 +32,12 @@ jobs:
       uses: lukka/get-cmake@latest
 
     - name: Configure the build
-      if: ${{ matrix.config.cov == false }}
+      if: ${{ matrix.config.os == 'macos-latest' }}
       run: cmake -S . -B build
+
+    - name: Configure the build with OpenMP
+      if: ${{ matrix.config.omp == true }}
+      run: cmake -S . -B build -DUSE_OPENMP=ON
 
     - name: Configure the build with coverage
       if: ${{ matrix.config.cov == true }}

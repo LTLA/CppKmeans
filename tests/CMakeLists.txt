@@ -26,10 +26,13 @@ target_link_libraries(
     kmeans
 )
 
-find_package(OpenMP REQUIRED)
-target_link_libraries(libtest OpenMP::OpenMP_CXX)
+set(USE_OPENMP OFF CACHE BOOL "Enable OpenMP for tests")
+if(USE_OPENMP)
+    find_package(OpenMP REQUIRED)
+    target_link_libraries(libtest OpenMP::OpenMP_CXX)
+endif()
 
-set(CODE_COVERAGE "Enable coverage testing" OFF)
+set(CODE_COVERAGE OFF CACHE BOOL "Enable coverage testing for tests")
 if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(libtest PRIVATE -O0 -g --coverage)
     target_link_options(libtest PRIVATE --coverage)
