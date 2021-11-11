@@ -4,6 +4,7 @@
 #include <vector>
 #include "random.hpp"
 #include "aarand/aarand.hpp"
+#include <iostream>
 
 /**
  * @file initialization.hpp
@@ -14,9 +15,42 @@
 namespace kmeans {
 
 /**
+ * @cond
+ */
+template<typename DATA_t, typename INDEX_t, class ENGINE>
+INDEX_t weighted_sample(const std::vector<DATA_t>& cumulative, const std::vector<DATA_t>& mindist, INDEX_t nobs, ENGINE& eng) {
+    auto total = cumulative.back();
+    INDEX_t chosen_id = 0;
+
+    do {
+        const DATA_t sampled_weight = total * aarand::standard_uniform(eng);
+        chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();
+
+        if (chosen_id == nobs) {
+            std::cout << chosen_id << "\t" << "YAY" << std::endl;
+        } else if (mindist[chosen_id] == 0) {
+            std::cout << chosen_id << "\t" << "YAY2" << std::endl;
+        }
+
+        // We wrap this in a do/while to defend against edge cases where
+        // ties are chosen. The most obvious of these is when you get a
+        // `sampled_weight` of zero _and_ there exists a bunch of zeros at
+        // the start of `cumulative`. One could also get unexpected ties
+        // from limited precision in floating point comparisons, so we'll
+        // just be safe and implement a loop here, in the same vein as
+        // uniform01.
+    } while (chosen_id == nobs || mindist[chosen_id] == 0);
+
+    return chosen_id;
+}
+/**
+ * @endcond
+ */
+
+/**
  * Implements the <b>k-means++</b> initialization described by Arthur and Vassilvitskii (2007).
  * This approach involves the selection of starting points via iterations of weighted sampling, 
- * where the sampling probability for each point is defined as the squared distance to the closest starting point that was chosen in any of the previous iterations.
+ * where the sampling probability for each point is proportional to the squared distance to the closest starting point that was chosen in any of the previous iterations.
  * The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.
  *
  * @param ndim Number of dimensions.
@@ -86,20 +120,7 @@ std::vector<INDEX_t> weighted_initialization(int ndim, INDEX_t nobs, const DATA_
             break;
         }
 
-        INDEX_t chosen_id = 0;
-        do {
-            const DATA_t sampled_weight = total * aarand::standard_uniform(eng);
-            chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();
-
-            // We wrap this in a do/while to defend against edge cases where
-            // ties are chosen. The most obvious of these is when you get a
-            // `sampled_weight` of zero _and_ there exists a bunch of zeros at
-            // the start of `cumulative`. One could also get unexpected ties
-            // from limited precision in floating point comparisons, so we'll
-            // just be safe and implement a loop here, in the same vein as
-            // uniform01.
-        } while (chosen_id == nobs || mindist[chosen_id] == 0);
-
+        auto chosen_id = weighted_sample(cumulative, mindist, nobs, eng);
         mindist[chosen_id] = 0;
         sofar.push_back(chosen_id);
     }
