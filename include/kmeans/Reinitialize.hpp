@@ -7,15 +7,55 @@
 #include "initialization.hpp"
 #include "QuickSearch.hpp"
 
+/**
+ * @file reinitialize.hpp
+ * 
+ * @brief Reinitialize from an existing set of clusters.
+ */
+
 namespace kmeans {
 
+/**
+ * @brief Reinitialize from an existing set of clusters.
+ *
+ * Imagine that we have a high-quality clustering of a dataset that we wish to update with more observations.
+ * The goal is to create a new set of clusters that (i) re-uses information from the existing "good" clustering for the previous observations
+ * while (ii) accommodating distinct clusters that are unique to the set of new observations.
+ * We cannot simply rely on the usual k-means iterations to create a new cluster as the bulk of previous observations discourage large movements of the centers.
+ * On the other hand, rerunning the k-means from scratch will discard all information from the existing clustering,
+ * possibly reducing the solution quality - especially if the previous clustering was already finely optimized, e.g., via restarts or high iteration counts.
+ *
+ * This class implements a reinitialization strategy for an existing k-means clustering after adding new observations.
+ * We remove each cluster center in turn and use a **kmeans++** approach to randomly propose a new cluster center.
+ * Sampling probabilities for all observations are weighted by the distances from the other (non-removed) centers. 
+ * If the proposed cluster center achieves a lower within-cluster-sum-squares (WCSS) than the clustering before removal of the previous center, 
+ * then the update is accepted and the proposed center becomes the new cluster center.
+ * This is repeated for each center and the updated set of cluster centers is reported for further refinement with, e.g., `HartiganWong` or `Lloyd`.
+ *
+ * Our strategy favors the preservation of existing clusters if there are no better arrangements. 
+ * However, it can still respond to the presence of new clusters by discarding an existing center if the distance (and thus sampling probability) is large enough. 
+ * We can reduce the strength of this preference for preservation by repeating the sampling across several iterations, 
+ * increasing the chance of finding an alternative center with a lower WCSS.
+ */
 class Reinitialize {
 public:
+    /**
+     * @brief Default parameters.
+     */
     struct Defaults {
+        /**
+         * See `set_seed()` for more details.
+         */
         static constexpr uint64_t seed = 1234u;
 
+        /**
+         * See `set_recompute_clusters()` for more details.
+         */
         static constexpr bool recompute_clusters = true;
 
+        /**
+         * See `set_iterations()` for more details.
+         */
         static constexpr int iterations = 10;
     };
 
@@ -25,22 +65,60 @@ private:
     int iterations = Defaults::iterations;
 
 public:
+    /**
+     * @param s Random seed for the PRNG.
+     *
+     * @return A reference to this `Reinitialize` object.
+     */ 
     Reinitialize& set_seed(uint64_t s = Defaults::seed) {
         seed = s;
         return *this;
     }
 
+    /**
+     * @param r Whether to compute the closest cluster for each observation on input.
+     * If `false`, we assume that the identity of the closest cluster is already provided in the `clusters` array in `run()`.
+     * This can avoid a redundant search if the cluster is already known, e.g., from previous k-means iterations.
+     * 
+     * @return A reference to this `Reinitialize` object.
+     */
     Reinitialize& set_recompute_clusters(bool r = Defaults::recompute_clusters) {
         recompute_clusters = r;
         return *this;
     }
 
+    /**
+     * @param i Number of iterations to attempt to find a new center with a lower WCSS than the previous clustering. 
+     * Larger values increase the likelihood that the cluster centers will be changed during reinitialization.
+     *
+     * @return A reference to this `Reinitialize` object.
+     */
     Reinitialize& set_iterations(int i = Defaults::iterations) {
         iterations = i;
         return *this;
     }
 
 public:
+    /**
+     * @tparam DATA_t Floating-point type for the data and centroids.
+     * @tparam CLUSTER_t Integer type for the cluster assignments.
+     * @tparam INDEX_t Integer type for the observation index.
+     *
+     * @param ndim Number of dimensions.
+     * @param nobs Number of observations.
+     * @param[in] data Pointer to a `ndim`-by-`nobs` array where columns are observations and rows are dimensions. 
+     * Data should be stored in column-major order.
+     * @param ncenters Number of cluster centers.
+     * @param[in, out] centers Pointer to a `ndim`-by-`ncenters` array where columns are cluster centers and rows are dimensions. 
+     * On input, this should contain the previous centroid locations for each cluster.
+     * Data should be stored in column-major order.
+     * On output, this will contain the reinitialized centroid locations for each cluster.
+     * @param[in, out] clusters Pointer to an array of length `nobs`.
+     * On input, this should contain the identity of the closest cluster if `set_recompute_clusters()` is set to `false`; otherwise the input values are ignored.
+     * On output, this will contain the (0-indexed) cluster assignment for each observation.
+     *
+     * @return `centers` and `clusters` are filled with the new centers and cluster assignments.
+     */
     template<typename DATA_t = double, typename INDEX_t = int, typename CLUSTER_t = int>
     void run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) const {
         std::vector<DATA_t> mindist(nobs);
