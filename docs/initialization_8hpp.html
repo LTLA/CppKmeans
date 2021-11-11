@@ -79,15 +79,17 @@ $(function() {
 <div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;random.hpp&quot;</code><br />
 <code>#include &quot;aarand/aarand.hpp&quot;</code><br />
+<code>#include &lt;iostream&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for initialization.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="initialization_8hpp__incl.png" border="0" usemap="#akmeans_2initialization_8hpp" alt=""/></div>
 <map name="akmeans_2initialization_8hpp" id="akmeans_2initialization_8hpp">
-<area shape="rect" title="Initialization methods to choose the starting centroids." alt="" coords="41,5,204,32"/>
+<area shape="rect" title="Initialization methods to choose the starting centroids." alt="" coords="83,5,245,32"/>
 <area shape="rect" title=" " alt="" coords="5,155,64,181"/>
 <area shape="rect" href="random_8hpp_source.html" title=" " alt="" coords="78,80,167,107"/>
 <area shape="rect" title=" " alt="" coords="181,155,309,181"/>
+<area shape="rect" title=" " alt="" coords="243,80,315,107"/>
 <area shape="rect" title=" " alt="" coords="89,155,157,181"/>
 </map>
 </div>
@@ -96,8 +98,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="initialization_8hpp__dep__incl.png" border="0" usemap="#akmeans_2initialization_8hppdep" alt=""/></div>
 <map name="akmeans_2initialization_8hppdep" id="akmeans_2initialization_8hppdep">
-<area shape="rect" title="Initialization methods to choose the starting centroids." alt="" coords="5,5,168,32"/>
-<area shape="rect" href="Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="15,80,159,107"/>
+<area shape="rect" title="Initialization methods to choose the starting centroids." alt="" coords="84,5,247,32"/>
+<area shape="rect" href="Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="5,80,149,107"/>
+<area shape="rect" href="Reinitialize_8hpp_source.html" title=" " alt="" coords="174,80,333,107"/>
 </map>
 </div>
 </div>
@@ -214,7 +217,7 @@ template&lt;typename DATA_t  = double, typename INDEX_t  = int, typename CLUSTER
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Implements the <b>k-means++</b> initialization described by Arthur and Vassilvitskii (2007). This approach involves the selection of starting points via iterations of weighted sampling, where the sampling probability for each point is defined as the squared distance to the closest starting point that was chosen in any of the previous iterations. The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.</p>
+<p >Implements the <b>k-means++</b> initialization described by Arthur and Vassilvitskii (2007). This approach involves the selection of starting points via iterations of weighted sampling, where the sampling probability for each point is proportional to the squared distance to the closest starting point that was chosen in any of the previous iterations. The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ndim</td><td>Number of dimensions. </td></tr>

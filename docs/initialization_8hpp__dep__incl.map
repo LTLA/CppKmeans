@@ -1,4 +1,5 @@
 <map id="kmeans/initialization.hpp" name="kmeans/initialization.hpp">
-<area shape="rect" id="node1" title="Initialization methods to choose the starting centroids." alt="" coords="5,5,168,32"/>
-<area shape="rect" id="node2" href="$Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="15,80,159,107"/>
+<area shape="rect" id="node1" title="Initialization methods to choose the starting centroids." alt="" coords="84,5,247,32"/>
+<area shape="rect" id="node2" href="$Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="5,80,149,107"/>
+<area shape="rect" id="node3" href="$Reinitialize_8hpp_source.html" title=" " alt="" coords="174,80,333,107"/>
 </map>
