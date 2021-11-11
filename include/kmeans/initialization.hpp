@@ -4,6 +4,7 @@
 #include <vector>
 #include "random.hpp"
 #include "aarand/aarand.hpp"
+#include <iostream>
 
 /**
  * @file initialization.hpp
@@ -24,6 +25,12 @@ INDEX_t weighted_sample(const std::vector<DATA_t>& cumulative, const std::vector
     do {
         const DATA_t sampled_weight = total * aarand::standard_uniform(eng);
         chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();
+
+        if (chosen_id == nobs) {
+            std::cout << chosen_id << "\t" << "YAY" << std::endl;
+        } else if (mindist[chosen_id] == 0) {
+            std::cout << chosen_id << "\t" << "YAY2" << std::endl;
+        }
 
         // We wrap this in a do/while to defend against edge cases where
         // ties are chosen. The most obvious of these is when you get a

@@ -45,40 +45,48 @@ public:
     void run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) const {
         std::vector<DATA_t> mindist(nobs);
         std::vector<DATA_t> cumulative(nobs);
-        std::cout << " ######### INIT ############ " << std::endl;
 
         if (recompute_clusters) {
             QuickSearch x(ndim, ncenters, centers);
             #pragma omp parallel for
             for (INDEX_t obs = 0; obs < nobs; ++obs) {
-                auto closest = x.find_with_distance(data + obs * ndim);
-                clusters[obs] = closest.first;
-                mindist[obs] = closest.second * closest.second;
+                clusters[obs] = x.find(data + obs * ndim);
             }
-        } else {
-            #pragma omp parallel for
-            for (INDEX_t obs = 0; obs < nobs; ++obs) {
-                const DATA_t* o = data + ndim * obs;
-                const DATA_t* c = centers + ndim * clusters[obs];
-                auto& current = mindist[obs];
-                for (int d = 0; d < ndim; ++d) {
-                    current += (o[d] - c[d]) * (o[d] - c[d]);
-                }
+        }
+
+        // Technically, we could get the distances from QuickSearch,
+        // but this gets passaged through a sqrt(), so we just recompute
+        // it to avoid problems with loss of numerical precision when
+        // computing WCSS (which may cause headaches with equality
+        // comparisons during the random sampling).
+        #pragma omp parallel for
+        for (INDEX_t obs = 0; obs < nobs; ++obs) {
+            const DATA_t* o = data + ndim * obs;
+            const DATA_t* c = centers + ndim * clusters[obs];
+            auto& current = mindist[obs];
+            for (int d = 0; d < ndim; ++d) {
+                double delta = o[d] - c[d];
+                current += delta * delta;
             }
         }
 
         std::mt19937_64 eng(seed);
-        double wcss = std::accumulate(mindist.begin(), mindist.end(), 0.0);
+        DATA_t wcss = std::accumulate(mindist.begin(), mindist.end(), 0.0);
+        std::vector<CLUSTER_t> clusters_erased(nobs);
+        std::vector<DATA_t> mindist_erased(nobs);
 
         for (CLUSTER_t c = 0; c < ncenters; ++c) {
+            std::copy(mindist.begin(), mindist.end(), mindist_erased.begin());
+            std::copy(clusters, clusters + nobs, clusters_erased.begin());
+
             // Erasing cluster 'c' and search on the rest. For c > 0, this erasure
             // is implicitly handled by the replacement with the sampled point.
             QuickSearch x(ndim, ncenters - 1, centers + ndim);
             #pragma omp parallel for
             for (INDEX_t obs = 0; obs < nobs; ++obs) {
-                if (clusters[obs] == c) {
+                if (clusters_erased[obs] == c) {
                     auto closest = x.find_with_distance(data + obs * ndim);
-                    mindist[obs] = closest.second * closest.second;
+                    mindist_erased[obs] = closest.second * closest.second;
 
                     // There is a frameshift on the cluster identities due to our
                     // removal and iterative replacement of cluster 'c'.  Thus, we
@@ -86,18 +94,17 @@ public:
                     // conflict with the original cluster identities, given that
                     // we need the originals for the later updates.
                     if (closest.first < c) {
-                        clusters[obs] = closest.first;
+                        clusters_erased[obs] = closest.first;
                     } else {
-                        clusters[obs] = closest.first + 1;
+                        clusters_erased[obs] = closest.first + 1;
                     }
                 } 
             }
 
-            cumulative[0] = mindist[0];
+            cumulative[0] = mindist_erased[0];
             for (INDEX_t i = 1; i < nobs; ++i) {
-                cumulative[i] = cumulative[i-1] + mindist[i];
+                cumulative[i] = cumulative[i-1] + mindist_erased[i];
             }
-            std::cout << "Starting WCSS is: " << wcss << "\t" << cumulative.back() << std::endl;
 
             // Performing multiple iterations to choose a new cluster center,
             // making sure that the WCSS is lower than what it was before we
@@ -107,11 +114,10 @@ public:
 
             const DATA_t* chosen_ptr = NULL;
             for (int it = 0; it < iterations; ++it) {
-                auto candidate = weighted_sample(cumulative, mindist, nobs, eng);
+                auto candidate = weighted_sample(cumulative, mindist_erased, nobs, eng);
                 auto candidate_ptr = data + candidate * ndim;
-                std::cout << ">>" << it << "\t" << candidate << std::endl;
-                std::copy(mindist.begin(), mindist.end(), mindist_copy.begin());
-                std::copy(clusters, clusters + nobs, clusters_copy.begin());
+                std::copy(mindist_erased.begin(), mindist_erased.end(), mindist_copy.begin());
+                std::copy(clusters_erased.begin(), clusters_erased.end(), clusters_copy.begin());
 
                 // Updating the minimum distances and the closest clusters.
                 #pragma omp parallel for
@@ -119,7 +125,8 @@ public:
                     const DATA_t* o = data + ndim * obs;
                     DATA_t candidate_dist = 0;
                     for (int d = 0; d < ndim; ++d) {
-                        candidate_dist += (candidate_ptr[d] - o[d]) * (candidate_ptr[d] - o[d]);
+                        double delta = candidate_ptr[d] - o[d];
+                        candidate_dist += delta * delta;
                     }
                     if (candidate_dist < mindist_copy[obs]) {
                         mindist_copy[obs] = candidate_dist;
@@ -128,7 +135,6 @@ public:
                 }
 
                 double wcss_copy = std::accumulate(mindist_copy.begin(), mindist_copy.end(), 0.0);
-                std::cout << "\t- " << wcss << "->" << wcss_copy << std::endl;
                 if (wcss > wcss_copy) {
                     mindist.swap(mindist_copy);
                     std::copy(clusters_copy.begin(), clusters_copy.end(), clusters);
@@ -159,7 +165,7 @@ public:
                 // that we effectively shifted everything to the right 
                 // to allow a copy-free QuickSearch.
                 std::vector<DATA_t> holding(centers, centers + ndim);
-                for (CLUSTER_t c2 = 0; c2 < ncenters - 1; ++c) {
+                for (CLUSTER_t c2 = 0; c2 < ncenters - 1; ++c2) {
                     auto dest = centers + c2 * ndim;
                     auto src = dest + ndim;
                     std::copy(src, src + ndim, dest);

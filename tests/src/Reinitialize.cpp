@@ -9,9 +9,10 @@ template<typename DATA_t = double, typename INDEX_t = int, typename CLUSTER_t = 
 void ref_reinitialize_centers(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, ENGINE& eng) {
     std::vector<DATA_t> mindist(nobs);
     std::vector<DATA_t> cumulative(nobs);
-    std::cout << " ######### INIT ############ " << std::endl;
 
     for (CLUSTER_t c = 0; c < ncenters; ++c) {
+        std::vector<INDEX_t> clusters(nobs);
+        
         // Finding the new closest cluster for each point.
         double wcss = 0;
         for (INDEX_t obs = 0; obs < nobs; ++obs) {
@@ -23,7 +24,8 @@ void ref_reinitialize_centers(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTE
                 const DATA_t* target = centers + ndim * c2;
                 double dist = 0;
                 for (int d = 0; d < ndim; ++d) {
-                    dist += (pt[d] - target[d]) * (pt[d] - target[d]);
+                    double delta = pt[d] - target[d];
+                    dist += delta * delta;
                 }
 
                 // We need to compute the WCSS as if the existing cluster
@@ -34,6 +36,7 @@ void ref_reinitialize_centers(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTE
                 }
                 if (c2 != c) {
                     if (dist < mindist[obs]) {
+                        clusters[obs] = c2;
                         mindist[obs] = dist;
                     }
                 }
@@ -46,13 +49,11 @@ void ref_reinitialize_centers(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTE
         for (INDEX_t i = 1; i < nobs; ++i) {
             cumulative[i] = cumulative[i-1] + mindist[i];
         }
-        std::cout << "Starting WCSS is: " << wcss << "\t" << cumulative.back() << std::endl;
 
         INDEX_t chosen_id = 0;
         bool found = false;
         for (int i = 0; i < kmeans::Reinitialize::Defaults::iterations; ++i) {
             auto id = kmeans::weighted_sample(cumulative, mindist, nobs, eng);
-            std::cout << i << "\t" << id << std::endl;
             const DATA_t* target = data + id * ndim;
             auto mindist_copy = mindist;
 
@@ -60,7 +61,8 @@ void ref_reinitialize_centers(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTE
                 const DATA_t* pt = data + ndim * obs;
                 double dist = 0;
                 for (int d = 0; d < ndim; ++d) {
-                    dist += (pt[d] - target[d]) * (pt[d] - target[d]);
+                    double delta = pt[d] - target[d];
+                    dist += delta * delta;
                 }
                 if (dist < mindist_copy[obs]) {
                     mindist_copy[obs] = dist;
@@ -68,7 +70,6 @@ void ref_reinitialize_centers(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTE
             } 
 
             double wcss2 = std::accumulate(mindist_copy.begin(), mindist_copy.end(), 0.0);
-            std::cout << "\t- " << wcss << "->" << wcss2 << std::endl;
             if (wcss2 < wcss) {
                 found = true;
                 chosen_id = id;
@@ -78,7 +79,6 @@ void ref_reinitialize_centers(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTE
         }
 
         if (found) {
-            std::cout << "Targeting: " << chosen_id << std::endl;
             auto chosen_ptr = data + chosen_id * ndim;
             auto target_ptr = centers + c * ndim;
             std::copy(chosen_ptr, chosen_ptr + ndim, target_ptr);
@@ -148,8 +148,8 @@ INSTANTIATE_TEST_CASE_P(
     Reinitialize,
     ReinitializeTest,
     ::testing::Combine(
-        ::testing::Values(2), // number of dimensions
-        ::testing::Values(57), // number of observations 
-        ::testing::Values(10) // number of centers 
+        ::testing::Values(5), // number of dimensions
+        ::testing::Values(57, 342), // number of observations 
+        ::testing::Values(5, 10, 20) // number of centers 
     )
 );
