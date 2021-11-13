@@ -76,31 +76,30 @@ $(function() {
 <div class="line"> </div>
 <div class="line"><span class="comment">// assorted boilerplate here...</span></div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">auto</span> res = <a class="code hl_class" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code hl_function" href="classkmeans_1_1Kmeans.html#ac41e9f61a2541baa314faa559ffb2f2a">run</a>(ndim, nobs, matrix.data(), ncenters);</div>
+<div class="line"><span class="keyword">auto</span> res = <a class="code hl_class" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run</a>(ndim, nobs, matrix.data(), ncenters);</div>
 <div class="line">res.centers; <span class="comment">// Matrix of centroid coordinates, stored in column-major format</span></div>
 <div class="line">res.clusters; <span class="comment">// Vector of cluster assignments</span></div>
 <div class="line">res.details; <span class="comment">// Details from the clustering algorithm</span></div>
 <div class="ttc" id="aKmeans_8hpp_html"><div class="ttname"><a href="Kmeans_8hpp.html">Kmeans.hpp</a></div><div class="ttdoc">Implements the full k-means clustering procedure.</div></div>
 <div class="ttc" id="aclasskmeans_1_1Kmeans_html"><div class="ttname"><a href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a></div><div class="ttdoc">Top-level class to run k-means clustering.</div><div class="ttdef"><b>Definition:</b> Kmeans.hpp:33</div></div>
-<div class="ttc" id="aclasskmeans_1_1Kmeans_html_ac41e9f61a2541baa314faa559ffb2f2a"><div class="ttname"><a href="classkmeans_1_1Kmeans.html#ac41e9f61a2541baa314faa559ffb2f2a">kmeans::Kmeans::run</a></div><div class="ttdeci">Details&lt; DATA_t, INDEX_t &gt; run(int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters, Base&lt; DATA_t, CLUSTER_t, INDEX_t &gt; *algorithm=NULL)</div><div class="ttdef"><b>Definition:</b> Kmeans.hpp:114</div></div>
+<div class="ttc" id="aclasskmeans_1_1Kmeans_html_a33587fabee0e531701632f18708fc863"><div class="ttname"><a href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">kmeans::Kmeans::run</a></div><div class="ttdeci">Details&lt; DATA_t, INDEX_t &gt; run(int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters, Initialize&lt; DATA_t, CLUSTER_t, INDEX_t &gt; *initializer=NULL, Refine&lt; DATA_t, CLUSTER_t, INDEX_t &gt; *refiner=NULL)</div><div class="ttdef"><b>Definition:</b> Kmeans.hpp:86</div></div>
 </div><!-- fragment --><p >If you already allocated arrays for the centroids and clusters, you can fill the arrays directly:</p>
 <div class="fragment"><div class="line">std::vector&lt;double&gt; centers(ndim * ncenters);</div>
 <div class="line">std::vector&lt;int&gt; clusters(nobs);</div>
-<div class="line"><span class="keyword">auto</span> deets = <a class="code hl_class" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code hl_function" href="classkmeans_1_1Kmeans.html#ac41e9f61a2541baa314faa559ffb2f2a">run</a>(ndim, nobs, matrix.data(), ncenters, </div>
+<div class="line"><span class="keyword">auto</span> deets = <a class="code hl_class" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run</a>(ndim, nobs, matrix.data(), ncenters, </div>
 <div class="line">                                  centers.data(), clusters.data());</div>
 <div class="line">deets.withinss;</div>
 <div class="line">deets.sizes;</div>
 </div><!-- fragment --><p >If you want to fiddle with parameters, use the relevant setters:</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a> km;</div>
-<div class="line">km.<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a08722656de2324a957f328c42f359748">set_seed</a>(42).<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a08d63cf867c8778e59da4625c7928c35">set_weighted</a>(<span class="keyword">false</span>);</div>
-<div class="line"><span class="keyword">auto</span> res2 = km.<a class="code hl_function" href="classkmeans_1_1Kmeans.html#ac41e9f61a2541baa314faa559ffb2f2a">run</a>(ndim, nobs, matrix.data(), ncenters);</div>
+<div class="line">km.<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a08722656de2324a957f328c42f359748">set_seed</a>(42).set_weighted(<span class="keyword">false</span>);</div>
+<div class="line"><span class="keyword">auto</span> res2 = km.<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run</a>(ndim, nobs, matrix.data(), ncenters);</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Or change the underlying algorithm:</span></div>
 <div class="line"><a class="code hl_class" href="classkmeans_1_1Lloyd.html">kmeans::Lloyd</a> ll;</div>
 <div class="line">ll.<a class="code hl_function" href="classkmeans_1_1Lloyd.html#a912eaa094641bb1a5175e63943e2b301">set_max_iterations</a>(100);</div>
-<div class="line"><span class="keyword">auto</span> res3 = <a class="code hl_class" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code hl_function" href="classkmeans_1_1Kmeans.html#ac41e9f61a2541baa314faa559ffb2f2a">run</a>(ndim, nobs, matrix.data(), ncenters, &amp;ll);</div>
-<div class="ttc" id="aclasskmeans_1_1Kmeans_html_a08722656de2324a957f328c42f359748"><div class="ttname"><a href="classkmeans_1_1Kmeans.html#a08722656de2324a957f328c42f359748">kmeans::Kmeans::set_seed</a></div><div class="ttdeci">Kmeans &amp; set_seed(uint64_t s=5489u)</div><div class="ttdef"><b>Definition:</b> Kmeans.hpp:72</div></div>
-<div class="ttc" id="aclasskmeans_1_1Kmeans_html_a08d63cf867c8778e59da4625c7928c35"><div class="ttname"><a href="classkmeans_1_1Kmeans.html#a08d63cf867c8778e59da4625c7928c35">kmeans::Kmeans::set_weighted</a></div><div class="ttdeci">Kmeans &amp; set_weighted(bool w=true)</div><div class="ttdef"><b>Definition:</b> Kmeans.hpp:61</div></div>
+<div class="line"><span class="keyword">auto</span> res3 = <a class="code hl_class" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run</a>(ndim, nobs, matrix.data(), ncenters, &amp;ll);</div>
+<div class="ttc" id="aclasskmeans_1_1Kmeans_html_a08722656de2324a957f328c42f359748"><div class="ttname"><a href="classkmeans_1_1Kmeans.html#a08722656de2324a957f328c42f359748">kmeans::Kmeans::set_seed</a></div><div class="ttdeci">Kmeans &amp; set_seed(uint64_t s=5489u)</div><div class="ttdef"><b>Definition:</b> Kmeans.hpp:58</div></div>
 <div class="ttc" id="aclasskmeans_1_1Lloyd_html"><div class="ttname"><a href="classkmeans_1_1Lloyd.html">kmeans::Lloyd</a></div><div class="ttdoc">Implements the Lloyd algorithm for k-means clustering.</div><div class="ttdef"><b>Definition:</b> Lloyd.hpp:44</div></div>
 <div class="ttc" id="aclasskmeans_1_1Lloyd_html_a912eaa094641bb1a5175e63943e2b301"><div class="ttname"><a href="classkmeans_1_1Lloyd.html#a912eaa094641bb1a5175e63943e2b301">kmeans::Lloyd::set_max_iterations</a></div><div class="ttdeci">Lloyd &amp; set_max_iterations(int m=Defaults::max_iterations)</div><div class="ttdef"><b>Definition:</b> Lloyd.hpp:66</div></div>
 </div><!-- fragment --><p >See the <a href="https://ltla.github.io/CppKmeans">reference documentation</a> for more details.</p>

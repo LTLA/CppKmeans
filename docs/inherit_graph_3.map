@@ -1,3 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structkmeans_1_1HartiganWong_1_1Defaults.html" title="Default parameter values for HartiganWong." alt="" coords="5,5,168,61"/>
+<area shape="rect" id="node1" href="$classkmeans_1_1Initialize.html" title=" " alt="" coords="5,118,129,159"/>
+<area shape="rect" id="node2" href="$classkmeans_1_1InitializeKmeansPP.html" title="Implements the k&#45;means++ initialization of Arthur and Vassilvitskii (2007)." alt="" coords="201,5,381,61"/>
+<area shape="rect" id="node3" href="$classkmeans_1_1InitializeNone.html" title="Perform &quot;initialization&quot; by just using the input cluster centers." alt="" coords="177,85,404,126"/>
+<area shape="rect" id="node4" href="$classkmeans_1_1InitializeRandom.html" title="Initialize starting points by sampling random observations without replacement." alt="" coords="177,150,404,191"/>
+<area shape="rect" id="node5" href="$classkmeans_1_1Reinitialize.html" title="Reinitialize from an existing set of clusters." alt="" coords="209,215,372,271"/>
 </map>

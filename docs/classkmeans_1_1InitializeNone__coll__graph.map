@@ -1,0 +1,4 @@
+<map id="kmeans::InitializeNone&lt; DATA_t, CLUSTER_t, INDEX_t &gt;" name="kmeans::InitializeNone&lt; DATA_t, CLUSTER_t, INDEX_t &gt;">
+<area shape="rect" id="node1" title="Perform &quot;initialization&quot; by just using the input cluster centers." alt="" coords="5,95,232,136"/>
+<area shape="rect" id="node2" href="$classkmeans_1_1Initialize.html" title=" " alt="" coords="57,5,181,47"/>
+</map>

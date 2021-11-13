@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['base_0',['Base',['../classkmeans_1_1Base.html',1,'kmeans']]],
-  ['base_3c_20double_2c_20int_2c_20int_20_3e_1',['Base&lt; double, int, int &gt;',['../classkmeans_1_1Base.html',1,'kmeans']]]
+  ['defaults_0',['Defaults',['../structkmeans_1_1HartiganWong_1_1Defaults.html',1,'kmeans::HartiganWong&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Defaults'],['../structkmeans_1_1InitializeKmeansPP_1_1Defaults.html',1,'kmeans::InitializeKmeansPP&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Defaults'],['../structkmeans_1_1InitializeRandom_1_1Defaults.html',1,'kmeans::InitializeRandom&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Defaults'],['../structkmeans_1_1Kmeans_1_1Defaults.html',1,'kmeans::Kmeans&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Defaults'],['../structkmeans_1_1Lloyd_1_1Defaults.html',1,'kmeans::Lloyd&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Defaults'],['../structkmeans_1_1MiniBatch_1_1Defaults.html',1,'kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Defaults'],['../structkmeans_1_1Reinitialize_1_1Defaults.html',1,'kmeans::Reinitialize&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Defaults']]],
+  ['details_1',['Details',['../structkmeans_1_1Details.html',1,'kmeans']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans::Base&lt; DATA_t, CLUSTER_t, INDEX_t &gt; Class Template Reference</title>
+<title>kmeans: kmeans::Initialize&lt; DATA_t, CLUSTER_t, INDEX_t &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -64,30 +64,30 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>kmeans</b></li><li class="navelem"><a class="el" href="classkmeans_1_1Base.html">Base</a></li>  </ul>
+<li class="navelem"><b>kmeans</b></li><li class="navelem"><a class="el" href="classkmeans_1_1Initialize.html">Initialize</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="classkmeans_1_1Base-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">kmeans::Base&lt; DATA_t, CLUSTER_t, INDEX_t &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
+<a href="classkmeans_1_1Initialize-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">kmeans::Initialize&lt; DATA_t, CLUSTER_t, INDEX_t &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classkmeans_1_1Base.html" title="Base class for all k-means algorithms.">Base</a> class for all k-means algorithms.  
- <a href="classkmeans_1_1Base.html#details">More...</a></p>
+<p>Base class for all k-means initialization algorithms.  
+ <a href="classkmeans_1_1Initialize.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Base_8hpp_source.html">Base.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aef3558d82c39fe02268ab021eb423faf"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; DATA_t, INDEX_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Base.html#aef3558d82c39fe02268ab021eb423faf">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters)=0</td></tr>
-<tr class="separator:aef3558d82c39fe02268ab021eb423faf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7511f915476cf88fbb314bb984582e0c"><td class="memItemLeft" align="right" valign="top">virtual CLUSTER_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Initialize.html#a7511f915476cf88fbb314bb984582e0c">run</a> (int ndim, INDEX_t nobs, const DATA_t *data, CLUSTER_t ncenters, DATA_t *centers, CLUSTER_t *clusters)=0</td></tr>
+<tr class="separator:a7511f915476cf88fbb314bb984582e0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int&gt;<br />
-class kmeans::Base&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</div><p ><a class="el" href="classkmeans_1_1Base.html" title="Base class for all k-means algorithms.">Base</a> class for all k-means algorithms. </p>
+class kmeans::Initialize&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</div><p >Base class for all k-means initialization algorithms. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">DATA_t</td><td>Floating-point type for the data and centroids. </td></tr>
@@ -97,8 +97,8 @@ class kmeans::Base&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</div><p ><a class="el" hr
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="aef3558d82c39fe02268ab021eb423faf" name="aef3558d82c39fe02268ab021eb423faf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aef3558d82c39fe02268ab021eb423faf">&#9670;&nbsp;</a></span>run()</h2>
+<a id="a7511f915476cf88fbb314bb984582e0c" name="a7511f915476cf88fbb314bb984582e0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7511f915476cf88fbb314bb984582e0c">&#9670;&nbsp;</a></span>run()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -109,7 +109,7 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; DATA_t, INDEX_t &gt; <a class="el" href="classkmeans_1_1Base.html">kmeans::Base</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::run </td>
+          <td class="memname">virtual CLUSTER_t <a class="el" href="classkmeans_1_1Initialize.html">kmeans::Initialize</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::run </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>ndim</em>, </td>
@@ -162,12 +162,12 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
     <tr><td class="paramdir"></td><td class="paramname">nobs</td><td>Number of observations. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to a <code>ndim</code>-by-<code>nobs</code> array where columns are observations and rows are dimensions. Data should be stored in column-major order. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">ncenters</td><td>Number of cluster centers. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">centers</td><td>Pointer to a <code>ndim</code>-by-<code>ncenters</code> array where columns are cluster centers and rows are dimensions. On input, this should contain the initial centroid locations for each cluster. Data should be stored in column-major order. On output, this will contain the final centroid locations for each cluster. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length <code>nobs</code>. On output, this will contain the cluster assignment for each observation.</td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">centers</td><td>Pointer to a <code>ndim</code>-by-<code>ncenters</code> array where columns are cluster centers and rows are dimensions. On input, this should contain the initial centroid locations for each cluster, or it may be ignored, depending on the subclass. Data should be stored in column-major order. On output, this will contain the final centroid locations for each cluster. </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">clusters</td><td>Pointer to an array of length <code>nobs</code>. On input, this should contain the initial cluster assignments for each observation, or it may be ignored, depending on the subclass. This may be modified by the subclass - no guarantees are provided as to the output state.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Details.html" title="Additional statistics from the k-means algorithm.">Details</a></code> object is returned containing clustering statistics. If <code>ncenters &gt; nobs</code>, only the first <code>nobs</code> columns of the <code>centers</code> array will be filled. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>centers</code> is filled with the new cluster centers. The number of filled centers is returned - this is usually equal to <code>ncenters</code>, but may not be if, e.g., <code>ncenters &gt; nobs</code>. If the returned value is less than <code>ncenters</code>, only the first centers in <code>centers</code> will be filled. </dd></dl>
 
 </div>
 </div>
