@@ -41,7 +41,7 @@ namespace kmeans {
  * _IEEE Transactions on Information Theory_ 28, 128-137.
  */
 template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
-class Lloyd : public Base<DATA_t, CLUSTER_t, INDEX_t> {
+class Lloyd : public Refine<DATA_t, CLUSTER_t, INDEX_t> {
 public:
     /** 
      * @brief Default parameter values for `Lloyd`.

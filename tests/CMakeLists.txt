@@ -15,7 +15,8 @@ add_executable(
     src/HartiganWong.cpp
     src/Lloyd.cpp
     src/MiniBatch.cpp
-    src/initialization.cpp
+    src/InitializeRandom.cpp
+    src/InitializeKmeansPP.cpp
     src/Kmeans.cpp
     src/Reinitialize.cpp
 )

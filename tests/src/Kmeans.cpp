@@ -68,7 +68,7 @@ TEST_P(KmeansSanityTest, SanityCheck) {
     }
 
     // Switching between algorithms.
-    std::unique_ptr<kmeans::Base<>> ptr;
+    std::unique_ptr<kmeans::Refine<> > ptr;
     auto algo = std::get<3>(param);
     if (algo == 1) {
         auto xptr = new kmeans::HartiganWong<>();
@@ -80,7 +80,7 @@ TEST_P(KmeansSanityTest, SanityCheck) {
         auto xptr = new kmeans::MiniBatch<>();
         ptr.reset(xptr);
     }
-    auto res = kmeans::Kmeans<>().run(nr, nc, data.data(), ncenters, ptr.get());
+    auto res = kmeans::Kmeans<>().run(nr, nc, data.data(), ncenters, NULL, ptr.get());
 
     // Checking that every 'ncenters'-th element is the same.
     std::vector<int> last_known(ncenters, -1);

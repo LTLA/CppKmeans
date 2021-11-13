@@ -3,7 +3,7 @@
 
 #include "Base.hpp"
 #include "HartiganWong.hpp"
-#include "initialization.hpp"
+#include "InitializeKmeansPP.hpp"
 #include "Details.hpp"
 #include <random>
 
@@ -37,60 +37,29 @@ public:
      */
     struct Defaults {
         /**
-         * See `set_weighted()` for more details.
-         */
-        static constexpr bool weighted = true;
-
-        /**
          * See `set_seed()` for more details.
          */
         static constexpr uint64_t seed = 5489u;
     };
 
 private:
-    bool weighted_init = Defaults::weighted; 
     uint64_t seed = Defaults::seed;
 
 public:
-    /** 
-     * @param w Should we use weighted initialization (see `weighted_initialization()`)?
-     * If `false`, simple initialization is used instead (see `simple_initialization()`).
-     *
-     * @return A reference to this `Kmeans` object.
-     */
-    Kmeans& set_weighted(bool w = true) {
-        weighted_init = w;
-        return *this;
-    }
-
     /** 
      * @param s Seed to use for PRNG.
      * Defaults to default seed for the `std::mt19937_64` constructor.
      *
      * @return A reference to this `Kmeans` object.
+     *
+     * This seed is only used for the default `refiner` and `initializer` instances in `run()`.
+     * Otherwise, the seed from individual instances is respected.
      */
     Kmeans& set_seed(uint64_t s = 5489u) {
         seed = s;
         return *this;
     }
-private:
-    CLUSTER_t initialize(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers) {
-        std::vector<INDEX_t> chosen;
-        std::mt19937_64 rng(seed);
-        if (weighted_init) {
-            chosen = weighted_initialization(ndim, nobs, data, ncenters, rng);
-        } else {
-            chosen = simple_initialization(nobs, ncenters, rng);
-        }
 
-        for (auto c : chosen) {
-            std::copy(data + c * ndim, data + (c + 1) * ndim, centers);
-            centers += ndim;
-        }
-
-        return chosen.size(); // this may be less than ncenters, depending on the initializer.
-    }
-    
 public:
     /**
      * @param ndim Number of dimensions.
@@ -99,26 +68,36 @@ public:
      * Data should be stored in column-major order.
      * @param ncenters Number of cluster centers.
      * @param[in, out] centers Pointer to a `ndim`-by-`ncenters` array where columns are cluster centers and rows are dimensions. 
-     * On input, this should contain the initial centroid locations for each cluster.
-     * Data should be stored in column-major order.
+     * On input, this should contain the initial centroid locations for each cluster if `set_initialization_method()` is `NONE`, otherwise it is ignored.
      * On output, this will contain the final centroid locations for each cluster.
-     * @param[out] clusters Pointer to an array of length `nobs`.
+     * Data should be stored in column-major order.
+     * @param[in, out] clusters Pointer to an array of length `nobs`.
+     * On input, this should contain the identity of the closest cluster for each observation if `set_initialization_method()` is `REINIT_PRECOMPUTED`, otherwise it is ignored.
      * On output, this will contain the (0-indexed) cluster assignment for each observation.
-     * @param algorithm Pointer to a `Base` object containing the desired k-means algorithm.
-     * If `NULL`, this defaults to a default `HartiganWong` instance.
+     * @param initializer Pointer to a `Initialize` object containing the desired k-means initialization method, e.g., `InitializeNone`, `InitializeRandom`, `InitializeKmeansPP`, `Reinitialize`.
+     * If `NULL`, this defaults to a default-constructed `InitializeKmeansPP` instance.
+     * @param refiner Pointer to a `Refine` object containing the desired k-means refinement algorithm, e.g., `HartiganWong`, `Lloyd`, `MiniBatch`.
+     * If `NULL`, this defaults to a default-constructed `HartiganWong` instance.
      *
      * @return `centers` and `clusters` are filled, and a `Details` object is returned containing clustering statistics.
      * Note that the actual number of clusters may be less than `ncenters` in pathological cases - 
      * check the length of `Details::sizes` and the value of `Details::status`.
      */
-    Details<DATA_t, INDEX_t> run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters,  Base<DATA_t, CLUSTER_t, INDEX_t>* algorithm = NULL) {
-        ncenters = initialize(ndim, nobs, data, ncenters, centers); 
+    Details<DATA_t, INDEX_t> run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters, 
+        Initialize<DATA_t, CLUSTER_t, INDEX_t>* initializer = NULL, Refine<DATA_t, CLUSTER_t, INDEX_t>* refiner = NULL)
+    {
+        if (initializer == NULL) {
+            InitializeKmeansPP<DATA_t, CLUSTER_t, INDEX_t> init;
+            ncenters = init.run(ndim, nobs, data, ncenters, centers, clusters); 
+        } else {
+            ncenters = initializer->run(ndim, nobs, data, ncenters, centers, clusters); 
+        }
 
-        if (algorithm == NULL) {
+        if (refiner == NULL) {
             HartiganWong<DATA_t, CLUSTER_t, INDEX_t> hw;
             return hw.run(ndim, nobs, data, ncenters, centers, clusters);
         } else {
-            return algorithm->run(ndim, nobs, data, ncenters, centers, clusters);
+            return refiner->run(ndim, nobs, data, ncenters, centers, clusters);
         }
     }
 
@@ -157,16 +136,22 @@ public:
      * @param[in] data Pointer to a `ndim`-by-`nobs` array where columns are observations and rows are dimensions. 
      * Data should be stored in column-major order.
      * @param ncenters Number of cluster centers.
-     * @param algorithm Pointer to a `Base` object containing the desired k-means algorithm.
-     * If `NULL`, this defaults to a default `HartiganWong` instance.
+     * @param initializer Pointer to a `Initialize` object containing the desired k-means initialization method.
+     * If `NULL`, this defaults to a default-constructed `InitializeKmeansPP` instance.
+     * @param refiner Pointer to a `Refine` object containing the desired k-means refinement algorithm.
+     * If `NULL`, this defaults to a default-constructed `HartiganWong` instance.
      *
      * @return `centers` and `clusters` are filled, and a `Results` object is returned containing clustering statistics.
      * See `run()` for more details.
+     *
+     * For this method, it would be unwise to initialize with any methods that use information from the existing cluster centers. 
+     * We suggest using only `InitializeRandom` or InitializeKmeansPP` here.
      */
-    Results run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, Base<DATA_t, CLUSTER_t, INDEX_t>* algorithm = NULL) {
+    Results run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, 
+        Initialize<DATA_t, CLUSTER_t, INDEX_t>* initializer = NULL, Refine<DATA_t, CLUSTER_t, INDEX_t>* refiner = NULL)
+    {
         Results output(ndim, nobs, ncenters);
-        ncenters = initialize(ndim, nobs, data, ncenters, output.centers.data()); 
-        output.details = run(ndim, nobs, data, ncenters, output.centers.data(), output.clusters.data(), algorithm);
+        output.details = run(ndim, nobs, data, ncenters, output.centers.data(), output.clusters.data(), initializer, refiner);
         return output;
     }
 };

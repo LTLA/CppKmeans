@@ -46,7 +46,7 @@ namespace kmeans {
  * _Applied Statistics_, 28, 100-108.
  */
 template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
-class HartiganWong : public Base<DATA_t, CLUSTER_t, INDEX_t> {
+class HartiganWong : public Refine<DATA_t, CLUSTER_t, INDEX_t> {
     int num_dim;
     INDEX_t num_obs;
     const DATA_t* data_ptr;

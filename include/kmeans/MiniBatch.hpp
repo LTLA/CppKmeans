@@ -46,7 +46,7 @@ namespace kmeans {
  * @tparam INDEX_t Integer type for the observation index.
  */
 template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
-class MiniBatch : public Base<DATA_t, CLUSTER_t, INDEX_t> {
+class MiniBatch : public Refine<DATA_t, CLUSTER_t, INDEX_t> {
 public:
     /** 
      * @brief Default parameter values for `MiniBatch`.

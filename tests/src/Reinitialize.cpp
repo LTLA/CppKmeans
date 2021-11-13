@@ -52,7 +52,7 @@ void ref_reinitialize_centers(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTE
 
         INDEX_t chosen_id = 0;
         bool found = false;
-        for (int i = 0; i < kmeans::Reinitialize::Defaults::iterations; ++i) {
+        for (int i = 0; i < kmeans::Reinitialize<>::Defaults::iterations; ++i) {
             auto id = kmeans::weighted_sample(cumulative, mindist, nobs, eng);
             const DATA_t* target = data + id * ndim;
             auto mindist_copy = mindist;

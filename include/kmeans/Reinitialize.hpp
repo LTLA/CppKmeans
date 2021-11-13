@@ -4,7 +4,9 @@
 #include <vector>
 #include <algorithm>
 #include <cstdint>
-#include "initialization.hpp"
+
+#include "Base.hpp"
+#include "random.hpp"
 #include "QuickSearch.hpp"
 
 /**
@@ -36,8 +38,13 @@ namespace kmeans {
  * However, it can still respond to the presence of new clusters by discarding an existing center if the distance (and thus sampling probability) is large enough. 
  * We can reduce the strength of this preference for preservation by repeating the sampling across several iterations, 
  * increasing the chance of finding an alternative center with a lower WCSS.
+ *
+ * @tparam DATA_t Floating-point type for the data and centroids.
+ * @tparam CLUSTER_t Integer type for the cluster assignments.
+ * @tparam INDEX_t Integer type for the observation index.
  */
-class Reinitialize {
+template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
+class Reinitialize : public Initialize<DATA_t, CLUSTER_t, INDEX_t> {
 public:
     /**
      * @brief Default parameters.
@@ -100,10 +107,6 @@ public:
 
 public:
     /**
-     * @tparam DATA_t Floating-point type for the data and centroids.
-     * @tparam CLUSTER_t Integer type for the cluster assignments.
-     * @tparam INDEX_t Integer type for the observation index.
-     *
      * @param ndim Number of dimensions.
      * @param nobs Number of observations.
      * @param[in] data Pointer to a `ndim`-by-`nobs` array where columns are observations and rows are dimensions. 
@@ -118,9 +121,9 @@ public:
      * On output, this will contain the (0-indexed) cluster assignment for each observation.
      *
      * @return `centers` and `clusters` are filled with the new centers and cluster assignments.
+     * The number of cluster centers is returned.
      */
-    template<typename DATA_t = double, typename INDEX_t = int, typename CLUSTER_t = int>
-    void run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) const {
+    CLUSTER_t run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
         std::vector<DATA_t> mindist(nobs);
         std::vector<DATA_t> cumulative(nobs);
 
@@ -258,7 +261,7 @@ public:
             }
         }
 
-        return;
+        return ncenters;
     }
 };
 
