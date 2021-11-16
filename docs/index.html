@@ -92,13 +92,15 @@ $(function() {
 <div class="line">deets.sizes;</div>
 </div><!-- fragment --><p >If you want to fiddle with parameters, use the relevant setters:</p>
 <div class="fragment"><div class="line"><a class="code hl_class" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a> km;</div>
-<div class="line">km.<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a08722656de2324a957f328c42f359748">set_seed</a>(42).set_weighted(<span class="keyword">false</span>);</div>
+<div class="line">km.<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a08722656de2324a957f328c42f359748">set_seed</a>(42);</div>
 <div class="line"><span class="keyword">auto</span> res2 = km.<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run</a>(ndim, nobs, matrix.data(), ncenters);</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// Or change the underlying algorithm:</span></div>
+<div class="line"><span class="comment">// Or change the underlying algorithms for initialization/refinement:</span></div>
+<div class="line"><a class="code hl_class" href="classkmeans_1_1InitializeRandom.html">kmeans::InitializeRandom</a> rd;</div>
 <div class="line"><a class="code hl_class" href="classkmeans_1_1Lloyd.html">kmeans::Lloyd</a> ll;</div>
 <div class="line">ll.<a class="code hl_function" href="classkmeans_1_1Lloyd.html#a912eaa094641bb1a5175e63943e2b301">set_max_iterations</a>(100);</div>
-<div class="line"><span class="keyword">auto</span> res3 = <a class="code hl_class" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run</a>(ndim, nobs, matrix.data(), ncenters, &amp;ll);</div>
+<div class="line"><span class="keyword">auto</span> res3 = <a class="code hl_class" href="classkmeans_1_1Kmeans.html">kmeans::Kmeans</a>().<a class="code hl_function" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run</a>(ndim, nobs, matrix.data(), ncenters, &amp;rd, &amp;ll);</div>
+<div class="ttc" id="aclasskmeans_1_1InitializeRandom_html"><div class="ttname"><a href="classkmeans_1_1InitializeRandom.html">kmeans::InitializeRandom</a></div><div class="ttdoc">Initialize starting points by sampling random observations without replacement.</div><div class="ttdef"><b>Definition:</b> InitializeRandom.hpp:43</div></div>
 <div class="ttc" id="aclasskmeans_1_1Kmeans_html_a08722656de2324a957f328c42f359748"><div class="ttname"><a href="classkmeans_1_1Kmeans.html#a08722656de2324a957f328c42f359748">kmeans::Kmeans::set_seed</a></div><div class="ttdeci">Kmeans &amp; set_seed(uint64_t s=5489u)</div><div class="ttdef"><b>Definition:</b> Kmeans.hpp:58</div></div>
 <div class="ttc" id="aclasskmeans_1_1Lloyd_html"><div class="ttname"><a href="classkmeans_1_1Lloyd.html">kmeans::Lloyd</a></div><div class="ttdoc">Implements the Lloyd algorithm for k-means clustering.</div><div class="ttdef"><b>Definition:</b> Lloyd.hpp:44</div></div>
 <div class="ttc" id="aclasskmeans_1_1Lloyd_html_a912eaa094641bb1a5175e63943e2b301"><div class="ttname"><a href="classkmeans_1_1Lloyd.html#a912eaa094641bb1a5175e63943e2b301">kmeans::Lloyd::set_max_iterations</a></div><div class="ttdeci">Lloyd &amp; set_max_iterations(int m=Defaults::max_iterations)</div><div class="ttdef"><b>Definition:</b> Lloyd.hpp:66</div></div>
