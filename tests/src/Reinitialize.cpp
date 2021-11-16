@@ -153,3 +153,17 @@ INSTANTIATE_TEST_CASE_P(
         ::testing::Values(5, 10, 20) // number of centers 
     )
 );
+
+TEST(ReinitializeTest, EdgeCases) {
+    // Check that it works with a single cluster.
+    kmeans::Reinitialize runner;
+    runner.set_seed(10);
+
+    std::vector<int> clusters(100, 1);
+    runner.set_recompute_clusters(true).run(10, 100, NULL, 1, NULL, clusters.data());
+    EXPECT_EQ(clusters, std::vector<int>(100));
+
+    std::fill(clusters.begin(), clusters.end(), 1);
+    runner.set_recompute_clusters(true).run(10, 100, NULL, 0, NULL, clusters.data());
+    EXPECT_EQ(clusters, std::vector<int>(100));
+}

@@ -124,6 +124,13 @@ public:
      * The number of cluster centers is returned.
      */
     CLUSTER_t run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
+        if (ncenters <= 1) {
+            if (recompute_clusters) {
+                std::fill(clusters, clusters + nobs, 0);
+            }
+            return ncenters;
+        }
+
         std::vector<DATA_t> mindist(nobs);
         std::vector<DATA_t> cumulative(nobs);
 
