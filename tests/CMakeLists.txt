@@ -18,7 +18,6 @@ add_executable(
     src/InitializeRandom.cpp
     src/InitializeKmeansPP.cpp
     src/Kmeans.cpp
-    src/Reinitialize.cpp
 )
 
 target_link_libraries(

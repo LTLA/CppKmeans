@@ -74,7 +74,7 @@ public:
      * @param[in, out] clusters Pointer to an array of length `nobs`.
      * On input, this should contain the identity of the closest cluster for each observation if `set_initialization_method()` is `REINIT_PRECOMPUTED`, otherwise it is ignored.
      * On output, this will contain the (0-indexed) cluster assignment for each observation.
-     * @param initializer Pointer to a `Initialize` object containing the desired k-means initialization method, e.g., `InitializeNone`, `InitializeRandom`, `InitializeKmeansPP`, `Reinitialize`.
+     * @param initializer Pointer to a `Initialize` object containing the desired k-means initialization method, e.g., `InitializeNone`, `InitializeRandom`, `InitializeKmeansPP`.
      * If `NULL`, this defaults to a default-constructed `InitializeKmeansPP` instance.
      * @param refiner Pointer to a `Refine` object containing the desired k-means refinement algorithm, e.g., `HartiganWong`, `Lloyd`, `MiniBatch`.
      * If `NULL`, this defaults to a default-constructed `HartiganWong` instance.
