@@ -1,11 +1,12 @@
 <map id="kmeans/Details.hpp" name="kmeans/Details.hpp">
-<area shape="rect" id="node1" title="Report detailed clustering statistics." alt="" coords="361,5,497,32"/>
-<area shape="rect" id="node2" href="$Base_8hpp_source.html" title=" " alt="" coords="365,80,492,107"/>
-<area shape="rect" id="node3" href="$HartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="29,155,207,181"/>
-<area shape="rect" id="node4" href="$Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="141,304,285,331"/>
-<area shape="rect" id="node8" href="$Lloyd_8hpp.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="747,155,873,181"/>
-<area shape="rect" id="node9" href="$MiniBatch_8hpp.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="898,155,1053,181"/>
-<area shape="rect" id="node5" href="$InitializeKmeansPP_8hpp.html" title="Class for kmeans++ initialization." alt="" coords="283,229,492,256"/>
-<area shape="rect" id="node6" href="$InitializeNone_8hpp.html" title="Class for no initialization." alt="" coords="548,155,723,181"/>
-<area shape="rect" id="node7" href="$InitializeRandom_8hpp.html" title="Class for random initialization." alt="" coords="333,155,524,181"/>
+<area shape="rect" id="node1" title="Report detailed clustering statistics." alt="" coords="597,5,733,32"/>
+<area shape="rect" id="node2" href="$Base_8hpp_source.html" title=" " alt="" coords="602,80,729,107"/>
+<area shape="rect" id="node3" href="$HartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="29,155,208,181"/>
+<area shape="rect" id="node4" href="$Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="117,304,261,331"/>
+<area shape="rect" id="node9" href="$Lloyd_8hpp.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="993,155,1119,181"/>
+<area shape="rect" id="node10" href="$MiniBatch_8hpp.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="1144,155,1299,181"/>
+<area shape="rect" id="node5" href="$InitializeKmeansPP_8hpp.html" title="Class for kmeans++ initialization." alt="" coords="157,229,366,256"/>
+<area shape="rect" id="node6" href="$InitializeNone_8hpp.html" title="Class for no initialization." alt="" coords="283,155,458,181"/>
+<area shape="rect" id="node7" href="$InitializePCAPartition_8hpp.html" title="Class for k&#45;means initialization with PCA partitioning." alt="" coords="483,155,701,181"/>
+<area shape="rect" id="node8" href="$InitializeRandom_8hpp.html" title="Class for random initialization." alt="" coords="726,155,917,181"/>
 </map>
