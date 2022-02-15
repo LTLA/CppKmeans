@@ -7,8 +7,9 @@
 
 ## Overview
 
-This repository contains a header-only C++ library for k-means clustering with the Hartigan-Wong algorithm.
-Initialization is performed using the kmeans++ approach from Arthur and Vassilvitskii (2007).
+This repository contains a header-only C++ library for k-means clustering.
+Initialization can be performed with user-supplied centers, random selection of points, weighted sampling with kmeans++ (Arthur and Vassilvitskii, 2007) or PCA partitioning (Su and Dy, 2007)/
+Refinement can be performed using the Hartigan-Wong approach or Lloyd's algorithm.
 The Hartigan-Wong implementation is derived from the Fortran code in the R **stats** package, heavily refactored for more idiomatic C++.
 
 ## Quick start
@@ -86,8 +87,12 @@ This requires the additional [**aarand**](https://github.com/LTLA/aarand) librar
 
 Hartigan, J. A. and Wong, M. A. (1979).
 Algorithm AS 136: A K-means clustering algorithm.
-_Applied Statistics_, 28, 100-108.
+_Applied Statistics_ 28, 100-108.
 
 Arthur, D. and Vassilvitskii, S. (2007). 
 k-means++: the advantages of careful seeding.
 _Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms_, 1027-1035.
+
+Su, T. and Dy, J. G. (2007).
+In Search of Deterministic Methods for Initializing K-Means and Gaussian Mixture Clustering,
+_Intelligent Data Analysis_ 11, 319-338.
