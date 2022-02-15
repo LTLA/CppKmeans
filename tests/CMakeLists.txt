@@ -17,6 +17,7 @@ add_executable(
     src/MiniBatch.cpp
     src/InitializeRandom.cpp
     src/InitializeKmeansPP.cpp
+    src/InitializePCAPartition.cpp
     src/Kmeans.cpp
 )
 

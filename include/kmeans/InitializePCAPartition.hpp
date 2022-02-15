@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <numeric>
 #include "aarand/aarand.hpp"
+#include "Base.hpp"
 
 /**
  * @file InitializePCAPartition.hpp
@@ -86,7 +87,7 @@ public:
      * @return A reference to this `InitializePCAPartition` object.
      */
     InitializePCAPartition& set_iterations(int i = Defaults::iterations) {
-        iterations = i;
+        iters = i;
         return *this;
     }
 
@@ -104,7 +105,7 @@ public:
      * @return A reference to this `InitializePCAPartition` object.
      */
     InitializePCAPartition& set_cap(INDEX_t c = Defaults::cap) {
-        cap = c;
+        observation_cap = c;
         return *this;
     }
 
@@ -112,7 +113,7 @@ public:
      * @param Random seed to use to construct the PRNG for the power method.
      * @return A reference to this `InitializePCAPartition` object.
      */
-    InitializeKmeansPP& set_seed(uint64_t s = Defaults::seed) {
+    InitializePCAPartition& set_seed(uint64_t s = Defaults::seed) {
         seed = s;
         return *this;
     }
@@ -154,7 +155,7 @@ public:
             }
             for (int j = 0; j < ndim; ++j) {
                 for (int k = 0; k <= j; ++k) {
-                    buffer[j * ndim + k] += delta[j] * delta[k];
+                    cov[j * ndim + k] += delta[j] * delta[k];
                 }
             }
         }
@@ -162,7 +163,7 @@ public:
         // Filling in the other side of the matrix, to enable cache-efficient multiplication.
         for (size_t j = 0; j < ndim; ++j) {
             for (size_t k = j + 1; k < ndim; ++k) {
-                buffer[j * ndim + k] = buffer[k * ndim + j];
+                cov[j * ndim + k] = cov[k * ndim + j];
             }
         }
 
@@ -170,12 +171,12 @@ public:
         std::vector<DATA_t> output(ndim); 
         while (1) {
             for (int d = 0; d < ndim - 1; d += 2) {
-                auto sampled = aarand::standard_normal<DATA_t>(rng);
+                auto sampled = aarand::standard_normal<DATA_t>(eng);
                 output[d] = sampled.first;
                 output[d + 1] = sampled.second;
             }
             if (ndim % 2) {
-                output.back() = aarand::standard_normal<DATA_t>(rng).first;
+                output.back() = aarand::standard_normal<DATA_t>(eng).first;
             }
             if (normalize(ndim, output.data())) {
                 break;
@@ -188,7 +189,7 @@ public:
                 // As the matrix is symmetric, we can use inner_product.
                 // This technically computes the transpose of the matrix
                 // with the vector, but it's all the same, so whatever.
-                delta[j] = std::inner_product(output.begin(), output.end(), buffer.data() + j * ndim, static_cast<DATA_t>(0.0));
+                delta[j] = std::inner_product(output.begin(), output.end(), cov.data() + j * ndim, static_cast<DATA_t>(0.0));
             }
 
             // Normalizing the matrix.
@@ -233,12 +234,27 @@ public:
             }
         }
 
-        return curmrse / chosens.size();
+        return curmrse / chosen.size();
     }
     /**
      * @endcond
      */
 public:
+    /*
+     * @param ndim Number of dimensions.
+     * @param nobs Number of observations.
+     * @param data Pointer to an array where the dimensions are rows and the observations are columns.
+     * Data should be stored in column-major format.
+     * @param ncenters Number of centers to pick.
+     * @param[out] centers Pointer to a `ndim`-by-`ncenters` array where columns are cluster centers and rows are dimensions. 
+     * On output, this will contain the final centroid locations for each cluster.
+     * Data should be stored in column-major order.
+     * @param clusters Pointer to an array of length `nobs`.
+     * This is used as a buffer and the contents on output should not be used.
+     *
+     * @return `centers` is filled with the new cluster centers.
+     * The number of filled centers is returned, see `Initializer::run()`.
+     */
     CLUSTER_t run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
         if (nobs == 0) {
             return 0;
@@ -251,7 +267,7 @@ public:
         // Setting up the zero'th cluster. (No need to actually compute the
         // MRSE at this point, as there's nothing to compare it to.)
         std::fill(clusters, clusters + nobs, 0);
-        std::fill(centers, ncenters + ndim, 0);
+        std::fill(centers, centers + ndim, 0);
         for (size_t i = 0; i < nobs; ++i) {
             auto dptr = data + i * ndim;
             for (int d = 0; d < ndim; ++d) {
@@ -271,7 +287,7 @@ public:
             // partitioning of small clusters with unstable mean SS values.
             DATA_t worst_ss = 0;
             INDEX_t worst_cluster = 0;
-            for (size_t i = 0; i < counts.size(); ++i) {
+            for (CLUSTER_t i = 0; i < cluster; ++i) {
                 DATA_t multiplier = assignments[i].size();
                 if (observation_cap && static_cast<DATA_t>(observation_cap) < multiplier) {
                     multiplier = observation_cap;
@@ -285,21 +301,21 @@ public:
             }
 
             // Extracting the principal component for this bad boy.
-            auto worst_center = center + worst_cluster * ndim;
-            auto pc1 = compute_pc1(ndim, assignments[worst_cluster], data, clusters, worst_cluster, worst_center, rng);
+            auto worst_center = centers + worst_cluster * ndim;
+            auto& worst_assignments = assignments[worst_cluster];
+            auto pc1 = compute_pc1(ndim, worst_assignments, data, worst_center, rng);
 
             // Projecting all points in this cluster along PC1. The center lies
             // at zero, so everything positive (on one side of the hyperplane
             // orthogonal to PC1 and passing through the center) gets bumped to
             // the next cluster.
-            auto& worst_assignments = assignments[worst_cluster];
-            std::vector<INDEX_t>& new_assignments = assignments[fulfilled];
+            std::vector<INDEX_t>& new_assignments = assignments[cluster];
             std::vector<INDEX_t> worst_assignments2;
             for (auto i : worst_assignments) {
                 auto dptr = data + i * ndim;
                 DATA_t proj = 0;
-                for (int j = 0; j < ndim; ++j) {
-                    proj += (dptr[j] - worst_center[j]) * pc1[j];
+                for (int d = 0; d < ndim; ++d) {
+                    proj += (dptr[d] - worst_center[d]) * pc1[d];
                 }
 
                 if (proj > 0) {
@@ -322,12 +338,11 @@ public:
                 clusters[i] = cluster;
             }
             worst_assignments.swap(worst_assignments2);
-            ++fulfilled;
 
             // Computing centers and MRSE.
-            if (cluster + 1 < nclusters) {
+            if (cluster + 1 < ncenters) {
                 if (new_assignments.size()) {
-                    auto new_center = center + cluster * ndim;
+                    auto new_center = centers + cluster * ndim;
                     update_mrse(ndim, new_assignments, data, new_center);
                 }
                 if (worst_assignments.size()) {
