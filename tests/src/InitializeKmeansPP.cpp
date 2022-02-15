@@ -63,7 +63,7 @@ TEST_P(KmeansPPInitializationTest, Sanity) {
     assemble(param);
     auto ncenters = std::get<2>(param);
 
-    // Duplicating the first 'nc' elements over and over again.
+    // Duplicating the first 'ncenters' elements over and over again.
     std::vector<int> choices(nc);
     std::iota(choices.begin(), choices.begin() + ncenters, 0);
 
@@ -76,7 +76,7 @@ TEST_P(KmeansPPInitializationTest, Sanity) {
         choices[c] = chosen;
     }
 
-    // Expect one entry from each of the first 'nc' elements;
+    // Expect one entry from each of the first 'ncenters' elements;
     // all others are duplicates and should have sampling probabilities of zero.
     kmeans::InitializeKmeansPP init;
     init.set_seed(ncenters * 100);
@@ -138,6 +138,6 @@ INSTANTIATE_TEST_CASE_P(
     KmeansPPInitializationEdgeTest,
     ::testing::Combine(
         ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 50) // number of dimensions
+        ::testing::Values(20, 50) // number of observations 
     )
 );

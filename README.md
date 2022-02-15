@@ -8,7 +8,7 @@
 ## Overview
 
 This repository contains a header-only C++ library for k-means clustering.
-Initialization can be performed with user-supplied centers, random selection of points, weighted sampling with kmeans++ (Arthur and Vassilvitskii, 2007) or PCA partitioning (Su and Dy, 2007)/
+Initialization can be performed with user-supplied centers, random selection of points, weighted sampling with kmeans++ (Arthur and Vassilvitskii, 2007) or PCA partitioning (Su and Dy, 2007).
 Refinement can be performed using the Hartigan-Wong approach or Lloyd's algorithm.
 The Hartigan-Wong implementation is derived from the Fortran code in the R **stats** package, heavily refactored for more idiomatic C++.
 
