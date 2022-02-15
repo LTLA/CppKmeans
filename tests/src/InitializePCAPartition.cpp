@@ -228,8 +228,6 @@ TEST_P(PCAPartitionInitializationTest, Sanity) {
         std::copy(cIt, cIt + nr, dIt);
     }
 
-    // Expect one entry from each of the first 'nc' elements;
-    // all others are duplicates and should have sampling probabilities of zero.
     kmeans::InitializePCAPartition init;
     init.set_seed(ncenters * 100);
 
@@ -238,6 +236,8 @@ TEST_P(PCAPartitionInitializationTest, Sanity) {
     auto output = init.run(nr, nc, data.data(), ncenters, centers.data(), clusters.data());
     EXPECT_EQ(output, ncenters);
 
+    // Expect one entry from each of the first 'ncenters' elements.
+    // We'll just do a brute-force search for them here.
     for (size_t i = 0; i < ncenters; ++i) {
         auto expected = data.begin() + i * nr;
         bool found = false;

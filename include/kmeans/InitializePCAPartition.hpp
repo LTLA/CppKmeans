@@ -290,10 +290,6 @@ public:
         std::fill(clusters, clusters + nobs, 0);
 
         for (CLUSTER_t cluster = 1; cluster < ncenters; ++cluster) {
-            // Choosing the cluster with the largest within-cluster SS. Here we
-            // apply an observation cap to avoid favoring large clusters. We
-            // don't use the mean SS as this may encourage excessive
-            // partitioning of small clusters with unstable mean SS values.
             DATA_t worst_ss = 0;
             INDEX_t worst_cluster = 0;
             for (CLUSTER_t i = 0; i < cluster; ++i) {
@@ -338,9 +334,10 @@ public:
 
             // If one or the other is empty, then this entire procedure short
             // circuits as all future iterations will just re-select this
-            // cluster (which won't get partitioned properly anyway). The
-            // quick return is correct as we would only fail to partition
-            // if all points are identical.
+            // cluster (which won't get partitioned properly anyway). In the
+            // bigger picture, the quick exit out of the iterations is correct
+            // as we should only fail to partition in this manner if all points
+            // within each remaining cluster are identical.
             if (new_assignments.empty() || worst_assignments2.empty()) {
                 return cluster;
             }
