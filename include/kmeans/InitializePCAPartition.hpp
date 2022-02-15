@@ -30,17 +30,12 @@ namespace kmeans {
  * and we split the cluster at its center along that axis to obtain two new clusters.
  * This is repeated until the desired number of clusters is obtained, and the centers and cluster identifiers are then reported.
  *
- * To ensure that we do not just select the largest cluster (which natually would have a higher WCSS),
- * we modify the procedure slightly to cap the effective number of observations contributing to the WCSS.
+ * The original algorithm favors selection and partitioning of the largest cluster, which has the greatest chance of having the highest WCSS.
+ * For more fine-grained control, we modify the procedure to adjust the effective number of observations contributing to the WCSS.
  * Specifically, we choose the cluster to partition based on the product of $N$ and the mean squared difference within each cluster,
- * where $N$ is the smaller of the cluster size and an observation cap.
- * This means that, past the cap, the dispersion of the clusters is the only metric that matters for partitioning.
- *
- * The observation cap represents the point at which a cluster has enough observations such that its existence is not in doubt.
- * If the cap is set to 1, the partitioning will be done on the mean squared difference;
- * this risks excessive splitting of small clusters with highly variable WCSS.
- * An appropriate value for this cap depends on the context - for example, scRNA-seq applications might set the cap to 100 cells.
- * Setting the cap to zero will cause it to be ignored such that the original PCA partitioning method is performed.
+ * where $N$ is the cluster size raised to some user-specified power (i.e., the "size adjustment") between 0 and 1.
+ * An adjustment of 1 recapitulates the original algorithm, while smaller values of the size adjustment will reduce the preference towards larger clusters.
+ * A value of zero means that the cluster size is completely ignored, though this seems unwise as it causes excessive splitting of small clusters with unstable WCSS.
  *
  * This method is not completely deterministic as a randomization step is used in the PCA.
  * Nonetheless, the stochasticity is likely to have a much smaller effect than in the other initialization methods.
@@ -72,9 +67,9 @@ public:
         static constexpr DATA_t tolerance = 0.000001;
 
         /**
-         * See `set_cap()` for more details.
+         * See `set_size_adjustment()` for more details.
          */
-        static constexpr INDEX_t cap = 0;
+        static constexpr DATA_t size_adjustment = 1;
 
         /**
          * See `set_seed()` for more details.
@@ -102,11 +97,11 @@ public:
     }
 
     /**
-     * @param c Cap on the number of observations.
+     * @param s Size adjustment value, should lie in [0, 1].
      * @return A reference to this `InitializePCAPartition` object.
      */
-    InitializePCAPartition& set_cap(INDEX_t c = Defaults::cap) {
-        observation_cap = c;
+    InitializePCAPartition& set_size_adjustment(DATA_t s = Defaults::size_adjustment) {
+        adjust = s;
         return *this;
     }
 
@@ -121,7 +116,7 @@ public:
 private:
     int iters = Defaults::iterations;
     DATA_t tol = Defaults::tolerance;
-    INDEX_t observation_cap = Defaults::cap;
+    DATA_t adjust = Defaults::size_adjustment;
     uint64_t seed = Defaults::seed;
 
 public:
@@ -294,8 +289,8 @@ public:
             INDEX_t worst_cluster = 0;
             for (CLUSTER_t i = 0; i < cluster; ++i) {
                 DATA_t multiplier = assignments[i].size();
-                if (observation_cap && static_cast<DATA_t>(observation_cap) < multiplier) {
-                    multiplier = observation_cap;
+                if (adjust != 1) {
+                    multiplier = std::pow(static_cast<DATA_t>(multiplier), adjust);
                 }
 
                 DATA_t pseudo_ss = mrse[i] * multiplier;
@@ -316,7 +311,6 @@ public:
             // the next cluster.
             std::vector<INDEX_t>& new_assignments = assignments[cluster];
             std::vector<INDEX_t> worst_assignments2;
-            double accumulated = 0;
             for (auto i : worst_assignments) {
                 auto dptr = data + i * ndim;
                 DATA_t proj = 0;
@@ -324,7 +318,6 @@ public:
                     proj += (dptr[d] - worst_center[d]) * pc1[d];
                 }
 
-                accumulated += proj;
                 if (proj > 0) {
                     new_assignments.push_back(i);
                 } else {
