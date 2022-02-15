@@ -111,8 +111,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1cda76f5a3387001cdeda9e369ca57d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8d861249b3c127bc2b90b0890e0560d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1InitializePCAPartition.html">InitializePCAPartition</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializePCAPartition.html#ad8d861249b3c127bc2b90b0890e0560d">set_tolerance</a> (DATA_t t=<a class="el" href="structkmeans_1_1InitializePCAPartition_1_1Defaults.html#a563d8fc126b0932ee70558035d87fd15">Defaults::tolerance</a>)</td></tr>
 <tr class="separator:ad8d861249b3c127bc2b90b0890e0560d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29a37fed0ec4e9703e092c0170f40eb9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1InitializePCAPartition.html">InitializePCAPartition</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializePCAPartition.html#a29a37fed0ec4e9703e092c0170f40eb9">set_cap</a> (INDEX_t c=<a class="el" href="structkmeans_1_1InitializePCAPartition_1_1Defaults.html#a9341bb83d5c8cc771c78cf0c7c585010">Defaults::cap</a>)</td></tr>
-<tr class="separator:a29a37fed0ec4e9703e092c0170f40eb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99ed7c482645f101b50828401c8ef92b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1InitializePCAPartition.html">InitializePCAPartition</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializePCAPartition.html#a99ed7c482645f101b50828401c8ef92b">set_size_adjustment</a> (double s=<a class="el" href="structkmeans_1_1InitializePCAPartition_1_1Defaults.html#a93ab034dec895b86ef521ee99028fd68">Defaults::size_adjustment</a>)</td></tr>
+<tr class="separator:a99ed7c482645f101b50828401c8ef92b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afdd89d1a3c878dafb71601d33d26c9aa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1InitializePCAPartition.html">InitializePCAPartition</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializePCAPartition.html#afdd89d1a3c878dafb71601d33d26c9aa">set_seed</a> (uint64_t s=<a class="el" href="structkmeans_1_1InitializePCAPartition_1_1Defaults.html#a9162bb86b4883b129a6b27568e772e06">Defaults::seed</a>)</td></tr>
 <tr class="separator:afdd89d1a3c878dafb71601d33d26c9aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7319784c52ca22880373a6b1fc47a264"><td class="memItemLeft" align="right" valign="top"><a id="a7319784c52ca22880373a6b1fc47a264" name="a7319784c52ca22880373a6b1fc47a264"></a>
@@ -127,8 +127,7 @@ CLUSTER_t&#160;</td><td class="memItemRight" valign="bottom"><b>run</b> (int ndi
 class kmeans::InitializePCAPartition&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</div><p >Implements the PCA partitioning method of Su and Dy (2007). </p>
 <p >This approach involves the selection of starting points via iterative partitioning based on principal components analysis. The aim is to obtain well-separated starting points for refinement with algorithms like Hartigan-Wong or <a class="el" href="classkmeans_1_1Lloyd.html" title="Implements the Lloyd algorithm for k-means clustering.">Lloyd</a>. This is achieved by selecting the most dispersed cluster for further partitioning.</p>
 <p >We start from a single cluster containing all points. At each iteration, we select the cluster with the largest within-cluster sum of squares (WCSS); we identify the first principal component within that cluster; and we split the cluster at its center along that axis to obtain two new clusters. This is repeated until the desired number of clusters is obtained, and the centers and cluster identifiers are then reported.</p>
-<p >To ensure that we do not just select the largest cluster (which natually would have a higher WCSS), we modify the procedure slightly to cap the effective number of observations contributing to the WCSS. Specifically, we choose the cluster to partition based on the product of $N$ and the mean squared difference within each cluster, where $N$ is the smaller of the cluster size and an observation cap. This means that, past the cap, the dispersion of the clusters is the only metric that matters for partitioning.</p>
-<p >The observation cap represents the point at which a cluster has enough observations such that its existence is not in doubt. If the cap is set to 1, the partitioning will be done on the mean squared difference; this risks excessive splitting of small clusters with highly variable WCSS. An appropriate value for this cap depends on the context - for example, scRNA-seq applications might set the cap to 100 cells. Setting the cap to zero will cause it to be ignored such that the original PCA partitioning method is performed.</p>
+<p >The original algorithm favors selection and partitioning of the largest cluster, which has the greatest chance of having the highest WCSS. For more fine-grained control, we modify the procedure to adjust the effective number of observations contributing to the WCSS. Specifically, we choose the cluster to partition based on the product of $N$ and the mean squared difference within each cluster, where $N$ is the cluster size raised to some user-specified power (i.e., the "size adjustment") between 0 and 1. An adjustment of 1 recapitulates the original algorithm, while smaller values of the size adjustment will reduce the preference towards larger clusters. A value of zero means that the cluster size is completely ignored, though this seems unwise as it causes excessive splitting of small clusters with unstable WCSS.</p>
 <p >This method is not completely deterministic as a randomization step is used in the PCA. Nonetheless, the stochasticity is likely to have a much smaller effect than in the other initialization methods.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -140,41 +139,6 @@ class kmeans::InitializePCAPartition&lt; DATA_t, CLUSTER_t, INDEX_t &gt;</div><p
 </dl>
 <p>@seealso Su, T. and Dy, J. G. (2007). In Search of Deterministic Methods for Initializing K-Means and Gaussian Mixture Clustering, <em>Intelligent Data Analysis</em> 11, 319-338. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a29a37fed0ec4e9703e092c0170f40eb9" name="a29a37fed0ec4e9703e092c0170f40eb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29a37fed0ec4e9703e092c0170f40eb9">&#9670;&nbsp;</a></span>set_cap()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1InitializePCAPartition.html">InitializePCAPartition</a> &amp; <a class="el" href="classkmeans_1_1InitializePCAPartition.html">kmeans::InitializePCAPartition</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::set_cap </td>
-          <td>(</td>
-          <td class="paramtype">INDEX_t&#160;</td>
-          <td class="paramname"><em>c</em> = <code><a class="el" href="structkmeans_1_1InitializePCAPartition_1_1Defaults.html#a9341bb83d5c8cc771c78cf0c7c585010">Defaults::cap</a></code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">c</td><td>Cap on the number of observations. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>A reference to this <code><a class="el" href="classkmeans_1_1InitializePCAPartition.html" title="Implements the PCA partitioning method of Su and Dy (2007).">InitializePCAPartition</a></code> object. </dd></dl>
-
-</div>
-</div>
 <a id="a1cda76f5a3387001cdeda9e369ca57d9" name="a1cda76f5a3387001cdeda9e369ca57d9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1cda76f5a3387001cdeda9e369ca57d9">&#9670;&nbsp;</a></span>set_iterations()</h2>
 
@@ -238,6 +202,41 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Random</td><td>seed to use to construct the PRNG for the power method. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to this <code><a class="el" href="classkmeans_1_1InitializePCAPartition.html" title="Implements the PCA partitioning method of Su and Dy (2007).">InitializePCAPartition</a></code> object. </dd></dl>
+
+</div>
+</div>
+<a id="a99ed7c482645f101b50828401c8ef92b" name="a99ed7c482645f101b50828401c8ef92b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99ed7c482645f101b50828401c8ef92b">&#9670;&nbsp;</a></span>set_size_adjustment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX_t  = int&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classkmeans_1_1InitializePCAPartition.html">InitializePCAPartition</a> &amp; <a class="el" href="classkmeans_1_1InitializePCAPartition.html">kmeans::InitializePCAPartition</a>&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::set_size_adjustment </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>s</em> = <code><a class="el" href="structkmeans_1_1InitializePCAPartition_1_1Defaults.html#a93ab034dec895b86ef521ee99028fd68">Defaults::size_adjustment</a></code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">s</td><td>Size adjustment value, should lie in [0, 1]. </td></tr>
   </table>
   </dd>
 </dl>
