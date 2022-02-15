@@ -126,8 +126,23 @@ public:
     /**
      * @cond
      */
+    static DATA_t normalize(int ndim, DATA_t* x) {
+        DATA_t ss = 0;
+        for (int d = 0; d < ndim; ++d) {
+            ss += x[d] * x[d];
+        }
+
+        if (ss) {
+            ss = std::sqrt(ss);
+            for (int d = 0; d < ndim; ++d) {
+                x[d] /= ss;
+            }
+        }
+        return ss;
+    }
+
     template<class Rng>
-    std::vector<DATA_t> compute_pc1(int ndim, const std::vector<INDEX_t>& chosen, const DATA_t* data, const DATA_t* center, Rng& eng) {
+    std::vector<DATA_t> compute_pc1(int ndim, const std::vector<INDEX_t>& chosen, const DATA_t* data, const DATA_t* center, Rng& eng) const {
         std::vector<DATA_t> delta(ndim);
         std::vector<DATA_t> cov(ndim * ndim);
 
@@ -153,13 +168,18 @@ public:
 
         // Defining a random starting vector.
         std::vector<DATA_t> output(ndim); 
-        for (int d = 0; d < ndim - 1; d += 2) {
-            auto sampled = aarand::standard_normal<DATA_t>(rng);
-            output[d] = sampled.first;
-            output[d + 1] = sampled.second;
-        }
-        if (ndim % 2) {
-            output.back() = aarand::standard_normal<DATA_t>(rng).first;
+        while (1) {
+            for (int d = 0; d < ndim - 1; d += 2) {
+                auto sampled = aarand::standard_normal<DATA_t>(rng);
+                output[d] = sampled.first;
+                output[d + 1] = sampled.second;
+            }
+            if (ndim % 2) {
+                output.back() = aarand::standard_normal<DATA_t>(rng).first;
+            }
+            if (normalize(ndim, output.data())) {
+                break;
+            }
         }
 
         // Applying power iterations.
@@ -172,21 +192,17 @@ public:
             }
 
             // Normalizing the matrix.
-            DATA_t ss = 0;
-            for (auto d : delta) { 
-                ss += d * d;
-            }
-            ss = std::sqrt(ss);
-            if (!ss) {
-                break;
-            }
-            for (auto& d : delta) {
-                d /= ss;
-            }
+            auto l2 = normalize(ndim, delta.data());
 
-            // Comparing to the previous value.
-            auto diff = std::inner_product(delta.begin(), delta.end(), output.begin(), static_cast<DATA_t>(0.0));
-            if (std::abs(diff - 1) < tol) {
+            // We want to know if SIGMA * output = lambda * output, i.e., l2 * delta = lambda * output.
+            // If we use l2 as a working estimate for lambda, we're basically just testing the difference
+            // between delta and output. We compute the error and compare this to the tolerance.
+            DATA_t err = 0;
+            for (int d = 0; d < ndim; ++d) {
+                DATA_t diff = delta[d] - output[i];
+                err += diff * diff;
+            }
+            if (std::sqrt(err) < tol) {
                 break;
             }
 
@@ -196,7 +212,7 @@ public:
         return output;
     } 
 
-    DATA_t update_mrse(int ndim, const std::vector<INDEX_t>& chosen, const DATA_t* data, DATA_t* center) {
+    static DATA_t update_mrse(int ndim, const std::vector<INDEX_t>& chosen, const DATA_t* data, DATA_t* center) {
         for (auto i : chosen) {
             auto dptr = data + i * ndim;
             for (int d = 0; d < ndim; ++d) {
