@@ -1,6 +1,7 @@
 #ifndef KMEANS_INITIALIZE_PCA_PARTITION_HPP
 #define KMEANS_INITIALIZE_PCA_PARTITION_HPP
 
+#include <iostream>
 #include <random>
 #include <vector>
 #include <cmath>
@@ -213,17 +214,34 @@ public:
         return output;
     } 
 
-    static DATA_t update_mrse(int ndim, const std::vector<INDEX_t>& chosen, const DATA_t* data, DATA_t* center) {
+    static void compute_center(int ndim, INDEX_t nobs, const DATA_t* data, DATA_t* center) {
+        std::fill(center, center + ndim, 0);
+        for (size_t i = 0; i < nobs; ++i) {
+            auto dptr = data + i * ndim;
+            for (int d = 0; d < ndim; ++d) {
+                center[d] += dptr[d];
+            }
+        }
+        for (int d = 0; d < ndim; ++d) {
+            center[d] /= nobs;
+        }
+    }
+
+    static void compute_center(int ndim, const std::vector<INDEX_t>& chosen, const DATA_t* data, DATA_t* center) {
+        std::fill(center, center + ndim, 0);
         for (auto i : chosen) {
             auto dptr = data + i * ndim;
             for (int d = 0; d < ndim; ++d) {
                 center[d] += dptr[d];
             }
         }
-
         for (int d = 0; d < ndim; ++d) {
             center[d] /= chosen.size();
         }
+    }
+
+    static DATA_t update_mrse(int ndim, const std::vector<INDEX_t>& chosen, const DATA_t* data, DATA_t* center) {
+        compute_center(ndim, chosen, data, center);
 
         DATA_t curmrse = 0;
         for (auto i : chosen) {
@@ -266,19 +284,10 @@ public:
 
         // Setting up the zero'th cluster. (No need to actually compute the
         // MRSE at this point, as there's nothing to compare it to.)
-        std::fill(clusters, clusters + nobs, 0);
-        std::fill(centers, centers + ndim, 0);
-        for (size_t i = 0; i < nobs; ++i) {
-            auto dptr = data + i * ndim;
-            for (int d = 0; d < ndim; ++d) {
-                centers[d] += dptr[d];
-            }
-        }
-        for (int d = 0; d < ndim; ++d) {
-            centers[d] /= nobs;
-        }
+        compute_center(ndim, nobs, data, centers);
         assignments[0].resize(nobs);
         std::iota(assignments.front().begin(), assignments.front().end(), 0);
+        std::fill(clusters, clusters + nobs, 0);
 
         for (CLUSTER_t cluster = 1; cluster < ncenters; ++cluster) {
             // Choosing the cluster with the largest within-cluster SS. Here we
@@ -311,6 +320,7 @@ public:
             // the next cluster.
             std::vector<INDEX_t>& new_assignments = assignments[cluster];
             std::vector<INDEX_t> worst_assignments2;
+            double accumulated = 0;
             for (auto i : worst_assignments) {
                 auto dptr = data + i * ndim;
                 DATA_t proj = 0;
@@ -318,6 +328,7 @@ public:
                     proj += (dptr[d] - worst_center[d]) * pc1[d];
                 }
 
+                accumulated += proj;
                 if (proj > 0) {
                     new_assignments.push_back(i);
                 } else {
@@ -340,16 +351,9 @@ public:
             worst_assignments.swap(worst_assignments2);
 
             // Computing centers and MRSE.
-            if (cluster + 1 < ncenters) {
-                if (new_assignments.size()) {
-                    auto new_center = centers + cluster * ndim;
-                    update_mrse(ndim, new_assignments, data, new_center);
-                }
-                if (worst_assignments.size()) {
-                    std::fill(worst_center, worst_center + ndim, 0);
-                    update_mrse(ndim, worst_assignments, data, worst_center);
-                }
-            }
+            auto new_center = centers + cluster * ndim;
+            mrse[cluster] = update_mrse(ndim, new_assignments, data, new_center);
+            mrse[worst_cluster] = update_mrse(ndim, worst_assignments, data, worst_center);
         }
 
         return ncenters;

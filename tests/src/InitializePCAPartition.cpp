@@ -53,6 +53,11 @@ TEST(PCAPartitionUtils, MRSECalculations) {
 
     EXPECT_EQ(var, varref);
     EXPECT_EQ(center, centerref);
+
+    // Checking the other center method.
+    std::vector<double> anothercenter(nr);
+    kmeans::InitializePCAPartition<>::compute_center(nr, chosen.size(), dataref.data(), anothercenter.data());
+    EXPECT_EQ(center, anothercenter);
 }
 
 TEST(PCAPartitionUtils, PowerMethodBasic) {
@@ -107,17 +112,8 @@ TEST(PCAPartitionUtils, PowerMethodComplex) {
 
     std::vector<int> chosen(nc);
     std::iota(chosen.begin(), chosen.end(), 0);
-
     std::vector<double> center(nr);
-    for (size_t c = 0; c < nc; ++c) {
-        auto ptr = data.data() + c * nr;
-        for (size_t r = 0; r < nr; ++r, ++ptr) {
-            center[r] += *ptr;
-        }
-    }
-    for (auto& c : center) { 
-        c /= nc;
-    }
+    kmeans::InitializePCAPartition<>::compute_center(nr, chosen, data.data(), center.data());
 
     kmeans::InitializePCAPartition init;
     auto output = init.compute_pc1(nr, chosen, data.data(), center.data(), rng);
@@ -173,17 +169,11 @@ TEST(PCAPartitionUtils, PowerMethodSubsetting) {
 
     // Subset to every 10th element.
     std::vector<int> chosen;
-    std::vector<double> center(nr);
     for (size_t c = 7; c < nc; c += 10) {
         chosen.push_back(c);
-        auto ptr = data.data() + c * nr;
-        for (size_t r = 0; r < nr; ++r, ++ptr) {
-            center[r] += *ptr;
-        }
     }
-    for (auto& c : center) { 
-        c /= nc;
-    }
+    std::vector<double> center(nr);
+    kmeans::InitializePCAPartition<>::compute_center(nr, chosen, data.data(), center.data());
 
     kmeans::InitializePCAPartition init;
     std::vector<double> output;
@@ -224,52 +214,53 @@ TEST_P(PCAPartitionInitializationTest, Basic) {
     EXPECT_EQ(nfilled, ncenters);
 }
 
-//TEST_P(PCAPartitionInitializationTest, Sanity) {
-//    auto param = GetParam();
-//    assemble(param);
-//    auto ncenters = std::get<2>(param);
-//
-//    // Duplicating the first 'nc' elements over and over again.
-//    std::vector<int> choices(nc);
-//    std::iota(choices.begin(), choices.begin() + ncenters, 0);
-//
-//    std::mt19937_64 rng(nc * 10);
-//    auto dIt = data.begin() + ncenters * nr;
-//    for (int c = ncenters; c < nc; ++c, dIt += nr) {
-//        auto chosen = rng() % ncenters;
-//        auto cIt = data.begin() + chosen * nr;
-//        std::copy(cIt, cIt + nr, dIt);
-//        choices[c] = chosen;
-//    }
-//
-//    // Expect one entry from each of the first 'nc' elements;
-//    // all others are duplicates and should have sampling probabilities of zero.
-//    kmeans::InitializePCAPartition init;
-//    init.set_seed(ncenters * 100);
-//
-//    std::vector<double> centers(nr * ncenters);
-//    std::vector<int> clusters(nc);
-//    auto output = init.run(nr, nc, data.data(), ncenters, centers.data(), clusters.data());
-//
-//    EXPECT_EQ(output.size(), ncenters);
-//    for (auto& o : output) {
-//        o = choices[o];
-//    }
-//    std::sort(output.begin(), output.end());
-//
-//    std::vector<int> expected(ncenters);
-//    std::iota(expected.begin(), expected.end(), 0);
-//    EXPECT_EQ(expected, output);
-//
-//    // If more clusters are requested, we detect that only duplicates are available and we bail early.
-//    auto output2 = init.run(nr, nc, data.data(), ncenters + 1);
-//    EXPECT_EQ(output2.size(), ncenters);
-//    for (auto& o : output2) {
-//        o = choices[o];
-//    }
-//    std::sort(output2.begin(), output2.end());
-//    EXPECT_EQ(expected, output2);
-//}
+TEST_P(PCAPartitionInitializationTest, Sanity) {
+    auto param = GetParam();
+    assemble(param);
+    auto ncenters = std::get<2>(param);
+
+    // Duplicating the first 'ncenters' elements over and over again.
+    std::mt19937_64 rng(nc * 10);
+    auto dIt = data.begin() + ncenters * nr;
+    for (int c = ncenters; c < nc; ++c, dIt += nr) {
+        auto chosen = rng() % ncenters;
+        auto cIt = data.begin() + chosen * nr;
+        std::copy(cIt, cIt + nr, dIt);
+    }
+
+    // Expect one entry from each of the first 'nc' elements;
+    // all others are duplicates and should have sampling probabilities of zero.
+    kmeans::InitializePCAPartition init;
+    init.set_seed(ncenters * 100);
+
+    std::vector<double> centers(nr * ncenters);
+    std::vector<int> clusters(nc);
+    auto output = init.run(nr, nc, data.data(), ncenters, centers.data(), clusters.data());
+    EXPECT_EQ(output, ncenters);
+
+    for (size_t i = 0; i < ncenters; ++i) {
+        auto expected = data.begin() + i * nr;
+        bool found = false;
+
+        for (size_t j = 0; j < ncenters; ++j) {
+            auto observed = centers.data() + j * nr;
+            bool okay = true;
+            for (int d = 0; d < nr; ++d) {
+                if (std::abs(expected[d] - observed[d]) > 0.000001) {
+                    okay = false;
+                    break;
+                }
+            }
+
+            if (okay) {
+                found = true;
+                break;
+            }
+        }
+
+        EXPECT_TRUE(found);
+    }
+}
 
 INSTANTIATE_TEST_CASE_P(
     PCAPartitionInitialization,
