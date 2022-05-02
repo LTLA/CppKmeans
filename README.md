@@ -81,7 +81,7 @@ target_link_libraries(mylib INTERFACE kmeans)
 ```
 
 If you're not using CMake, the simple approach is to just copy the files - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's `-I`.
-This requires the additional [**aarand**](https://github.com/LTLA/aarand) library for some lightweight distribution functions.
+This requires the additional [**aarand**](https://github.com/LTLA/aarand) and [**powerit**](https://github.com/LTLA/powerit) libraries for some lightweight distribution functions.
 
 ## References
 

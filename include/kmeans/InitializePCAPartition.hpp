@@ -7,7 +7,9 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
+
 #include "aarand/aarand.hpp"
+#include "powerit/PowerIterations.hpp"
 #include "Base.hpp"
 
 /**
@@ -57,16 +59,6 @@ public:
      */
     struct Defaults {
         /**
-         * See `set_iterations()` for more details.
-         */
-        static constexpr int iterations = 500;
-
-        /**
-         * See `set_tolerance()` for more details.
-         */
-        static constexpr DATA_t tolerance = 0.000001;
-
-        /**
          * See `set_size_adjustment()` for more details.
          */
         static constexpr DATA_t size_adjustment = 1;
@@ -79,19 +71,19 @@ public:
 
 public:
     /**
-     * @param i Maximum number of iterations of the power method to perform when finding the first PC.
+     * @param i Maximum number of power iterations to use in `powerit::PowerIterations::set_iterations()`.
      * @return A reference to this `InitializePCAPartition` object.
      */
-    InitializePCAPartition& set_iterations(int i = Defaults::iterations) {
+    InitializePCAPartition& set_iterations(int i = powerit::PowerIterations::Defaults::iterations) {
         iters = i;
         return *this;
     }
 
     /**
-     * @param t Convergence threshold to terminate the power method.
+     * @param t Convergence threshold to use in `powerit::PowerIterations::set_tolerance()`.
      * @return A reference to this `InitializePCAPartition` object.
      */
-    InitializePCAPartition& set_tolerance(DATA_t t = Defaults::tolerance) {
+    InitializePCAPartition& set_tolerance(DATA_t t = powerit::PowerIterations::Defaults::tolerance) {
         tol = t;
         return *this;
     }
@@ -114,8 +106,8 @@ public:
         return *this;
     }
 private:
-    int iters = Defaults::iterations;
-    DATA_t tol = Defaults::tolerance;
+    int iters = powerit::PowerIterations::Defaults::iterations;
+    DATA_t tol = powerit::PowerIterations::Defaults::tolerance;
     DATA_t adjust = Defaults::size_adjustment;
     uint64_t seed = Defaults::seed;
 
@@ -163,49 +155,11 @@ public:
             }
         }
 
-        // Defining a random starting vector.
-        std::vector<DATA_t> output(ndim); 
-        while (1) {
-            for (int d = 0; d < ndim - 1; d += 2) {
-                auto sampled = aarand::standard_normal<DATA_t>(eng);
-                output[d] = sampled.first;
-                output[d + 1] = sampled.second;
-            }
-            if (ndim % 2) {
-                output.back() = aarand::standard_normal<DATA_t>(eng).first;
-            }
-            if (normalize(ndim, output.data())) {
-                break;
-            }
-        }
+        powerit::PowerIterations power;
+        power.set_iterations(iters).set_tolerance(tol);
 
-        // Applying power iterations.
-        for (int i = 0; i < iters; ++i) {
-            for (size_t j = 0; j < ndim; ++j) {
-                // As the matrix is symmetric, we can use inner_product.
-                // This technically computes the transpose of the matrix
-                // with the vector, but it's all the same, so whatever.
-                delta[j] = std::inner_product(output.begin(), output.end(), cov.data() + j * ndim, static_cast<DATA_t>(0.0));
-            }
-
-            // Normalizing the matrix.
-            auto l2 = normalize(ndim, delta.data());
-
-            // We want to know if SIGMA * output = lambda * output, i.e., l2 * delta = lambda * output.
-            // If we use l2 as a working estimate for lambda, we're basically just testing the difference
-            // between delta and output. We compute the error and compare this to the tolerance.
-            DATA_t err = 0;
-            for (int d = 0; d < ndim; ++d) {
-                DATA_t diff = delta[d] - output[i];
-                err += diff * diff;
-            }
-            if (std::sqrt(err) < tol) {
-                break;
-            }
-
-            std::copy(delta.begin(), delta.end(), output.begin());
-        }
-
+        std::vector<DATA_t> output(ndim);
+        power.run(ndim, cov.data(), output.data(), eng);
         return output;
     } 
 
