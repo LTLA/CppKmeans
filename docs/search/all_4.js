@@ -10,5 +10,5 @@ var searchData=
   ['initializepcapartition_2ehpp_7',['InitializePCAPartition.hpp',['../InitializePCAPartition_8hpp.html',1,'']]],
   ['initializerandom_8',['InitializeRandom',['../classkmeans_1_1InitializeRandom.html',1,'kmeans']]],
   ['initializerandom_2ehpp_9',['InitializeRandom.hpp',['../InitializeRandom_8hpp.html',1,'']]],
-  ['iterations_10',['iterations',['../structkmeans_1_1Details.html#a83defe41cd0ace522c1a2434f570337e',1,'kmeans::Details::iterations()'],['../structkmeans_1_1InitializePCAPartition_1_1Defaults.html#ab44100bec3d1b8bcbb49aa38afaa0202',1,'kmeans::InitializePCAPartition::Defaults::iterations()']]]
+  ['iterations_10',['iterations',['../structkmeans_1_1Details.html#a83defe41cd0ace522c1a2434f570337e',1,'kmeans::Details']]]
 ];
