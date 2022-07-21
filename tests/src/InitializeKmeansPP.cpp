@@ -1,7 +1,14 @@
-#include "kmeans/InitializeKmeansPP.hpp"
+#include "TestCore.h"
+
 #include <random>
 #include <vector>
-#include "TestCore.h"
+
+#ifdef CUSTOM_PARALLEL_TEST
+// Must be before any kmeans imports.
+#include "custom_parallel.h"
+#endif
+
+#include "kmeans/InitializeKmeansPP.hpp"
 
 using KmeansPPInitializationTest = TestParamCore<std::tuple<int, int, int> >;
 
@@ -36,6 +43,14 @@ TEST_P(KmeansPPInitializationTest, Basic) {
         auto optr = data.data() + c * nr;
         std::vector<double> exp(optr, optr + nr);
         EXPECT_EQ(obs, exp);
+    }
+
+    // Check that parallelization gives the same result.
+    {
+        auto init2 = init;
+        init2.set_num_threads(3);
+        auto output2 = init2.run(nr, nc, data.data(), ncenters);
+        EXPECT_EQ(copy, output2);
     }
 }
 

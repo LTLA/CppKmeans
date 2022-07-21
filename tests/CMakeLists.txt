@@ -27,6 +27,26 @@ target_link_libraries(
     kmeans
 )
 
+# Also testing the custom parallelization.
+add_executable(
+    cuspartest
+    src/HartiganWong.cpp
+    src/Lloyd.cpp
+    src/MiniBatch.cpp
+    src/InitializeRandom.cpp
+    src/InitializeKmeansPP.cpp
+    src/InitializePCAPartition.cpp
+    src/Kmeans.cpp
+)
+
+target_link_libraries(
+    cuspartest
+    gtest_main
+    kmeans
+)
+
+target_compile_definitions(cuspartest PRIVATE CUSTOM_PARALLEL_TEST=1)
+
 set(USE_OPENMP OFF CACHE BOOL "Enable OpenMP for tests")
 if(USE_OPENMP)
     find_package(OpenMP REQUIRED)
@@ -41,5 +61,4 @@ endif()
 
 include(GoogleTest)
 gtest_discover_tests(libtest)
-
-add_test(NAME kmeans_tests COMMAND libtest)
+gtest_discover_tests(cuspartest)

@@ -1,9 +1,15 @@
+#include "TestCore.h"
+
+#include <memory>
+
+#ifdef CUSTOM_PARALLEL_TEST
+// Must be before any kmeans imports.
+#include "custom_parallel.h"
+#endif
+
 #include "kmeans/Kmeans.hpp"
 #include "kmeans/Lloyd.hpp"
 #include "kmeans/MiniBatch.hpp"
-#include <gtest/gtest.h>
-#include "TestCore.h"
-#include <memory>
 
 using KmeansBasicTest = TestParamCore<std::tuple<int, int, int> >;
 

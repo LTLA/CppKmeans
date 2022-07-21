@@ -11,7 +11,7 @@ jobs:
       matrix:
         config:
         - {
-            name: "Ubuntu Latest GCC", 
+            name: "Ubuntu Latest GCC, OMP enabled", 
             os: ubuntu-latest,
             omp: true
           }

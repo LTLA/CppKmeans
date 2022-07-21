@@ -1,7 +1,14 @@
-#include "kmeans/InitializeRandom.hpp"
+#include "TestCore.h"
+
 #include <random>
 #include <vector>
-#include "TestCore.h"
+
+#ifdef CUSTOM_PARALLEL_TEST
+// Must be before any kmeans imports.
+#include "custom_parallel.h"
+#endif
+
+#include "kmeans/InitializeRandom.hpp"
 
 using RandomInitializationTest = TestParamCore<std::tuple<int, int, int> >;
 

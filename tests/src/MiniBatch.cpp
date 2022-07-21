@@ -1,6 +1,11 @@
-#include "kmeans/MiniBatch.hpp"
-#include <gtest/gtest.h>
 #include "TestCore.h"
+
+#ifdef CUSTOM_PARALLEL_TEST
+// Must be before any kmeans imports.
+#include "custom_parallel.h"
+#endif
+
+#include "kmeans/MiniBatch.hpp"
 
 using MiniBatchBasicTest = TestParamCore<std::tuple<int, int, int> >;
 
@@ -34,6 +39,16 @@ TEST_P(MiniBatchBasicTest, Sweep) {
         } else {
             EXPECT_EQ(wcss[i], 0);
         }
+    }
+
+    // Checking that parallelization gives the same result.
+    {
+        auto pcenters = create_centers(data.data(), ncenters);
+        std::vector<int> pclusters(nc);
+        auto pmb = kmeans::MiniBatch<>().set_num_threads(3).run(nr, nc, data.data(), ncenters, pcenters.data(), pclusters.data());
+        EXPECT_EQ(pcenters, centers);
+        EXPECT_EQ(pclusters, clusters);
+        EXPECT_EQ(pmb.withinss, wcss);
     }
 }
 

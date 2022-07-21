@@ -44,6 +44,11 @@ public:
          * See `set_seed()` for more details.
          */
         static constexpr uint64_t seed = 6523u;
+
+        /** 
+         * See `set_num_threads()` for more details.
+         */
+        static constexpr int num_threads = 1;
     };
 
     /**
@@ -55,8 +60,20 @@ public:
         seed = s;
         return *this;
     }
+
+    /**
+     * @param n Number of threads to use.
+     *
+     * @return A reference to this `InitializeKmeansPP` object.
+     */
+    InitializeKmeansPP& set_num_threads(int n = Defaults::num_threads) {
+        nthreads = n;
+        return *this;
+    }
+
 private:
     uint64_t seed = Defaults::seed;
+    int nthreads = Defaults::num_threads;
 
 public:
     /**
@@ -74,8 +91,13 @@ public:
             if (!sofar.empty()) {
                 auto last = sofar.back();
 
-                #pragma omp parallel for
+#ifndef KMEANS_CUSTOM_PARALLEL
+                #pragma omp parallel for num_threads(nthreads)
                 for (INDEX_t obs = 0; obs < nobs; ++obs) {
+#else
+                KMEANS_CUSTOM_PARALLEL(nobs, [&](INDEX_t first, INDEX_t end) -> void {
+                for (INDEX_t obs = first; obs < end; ++obs) {
+#endif
                     if (mindist[obs]) {
                         const DATA_t* acopy = data + obs * ndim;
                         const DATA_t* scopy = data + last * ndim;
@@ -88,7 +110,13 @@ public:
                             mindist[obs] = r2;
                         }
                     }
+#ifndef KMEANS_CUSTOM_PARALLEL
                 }
+#else
+                }
+                }, nthreads);
+#endif
+
             } else {
                 counter = nobs;
             }

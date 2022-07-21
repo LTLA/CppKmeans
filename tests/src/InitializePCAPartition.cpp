@@ -1,7 +1,14 @@
-#include "kmeans/InitializePCAPartition.hpp"
+#include "TestCore.h"
+
 #include <random>
 #include <vector>
-#include "TestCore.h"
+
+#ifdef CUSTOM_PARALLEL_TEST
+// Must be before any kmeans imports.
+#include "custom_parallel.h"
+#endif
+
+#include "kmeans/InitializePCAPartition.hpp"
 
 TEST(PCAPartitionUtils, L2normalization) {
     std::vector<double> x{1,2,3,4};
