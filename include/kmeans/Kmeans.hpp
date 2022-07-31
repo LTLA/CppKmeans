@@ -59,7 +59,7 @@ public:
      * @return A reference to this `Kmeans` object.
      *
      * This seed is only used for the default `initializer` instance in `run()`.
-     * Otherwise, the seed from individual instances is respected.
+     * Otherwise, if an `initializer` is explicitly passed to `run()`, its seed is respected.
      */
     Kmeans& set_seed(uint64_t s = 5489u) {
         seed = s;
@@ -72,7 +72,7 @@ public:
      * @return A reference to this `Kmeans` object.
      *
      * This setting is only used for the default `refiner` and `initializer` instances in `run()`.
-     * Otherwise, the seed from the individual instances is respected.
+     * Otherwise, if an `initializer` or `refiner` is explicitly passed to `run()`, the number of threads specified in the instance is respected.
      */
     Kmeans& set_num_threads(int n = Defaults::num_threads) {
         nthreads = n;
