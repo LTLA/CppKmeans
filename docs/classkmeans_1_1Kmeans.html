@@ -309,7 +309,7 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A reference to this <code><a class="el" href="classkmeans_1_1Kmeans.html" title="Top-level class to run k-means clustering.">Kmeans</a></code> object.</dd></dl>
-<p>This setting is only used for the default <code>refiner</code> and <code>initializer</code> instances in <code><a class="el" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run()</a></code>. Otherwise, the seed from the individual instances is respected. </p>
+<p>This setting is only used for the default <code>refiner</code> and <code>initializer</code> instances in <code><a class="el" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run()</a></code>. Otherwise, if an <code>initializer</code> or <code>refiner</code> is explicitly passed to <code><a class="el" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run()</a></code>, the number of threads specified in the instance is respected. </p>
 
 </div>
 </div>
@@ -345,7 +345,7 @@ template&lt;typename DATA_t  = double, typename CLUSTER_t  = int, typename INDEX
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A reference to this <code><a class="el" href="classkmeans_1_1Kmeans.html" title="Top-level class to run k-means clustering.">Kmeans</a></code> object.</dd></dl>
-<p>This seed is only used for the default <code>initializer</code> instance in <code><a class="el" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run()</a></code>. Otherwise, the seed from individual instances is respected. </p>
+<p>This seed is only used for the default <code>initializer</code> instance in <code><a class="el" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run()</a></code>. Otherwise, if an <code>initializer</code> is explicitly passed to <code><a class="el" href="classkmeans_1_1Kmeans.html#a33587fabee0e531701632f18708fc863">run()</a></code>, its seed is respected. </p>
 
 </div>
 </div>
