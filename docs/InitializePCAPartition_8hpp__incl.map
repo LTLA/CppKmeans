@@ -1,13 +1,13 @@
 <map id="kmeans/InitializePCAPartition.hpp" name="kmeans/InitializePCAPartition.hpp">
-<area shape="rect" id="node1" title="Class for k&#45;means initialization with PCA partitioning." alt="" coords="253,5,472,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,80,77,107"/>
-<area shape="rect" id="node3" title=" " alt="" coords="102,80,167,107"/>
-<area shape="rect" id="node4" title=" " alt="" coords="216,229,275,256"/>
-<area shape="rect" id="node5" title=" " alt="" coords="243,80,301,107"/>
-<area shape="rect" id="node6" title=" " alt="" coords="325,80,400,107"/>
-<area shape="rect" id="node7" title=" " alt="" coords="425,80,493,107"/>
-<area shape="rect" id="node8" title=" " alt="" coords="517,80,645,107"/>
-<area shape="rect" id="node9" title=" " alt="" coords="670,80,853,107"/>
-<area shape="rect" id="node10" href="$Base_8hpp_source.html" title=" " alt="" coords="877,80,953,107"/>
-<area shape="rect" id="node11" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="557,155,643,181"/>
+<area shape="rect" id="node1" title="Class for k&#45;means initialization with PCA partitioning." alt="" coords="253,5,472,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,79,77,104"/>
+<area shape="rect" id="node3" title=" " alt="" coords="102,79,167,104"/>
+<area shape="rect" id="node4" title=" " alt="" coords="216,225,275,251"/>
+<area shape="rect" id="node5" title=" " alt="" coords="243,79,301,104"/>
+<area shape="rect" id="node6" title=" " alt="" coords="325,79,400,104"/>
+<area shape="rect" id="node7" title=" " alt="" coords="425,79,493,104"/>
+<area shape="rect" id="node8" title=" " alt="" coords="517,79,645,104"/>
+<area shape="rect" id="node9" title=" " alt="" coords="670,79,853,104"/>
+<area shape="rect" id="node10" href="$Base_8hpp_source.html" title=" " alt="" coords="877,79,953,104"/>
+<area shape="rect" id="node11" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="557,152,643,177"/>
 </map>

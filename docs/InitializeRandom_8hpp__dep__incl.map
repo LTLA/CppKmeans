@@ -1,5 +1,5 @@
 <map id="kmeans/InitializeRandom.hpp" name="kmeans/InitializeRandom.hpp">
-<area shape="rect" id="node1" title="Class for random initialization." alt="" coords="15,5,205,32"/>
-<area shape="rect" id="node2" href="$InitializeKmeansPP_8hpp.html" title="Class for kmeans++ initialization." alt="" coords="5,80,215,107"/>
-<area shape="rect" id="node3" href="$Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="38,155,182,181"/>
+<area shape="rect" id="node1" title="Class for random initialization." alt="" coords="15,5,205,31"/>
+<area shape="rect" id="node2" href="$InitializeKmeansPP_8hpp.html" title="Class for kmeans++ initialization." alt="" coords="5,79,215,104"/>
+<area shape="rect" id="node3" href="$Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="38,152,182,177"/>
 </map>

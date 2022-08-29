@@ -1,4 +1,4 @@
 <map id="kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;" name="kmeans::MiniBatch&lt; DATA_t, CLUSTER_t, INDEX_t &gt;">
-<area shape="rect" id="node1" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="9,95,164,151"/>
-<area shape="rect" id="node2" href="$classkmeans_1_1Refine.html" title=" " alt="" coords="5,5,168,47"/>
+<area shape="rect" id="node1" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="19,93,173,148"/>
+<area shape="rect" id="node2" href="$classkmeans_1_1Refine.html" title="Base class for all k&#45;means refinement algorithms." alt="" coords="5,5,187,45"/>
 </map>

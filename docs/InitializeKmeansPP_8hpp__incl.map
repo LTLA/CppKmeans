@@ -1,13 +1,13 @@
 <map id="kmeans/InitializeKmeansPP.hpp" name="kmeans/InitializeKmeansPP.hpp">
-<area shape="rect" id="node1" title="Class for kmeans++ initialization." alt="" coords="115,5,325,32"/>
-<area shape="rect" id="node2" title=" " alt="" coords="44,304,103,331"/>
-<area shape="rect" id="node3" title=" " alt="" coords="339,155,413,181"/>
-<area shape="rect" id="node4" title=" " alt="" coords="437,155,499,181"/>
-<area shape="rect" id="node5" href="$Base_8hpp_source.html" title=" " alt="" coords="35,155,111,181"/>
-<area shape="rect" id="node7" href="$InitializeRandom_8hpp.html" title="Class for random initialization." alt="" coords="204,80,345,107"/>
-<area shape="rect" id="node9" href="$random_8hpp_source.html" title=" " alt="" coords="135,155,225,181"/>
-<area shape="rect" id="node6" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="30,229,117,256"/>
-<area shape="rect" id="node8" title=" " alt="" coords="249,155,314,181"/>
-<area shape="rect" id="node10" title=" " alt="" coords="193,229,261,256"/>
-<area shape="rect" id="node11" title=" " alt="" coords="285,229,413,256"/>
+<area shape="rect" id="node1" title="Class for kmeans++ initialization." alt="" coords="115,5,325,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="44,299,103,324"/>
+<area shape="rect" id="node3" title=" " alt="" coords="339,152,413,177"/>
+<area shape="rect" id="node4" title=" " alt="" coords="437,152,499,177"/>
+<area shape="rect" id="node5" href="$Base_8hpp_source.html" title=" " alt="" coords="35,152,111,177"/>
+<area shape="rect" id="node7" href="$InitializeRandom_8hpp.html" title="Class for random initialization." alt="" coords="204,79,345,104"/>
+<area shape="rect" id="node9" href="$random_8hpp_source.html" title=" " alt="" coords="135,152,225,177"/>
+<area shape="rect" id="node6" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="30,225,117,251"/>
+<area shape="rect" id="node8" title=" " alt="" coords="249,152,314,177"/>
+<area shape="rect" id="node10" title=" " alt="" coords="193,225,261,251"/>
+<area shape="rect" id="node11" title=" " alt="" coords="285,225,413,251"/>
 </map>

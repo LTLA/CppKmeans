@@ -1,7 +1,7 @@
 <map id="kmeans/InitializeNone.hpp" name="kmeans/InitializeNone.hpp">
-<area shape="rect" id="node1" title="Class for no initialization." alt="" coords="11,5,185,32"/>
-<area shape="rect" id="node2" href="$Base_8hpp_source.html" title=" " alt="" coords="11,80,87,107"/>
-<area shape="rect" id="node5" title=" " alt="" coords="111,80,186,107"/>
-<area shape="rect" id="node3" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="5,155,92,181"/>
-<area shape="rect" id="node4" title=" " alt="" coords="19,229,78,256"/>
+<area shape="rect" id="node1" title="Class for no initialization." alt="" coords="11,5,185,31"/>
+<area shape="rect" id="node2" href="$Base_8hpp_source.html" title=" " alt="" coords="11,79,87,104"/>
+<area shape="rect" id="node5" title=" " alt="" coords="111,79,186,104"/>
+<area shape="rect" id="node3" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="5,152,92,177"/>
+<area shape="rect" id="node4" title=" " alt="" coords="19,225,78,251"/>
 </map>

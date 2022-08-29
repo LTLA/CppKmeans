@@ -1,4 +1,4 @@
 <map id="kmeans::InitializeKmeansPP&lt; DATA_t, CLUSTER_t, INDEX_t &gt;" name="kmeans::InitializeKmeansPP&lt; DATA_t, CLUSTER_t, INDEX_t &gt;">
-<area shape="rect" id="node1" title="Implements the k&#45;means++ initialization of Arthur and Vassilvitskii (2007)." alt="" coords="5,95,185,151"/>
-<area shape="rect" id="node2" href="$classkmeans_1_1Initialize.html" title=" " alt="" coords="33,5,157,47"/>
+<area shape="rect" id="node1" title="Implements the k&#45;means++ initialization of Arthur and Vassilvitskii (2007)." alt="" coords="5,108,185,163"/>
+<area shape="rect" id="node2" href="$classkmeans_1_1Initialize.html" title="Base class for all k&#45;means initialization algorithms." alt="" coords="14,5,177,60"/>
 </map>

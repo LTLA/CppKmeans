@@ -1,4 +1,4 @@
 <map id="kmeans::HartiganWong&lt; DATA_t, CLUSTER_t, INDEX_t &gt;" name="kmeans::HartiganWong&lt; DATA_t, CLUSTER_t, INDEX_t &gt;">
-<area shape="rect" id="node1" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="5,95,168,151"/>
-<area shape="rect" id="node2" href="$classkmeans_1_1Refine.html" title=" " alt="" coords="5,5,168,47"/>
+<area shape="rect" id="node1" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="15,93,177,148"/>
+<area shape="rect" id="node2" href="$classkmeans_1_1Refine.html" title="Base class for all k&#45;means refinement algorithms." alt="" coords="5,5,187,45"/>
 </map>

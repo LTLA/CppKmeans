@@ -1,0 +1,7 @@
+<map id="kmeans::Initialize&lt; DATA_t, CLUSTER_t, INDEX_t &gt;" name="kmeans::Initialize&lt; DATA_t, CLUSTER_t, INDEX_t &gt;">
+<area shape="rect" id="node1" title="Base class for all k&#45;means initialization algorithms." alt="" coords="5,109,168,164"/>
+<area shape="rect" id="node2" href="$classkmeans_1_1InitializeKmeansPP.html" title="Implements the k&#45;means++ initialization of Arthur and Vassilvitskii (2007)." alt="" coords="239,5,419,60"/>
+<area shape="rect" id="node3" href="$classkmeans_1_1InitializeNone.html" title="Perform &quot;initialization&quot; by just using the input cluster centers." alt="" coords="216,85,443,125"/>
+<area shape="rect" id="node4" href="$classkmeans_1_1InitializePCAPartition.html" title="Implements the PCA partitioning method of Su and Dy (2007)." alt="" coords="216,149,443,189"/>
+<area shape="rect" id="node5" href="$classkmeans_1_1InitializeRandom.html" title="Initialize starting points by sampling random observations without replacement." alt="" coords="216,213,443,253"/>
+</map>

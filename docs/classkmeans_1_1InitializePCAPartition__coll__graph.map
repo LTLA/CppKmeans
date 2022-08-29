@@ -1,4 +1,4 @@
 <map id="kmeans::InitializePCAPartition&lt; DATA_t, CLUSTER_t, INDEX_t &gt;" name="kmeans::InitializePCAPartition&lt; DATA_t, CLUSTER_t, INDEX_t &gt;">
-<area shape="rect" id="node1" title="Implements the PCA partitioning method of Su and Dy (2007)." alt="" coords="5,95,232,136"/>
-<area shape="rect" id="node2" href="$classkmeans_1_1Initialize.html" title=" " alt="" coords="57,5,181,47"/>
+<area shape="rect" id="node1" title="Implements the PCA partitioning method of Su and Dy (2007)." alt="" coords="5,108,232,148"/>
+<area shape="rect" id="node2" href="$classkmeans_1_1Initialize.html" title="Base class for all k&#45;means initialization algorithms." alt="" coords="37,5,200,60"/>
 </map>
