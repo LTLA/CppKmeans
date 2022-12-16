@@ -131,6 +131,8 @@ public:
          * @cond
          */
         Results(int ndim, INDEX_t nobs, CLUSTER_t ncenters) : centers(ndim * ncenters), clusters(nobs) {}
+
+        Results() {}
         /**
          * @endcond
          */

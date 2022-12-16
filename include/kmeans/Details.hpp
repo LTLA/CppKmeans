@@ -23,7 +23,7 @@ struct Details {
     /**
      * @cond
      */
-    Details() {}
+    Details() : iterations(0), status(0) {}
 
     Details(int it, int st) : sizes(0), withinss(0), iterations(it), status(st) {}
 
