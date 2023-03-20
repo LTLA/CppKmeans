@@ -56,9 +56,11 @@ See the [reference documentation](https://ltla.github.io/CppKmeans) for more det
 
 ## Building projects 
 
+### CMake with `FetchContent`
+
 If you're using CMake, you just need to add something like this to your `CMakeLists.txt`:
 
-```
+```cmake
 include(FetchContent)
 
 FetchContent_Declare(
@@ -72,16 +74,37 @@ FetchContent_MakeAvailable(kmeans)
 
 Then you can link to **kmeans** to make the headers available during compilation:
 
-```
+```cmake
 # For executables:
-target_link_libraries(myexe kmeans)
+target_link_libraries(myexe ltla::kmeans)
 
 # For libaries
-target_link_libraries(mylib INTERFACE kmeans)
+target_link_libraries(mylib INTERFACE ltla::kmeans)
 ```
 
-If you're not using CMake, the simple approach is to just copy the files - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's `-I`.
-This requires the additional [**aarand**](https://github.com/LTLA/aarand) and [**powerit**](https://github.com/LTLA/powerit) libraries for some lightweight distribution functions.
+### CMake with `find_package()`
+
+```cmake
+find_package(ltla_kmeans CONFIG REQUIRED)
+target_link_libraries(mylib INTERFACE ltla::kmeans)
+```
+
+To install the library, use:
+
+```sh
+mkdir build && cd build
+cmake .. -DKMEANS_TESTS=OFF
+cmake --build . --target install
+```
+
+By default, this will use `FetchContent` to fetch all external dependencies.
+If you want to install them manually, use `-DKMEANS_FETCH_EXTERN=OFF`.
+See the commit hashes in [`extern/CMakeLists.txt`](extern/CMakeLists.txt) to find compatible versions of each dependency.
+
+### Manual
+
+If you're not using CMake, the simple approach is to just copy the files in `include/` - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's `-I`.
+This requires the external dependencies listed in [`extern/CMakeLists.txt`](extern/CMakeLists.txt), which also need to be made available during compilation.
 
 ## References
 
