@@ -1,12 +1,28 @@
 <map id="kmeans/Details.hpp" name="kmeans/Details.hpp">
-<area shape="rect" id="node1" title="Report detailed clustering statistics." alt="" coords="597,5,733,31"/>
-<area shape="rect" id="node2" href="$Base_8hpp_source.html" title=" " alt="" coords="602,79,729,104"/>
-<area shape="rect" id="node3" href="$HartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="29,152,208,177"/>
-<area shape="rect" id="node4" href="$Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="117,299,261,324"/>
-<area shape="rect" id="node9" href="$Lloyd_8hpp.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="993,152,1119,177"/>
-<area shape="rect" id="node10" href="$MiniBatch_8hpp.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="1144,152,1299,177"/>
-<area shape="rect" id="node5" href="$InitializeKmeansPP_8hpp.html" title="Class for kmeans++ initialization." alt="" coords="157,225,366,251"/>
-<area shape="rect" id="node6" href="$InitializeNone_8hpp.html" title="Class for no initialization." alt="" coords="283,152,458,177"/>
-<area shape="rect" id="node7" href="$InitializePCAPartition_8hpp.html" title="Class for k&#45;means initialization with PCA partitioning." alt="" coords="483,152,701,177"/>
-<area shape="rect" id="node8" href="$InitializeRandom_8hpp.html" title="Class for random initialization." alt="" coords="726,152,917,177"/>
+<area shape="rect" id="Node000001" title="Report detailed clustering statistics." alt="" coords="595,5,730,31"/>
+<area shape="rect" id="Node000002" href="$Base_8hpp_source.html" title=" " alt="" coords="600,79,725,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="665,46,665,79,660,79,660,46"/>
+<area shape="rect" id="Node000003" href="$HartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="30,153,207,178"/>
+<area shape="poly" id="edge13_Node000001_Node000003" title=" " alt="" coords="604,38,165,155,164,149,603,33"/>
+<area shape="rect" id="Node000004" href="$Kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="118,300,261,326"/>
+<area shape="poly" id="edge14_Node000001_Node000004" title=" " alt="" coords="580,27,436,39,266,62,185,79,113,100,56,125,35,139,20,154,9,176,12,197,25,218,47,238,103,272,158,297,156,302,100,277,43,242,21,221,7,199,4,175,15,151,32,135,54,120,112,95,184,74,265,57,435,34,580,21"/>
+<area shape="rect" id="Node000009" href="$Lloyd_8hpp.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="986,153,1113,178"/>
+<area shape="poly" id="edge15_Node000001_Node000009" title=" " alt="" coords="709,34,1018,150,1016,155,707,39"/>
+<area shape="rect" id="Node000010" href="$MiniBatch_8hpp.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="1137,153,1290,178"/>
+<area shape="poly" id="edge16_Node000001_Node000010" title=" " alt="" coords="724,33,1168,149,1166,155,722,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="586,106,208,155,207,150,585,101"/>
+<area shape="poly" id="edge10_Node000002_Node000004" title=" " alt="" coords="740,98,850,116,896,131,914,140,926,151,932,166,926,180,906,198,880,215,809,243,722,265,624,282,424,303,261,312,261,307,424,298,624,277,721,260,808,238,877,210,903,194,922,177,927,166,922,154,911,145,894,136,848,121,739,103"/>
+<area shape="rect" id="Node000005" href="$InitializeKmeansPP_8hpp.html" title="Class for kmeans++ initialization." alt="" coords="156,226,364,252"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="585,97,499,101,406,111,324,128,293,140,273,155,263,171,258,190,260,226,255,226,253,190,258,169,269,151,291,135,323,123,405,106,499,96,585,92"/>
+<area shape="rect" id="Node000006" href="$InitializeNone_8hpp.html" title="Class for no initialization." alt="" coords="283,153,456,178"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="599,111,420,155,419,149,598,106"/>
+<area shape="rect" id="Node000007" href="$InitializePCAPartition_8hpp.html" title="Class for k&#45;means initialization with PCA partitioning." alt="" coords="481,153,698,178"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="642,117,604,154,600,150,639,113"/>
+<area shape="rect" id="Node000008" href="$InitializeRandom_8hpp.html" title="Class for random initialization." alt="" coords="722,153,913,178"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="703,109,792,150,790,154,701,114"/>
+<area shape="poly" id="edge11_Node000002_Node000009" title=" " alt="" coords="741,105,986,150,985,155,740,110"/>
+<area shape="poly" id="edge12_Node000002_Node000010" title=" " alt="" coords="741,101,1137,152,1136,157,740,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="126,192,134,221,146,251,163,277,180,298,176,301,159,280,142,253,129,223,121,194"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="240,264,203,301,199,298,236,261"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="708,183,356,228,355,223,708,178"/>
 </map>

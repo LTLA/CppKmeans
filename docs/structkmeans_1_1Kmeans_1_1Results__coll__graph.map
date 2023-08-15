@@ -1,4 +1,5 @@
 <map id="kmeans::Kmeans&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Results" name="kmeans::Kmeans&lt; DATA_t, CLUSTER_t, INDEX_t &gt;::Results">
-<area shape="rect" id="node1" title="Full statistics from k&#45;means clustering." alt="" coords="5,108,173,163"/>
-<area shape="rect" id="node2" href="$structkmeans_1_1Details.html" title=" " alt="" coords="9,5,169,45"/>
+<area shape="rect" id="Node000001" title="Full statistics from k&#45;means clustering." alt="" coords="5,109,173,165"/>
+<area shape="rect" id="Node000002" href="$structkmeans_1_1Details.html" title=" " alt="" coords="9,5,169,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,61,92,109,86,109,86,61"/>
 </map>

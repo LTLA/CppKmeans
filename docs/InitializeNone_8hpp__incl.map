@@ -1,7 +1,11 @@
 <map id="kmeans/InitializeNone.hpp" name="kmeans/InitializeNone.hpp">
-<area shape="rect" id="node1" title="Class for no initialization." alt="" coords="11,5,185,31"/>
-<area shape="rect" id="node2" href="$Base_8hpp_source.html" title=" " alt="" coords="11,79,87,104"/>
-<area shape="rect" id="node5" title=" " alt="" coords="111,79,186,104"/>
-<area shape="rect" id="node3" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="5,152,92,177"/>
-<area shape="rect" id="node4" title=" " alt="" coords="19,225,78,251"/>
+<area shape="rect" id="Node000001" title="Class for no initialization." alt="" coords="11,5,184,31"/>
+<area shape="rect" id="Node000002" href="$Base_8hpp_source.html" title=" " alt="" coords="10,79,86,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,33,67,68,62,65,87,30"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="110,79,184,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="108,30,132,65,128,68,103,33"/>
+<area shape="rect" id="Node000003" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="5,153,91,178"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="51,105,51,138,45,138,45,105"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="19,226,77,252"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="51,179,51,211,45,211,45,179"/>
 </map>

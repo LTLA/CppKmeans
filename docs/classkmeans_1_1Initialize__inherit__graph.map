@@ -1,7 +1,11 @@
 <map id="kmeans::Initialize&lt; DATA_t, CLUSTER_t, INDEX_t &gt;" name="kmeans::Initialize&lt; DATA_t, CLUSTER_t, INDEX_t &gt;">
-<area shape="rect" id="node1" title="Base class for all k&#45;means initialization algorithms." alt="" coords="5,109,168,164"/>
-<area shape="rect" id="node2" href="$classkmeans_1_1InitializeKmeansPP.html" title="Implements the k&#45;means++ initialization of Arthur and Vassilvitskii (2007)." alt="" coords="239,5,419,60"/>
-<area shape="rect" id="node3" href="$classkmeans_1_1InitializeNone.html" title="Perform &quot;initialization&quot; by just using the input cluster centers." alt="" coords="216,85,443,125"/>
-<area shape="rect" id="node4" href="$classkmeans_1_1InitializePCAPartition.html" title="Implements the PCA partitioning method of Su and Dy (2007)." alt="" coords="216,149,443,189"/>
-<area shape="rect" id="node5" href="$classkmeans_1_1InitializeRandom.html" title="Initialize starting points by sampling random observations without replacement." alt="" coords="216,213,443,253"/>
+<area shape="rect" id="Node000001" title="Base class for all k&#45;means initialization algorithms." alt="" coords="5,111,167,166"/>
+<area shape="rect" id="Node000002" href="$classkmeans_1_1InitializeKmeansPP.html" title="Implements the k&#45;means++ initialization of Arthur and Vassilvitskii (2007)." alt="" coords="238,5,418,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,101,214,71,243,59,245,64,216,76,153,106"/>
+<area shape="rect" id="Node000003" href="$classkmeans_1_1InitializeNone.html" title="Perform &quot;initialization&quot; by just using the input cluster centers." alt="" coords="215,85,441,126"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="181,123,214,118,215,123,182,128"/>
+<area shape="rect" id="Node000004" href="$classkmeans_1_1InitializePCAPartition.html" title="Implements the PCA partitioning method of Su and Dy (2007)." alt="" coords="215,150,441,191"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="182,148,215,153,214,158,181,154"/>
+<area shape="rect" id="Node000005" href="$classkmeans_1_1InitializeRandom.html" title="Initialize starting points by sampling random observations without replacement." alt="" coords="215,216,441,256"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="152,171,216,200,251,213,249,218,214,205,150,176"/>
 </map>

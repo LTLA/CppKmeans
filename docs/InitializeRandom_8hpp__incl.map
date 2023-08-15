@@ -1,12 +1,22 @@
 <map id="kmeans/InitializeRandom.hpp" name="kmeans/InitializeRandom.hpp">
-<area shape="rect" id="node1" title="Class for random initialization." alt="" coords="127,5,318,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,80,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="104,79,165,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="190,79,255,104"/>
-<area shape="rect" id="node5" href="$Base_8hpp_source.html" title=" " alt="" coords="279,79,355,104"/>
-<area shape="rect" id="node8" href="$random_8hpp_source.html" title=" " alt="" coords="402,79,491,104"/>
-<area shape="rect" id="node6" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="262,152,349,177"/>
-<area shape="rect" id="node7" title=" " alt="" coords="316,225,375,251"/>
-<area shape="rect" id="node9" title=" " alt="" coords="425,152,493,177"/>
-<area shape="rect" id="node10" title=" " alt="" coords="517,152,645,177"/>
+<area shape="rect" id="Node000001" title="Class for random initialization." alt="" coords="126,5,316,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,80,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,34,88,75,86,71,190,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="104,79,165,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="208,34,162,72,158,67,205,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="189,79,253,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="224,31,224,64,219,64,219,31"/>
+<area shape="rect" id="Node000005" href="$Base_8hpp_source.html" title=" " alt="" coords="277,79,352,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="239,29,289,68,286,72,235,34"/>
+<area shape="rect" id="Node000008" href="$random_8hpp_source.html" title=" " alt="" coords="398,79,487,105"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="260,29,392,71,390,77,258,34"/>
+<area shape="rect" id="Node000006" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="260,153,345,178"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="315,105,310,138,304,138,310,104"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="314,226,371,252"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="311,177,331,212,326,215,307,180"/>
+<area shape="poly" id="edge8_Node000008_Node000007" title=" " alt="" coords="437,107,361,215,357,212,432,103"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="420,153,487,178"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="447,104,452,138,447,138,442,105"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="511,153,638,178"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="466,103,541,143,538,148,464,108"/>
 </map>

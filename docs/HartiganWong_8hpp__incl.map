@@ -1,14 +1,33 @@
 <map id="kmeans/HartiganWong.hpp" name="kmeans/HartiganWong.hpp">
-<area shape="rect" id="node1" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="423,5,602,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="141,225,199,251"/>
-<area shape="rect" id="node3" title=" " alt="" coords="459,225,534,251"/>
-<area shape="rect" id="node4" title=" " alt="" coords="599,152,667,177"/>
-<area shape="rect" id="node5" title=" " alt="" coords="726,79,787,104"/>
-<area shape="rect" id="node6" title=" " alt="" coords="812,79,891,104"/>
-<area shape="rect" id="node7" title=" " alt="" coords="915,79,969,104"/>
-<area shape="rect" id="node8" href="$Base_8hpp_source.html" title=" " alt="" coords="5,79,81,104"/>
-<area shape="rect" id="node9" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="45,152,132,177"/>
-<area shape="rect" id="node10" href="$compute__centroids_8hpp_source.html" title=" " alt="" coords="419,152,575,177"/>
-<area shape="rect" id="node11" href="$compute__wcss_8hpp_source.html" title=" " alt="" coords="208,152,343,177"/>
-<area shape="rect" id="node12" href="$is__edge__case_8hpp_source.html" title=" " alt="" coords="348,79,475,104"/>
+<area shape="rect" id="Node000001" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="418,5,596,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="140,226,197,252"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="421,34,363,49,301,73,243,107,218,129,196,154,181,183,174,212,169,211,176,181,191,151,214,125,240,103,299,68,361,44,420,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="454,226,528,252"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="540,29,592,54,646,89,668,109,682,131,685,155,675,180,647,206,614,223,578,234,543,239,543,234,576,229,612,218,644,202,670,177,679,155,677,133,664,112,643,93,590,58,537,34"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="593,153,661,178"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="519,30,610,139,606,143,515,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="720,79,780,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="549,29,706,75,705,80,547,34"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="804,79,882,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="567,29,790,76,789,81,566,34"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="906,79,959,105"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="596,27,732,46,892,76,891,82,731,51,596,32"/>
+<area shape="rect" id="Node000008" href="$Base_8hpp_source.html" title=" " alt="" coords="5,79,81,105"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="418,34,269,55,99,82,96,82,95,77,99,76,268,49,418,28"/>
+<area shape="rect" id="Node000009" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="46,153,131,178"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="418,29,267,48,198,63,151,81,135,94,122,109,102,141,97,138,117,106,132,90,148,77,196,58,266,43,418,24"/>
+<area shape="rect" id="Node000010" href="$compute__centroids_8hpp_source.html" title=" " alt="" coords="413,153,569,178"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="508,32,497,138,491,137,503,31"/>
+<area shape="rect" id="Node000011" href="$compute__wcss_8hpp_source.html" title=" " alt="" coords="206,153,339,178"/>
+<area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="442,34,386,52,359,65,334,81,306,110,286,141,282,138,302,106,331,77,357,60,385,47,440,29"/>
+<area shape="rect" id="Node000012" href="$is__edge__case_8hpp_source.html" title=" " alt="" coords="344,79,470,105"/>
+<area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="492,34,437,72,434,68,488,29"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="53,103,75,139,71,141,48,106"/>
+<area shape="poly" id="edge9_Node000009_Node000002" title=" " alt="" coords="104,177,146,214,142,218,100,181"/>
+<area shape="poly" id="edge12_Node000010_Node000003" title=" " alt="" coords="494,179,494,211,488,211,488,179"/>
+<area shape="poly" id="edge14_Node000011_Node000002" title=" " alt="" coords="256,181,199,220,196,215,253,177"/>
+<area shape="poly" id="edge17_Node000012_Node000003" title=" " alt="" coords="405,106,398,140,398,159,404,177,423,200,448,217,445,221,419,204,399,180,393,160,393,139,400,104"/>
+<area shape="poly" id="edge16_Node000012_Node000004" title=" " alt="" coords="445,103,580,146,578,151,444,108"/>
+<area shape="poly" id="edge19_Node000012_Node000010" title=" " alt="" coords="423,103,468,141,464,145,420,107"/>
+<area shape="poly" id="edge18_Node000012_Node000011" title=" " alt="" coords="385,108,309,148,307,143,383,103"/>
 </map>

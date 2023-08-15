@@ -1,13 +1,24 @@
 <map id="kmeans/InitializePCAPartition.hpp" name="kmeans/InitializePCAPartition.hpp">
-<area shape="rect" id="node1" title="Class for k&#45;means initialization with PCA partitioning." alt="" coords="253,5,472,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,79,77,104"/>
-<area shape="rect" id="node3" title=" " alt="" coords="102,79,167,104"/>
-<area shape="rect" id="node4" title=" " alt="" coords="216,225,275,251"/>
-<area shape="rect" id="node5" title=" " alt="" coords="243,79,301,104"/>
-<area shape="rect" id="node6" title=" " alt="" coords="325,79,400,104"/>
-<area shape="rect" id="node7" title=" " alt="" coords="425,79,493,104"/>
-<area shape="rect" id="node8" title=" " alt="" coords="517,79,645,104"/>
-<area shape="rect" id="node9" title=" " alt="" coords="670,79,853,104"/>
-<area shape="rect" id="node10" href="$Base_8hpp_source.html" title=" " alt="" coords="877,79,953,104"/>
-<area shape="rect" id="node11" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="557,152,643,177"/>
+<area shape="rect" id="Node000001" title="Class for k&#45;means initialization with PCA partitioning." alt="" coords="250,5,467,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,77,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="303,34,92,81,91,76,301,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="101,79,165,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="321,34,180,78,179,73,319,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="214,226,271,252"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="299,34,260,52,243,64,230,80,218,113,217,148,224,183,234,212,228,213,219,184,212,149,213,112,225,78,240,61,257,47,297,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="240,79,298,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="345,34,297,72,293,68,342,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="321,79,396,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="361,31,361,64,356,64,356,31"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="419,79,487,105"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="376,29,427,68,424,72,373,34"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="511,79,638,105"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="396,29,525,71,523,76,394,34"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="662,79,844,105"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="426,29,672,73,671,79,425,34"/>
+<area shape="rect" id="Node000010" href="$Base_8hpp_source.html" title=" " alt="" coords="869,79,944,105"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="468,27,645,46,855,76,854,82,644,51,467,32"/>
+<area shape="rect" id="Node000011" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="552,153,637,178"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="869,104,652,154,651,149,867,99"/>
+<area shape="poly" id="edge11_Node000011_Node000004" title=" " alt="" coords="552,178,286,232,285,226,551,173"/>
 </map>

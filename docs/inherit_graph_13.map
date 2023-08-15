@@ -1,6 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classkmeans_1_1Refine.html" title="Base class for all k&#45;means refinement algorithms." alt="" coords="5,85,187,125"/>
-<area shape="rect" id="node2" href="$classkmeans_1_1HartiganWong.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="244,5,407,60"/>
-<area shape="rect" id="node3" href="$classkmeans_1_1Lloyd.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="235,85,416,125"/>
-<area shape="rect" id="node4" href="$classkmeans_1_1MiniBatch.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="248,149,403,204"/>
+<area shape="rect" id="Node000000" href="$classkmeans_1_1Refine.html" title="Base class for all k&#45;means refinement algorithms." alt="" coords="5,85,186,126"/>
+<area shape="rect" id="Node000001" href="$classkmeans_1_1HartiganWong.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="243,5,405,61"/>
+<area shape="poly" id="edge5_Node000000_Node000001" title=" " alt="" coords="175,77,242,56,243,61,177,82"/>
+<area shape="rect" id="Node000002" href="$classkmeans_1_1Lloyd.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="234,85,414,126"/>
+<area shape="poly" id="edge6_Node000000_Node000002" title=" " alt="" coords="200,103,233,103,233,108,200,108"/>
+<area shape="rect" id="Node000003" href="$classkmeans_1_1MiniBatch.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="247,149,401,205"/>
+<area shape="poly" id="edge7_Node000000_Node000003" title=" " alt="" coords="177,128,247,150,246,155,175,133"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="kmeans/Details.hpp" name="kmeans/Details.hpp">
-<area shape="rect" id="node1" title="Report detailed clustering statistics." alt="" coords="5,5,141,31"/>
-<area shape="rect" id="node2" title=" " alt="" coords="44,79,103,104"/>
+<area shape="rect" id="Node000001" title="Report detailed clustering statistics." alt="" coords="5,5,141,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="44,79,102,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,31,76,64,70,64,70,31"/>
 </map>
