@@ -53,7 +53,7 @@ public:
     };
 
     /**
-     * @param Random seed to use to construct the PRNG prior to sampling.
+     * @param s Random seed to use to construct the PRNG prior to sampling.
      *
      * @return A reference to this `InitializeRandom` object.
      */

@@ -13,6 +13,10 @@
  * @brief Implements the full k-means clustering procedure.
  */
 
+/**
+ * @namespace kmeans
+ * @brief Namespace for k-means clustering.
+ */
 namespace kmeans {
 
 /**

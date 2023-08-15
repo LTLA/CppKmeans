@@ -46,7 +46,7 @@ namespace kmeans {
  * @tparam CLUSTER_t Integer type for the cluster index.
  * @tparam INDEX_t Integer type for the observation index.
  *
- * @seealso
+ * @see
  * Su, T. and Dy, J. G. (2007).
  * In Search of Deterministic Methods for Initializing K-Means and Gaussian Mixture Clustering,
  * _Intelligent Data Analysis_ 11, 319-338.
@@ -98,7 +98,7 @@ public:
     }
 
     /**
-     * @param Random seed to use to construct the PRNG for the power method.
+     * @param s Random seed to use to construct the PRNG for the power method.
      * @return A reference to this `InitializePCAPartition` object.
      */
     InitializePCAPartition& set_seed(uint64_t s = Defaults::seed) {
