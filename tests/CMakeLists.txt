@@ -14,55 +14,42 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(
-    libtest 
-    src/HartiganWong.cpp
-    src/Lloyd.cpp
-    src/MiniBatch.cpp
-    src/InitializeRandom.cpp
-    src/InitializeKmeansPP.cpp
-    src/InitializePCAPartition.cpp
-    src/Kmeans.cpp
-)
-
-target_link_libraries(
-    libtest
-    gtest_main
-    kmeans
-)
-
-# Also testing the custom parallelization.
-add_executable(
-    cuspartest
-    src/HartiganWong.cpp
-    src/Lloyd.cpp
-    src/MiniBatch.cpp
-    src/InitializeRandom.cpp
-    src/InitializeKmeansPP.cpp
-    src/InitializePCAPartition.cpp
-    src/Kmeans.cpp
-)
-
-target_link_libraries(
-    cuspartest
-    gtest_main
-    kmeans
-)
-
-target_compile_definitions(cuspartest PRIVATE CUSTOM_PARALLEL_TEST=1)
-
-set(USE_OPENMP OFF CACHE BOOL "Enable OpenMP for tests")
-if(USE_OPENMP)
-    find_package(OpenMP REQUIRED)
-    target_link_libraries(libtest OpenMP::OpenMP_CXX)
-endif()
-
 set(CODE_COVERAGE OFF CACHE BOOL "Enable coverage testing for tests")
-if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(libtest PRIVATE -O0 -g --coverage)
-    target_link_options(libtest PRIVATE --coverage)
-endif()
 
 include(GoogleTest)
-gtest_discover_tests(libtest)
-gtest_discover_tests(cuspartest)
+
+macro(create_test target)
+    add_executable(
+        ${target} 
+        src/HartiganWong.cpp
+        src/Lloyd.cpp
+        src/MiniBatch.cpp
+        src/InitializeRandom.cpp
+        src/InitializeKmeansPP.cpp
+        src/InitializePCAPartition.cpp
+        src/Kmeans.cpp
+    )
+
+    target_link_libraries(
+        ${target}
+        gtest_main
+        kmeans
+    )
+
+    if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(${target} PRIVATE -O0 -g --coverage)
+        target_link_options(${target} PRIVATE --coverage)
+    endif()
+
+    gtest_discover_tests(${target})
+endmacro()
+
+create_test(libtest)
+create_test(cuspartest)
+target_compile_definitions(cuspartest PRIVATE CUSTOM_PARALLEL_TEST=1)
+
+find_package(OpenMP)
+if(OpenMP_FOUND)
+    create_test(omptest)
+    target_link_libraries(omptest OpenMP::OpenMP_CXX)
+endif()
