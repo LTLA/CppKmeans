@@ -177,7 +177,9 @@ public:
          * IC2(I). Assign it to IC1(I). 
          */
 #ifndef KMEANS_CUSTOM_PARALLEL
+#ifdef _OPENMP
         #pragma omp parallel for num_threads(nthreads)
+#endif
         for (INDEX_t obs = 0; obs < num_obs; ++obs) {
 #else
         KMEANS_CUSTOM_PARALLEL(num_obs, [&](INDEX_t first, INDEX_t last) -> void {
@@ -366,8 +368,13 @@ private:
                      * true, we only need to consider clusters that are in the live
                      * set for possible transfer of point I. Otherwise, we need to
                      * consider all possible clusters. 
+                     *
+                     * Translation note: the original Fortran code doesn't have parentheses
+                     * around the first &&, but .AND. has greater precedence than .OR.,
+                     * so it should be faithful to add those parentheses for clarity
+                     * (and to avoid GCC warnings).
                      */
-                    if (obs >= live[l1] && obs >= live[cen] || cen == l1 || cen == ll) {
+                    if ((obs >= live[l1] && obs >= live[cen]) || cen == l1 || cen == ll) {
                         continue;
                     }
 

@@ -78,7 +78,7 @@ public:
      * @return `centers` is filled with the new cluster centers.
      * The number of filled centers is returned, see `Initializer::run()`.
      */
-    CLUSTER_t run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
+    CLUSTER_t run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t*) {
         std::mt19937_64 eng(seed);
         auto chosen = sample_without_replacement(nobs, ncenters, eng);
         copy_into_array(chosen, ndim, data, centers);

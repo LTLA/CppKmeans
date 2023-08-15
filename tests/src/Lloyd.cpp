@@ -33,7 +33,7 @@ TEST_P(LloydBasicTest, Sweep) {
 
     // Checking that the WCSS calculations are correct.
     const auto& wcss = hw.withinss;
-    for (size_t i = 0; i < ncenters; ++i) {
+    for (int i = 0; i < ncenters; ++i) {
         if (counts[i] > 1) {
             EXPECT_TRUE(wcss[i] > 0);
         } else {
@@ -52,7 +52,7 @@ TEST_P(LloydBasicTest, Sweep) {
     }
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     Lloyd,
     LloydBasicTest,
     ::testing::Combine(
@@ -117,7 +117,7 @@ TEST_P(LloydConstantTest, TooFew) {
     EXPECT_EQ(hw2.sizes, std::vector<int>());
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     Lloyd,
     LloydConstantTest,
     ::testing::Combine(
@@ -134,13 +134,13 @@ TEST_P(LloydQuickNeighborTest, Sweep) {
 
     // Quick and dirty check to verify that we do get back the right identity.
     kmeans::QuickSearch index(nr, nc, data.data()); 
-    for (size_t c = 0; c < nc; ++c) {
+    for (int c = 0; c < nc; ++c) {
         auto best = index.find(data.data() + c * nr);
         EXPECT_EQ(c, best);
     }
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     Lloyd,
     LloydQuickNeighborTest,
     ::testing::Combine(

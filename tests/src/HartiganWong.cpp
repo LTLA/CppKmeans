@@ -33,7 +33,7 @@ TEST_P(HartiganWongBasicTest, Sweep) {
 
     // Checking that the WCSS calculations are correct.
     const auto& wcss = hw.withinss;
-    for (size_t i = 0; i < ncenters; ++i) {
+    for (int i = 0; i < ncenters; ++i) {
         if (counts[i] > 1) {
             EXPECT_TRUE(wcss[i] > 0);
         } else {
@@ -52,7 +52,7 @@ TEST_P(HartiganWongBasicTest, Sweep) {
     }
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     HartiganWong,
     HartiganWongBasicTest,
     ::testing::Combine(
@@ -117,7 +117,7 @@ TEST_P(HartiganWongConstantTest, TooFew) {
     EXPECT_EQ(hw2.sizes, std::vector<int>());
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     HartiganWong,
     HartiganWongConstantTest,
     ::testing::Combine(

@@ -149,8 +149,8 @@ public:
         }
 
         // Filling in the other side of the matrix, to enable cache-efficient multiplication.
-        for (size_t j = 0; j < ndim; ++j) {
-            for (size_t k = j + 1; k < ndim; ++k) {
+        for (int j = 0; j < ndim; ++j) {
+            for (int k = j + 1; k < ndim; ++k) {
                 cov[j * ndim + k] = cov[k * ndim + j];
             }
         }
@@ -165,7 +165,7 @@ public:
 
     static void compute_center(int ndim, INDEX_t nobs, const DATA_t* data, DATA_t* center) {
         std::fill(center, center + ndim, 0);
-        for (size_t i = 0; i < nobs; ++i) {
+        for (INDEX_t i = 0; i < nobs; ++i) {
             auto dptr = data + i * ndim;
             for (int d = 0; d < ndim; ++d) {
                 center[d] += dptr[d];

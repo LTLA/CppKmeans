@@ -37,7 +37,7 @@ TEST_P(KmeansBasicTest, Sweep) {
 
     // Checking that the WCSS calculations are correct.
     const auto& wcss = res.details.withinss;
-    for (size_t i = 0; i < ncenters; ++i) {
+    for (int i = 0; i < ncenters; ++i) {
         if (counts[i] > 1) {
             EXPECT_TRUE(wcss[i] > 0);
         } else {
@@ -46,7 +46,7 @@ TEST_P(KmeansBasicTest, Sweep) {
     }
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     Kmeans,
     KmeansBasicTest,
     ::testing::Combine(
@@ -108,7 +108,7 @@ TEST_P(KmeansSanityTest, SanityCheck) {
     }
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     Kmeans,
     KmeansSanityTest,
     ::testing::Combine(

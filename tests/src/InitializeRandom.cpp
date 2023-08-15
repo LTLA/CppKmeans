@@ -66,7 +66,7 @@ TEST_P(RandomInitializationTest, Deterministic) {
     EXPECT_NE(copy, output3);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     RandomInitialization,
     RandomInitializationTest,
     ::testing::Combine(
@@ -93,7 +93,7 @@ TEST_P(RandomInitializationEdgeTest, TooManyClusters) {
     EXPECT_EQ(soutput2, expected);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     RandomInitialization,
     RandomInitializationEdgeTest,
     ::testing::Combine(

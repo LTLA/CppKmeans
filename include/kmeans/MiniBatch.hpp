@@ -188,7 +188,6 @@ public:
         std::vector<INDEX_t> last_changed(ncenters), last_sampled(ncenters);
 
         auto actual_batch_size = std::min(batch_size, nobs);
-        int last_updated = 0;
         std::mt19937_64 eng(seed);
 
         for (iter = 1; iter <= maxiter; ++iter) {
@@ -203,7 +202,9 @@ public:
             size_t nchosen = chosen.size();
 
 #ifndef KMEANS_CUSTOM_PARALLEL
+#ifdef _OPENMP
             #pragma omp parallel for num_threads(nthreads)
+#endif
             for (size_t i = 0; i < nchosen; ++i) {
 #else
             KMEANS_CUSTOM_PARALLEL(nchosen, [&](size_t first, size_t last) -> void {
@@ -267,7 +268,9 @@ public:
         QuickSearch<DATA_t, CLUSTER_t> index(ndim, ncenters, centers);
 
 #ifndef KMEANS_CUSTOM_PARALLEL
+#ifdef _OPENMP
         #pragma omp parallel for num_threads(nthreads)
+#endif
         for (INDEX_t o = 0; o < nobs; ++o) {
 #else
         KMEANS_CUSTOM_PARALLEL(nobs, [&](INDEX_t first, INDEX_t last) -> void {

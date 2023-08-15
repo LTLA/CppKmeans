@@ -33,7 +33,7 @@ TEST_P(MiniBatchBasicTest, Sweep) {
 
     // Checking that the WCSS calculations are correct.
     const auto& wcss = mb.withinss;
-    for (size_t i = 0; i < ncenters; ++i) {
+    for (int i = 0; i < ncenters; ++i) {
         if (counts[i] > 1) {
             EXPECT_TRUE(wcss[i] > 0);
         } else {
@@ -52,7 +52,7 @@ TEST_P(MiniBatchBasicTest, Sweep) {
     }
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     MiniBatch,
     MiniBatchBasicTest,
     ::testing::Combine(
@@ -86,7 +86,7 @@ TEST_P(MiniBatchConstantTest, TooMany) {
     EXPECT_EQ(ref, clusters);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     MiniBatch,
     MiniBatchConstantTest,
     ::testing::Combine(

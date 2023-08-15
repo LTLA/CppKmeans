@@ -11,7 +11,7 @@ template<typename T = int, class ENGINE>
 std::vector<T> sample_without_replacement(T population, size_t choose, ENGINE& eng) {
     std::vector<T> sofar;
 
-    if (choose >= population) {
+    if (choose >= static_cast<size_t>(population)) {
         sofar.resize(population);
         std::iota(sofar.begin(), sofar.end(), 0);
     } else {

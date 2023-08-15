@@ -56,7 +56,7 @@ private:
         nodes.resize(pos + 1);
         Node& node=nodes.back();
             
-        int gap = upper - lower;
+        NodeIndex_t gap = upper - lower;
         if (gap > 1) {      // if we did not arrive at leaf yet
 
             /* Choose an arbitrary point and move it to the start of the [lower, upper)
@@ -73,7 +73,7 @@ private:
 
             // Compute distances to the new vantage point.
             const DATA_t* ref = std::get<1>(vantage);
-            for (size_t i = lower + 1; i < upper; ++i) {
+            for (NodeIndex_t i = lower + 1; i < upper; ++i) {
                 const DATA_t* loc = std::get<1>(items[i]);
                 std::get<2>(items[i]) = raw_distance(ref, loc, num_dim);
             }

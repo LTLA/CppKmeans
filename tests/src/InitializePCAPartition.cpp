@@ -101,7 +101,7 @@ TEST(PCAPartitionUtils, PowerMethodBasic) {
     }
     l2 = std::sqrt(l2);
 
-    for (int r = 0; r < nr; ++r) {
+    for (size_t r = 0; r < nr; ++r) {
         EXPECT_FLOAT_EQ(point[r] / l2, output[r]);
     }
 }
@@ -245,11 +245,11 @@ TEST_P(PCAPartitionInitializationTest, Sanity) {
 
     // Expect one entry from each of the first 'ncenters' elements.
     // We'll just do a brute-force search for them here.
-    for (size_t i = 0; i < ncenters; ++i) {
+    for (int i = 0; i < ncenters; ++i) {
         auto expected = data.begin() + i * nr;
         bool found = false;
 
-        for (size_t j = 0; j < ncenters; ++j) {
+        for (int j = 0; j < ncenters; ++j) {
             auto observed = centers.data() + j * nr;
             bool okay = true;
             for (int d = 0; d < nr; ++d) {
@@ -269,7 +269,7 @@ TEST_P(PCAPartitionInitializationTest, Sanity) {
     }
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     PCAPartitionInitialization,
     PCAPartitionInitializationTest,
     ::testing::Combine(
@@ -299,7 +299,7 @@ TEST_P(PCAPartitionInitializationEdgeTest, TooManyClusters) {
     EXPECT_EQ(woutput2, nc);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     PCAPartitionInitialization,
     PCAPartitionInitializationEdgeTest,
     ::testing::Combine(

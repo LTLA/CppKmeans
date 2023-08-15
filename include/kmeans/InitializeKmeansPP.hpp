@@ -87,12 +87,13 @@ public:
         std::mt19937_64 eng(seed);
 
         for (CLUSTER_t cen = 0; cen < ncenters; ++cen) {
-            INDEX_t counter = 0;
             if (!sofar.empty()) {
                 auto last = sofar.back();
 
 #ifndef KMEANS_CUSTOM_PARALLEL
+#ifdef _OPENMP
                 #pragma omp parallel for num_threads(nthreads)
+#endif
                 for (INDEX_t obs = 0; obs < nobs; ++obs) {
 #else
                 KMEANS_CUSTOM_PARALLEL(nobs, [&](INDEX_t first, INDEX_t end) -> void {
@@ -116,9 +117,6 @@ public:
                 }
                 }, nthreads);
 #endif
-
-            } else {
-                counter = nobs;
             }
 
             cumulative[0] = mindist[0];
@@ -157,7 +155,7 @@ public:
      * @return `centers` is filled with the new cluster centers.
      * The number of filled centers is returned, see `Initializer::run()`.
      */
-    CLUSTER_t run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
+    CLUSTER_t run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t*) {
         if (!nobs) {
             return 0;
         }

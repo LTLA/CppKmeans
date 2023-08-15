@@ -101,7 +101,9 @@ public:
             QuickSearch<DATA_t, CLUSTER_t> index(ndim, ncenters, centers);
 
 #ifndef KMEANS_CUSTOM_PARALLEL
+#ifdef _OPENMP
             #pragma omp parallel for num_threads(nthreads)
+#endif
             for (INDEX_t obs = 0; obs < nobs; ++obs) {
 #else
             KMEANS_CUSTOM_PARALLEL(nobs, [&](INDEX_t first, INDEX_t last) -> void {

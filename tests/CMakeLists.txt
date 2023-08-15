@@ -36,6 +36,8 @@ macro(create_test target)
         kmeans
     )
 
+    target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+
     if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         target_compile_options(${target} PRIVATE -O0 -g --coverage)
         target_link_options(${target} PRIVATE --coverage)

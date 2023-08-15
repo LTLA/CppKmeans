@@ -117,7 +117,7 @@ TEST_P(KmeansPPInitializationTest, Sanity) {
     EXPECT_EQ(expected, output2);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     KmeansPPInitialization,
     KmeansPPInitializationTest,
     ::testing::Combine(
@@ -148,7 +148,7 @@ TEST_P(KmeansPPInitializationEdgeTest, TooManyClusters) {
     EXPECT_EQ(woutput2, expected);
 }
 
-INSTANTIATE_TEST_CASE_P(
+INSTANTIATE_TEST_SUITE_P(
     KmeansPPInitialization,
     KmeansPPInitializationEdgeTest,
     ::testing::Combine(
