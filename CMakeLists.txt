@@ -1,20 +1,18 @@
-cmake_minimum_required(VERSION 3.14...3.25)
+cmake_minimum_required(VERSION 3.24)
 
 project(kmeans
     VERSION 1.0.0
     DESCRIPTION "A C++ port of the Hartigan-Wong k-means algorithm"
     LANGUAGES CXX)
 
-include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
-
-# Library
 add_library(kmeans INTERFACE)
 add_library(ltla::kmeans ALIAS kmeans)
 
+include(GNUInstallDirs)
 target_include_directories(kmeans INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ltla>)
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ltla_kmeans>)
+
 target_compile_features(kmeans INTERFACE cxx_std_17)
 
 # Dependencies
@@ -43,7 +41,7 @@ endif()
 
 # Install
 install(DIRECTORY include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ltla)
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ltla_kmeans)
 
 install(TARGETS kmeans
     EXPORT kmeansTargets)
@@ -53,6 +51,7 @@ install(EXPORT kmeansTargets
     NAMESPACE ltla::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ltla_kmeans)
 
+include(CMakePackageConfigHelpers)
 configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/ltla_kmeansConfig.cmake"
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ltla_kmeans)

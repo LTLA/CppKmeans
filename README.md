@@ -84,12 +84,7 @@ target_link_libraries(mylib INTERFACE ltla::kmeans)
 
 ### CMake with `find_package()`
 
-```cmake
-find_package(ltla_kmeans CONFIG REQUIRED)
-target_link_libraries(mylib INTERFACE ltla::kmeans)
-```
-
-To install the library, use:
+To install the library, clone an appropriate version of this repository and run:
 
 ```sh
 mkdir build && cd build
@@ -97,9 +92,15 @@ cmake .. -DKMEANS_TESTS=OFF
 cmake --build . --target install
 ```
 
-By default, this will use `FetchContent` to fetch all external dependencies.
+Then we can use `find_package()` as usual:
+
+```cmake
+find_package(ltla_kmeans CONFIG REQUIRED)
+target_link_libraries(mylib INTERFACE ltla::kmeans)
+```
+
+By default, this will use `FetchContent` to fetch all external dependencies (see [`extern/CMakeLists.txt`](extern/CMakeLists.txt) for a list).
 If you want to install them manually, use `-DKMEANS_FETCH_EXTERN=OFF`.
-See the commit hashes in [`extern/CMakeLists.txt`](extern/CMakeLists.txt) to find compatible versions of each dependency.
 
 ### Manual
 
