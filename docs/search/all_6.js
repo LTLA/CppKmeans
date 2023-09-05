@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['lloyd_0',['Lloyd',['../classkmeans_1_1Lloyd.html',1,'kmeans']]],
-  ['lloyd_2ehpp_1',['Lloyd.hpp',['../Lloyd_8hpp.html',1,'']]]
+  ['k_20means_0',['C++ library for k-means',['../index.html',1,'']]],
+  ['kmeans_1',['kmeans',['../classkmeans_1_1Kmeans.html',1,'kmeans::Kmeans&lt; DATA_t, CLUSTER_t, INDEX_t &gt;'],['../namespacekmeans.html',1,'kmeans']]],
+  ['kmeans_2ehpp_2',['Kmeans.hpp',['../Kmeans_8hpp.html',1,'']]]
 ];
