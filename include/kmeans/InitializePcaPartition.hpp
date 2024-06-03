@@ -13,11 +13,32 @@
 #include "Base.hpp"
 
 /**
- * @file InitializePCAPartition.hpp
+ * @file InitializePcaPartition.hpp
  *
  * @brief Class for k-means initialization with PCA partitioning.
  */
 namespace kmeans {
+
+/**
+ * @brief Options for `InitializePcaPartition`.
+ */
+struct InitializePcaPartitionOptions {
+    /**
+     * Options to use for the power iterations.
+     */
+    powerit::Options power_iteration_options;
+
+    /**
+     * Size adjustment value, check out `InitializePcaPartition` for more details.
+     * This value should lie in `[0, 1]`.
+     */
+    double size_adjustment = 1;
+
+    /**
+     * Random seed to use to construct the PRNG for the power iterations.
+     */
+    static constexpr uint64_t seed = 6523u;
+};
 
 /**
  * @brief Implements the PCA partitioning method of Su and Dy (2007).
@@ -42,98 +63,39 @@ namespace kmeans {
  * This method is not completely deterministic as a randomization step is used in the PCA.
  * Nonetheless, the stochasticity is likely to have a much smaller effect than in the other initialization methods.
  *
- * @tparam DATA_t Floating-point type for the data and centroids.
- * @tparam CLUSTER_t Integer type for the cluster index.
- * @tparam INDEX_t Integer type for the observation index.
+ * @tparam Data_ Floating-point type for the data and centroids.
+ * @tparam Cluster_ Integer type for the cluster index.
+ * @tparam Index_ Integer type for the observation index.
  *
  * @see
  * Su, T. and Dy, J. G. (2007).
  * In Search of Deterministic Methods for Initializing K-Means and Gaussian Mixture Clustering,
  * _Intelligent Data Analysis_ 11, 319-338.
  */
-template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
-class InitializePCAPartition : public Initialize<DATA_t, CLUSTER_t, INDEX_t> {
+template<typename Data_ = double, typename Cluster_ = int, typename Index_ = int>
+class InitializePcaPartition : public Initialize<Data_, Cluster_, Index_> {
 public:
     /**
-     * @brief Default parameter settings.
+     * @param options Options for PCA partitioning.
      */
-    struct Defaults {
-        /**
-         * See `set_size_adjustment()` for more details.
-         */
-        static constexpr DATA_t size_adjustment = 1;
-
-        /**
-         * See `set_seed()` for more details.
-         */
-        static constexpr uint64_t seed = 6523u;
-    };
-
-public:
-    /**
-     * @param i Maximum number of power iterations to use in `powerit::PowerIterations::set_iterations()`.
-     * @return A reference to this `InitializePCAPartition` object.
-     */
-    InitializePCAPartition& set_iterations(int i = powerit::PowerIterations::Defaults::iterations) {
-        iters = i;
-        return *this;
-    }
+    InitializePcaPartition(InitializePcaPartition<Data_> options) : my_options(std::move(options)) {}
 
     /**
-     * @param t Convergence threshold to use in `powerit::PowerIterations::set_tolerance()`.
-     * @return A reference to this `InitializePCAPartition` object.
+     * Default constructor.
      */
-    InitializePCAPartition& set_tolerance(DATA_t t = powerit::PowerIterations::Defaults::tolerance) {
-        tol = t;
-        return *this;
-    }
+    InitializePcaPartition() = default;
 
-    /**
-     * @param s Size adjustment value, should lie in [0, 1].
-     * @return A reference to this `InitializePCAPartition` object.
-     */
-    InitializePCAPartition& set_size_adjustment(DATA_t s = Defaults::size_adjustment) {
-        adjust = s;
-        return *this;
-    }
-
-    /**
-     * @param s Random seed to use to construct the PRNG for the power method.
-     * @return A reference to this `InitializePCAPartition` object.
-     */
-    InitializePCAPartition& set_seed(uint64_t s = Defaults::seed) {
-        seed = s;
-        return *this;
-    }
 private:
-    int iters = powerit::PowerIterations::Defaults::iterations;
-    DATA_t tol = powerit::PowerIterations::Defaults::tolerance;
-    DATA_t adjust = Defaults::size_adjustment;
-    uint64_t seed = Defaults::seed;
+    InitializePcaPartitionOptions my_options;
 
 public:
     /**
      * @cond
      */
-    static DATA_t normalize(int ndim, DATA_t* x) {
-        DATA_t ss = 0;
-        for (int d = 0; d < ndim; ++d) {
-            ss += x[d] * x[d];
-        }
-
-        if (ss) {
-            ss = std::sqrt(ss);
-            for (int d = 0; d < ndim; ++d) {
-                x[d] /= ss;
-            }
-        }
-        return ss;
-    }
-
     template<class Rng>
-    std::vector<DATA_t> compute_pc1(int ndim, const std::vector<INDEX_t>& chosen, const DATA_t* data, const DATA_t* center, Rng& eng) const {
-        std::vector<DATA_t> delta(ndim);
-        std::vector<DATA_t> cov(ndim * ndim);
+    std::vector<Data_> compute_pc1(int ndim, const std::vector<Index_>& chosen, const Data_* data, const Data_* center, Rng& eng) const {
+        std::vector<Data_> delta(ndim);
+        std::vector<Data_> cov(ndim * ndim);
 
         // Computing the lower triangle of the covariance matrix. 
         for (auto i : chosen) {
@@ -158,14 +120,14 @@ public:
         powerit::PowerIterations power;
         power.set_iterations(iters).set_tolerance(tol);
 
-        std::vector<DATA_t> output(ndim);
+        std::vector<Data_> output(ndim);
         power.run(ndim, cov.data(), output.data(), eng);
         return output;
     } 
 
-    static void compute_center(int ndim, INDEX_t nobs, const DATA_t* data, DATA_t* center) {
+    static void compute_center(int ndim, Index_ nobs, const Data_* data, Data_* center) {
         std::fill(center, center + ndim, 0);
-        for (INDEX_t i = 0; i < nobs; ++i) {
+        for (Index_ i = 0; i < nobs; ++i) {
             auto dptr = data + i * ndim;
             for (int d = 0; d < ndim; ++d) {
                 center[d] += dptr[d];
@@ -176,7 +138,7 @@ public:
         }
     }
 
-    static void compute_center(int ndim, const std::vector<INDEX_t>& chosen, const DATA_t* data, DATA_t* center) {
+    static void compute_center(int ndim, const std::vector<Index_>& chosen, const Data_* data, Data_* center) {
         std::fill(center, center + ndim, 0);
         for (auto i : chosen) {
             auto dptr = data + i * ndim;
@@ -189,14 +151,14 @@ public:
         }
     }
 
-    static DATA_t update_mrse(int ndim, const std::vector<INDEX_t>& chosen, const DATA_t* data, DATA_t* center) {
+    static Data_ update_mrse(int ndim, const std::vector<Index_>& chosen, const Data_* data, Data_* center) {
         compute_center(ndim, chosen, data, center);
 
-        DATA_t curmrse = 0;
+        Data_ curmrse = 0;
         for (auto i : chosen) {
             auto dptr = data + i * ndim;
             for (int d = 0; d < ndim; ++d) {
-                DATA_t delta = dptr[d] - center[d];
+                Data_ delta = dptr[d] - center[d];
                 curmrse += delta * delta;
             }
         }
@@ -222,14 +184,14 @@ public:
      * @return `centers` is filled with the new cluster centers.
      * The number of filled centers is returned, see `Initializer::run()`.
      */
-    CLUSTER_t run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
+    Cluster_ run(int ndim, Index_ nobs, const Data_* data, Cluster_ ncenters, Data_* centers, Cluster_* clusters) {
         if (nobs == 0) {
             return 0;
         }
 
         std::mt19937_64 rng(seed);
-        std::vector<DATA_t> mrse(ncenters);
-        std::vector<std::vector<INDEX_t> > assignments(ncenters);
+        std::vector<Data_> mrse(ncenters);
+        std::vector<std::vector<Index_> > assignments(ncenters);
 
         // Setting up the zero'th cluster. (No need to actually compute the
         // MRSE at this point, as there's nothing to compare it to.)
@@ -238,16 +200,16 @@ public:
         std::iota(assignments.front().begin(), assignments.front().end(), 0);
         std::fill(clusters, clusters + nobs, 0);
 
-        for (CLUSTER_t cluster = 1; cluster < ncenters; ++cluster) {
-            DATA_t worst_ss = 0;
-            INDEX_t worst_cluster = 0;
-            for (CLUSTER_t i = 0; i < cluster; ++i) {
-                DATA_t multiplier = assignments[i].size();
+        for (Cluster_ cluster = 1; cluster < ncenters; ++cluster) {
+            Data_ worst_ss = 0;
+            Index_ worst_cluster = 0;
+            for (Cluster_ i = 0; i < cluster; ++i) {
+                Data_ multiplier = assignments[i].size();
                 if (adjust != 1) {
-                    multiplier = std::pow(static_cast<DATA_t>(multiplier), adjust);
+                    multiplier = std::pow(static_cast<Data_>(multiplier), adjust);
                 }
 
-                DATA_t pseudo_ss = mrse[i] * multiplier;
+                Data_ pseudo_ss = mrse[i] * multiplier;
                 if (pseudo_ss > worst_ss) {
                     worst_ss = pseudo_ss;
                     worst_cluster = i;
@@ -263,11 +225,11 @@ public:
             // at zero, so everything positive (on one side of the hyperplane
             // orthogonal to PC1 and passing through the center) gets bumped to
             // the next cluster.
-            std::vector<INDEX_t>& new_assignments = assignments[cluster];
-            std::vector<INDEX_t> worst_assignments2;
+            std::vector<Index_>& new_assignments = assignments[cluster];
+            std::vector<Index_> worst_assignments2;
             for (auto i : worst_assignments) {
                 auto dptr = data + i * ndim;
-                DATA_t proj = 0;
+                Data_ proj = 0;
                 for (int d = 0; d < ndim; ++d) {
                     proj += (dptr[d] - worst_center[d]) * pc1[d];
                 }

@@ -15,27 +15,15 @@ namespace kmeans {
 /**
  * @brief Perform "initialization" by just using the input cluster centers.
  *
- * @tparam DATA_t Floating-point type for the data and centroids.
+ * @tparam Data_ Floating-point type for the data and centroids.
  * @tparam CLUSTER_t Integer type for the cluster index.
- * @tparam INDEX_t Integer type for the observation index.
+ * @tparam Index_ Integer type for the observation index.
  */
-template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
-class InitializeNone : public Initialize<DATA_t, CLUSTER_t, INDEX_t> { 
+template<typename Data_ = double, typename CLUSTER_t = int, typename Index_ = int>
+class InitializeNone : public Initialize<Data_, CLUSTER_t, Index_> { 
 public:
-    /*
-     * @param ndim Number of dimensions.
-     * @param nobs Number of observations.
-     * @param data Pointer to an array where the dimensions are rows and the observations are columns.
-     * Data should be stored in column-major format.
-     * @param ncenters Number of centers to pick.
-     * @param centers Pointer to a `ndim`-by-`ncenters` array where columns are cluster centers and rows are dimensions. 
-     * This is left unchanged.
-     * @param clusters Ignored in this method.
-     *
-     * @return The smaller of `ncenters` and `nobs` is returned, see `Initialize::run()`.
-     */
-    CLUSTER_t run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
-        return std::min(nobs, static_cast<INDEX_t>(ncenters));
+    CLUSTER_t run(int ndim, Index_ nobs, const Data_* data, CLUSTER_t ncenters, Data_* centers, CLUSTER_t* clusters) {
+        return std::min(nobs, static_cast<Index_>(ncenters));
     }
 };
 
