@@ -222,7 +222,7 @@ public:
         InitializePcaPartition_internal::compute_center(data, centers);
         assignments[0].resize(nobs);
         std::iota(assignments.front().begin(), assignments.front().end(), 0);
-        std::vector<typename Matrix_::index_type> worst_assignments2;
+        std::vector<typename Matrix_::index_type> replace_assignments;
 
         for (Cluster_ cluster = 1; cluster < ncenters; ++cluster) {
             Cluster_ worst_cluster = 0;
@@ -242,7 +242,7 @@ public:
             // orthogonal to PC1 and passing through the center) gets bumped to
             // the next cluster.
             auto& new_assignments = assignments[cluster];
-            worst_assignments2.clear();
+            replace_assignments.clear();
 
             size_t num_in_cluster = worst_assignments.size();
             auto work = data.create_workspace(worst_assignments.data(), num_in_cluster);
@@ -257,7 +257,7 @@ public:
                 if (proj > 0) {
                     new_assignments.push_back(i);
                 } else {
-                    worst_assignments2.push_back(i);
+                    replace_assignments.push_back(i);
                 }
             }
 
@@ -267,7 +267,7 @@ public:
             // bigger picture, the quick exit out of the iterations is correct
             // as we should only fail to partition in this manner if all points
             // within each remaining cluster are identical.
-            if (new_assignments.empty() || worst_assignments2.empty()) {
+            if (new_assignments.empty() || replace_assignments.empty()) {
                 return cluster;
             }
 
@@ -276,10 +276,10 @@ public:
             auto new_mrse = InitializePcaPartition_internal::update_center_and_mrse(data, new_assignments, new_center);
             mrse.emplace(new_mrse, cluster);
 
-            auto worst_mrse = InitializePcaPartition_internal::update_center_and_mrse(data, worst_assignments2, worst_center);
-            mrse.emplace(worst_mrse, worst_cluster);
+            auto replace_mrse = InitializePcaPartition_internal::update_center_and_mrse(data, replace_assignments, worst_center);
+            mrse.emplace(replace_mrse, worst_cluster);
 
-            worst_assignments.swap(worst_assignments2);
+            worst_assignments.swap(replace_assignments);
         }
 
         return ncenters;
