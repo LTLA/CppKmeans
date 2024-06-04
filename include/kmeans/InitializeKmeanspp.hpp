@@ -82,14 +82,16 @@ std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Clus
             auto last_ptr = data.get_observation(sofar.back(), last_work);
 
             internal::parallelize(nobs, nthreads, [&](int, Index_ start, Index_ length) {
-                auto curwork = data.create_workspace(start, length);
+                auto curwork = data.create_workspace();
                 for (Index_ obs = start, end = start + length; obs < end; ++obs) {
                     if (mindist[obs]) {
-                        auto acopy = data.get_observation(curwork);
+                        auto acopy = data.get_observation(obs, curwork);
                         auto scopy = last_ptr;
+
                         Data_ r2 = 0;
                         for (Dim_ dim = 0; dim < ndim; ++dim, ++acopy, ++scopy) {
-                            r2 += (*acopy - *scopy) * (*acopy - *scopy);
+                            Data_ delta = (*acopy - *scopy);
+                            r2 += delta * delta;
                         }
 
                         if (cen == 1 || r2 < mindist[obs]) {

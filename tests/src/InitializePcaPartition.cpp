@@ -55,7 +55,7 @@ TEST(PcaPartitionUtils, MRSECalculations) {
         EXPECT_EQ(center, anothercenter);
     }
 
-    // Checking the other WCSS method.
+    // Cross-checking against the WCSS calculations.
     {
         std::vector<double> wcss(1);
         std::vector<int> clusters(nc);
@@ -218,12 +218,14 @@ TEST_P(PcaPartitionInitializationTest, Basic) {
     assemble(param);
     auto ncenters = std::get<2>(param);
 
-    kmeans::InitializePcaPartition init;
-    init.set_seed(ncenters * 10);
+    kmeans::SimpleMatrix mat(nr, nc, data.data());
+
+    kmeans::InitializePcaPartitionOptions opt;
+    opt.seed = ncenters * 10;
+    kmeans::InitializePcaPartition init(opt);
 
     std::vector<double> centers(nr * ncenters);
-    std::vector<int> clusters(nc);
-    auto nfilled = init.run(nr, nc, data.data(), ncenters, centers.data(), clusters.data());
+    auto nfilled = init.run(mat, ncenters, centers.data());
     EXPECT_EQ(nfilled, ncenters);
 }
 
@@ -240,14 +242,15 @@ TEST_P(PcaPartitionInitializationTest, Sanity) {
         auto cIt = data.begin() + chosen * nr;
         std::copy(cIt, cIt + nr, dIt);
     }
+    kmeans::SimpleMatrix mat(nr, nc, data.data());
 
-    kmeans::InitializePcaPartition init;
-    init.set_seed(ncenters * 100);
+    kmeans::InitializePcaPartitionOptions opt;
+    opt.seed = ncenters * 10;
+    kmeans::InitializePcaPartition init(opt);
 
     std::vector<double> centers(nr * ncenters);
-    std::vector<int> clusters(nc);
-    auto output = init.run(nr, nc, data.data(), ncenters, centers.data(), clusters.data());
-    EXPECT_EQ(output, ncenters);
+    auto nfilled = init.run(mat, ncenters, centers.data());
+    EXPECT_EQ(nfilled, ncenters);
 
     // Expect one entry from each of the first 'ncenters' elements.
     // We'll just do a brute-force search for them here.
@@ -291,18 +294,42 @@ TEST_P(PcaPartitionInitializationEdgeTest, TooManyClusters) {
     auto param = GetParam();
     assemble(param);
 
-    kmeans::InitializePcaPartition init;
-    init.set_seed(nc * 100);
+    kmeans::InitializePcaPartitionOptions opt;
+    opt.seed = nc * 10;
+    kmeans::InitializePcaPartition init(opt);
 
-    std::vector<double> centers(nr * nc);
-    std::vector<int> clusters(nc);
+    std::vector<double> centers(nc * nr);
+    auto nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc, centers.data());
+    EXPECT_EQ(nfilled, nc);
 
-    auto woutput = init.run(nr, nc, data.data(), nc, centers.data(), clusters.data());
-    EXPECT_EQ(woutput, nc);
+    // Check that there's one representative from each cluster.
+    std::vector<int> equivalence, expected;
+    for (int c = 0; c < nc; ++c) {
+        expected.push_back(c);
 
-    centers.resize(nr * (nc + 1));
-    auto woutput2 = init.run(nr, nc, data.data(), nc + 1, centers.data(), clusters.data());
-    EXPECT_EQ(woutput2, nc);
+        for (int d = 0; d < nc; ++d) {
+            auto cIt = centers.begin() + c * nr;
+            auto dIt = data.begin() + d * nr;
+            bool is_equal = true;
+            for (int r = 0; r < nr; ++r, ++cIt, ++dIt) {
+                if (*cIt != *dIt) {
+                    is_equal = false;
+                    break;
+                }
+            }
+
+            if (is_equal) {
+                equivalence.push_back(d);
+            }
+        }
+    }
+    std::sort(equivalence.begin(), equivalence.end());
+    EXPECT_EQ(equivalence, expected);
+
+    std::vector<double> centers2(nc * nr);
+    auto nfilled2 = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc + 10, centers2.data());
+    EXPECT_EQ(nfilled2, nc);
+    EXPECT_EQ(centers2, centers);
 }
 
 INSTANTIATE_TEST_SUITE_P(

@@ -13,7 +13,7 @@ void compute_wcss(const Matrix_& data, Cluster_ ncenters, const Center_* centers
     auto ndim = data.num_dimensions();
     std::fill_n(wcss, ncenters, 0);
 
-    auto work = data.create_workspace(0, nobs);
+    auto work = data.create_workspace(static_cast<typename Matrix_::index_type>(0), nobs);
     for (decltype(nobs) obs = 0; obs < nobs; ++obs) {
         auto cen = clusters[obs];
         auto curcenter = centers + static_cast<size_t>(cen) * static_cast<size_t>(ndim);
