@@ -18,7 +18,6 @@
 
 namespace kmeans {
 
-
 /**
  * @brief Options to use for `InitializeRandom`.
  */
@@ -36,8 +35,8 @@ struct InitializeRandomOptions {
  * @tparam Cluster_ Integer type for the cluster index.
  * @tparam Index_ Integer type for the observation index.
  */
-template<typename Data_ = double, typename Cluster_ = int, typename Index_ = int>
-class InitializeRandom : public Initialize<Data_, Cluster_, Index_> { 
+template<class Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
+class InitializeRandom : public Initialize<Matrix_, Cluster_, Center_> { 
 private:
     InitializeRandomOptions my_options;
 
@@ -53,9 +52,9 @@ public:
     InitializeRandom() = default;
 
 public:
-    Cluster_ run(int ndim, Index_ nobs, const Data_* data, Cluster_ ncenters, Data_* centers) {
+    Cluster_ run(const Matrix_& data, Cluster_ ncenters, Center_* centers) {
         std::mt19937_64 eng(my_options.seed);
-        std::vector<Cluster_> chosen(std::min(nobs, static_cast<Index_>(ncenters)));
+        std::vector<Cluster_> chosen(std::min(data.num_observations(), static_cast<typename Matrix_::index_type>(ncenters)));
         aarand::sample(nobs, ncenters, chosen.begin());
         internal::copy_into_array(chosen, ndim, data, centers);
         return chosen.size();

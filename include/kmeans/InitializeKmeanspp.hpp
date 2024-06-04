@@ -5,9 +5,9 @@
 #include <algorithm>
 #include <cstdint>
 
-#include "Base.hpp"
-#include "InitializeRandom.hpp"
+#include "Initialize.hpp"
 #include "random.hpp"
+#include "utils.hpp"
 
 /**
  * @file InitializeKmeansPP.hpp
@@ -18,7 +18,7 @@
 namespace kmeans {
 
 /**
- * @brief Default parameter settings.
+ * @brief Options for **k-means++** initialization.
  */
 struct InitializeKmeansppOptions {
     /**
@@ -28,6 +28,7 @@ struct InitializeKmeansppOptions {
 
     /** 
      * Number of threads to use.
+     * This should be positive.
      */
     int num_threads = 1;
 };
@@ -37,47 +38,41 @@ struct InitializeKmeansppOptions {
  */
 namespace internal {
 
-template<typename Data_, typename Cluster_, typename Index_>
-std::vector<Index_> run_kmeanspp(int ndim, Index_ nobs, const Data_* data, Cluster_ ncenters, uint64_t seed, int nthreads) {
+template<class Matrix_, typename Cluster_, typename Center_>
+std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, uint64_t seed, int nthreads) {
+    typedef typename Matrix_::data_type Data_;
+    typedef typename Matrix_::index_type Index_;
+    typedef typename Matrix_::dimension_type Dim_;
+
+    auto nobs = data.num_observations();
     std::vector<Data_> mindist(nobs, 1);
     std::vector<Data_> cumulative(nobs);
     std::vector<Index_> sofar;
     sofar.reserve(ncenters);
     std::mt19937_64 eng(seed);
 
+    auto last_work = data.create_workspace();
     for (Cluster_ cen = 0; cen < ncenters; ++cen) {
         if (!sofar.empty()) {
-            auto last = sofar.back();
+            auto last_ptr = data.fetch_observation(sofar.back(), last_work);
 
-#ifndef KMEANS_CUSTOM_PARALLEL
-#ifdef _OPENMP
-            #pragma omp parallel for num_threads(nthreads)
-#endif
-            for (Index_ obs = 0; obs < nobs; ++obs) {
-#else
-            KMEANS_CUSTOM_PARALLEL(nobs, [&](Index_ first, Index_ end) -> void {
-            for (Index_ obs = first; obs < end; ++obs) {
-#endif
+            internal::parallelize(nobs, nthreads, [&](int, Index_ start, Index_ length) {
+                auto curwork = matrix.create_workspace(start, length);
+                for (Index_ obs = start, end = start + length; obs < end; ++obs) {
+                    if (mindist[obs]) {
+                        auto acopy = data.fetch_observation(curwork);
+                        auto scopy = last_ptr;
+                        Data_ r2 = 0;
+                        for (Dim_ dim = 0; dim < ndim; ++dim, ++acopy, ++scopy) {
+                            r2 += (*acopy - *scopy) * (*acopy - *scopy);
+                        }
 
-                if (mindist[obs]) {
-                    const Data_* acopy = data + obs * ndim;
-                    const Data_* scopy = data + last * ndim;
-                    Data_ r2 = 0;
-                    for (int dim = 0; dim < ndim; ++dim, ++acopy, ++scopy) {
-                        r2 += (*acopy - *scopy) * (*acopy - *scopy);
-                    }
-
-                    if (cen == 1 || r2 < mindist[obs]) {
-                        mindist[obs] = r2;
+                        if (cen == 1 || r2 < mindist[obs]) {
+                            mindist[obs] = r2;
+                        }
                     }
                 }
-
-#ifndef KMEANS_CUSTOM_PARALLEL
-            }
-#else
-            }
-            }, nthreads);
-#endif
+            });
         }
 
         cumulative[0] = mindist[0];
@@ -110,16 +105,16 @@ std::vector<Index_> run_kmeanspp(int ndim, Index_ nobs, const Data_* data, Clust
  * where the sampling probability for each point is proportional to the squared distance to the closest starting point that was chosen in any of the previous iterations.
  * The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.
  *
- * @tparam Data_ Floating-point type for the data and centroids.
- * @tparam Cluster_ Integer type for the cluster index.
- * @tparam Index_ Integer type for the observation index.
+ * @tparam Matrix_ Matrix type for the input data.
+ * @tparam Cluster_ Integer type for the cluster assignments.
+ * @tparam Center_ Floating-point type for the centroids.
  *
  * @see
  * Arthur, D. and Vassilvitskii, S. (2007).
  * k-means++: the advantages of careful seeding.
  * _Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms_, 1027-1035.
  */
-template<typename Data_ = double, typename Cluster_ = int, typename Index_ = int>
+template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
 class InitializeKmeanspp : public Initialize<Data_, Cluster_, Index_> {
 private:
     InitializeKmeansppOptions my_options;
@@ -136,12 +131,14 @@ public:
     InitializeKmeanspp() = default;
 
 public:
-    Cluster_ run(int ndim, Index_ nobs, const Data_* data, Cluster_ ncenters, Data_* centers) {
+    Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Center_* centers) {
+        size_t nobs = matrix.num_observations();
         if (!nobs) {
             return 0;
         }
-        auto sofar = internal::run_kmeanspp(ndim, nobs, data, ncenters, my_options.seed, my_options.num_threads);
-        internal::copy_into_array(sofar, ndim, data, centers);
+
+        auto sofar = internal::run_kmeanspp(matrix, ncenters, my_options.seed, my_options.num_threads);
+        internal::copy_into_array(sofar, matrix, centers);
         return sofar.size();
     }
 };

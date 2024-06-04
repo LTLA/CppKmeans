@@ -13,17 +13,19 @@
 namespace kmeans {
 
 /**
- * @brief Perform "initialization" by just using the input cluster centers.
+ * @brief No-op "initialization" with existing cluster centers.
  *
- * @tparam Data_ Floating-point type for the data and centroids.
- * @tparam CLUSTER_t Integer type for the cluster index.
- * @tparam Index_ Integer type for the observation index.
+ * @tparam Matrix_ Matrix type for the input data.
+ * @tparam Cluster_ Integer type for the cluster assignments.
+ * @tparam Center_ Floating-point type for the centroids.
+ * 
+ * This class assumes that that cluster centers are already present in the `centers` array, and returns them without modification.
  */
-template<typename Data_ = double, typename CLUSTER_t = int, typename Index_ = int>
-class InitializeNone : public Initialize<Data_, CLUSTER_t, Index_> { 
+template<class Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
+class InitializeNone : public Initialize<Data_, Cluster_, Center_> { 
 public:
-    CLUSTER_t run(int ndim, Index_ nobs, const Data_* data, CLUSTER_t ncenters, Data_* centers, CLUSTER_t* clusters) {
-        return std::min(nobs, static_cast<Index_>(ncenters));
+    Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Center_*) {
+        return std::min(matrix.num_observations(), static_cast<typename Matrix_::index_type>(ncenters));
     }
 };
 

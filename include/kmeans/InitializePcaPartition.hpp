@@ -41,6 +41,70 @@ struct InitializePcaPartitionOptions {
 };
 
 /**
+ * @cond
+ */
+namespace internal {
+
+template<typename Center_>
+struct PowerWorkspace {
+    std::vector<Center_> pc;
+    std::vector<Center_> delta;
+    std::vector<Center_> cov;
+};
+
+template<class Matrix_, typename Center_, class Engine_>
+std::vector<Data_> compute_pc1(
+    const Matrix_& data, 
+    const std::vector<typename Matrix_::index_type>& chosen, 
+    const Center_* center, 
+    Engine_& eng, 
+    PowerWorkspace<Matrix_, Center_>& work,
+    int nthreads,
+    const powerit::Options& power_opts)
+{
+    auto ndim = data.num_observations();
+    work.pc.resize(ndim);
+    work.delta.resize(ndim);
+    size_t long_ndim = ndim;
+    work.cov.resize(long_ndim * long_ndim);
+
+    work.matwork.clear();
+    work.matwork.reserve(nthreads);
+    for (int t = 0; t < nthreads; ++t) {
+        work.matwork.push_back(matrix.
+    }
+
+    // Computing the lower triangle of the covariance matrix. 
+    auto work = data
+    for (auto i : chosen) {
+        auto dptr = data + i * ndim;
+        for (int j = 0; j < ndim; ++j) {
+            delta[j] = dptr[j] - center[j];
+        }
+        for (int j = 0; j < ndim; ++j) {
+            for (int k = 0; k <= j; ++k) {
+                cov[j * ndim + k] += delta[j] * delta[k];
+            }
+        }
+    }
+
+    // Filling in the other side of the matrix, to enable cache-efficient multiplication.
+    for (int j = 0; j < ndim; ++j) {
+        for (int k = j + 1; k < ndim; ++k) {
+            cov[j * ndim + k] = cov[k * ndim + j];
+        }
+    }
+
+    powerit::compute(ndim, cov.data(), work.pc.data(), eng, power_opts);
+    return output;
+} 
+
+}
+/**
+ * @endcond
+ */
+
+/**
  * @brief Implements the PCA partitioning method of Su and Dy (2007).
  *
  * This approach involves the selection of starting points via iterative partitioning based on principal components analysis.
@@ -89,41 +153,6 @@ private:
     InitializePcaPartitionOptions my_options;
 
 public:
-    /**
-     * @cond
-     */
-    template<class Rng>
-    std::vector<Data_> compute_pc1(int ndim, const std::vector<Index_>& chosen, const Data_* data, const Data_* center, Rng& eng) const {
-        std::vector<Data_> delta(ndim);
-        std::vector<Data_> cov(ndim * ndim);
-
-        // Computing the lower triangle of the covariance matrix. 
-        for (auto i : chosen) {
-            auto dptr = data + i * ndim;
-            for (int j = 0; j < ndim; ++j) {
-                delta[j] = dptr[j] - center[j];
-            }
-            for (int j = 0; j < ndim; ++j) {
-                for (int k = 0; k <= j; ++k) {
-                    cov[j * ndim + k] += delta[j] * delta[k];
-                }
-            }
-        }
-
-        // Filling in the other side of the matrix, to enable cache-efficient multiplication.
-        for (int j = 0; j < ndim; ++j) {
-            for (int k = j + 1; k < ndim; ++k) {
-                cov[j * ndim + k] = cov[k * ndim + j];
-            }
-        }
-
-        powerit::PowerIterations power;
-        power.set_iterations(iters).set_tolerance(tol);
-
-        std::vector<Data_> output(ndim);
-        power.run(ndim, cov.data(), output.data(), eng);
-        return output;
-    } 
 
     static void compute_center(int ndim, Index_ nobs, const Data_* data, Data_* center) {
         std::fill(center, center + ndim, 0);
