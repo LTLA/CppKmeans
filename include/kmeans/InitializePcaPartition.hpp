@@ -43,7 +43,7 @@ struct InitializePcaPartitionOptions {
 /**
  * @cond
  */
-namespace internal {
+namespace InitializePcaPartitionsOptions_internal {
 
 template<typename Center_>
 struct PowerWorkspace {
@@ -68,36 +68,81 @@ std::vector<Data_> compute_pc1(
     size_t long_ndim = ndim;
     work.cov.resize(long_ndim * long_ndim);
 
-    work.matwork.clear();
-    work.matwork.reserve(nthreads);
-    for (int t = 0; t < nthreads; ++t) {
-        work.matwork.push_back(matrix.
-    }
-
     // Computing the lower triangle of the covariance matrix. 
-    auto work = data
-    for (auto i : chosen) {
-        auto dptr = data + i * ndim;
+    // TODO: parallelize this bad boy by splitting into blocks, computing the
+    // covariance within each block in each thread, and then adding them all
+    // together. We need to use blocks to guarantee we get the same results
+    // with and without parallelization.
+    auto work = data.get_workspace(chosen.data(), chosen.size());
+    for (size_t i = 0, end = chosen.size(); i < end; ++i) {
+        auto dptr = data.get_observation(work);
+
         for (int j = 0; j < ndim; ++j) {
             delta[j] = dptr[j] - center[j];
         }
-        for (int j = 0; j < ndim; ++j) {
-            for (int k = 0; k <= j; ++k) {
-                cov[j * ndim + k] += delta[j] * delta[k];
+
+        size_t offset = 0;
+        for (decltype(ndim) j = 0; j < ndim; ++j, offset += long_ndim) {
+            for (decltype(ndim) k = 0; k <= j; ++k) {
+                cov[offset + static_cast<size_t>(k)] += delta[j] * delta[k];
             }
         }
     }
 
     // Filling in the other side of the matrix, to enable cache-efficient multiplication.
-    for (int j = 0; j < ndim; ++j) {
-        for (int k = j + 1; k < ndim; ++k) {
-            cov[j * ndim + k] = cov[k * ndim + j];
+    size_t src_offset = 0;
+    for (int j = 0; j < ndim; ++j, src_offset += long_ndim) {
+        size_t dest_offset = j;
+        size_t src_offset_copy = src_offset;
+        for (int k = j + 1; k < ndim; ++k, dest_offset += long_dim, ++src_offset_copy) {
+            cov[src_offset_copy] = cov[dest_offset];
         }
     }
 
     powerit::compute(ndim, cov.data(), work.pc.data(), eng, power_opts);
     return output;
 } 
+
+template<class Matrix_, typename Center_>
+void compute_center(const Matrix_& data, Data_* center) {
+    auto ndim = data.num_dimensions();
+    std::fill_n(center, ndim, 0);
+    auto nobs = data.num_observations();
+    auto work = data.create_workspace(0, nobs);
+
+    for (decltype(nobs) i = 0; i < nobs; ++i) {
+        auto dptr = data.fetch_observation(work);
+        for (decltype(ndim) d = 0; d < ndim; ++d) {
+            center[d] += dptr[d];
+        }
+    }
+
+    for (decltype(ndim) d = 0; d < ndim; ++d) {
+        center[d] /= nobs;
+    }
+}
+
+template<class Matrix_, typename Center_>
+Center_ update_mrse(const Matrix_& data, const std::vector<typename Matrix_::index_type>& chosen, Center_* center, std::vector<Center_>& work_var) {
+    std::fill_n(center, ndim, 0);
+    std::fill_n(work_var.begin(), ndim, 0);
+
+    auto ndim = data.num_dimensions();
+    auto work = data.create_workspace(chosen.data(), chosen.size());
+
+    // Using Welford's method so we only have to make one pass through the matrix,
+    // instead of doing two passes to compute the mean and then the variance.
+    for (size_t i = 0, end = chosen.size(); i < end; ++i) {
+        auto dptr = work.fetch_observation(work);
+        for (decltype(ndim) d = 0; d < ndim; ++d) {
+            Data_ delta = dptr[d] - center[d];
+            center[d] += delta / (i + 1);
+            work_var[d] += delta * (dptr[d] - center[d]);
+        }
+    }
+
+    return std::accumulate(work_var.begin(), work_var.end(), static_cast<Center_>(0)) / chosen.size();
+}
 
 }
 /**
@@ -136,8 +181,8 @@ std::vector<Data_> compute_pc1(
  * In Search of Deterministic Methods for Initializing K-Means and Gaussian Mixture Clustering,
  * _Intelligent Data Analysis_ 11, 319-338.
  */
-template<typename Data_ = double, typename Cluster_ = int, typename Index_ = int>
-class InitializePcaPartition : public Initialize<Data_, Cluster_, Index_> {
+template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
+class InitializePcaPartition : public Initialize<Matrix_, Cluster_, Center_> {
 public:
     /**
      * @param options Options for PCA partitioning.
@@ -153,102 +198,37 @@ private:
     InitializePcaPartitionOptions my_options;
 
 public:
-
-    static void compute_center(int ndim, Index_ nobs, const Data_* data, Data_* center) {
-        std::fill(center, center + ndim, 0);
-        for (Index_ i = 0; i < nobs; ++i) {
-            auto dptr = data + i * ndim;
-            for (int d = 0; d < ndim; ++d) {
-                center[d] += dptr[d];
-            }
-        }
-        for (int d = 0; d < ndim; ++d) {
-            center[d] /= nobs;
-        }
-    }
-
-    static void compute_center(int ndim, const std::vector<Index_>& chosen, const Data_* data, Data_* center) {
-        std::fill(center, center + ndim, 0);
-        for (auto i : chosen) {
-            auto dptr = data + i * ndim;
-            for (int d = 0; d < ndim; ++d) {
-                center[d] += dptr[d];
-            }
-        }
-        for (int d = 0; d < ndim; ++d) {
-            center[d] /= chosen.size();
-        }
-    }
-
-    static Data_ update_mrse(int ndim, const std::vector<Index_>& chosen, const Data_* data, Data_* center) {
-        compute_center(ndim, chosen, data, center);
-
-        Data_ curmrse = 0;
-        for (auto i : chosen) {
-            auto dptr = data + i * ndim;
-            for (int d = 0; d < ndim; ++d) {
-                Data_ delta = dptr[d] - center[d];
-                curmrse += delta * delta;
-            }
-        }
-
-        return curmrse / chosen.size();
-    }
-    /**
-     * @endcond
-     */
-public:
-    /*
-     * @param ndim Number of dimensions.
-     * @param nobs Number of observations.
-     * @param data Pointer to an array where the dimensions are rows and the observations are columns.
-     * Data should be stored in column-major format.
-     * @param ncenters Number of centers to pick.
-     * @param[out] centers Pointer to a `ndim`-by-`ncenters` array where columns are cluster centers and rows are dimensions. 
-     * On output, this will contain the final centroid locations for each cluster.
-     * Data should be stored in column-major order.
-     * @param clusters Pointer to an array of length `nobs`.
-     * This is used as a buffer and the contents on output should not be used.
-     *
-     * @return `centers` is filled with the new cluster centers.
-     * The number of filled centers is returned, see `Initializer::run()`.
-     */
-    Cluster_ run(int ndim, Index_ nobs, const Data_* data, Cluster_ ncenters, Data_* centers, Cluster_* clusters) {
+    Cluster_ run(const Matrix_& data, Cluster_ ncenters, Center_* centers) {
+        auto nobs = matrix.num_observations();
         if (nobs == 0) {
             return 0;
         }
 
         std::mt19937_64 rng(seed);
-        std::vector<Data_> mrse(ncenters);
+        std::priority_queue<std::pair<Data_, Cluster_> > mrse;
         std::vector<std::vector<Index_> > assignments(ncenters);
+
+        auto ndim = matrix.num_dimensions();
+        std::vector<Center_> work_var(ndim);
 
         // Setting up the zero'th cluster. (No need to actually compute the
         // MRSE at this point, as there's nothing to compare it to.)
-        compute_center(ndim, nobs, data, centers);
+        compute_center(matrix, centers);
         assignments[0].resize(nobs);
         std::iota(assignments.front().begin(), assignments.front().end(), 0);
-        std::fill(clusters, clusters + nobs, 0);
+        std::fill_n(clusters, nobs, 0);
 
         for (Cluster_ cluster = 1; cluster < ncenters; ++cluster) {
-            Data_ worst_ss = 0;
             Index_ worst_cluster = 0;
-            for (Cluster_ i = 0; i < cluster; ++i) {
-                Data_ multiplier = assignments[i].size();
-                if (adjust != 1) {
-                    multiplier = std::pow(static_cast<Data_>(multiplier), adjust);
-                }
-
-                Data_ pseudo_ss = mrse[i] * multiplier;
-                if (pseudo_ss > worst_ss) {
-                    worst_ss = pseudo_ss;
-                    worst_cluster = i;
-                }
+            if (worst.size()) {
+                worst_cluster = mrse.top().second;
+                mrse.pop();
             }
 
             // Extracting the principal component for this bad boy.
             auto worst_center = centers + worst_cluster * ndim;
             auto& worst_assignments = assignments[worst_cluster];
-            auto pc1 = compute_pc1(ndim, worst_assignments, data, worst_center, rng);
+            auto pc1 = compute_pc1(data, worst_assignments, worst_center, rng);
 
             // Projecting all points in this cluster along PC1. The center lies
             // at zero, so everything positive (on one side of the hyperplane
@@ -256,10 +236,14 @@ public:
             // the next cluster.
             std::vector<Index_>& new_assignments = assignments[cluster];
             std::vector<Index_> worst_assignments2;
-            for (auto i : worst_assignments) {
-                auto dptr = data + i * ndim;
-                Data_ proj = 0;
-                for (int d = 0; d < ndim; ++d) {
+
+            size_t num_in_cluster = worst_assignments.size();
+            auto work = data.create_workspace(worst_assignments.data(), num_in_cluster);
+            for (size_t i = 0; i < num_in_cluster; ++i) {
+                auto dptr = data.fetch_observation(work);
+
+                Center_ proj = 0;
+                for (decltype(ndim) d = 0; d < ndim; ++d) {
                     proj += (dptr[d] - worst_center[d]) * pc1[d];
                 }
 
@@ -286,9 +270,9 @@ public:
             worst_assignments.swap(worst_assignments2);
 
             // Computing centers and MRSE.
-            auto new_center = centers + cluster * ndim;
-            mrse[cluster] = update_mrse(ndim, new_assignments, data, new_center);
-            mrse[worst_cluster] = update_mrse(ndim, worst_assignments, data, worst_center);
+            auto new_center = centers + static_cast<size_t>(cluster) * static_cast<size_t>(ndim); // cast to avoid overflow.
+            mrse.emplace_back(update_mrse(data, new_assignments, new_center, work_var), cluster);
+            mrse.emplace_back(update_mrse(data, worst_assignments, worst_center, work_var), worst_cluster);
         }
 
         return ncenters;

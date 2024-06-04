@@ -85,7 +85,7 @@ std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Clus
             break;
         }
 
-        auto chosen_id = weighted_sample(cumulative, mindist, nobs, eng);
+        auto chosen_id = internal::weighted_sample(cumulative, mindist, nobs, eng);
         mindist[chosen_id] = 0;
         sofar.push_back(chosen_id);
     }

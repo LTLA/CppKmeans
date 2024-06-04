@@ -42,24 +42,48 @@ public:
 
     typedef Index_ index_type;
 
-    typedef size_t dimension_type;
+    typedef decltype(my_num_dim) dimension_type;
 
-    struct Workspace{};
+    struct RandomAccessWorkspace{};
 
-    Index_ num_obs() const {
+    struct ConsecutiveAccessWorkspace {
+        ConsecutiveAccessWorkspace(index_type start) : at(start) {}
+        index_type at;
+    };
+
+    struct IndexedAccessWorkspace {
+        IndexedAccessWorkspace(const std::vector<index_type>& sequence) : sequence(sequence) {}
+        const std::vector<index_type>& sequence;
+        index_type at = 0;
+    };
+
+public:
+    Index_ num_observations() const {
         return my_num_obs;
     }
 
-    int num_dim() const {
+    dimension_type num_dimensions() const {
         return my_num_dim;
     }
 
-    Workspace create_workspace() const {
-        return Workspace();
+    RandomAccessWorkspace create_workspace() const {
+        return RandomAccessWorkspace();
     }
 
-    const Data_* get_observation(Index_ i, [[maybe_unused]] Workspace& workspace) const {
+    ConsecutiveWorkspace create_workspace(index_type start, index_type) const {
+        return ConsecutiveAccessWorkspace(start);
+    }
+
+    const data_type* get_observation(Index_ i, [[maybe_unused]] RandomAccessWorkspace& workspace) const {
         return my_data + static_cast<size_t>(i) * my_long_num_dim; // avoid overflow during multiplication.
+    } 
+
+    const data_type* get_observation(ConsecutiveAccessWorkspace& workspace) const {
+        return my_data + static_cast<size_t>(workspace.at++) * my_long_num_dim; // avoid overflow during multiplication.
+    } 
+
+    const data_type* get_observation(IndexedAccessWorkspace& workspace) const {
+        return my_data + static_cast<size_t>(workspace.sequence[workspace.at++]) * my_long_num_dim; // avoid overflow during multiplication.
     } 
     /**
      * @endcond

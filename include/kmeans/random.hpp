@@ -7,27 +7,7 @@
 
 namespace kmeans {
 
-template<typename T = int, class ENGINE>
-std::vector<T> sample_without_replacement(T population, size_t choose, ENGINE& eng) {
-    std::vector<T> sofar;
-
-    if (choose >= static_cast<size_t>(population)) {
-        sofar.resize(population);
-        std::iota(sofar.begin(), sofar.end(), 0);
-    } else {
-        sofar.reserve(choose);
-        T traversed = 0;
-
-        while (sofar.size() < choose) {
-            if (static_cast<double>(choose - sofar.size()) > static_cast<double>(population - traversed) * aarand::standard_uniform(eng)) {
-                sofar.push_back(traversed);
-            }
-            ++traversed;
-        }
-    }
-
-    return sofar;
-}
+namespace internal {
 
 template<typename DATA_t, typename INDEX_t, class ENGINE>
 INDEX_t weighted_sample(const std::vector<DATA_t>& cumulative, const std::vector<DATA_t>& mindist, INDEX_t nobs, ENGINE& eng) {
@@ -48,6 +28,8 @@ INDEX_t weighted_sample(const std::vector<DATA_t>& cumulative, const std::vector
     } while (chosen_id == nobs || mindist[chosen_id] == 0);
 
     return chosen_id;
+}
+
 }
 
 }

@@ -12,8 +12,9 @@ namespace kmeans {
  * @brief Compile-time interface for matrix data.
  *
  * This defines the expectations for a matrix of observation-level data to be used in `Initialize::run()` and `Refine::run()`.
- * Long story short, the matrix should support extraction of the vector of coordinates for each observation.
+ * Each matrix should support extraction of the vector of coordinates for each observation.
  */
+template<typename Data_, typename Index_, typename Dim_>
 class MockMatrix {
 public:
     /**
@@ -24,30 +25,45 @@ public:
      * @endcond
      */
 
-private:
-    int my_num_dim;
-    Index_ my_num_obs;
-    const Data_* my_data;
-    size_t my_long_num_dim;
-
 public:
     /**
      * Type of the data.
      * Any floating-point type may be used here.
      */
-    typedef double data_type;
+    typedef Data_ data_type;
 
     /**
      * Type for the observation indices.
      * Any integer type may be used here.
      */
-    typedef size_t index_type;
+    typedef Index_ index_type;
 
     /**
      * Integer type for the dimension indices.
      * Any integer type may be used here.
      */
-    typedef int dimension_type;
+    typedef Dim_ dimension_type;
+
+private:
+    dimension_type my_num_dim;
+    index_type my_num_obs;
+    const data_type* my_data;
+    size_t my_long_num_dim;
+
+public:
+    /**
+     * @return Number of observations.
+     */
+    index_type num_observations() const {
+        return my_num_obs;
+    }
+
+    /**
+     * @return Number of dimensions.
+     */
+    dimension_type num_dimensions() const {
+        return my_num_dim;
+    }
 
 public:
     /**
@@ -73,8 +89,8 @@ public:
         /**
          * @cond
          */
-        ConsecutiveAccessWorkspace(index_type start, index_type length) : at(start), end(start + length) {}
-        index_type at, end;
+        ConsecutiveAccessWorkspace(index_type start) : at(start) {}
+        index_type at;
         /**
          * @endcond
          */
@@ -85,26 +101,38 @@ public:
      * @param length Length of the contiguous block to be accessed consecutively.
      * @return A new consecutive-access workspace, to be passed to `fetch_observation()`.
      */
-    ConsecutiveWorkspace create_workspace(index_type start, index_type length) const {
-        return ConsecutiveAccessWorkspace(start, length);
+    ConsecutiveAccessWorkspace create_workspace(index_type start, [[maybe_unused]] index_type length) const {
+        return ConsecutiveAccessWorkspace(start);
     }
 
+    /**
+     * @brief Workspace for access to a indexed subset of observations.
+     *
+     * This may be used by matrix implementations to store temporary data structures that can be re-used in each call to `fetch_observation()`.
+     */
+    struct IndexedAccessWorkspace {
+        /**
+         * @cond
+         */
+        IndexedAccessWorkspace(const std::vector<index_type>& sequence) : sequence(sequence) {}
+        const std::vector<index_type>& sequence;
+        index_type at = 0;
+        /**
+         * @endcond
+         */
+    };
+
+    /**
+     * @param[in] sequence Vector of sorted and unique indices of observations, to be accessed in the provided order.
+     * It is assumed that the vector will not be deallocated before the destruction of the returned `IndexedAccessWorkspace`.
+     * @param length Number of observations in `sequence`.
+     * @return A new indexed-access workspace, to be passed to `fetch_observation()`.
+     */
+    IndexedAccessWorkspace create_workspace(const std::vector<index_type>& sequence) const {
+        return IndexedAccessWorkspace(sequence);
+    }
 
 public:
-    /**
-     * @return Number of observations.
-     */
-    index_type num_observations() const {
-        return my_num_obs;
-    }
-
-    /**
-     * @return Number of dimensions.
-     */
-    dimension_type num_dimensions() const {
-        return my_num_dim;
-    }
-
     /**
      * @param i Index of the observation to fetch.
      * @param workspace Random-access workspace for fetching.
@@ -115,11 +143,19 @@ public:
     } 
 
     /**
-     * @param workspace Consecutive-access workspace. 
-     * @return Pointer to an array of length equal to `num_dimensions()`, containing the coordinates for this observation.
+     * @param workspace Consecutive access workspace. 
+     * @return Pointer to an array of length equal to `num_dimensions()`, containing the coordinates for the next observation.
      */
     const data_type* get_observation(ConsecutiveAccessWorkspace& workspace) const {
         return my_data + static_cast<size_t>(workspace.at++) * my_long_num_dim; // avoid overflow during multiplication.
+    } 
+
+    /**
+     * @param workspace Indexed access workspace. 
+     * @return Pointer to an array of length equal to `num_dimensions()`, containing the coordinates for the next observation.
+     */
+    const data_type* get_observation(IndexedAccessWorkspace& workspace) const {
+        return my_data + static_cast<size_t>(workspace.sequence[workspace.at++]) * my_long_num_dim; // avoid overflow during multiplication.
     } 
 };
 
