@@ -6,7 +6,7 @@
 #include <random>
 
 #include "Initialize.hpp"
-#include "random.hpp"
+#include "copy_into_array.hpp"
 
 #include "aarand/aarand.hpp"
 
@@ -52,11 +52,12 @@ public:
     InitializeRandom() = default;
 
 public:
-    Cluster_ run(const Matrix_& data, Cluster_ ncenters, Center_* centers) {
+    Cluster_ run(const Matrix_& data, Cluster_ ncenters, Center_* centers) const {
         std::mt19937_64 eng(my_options.seed);
-        std::vector<Cluster_> chosen(std::min(data.num_observations(), static_cast<typename Matrix_::index_type>(ncenters)));
-        aarand::sample(nobs, ncenters, chosen.begin());
-        internal::copy_into_array(chosen, ndim, data, centers);
+        auto nobs = data.num_observations();
+        std::vector<typename Matrix_::index_type> chosen(std::min(nobs, static_cast<typename Matrix_::index_type>(ncenters)));
+        aarand::sample(nobs, ncenters, chosen.begin(), eng);
+        internal::copy_into_array(data, chosen, centers);
         return chosen.size();
     }
 };

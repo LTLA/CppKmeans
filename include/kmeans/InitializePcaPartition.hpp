@@ -1,16 +1,16 @@
 #ifndef KMEANS_INITIALIZE_PCA_PARTITION_HPP
 #define KMEANS_INITIALIZE_PCA_PARTITION_HPP
 
-#include <iostream>
-#include <random>
 #include <vector>
-#include <cmath>
 #include <algorithm>
 #include <numeric>
+#include <queue>
+#include <random>
 
 #include "aarand/aarand.hpp"
-#include "powerit/PowerIterations.hpp"
-#include "Base.hpp"
+#include "powerit/powerit.hpp"
+
+#include "Initialize.hpp"
 
 /**
  * @file InitializePcaPartition.hpp
@@ -46,7 +46,8 @@ struct InitializePcaPartitionOptions {
 namespace InitializePcaPartitionsOptions_internal {
 
 template<typename Center_>
-struct PowerWorkspace {
+struct Workspace {
+    Workspace(size_t ndim) : pc(ndim), delta(ndim), cov(ndim * ndim) {}
     std::vector<Center_> pc;
     std::vector<Center_> delta;
     std::vector<Center_> cov;
@@ -58,33 +59,26 @@ std::vector<Data_> compute_pc1(
     const std::vector<typename Matrix_::index_type>& chosen, 
     const Center_* center, 
     Engine_& eng, 
-    PowerWorkspace<Matrix_, Center_>& work,
+    Workspace<Center_>& work,
     int nthreads,
+    typename::Matrix_::index_type block_size,
     const powerit::Options& power_opts)
 {
-    auto ndim = data.num_observations();
-    work.pc.resize(ndim);
-    work.delta.resize(ndim);
+    auto ndim = data.num_dimensions();
     size_t long_ndim = ndim;
-    work.cov.resize(long_ndim * long_ndim);
 
-    // Computing the lower triangle of the covariance matrix. 
-    // TODO: parallelize this bad boy by splitting into blocks, computing the
-    // covariance within each block in each thread, and then adding them all
-    // together. We need to use blocks to guarantee we get the same results
-    // with and without parallelization.
     auto work = data.get_workspace(chosen.data(), chosen.size());
     for (size_t i = 0, end = chosen.size(); i < end; ++i) {
         auto dptr = data.get_observation(work);
-
         for (int j = 0; j < ndim; ++j) {
-            delta[j] = dptr[j] - center[j];
+            work.delta[j] = dptr[j] - center[j];
         }
 
         size_t offset = 0;
         for (decltype(ndim) j = 0; j < ndim; ++j, offset += long_ndim) {
-            for (decltype(ndim) k = 0; k <= j; ++k) {
-                cov[offset + static_cast<size_t>(k)] += delta[j] * delta[k];
+            size_t copy_offset = offset;
+            for (decltype(ndim) k = 0; k <= j; ++k, ++copy_offset) {
+                work.cov[copy_offset] += work.delta[j] * work.delta[k];
             }
         }
     }
@@ -94,8 +88,8 @@ std::vector<Data_> compute_pc1(
     for (int j = 0; j < ndim; ++j, src_offset += long_ndim) {
         size_t dest_offset = j;
         size_t src_offset_copy = src_offset;
-        for (int k = j + 1; k < ndim; ++k, dest_offset += long_dim, ++src_offset_copy) {
-            cov[src_offset_copy] = cov[dest_offset];
+        for (decltype(ndim) k = 0; k <= j; ++k, ++src_offset_copy, dest_offset += long_dim) {
+            cov[dest_offset] = cov[src_offset_copy];
         }
     }
 
@@ -123,25 +117,36 @@ void compute_center(const Matrix_& data, Data_* center) {
 }
 
 template<class Matrix_, typename Center_>
-Center_ update_mrse(const Matrix_& data, const std::vector<typename Matrix_::index_type>& chosen, Center_* center, std::vector<Center_>& work_var) {
-    std::fill_n(center, ndim, 0);
-    std::fill_n(work_var.begin(), ndim, 0);
-
+Center_ update_center_and_mrse(const Matrix_& data, const std::vector<typename Matrix_::index_type>& chosen, Center_* center) {
     auto ndim = data.num_dimensions();
-    auto work = data.create_workspace(chosen.data(), chosen.size());
 
-    // Using Welford's method so we only have to make one pass through the matrix,
-    // instead of doing two passes to compute the mean and then the variance.
-    for (size_t i = 0, end = chosen.size(); i < end; ++i) {
-        auto dptr = work.fetch_observation(work);
+    std::fill_n(center, ndim, 0);
+    {
+        auto work = data.create_workspace(chosen.data(), chosen.size());
+        for (size_t i = 0, end = chosen.size(); i < end; ++i) {
+            auto dptr = data.fetch_observation(work);
+            for (decltype(ndim) d = 0; d < ndim; ++d) {
+                center[d] += dptr[d];
+            }
+        }
         for (decltype(ndim) d = 0; d < ndim; ++d) {
-            Data_ delta = dptr[d] - center[d];
-            center[d] += delta / (i + 1);
-            work_var[d] += delta * (dptr[d] - center[d]);
+            center[d] /= nobs;
         }
     }
 
-    return std::accumulate(work_var.begin(), work_var.end(), static_cast<Center_>(0)) / chosen.size();
+    Center_ mrse = 0;
+    {
+        auto work = data.create_workspace(chosen.data(), chosen.size());
+        for (size_t i = 0, end = chosen.size(); i < end; ++i) {
+            auto dptr = data.fetch_observation(work);
+            for (decltype(ndim) d = 0; d < ndim; ++d) {
+                Data_ delta = dptr[d] - center[d];
+                mrse += delta * delta;
+            }
+        }
+    }
+
+    return mrse / chosen.size();
 }
 
 }
@@ -209,7 +214,6 @@ public:
         std::vector<std::vector<Index_> > assignments(ncenters);
 
         auto ndim = matrix.num_dimensions();
-        std::vector<Center_> work_var(ndim);
 
         // Setting up the zero'th cluster. (No need to actually compute the
         // MRSE at this point, as there's nothing to compare it to.)
@@ -271,8 +275,8 @@ public:
 
             // Computing centers and MRSE.
             auto new_center = centers + static_cast<size_t>(cluster) * static_cast<size_t>(ndim); // cast to avoid overflow.
-            mrse.emplace_back(update_mrse(data, new_assignments, new_center, work_var), cluster);
-            mrse.emplace_back(update_mrse(data, worst_assignments, worst_center, work_var), worst_cluster);
+            mrse.emplace_back(update_center_and_mrse(data, new_assignments, new_center), cluster);
+            mrse.emplace_back(update_center_and_mrse(data, worst_assignments, worst_center), worst_cluster);
         }
 
         return ncenters;

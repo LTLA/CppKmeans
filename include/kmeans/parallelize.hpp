@@ -7,17 +7,6 @@ namespace kmeans {
 
 namespace internal {
 
-template<class Chosen_, class Matrix_, typename Data_>
-void copy_into_array(const Chosen_& chosen, const Matrix_& in, Data_* out) {
-    auto work = in.create_workspace();
-    auto ndim = in.num_dimensions();
-    for (auto c : chosen) {
-        auto ptr = in.fetch_observation(c, work);
-        std::copy_n(ptr, ndim, out);
-        out += ndim;
-    }
-}
-
 template<typename Index_, class Function_>
 void parallelize(Index_ ntasks, int nthreads, Function_ fun) {
     if (nthreads > 1) {

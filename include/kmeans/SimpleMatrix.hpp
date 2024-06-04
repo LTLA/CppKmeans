@@ -38,7 +38,7 @@ public:
     /**
      * @cond
      */
-    typename Data_ data_type;
+    typedef Data_ data_type;
 
     typedef Index_ index_type;
 
@@ -52,8 +52,8 @@ public:
     };
 
     struct IndexedAccessWorkspace {
-        IndexedAccessWorkspace(const std::vector<index_type>& sequence) : sequence(sequence) {}
-        const std::vector<index_type>& sequence;
+        IndexedAccessWorkspace(const index_type* sequence) : sequence(sequence) {}
+        const index_type* sequence;
         index_type at = 0;
     };
 
@@ -70,8 +70,12 @@ public:
         return RandomAccessWorkspace();
     }
 
-    ConsecutiveWorkspace create_workspace(index_type start, index_type) const {
+    ConsecutiveAccessWorkspace create_workspace(index_type start, index_type) const {
         return ConsecutiveAccessWorkspace(start);
+    }
+
+    IndexedAccessWorkspace create_workspace(const index_type* sequence, index_type) const {
+        return IndexedAccessWorkspace(sequence);
     }
 
     const data_type* get_observation(Index_ i, [[maybe_unused]] RandomAccessWorkspace& workspace) const {

@@ -21,13 +21,13 @@ include(GoogleTest)
 macro(create_test target)
     add_executable(
         ${target} 
-        src/HartiganWong.cpp
-        src/Lloyd.cpp
-        src/MiniBatch.cpp
+        #        src/HartiganWong.cpp
+        #        src/Lloyd.cpp
+        #        src/MiniBatch.cpp
         src/InitializeRandom.cpp
-        src/InitializeKmeansPP.cpp
+        src/InitializeKmeanspp.cpp
         src/InitializePCAPartition.cpp
-        src/Kmeans.cpp
+        # src/Kmeans.cpp
     )
 
     target_link_libraries(

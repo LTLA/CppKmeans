@@ -5,9 +5,12 @@
 #include <algorithm>
 #include <cstdint>
 
+#include "aarand/aarand.hpp"
+
 #include "Initialize.hpp"
-#include "random.hpp"
-#include "utils.hpp"
+#include "SimpleMatrix.hpp"
+#include "copy_into_array.hpp"
+#include "parallelize.hpp"
 
 /**
  * @file InitializeKmeansPP.hpp
@@ -36,15 +39,37 @@ struct InitializeKmeansppOptions {
 /**
  * @cond
  */
-namespace internal {
+namespace InitializeKmeanspp_internal {
 
-template<class Matrix_, typename Cluster_, typename Center_>
+template<typename Data_, typename Index_, class Engine_>
+Index_ weighted_sample(const std::vector<Data_>& cumulative, const std::vector<Data_>& mindist, Index_ nobs, Engine_& eng) {
+    auto total = cumulative.back();
+    Index_ chosen_id = 0;
+
+    do {
+        const Data_ sampled_weight = total * aarand::standard_uniform(eng);
+        chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();
+
+        // We wrap this in a do/while to defend against edge cases where
+        // ties are chosen. The most obvious of these is when you get a
+        // `sampled_weight` of zero _and_ there exists a bunch of zeros at
+        // the start of `cumulative`. One could also get unexpected ties
+        // from limited precision in floating point comparisons, so we'll
+        // just be safe and implement a loop here, in the same vein as
+        // uniform01.
+    } while (chosen_id == nobs || mindist[chosen_id] == 0);
+
+    return chosen_id;
+}
+
+template<class Matrix_, typename Cluster_>
 std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, uint64_t seed, int nthreads) {
     typedef typename Matrix_::data_type Data_;
     typedef typename Matrix_::index_type Index_;
     typedef typename Matrix_::dimension_type Dim_;
 
     auto nobs = data.num_observations();
+    auto ndim = data.num_dimensions();
     std::vector<Data_> mindist(nobs, 1);
     std::vector<Data_> cumulative(nobs);
     std::vector<Index_> sofar;
@@ -54,13 +79,13 @@ std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Clus
     auto last_work = data.create_workspace();
     for (Cluster_ cen = 0; cen < ncenters; ++cen) {
         if (!sofar.empty()) {
-            auto last_ptr = data.fetch_observation(sofar.back(), last_work);
+            auto last_ptr = data.get_observation(sofar.back(), last_work);
 
             internal::parallelize(nobs, nthreads, [&](int, Index_ start, Index_ length) {
-                auto curwork = matrix.create_workspace(start, length);
+                auto curwork = data.create_workspace(start, length);
                 for (Index_ obs = start, end = start + length; obs < end; ++obs) {
                     if (mindist[obs]) {
-                        auto acopy = data.fetch_observation(curwork);
+                        auto acopy = data.get_observation(curwork);
                         auto scopy = last_ptr;
                         Data_ r2 = 0;
                         for (Dim_ dim = 0; dim < ndim; ++dim, ++acopy, ++scopy) {
@@ -85,7 +110,7 @@ std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Clus
             break;
         }
 
-        auto chosen_id = internal::weighted_sample(cumulative, mindist, nobs, eng);
+        auto chosen_id = weighted_sample(cumulative, mindist, nobs, eng);
         mindist[chosen_id] = 0;
         sofar.push_back(chosen_id);
     }
@@ -115,7 +140,7 @@ std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Clus
  * _Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms_, 1027-1035.
  */
 template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
-class InitializeKmeanspp : public Initialize<Data_, Cluster_, Index_> {
+class InitializeKmeanspp : public Initialize<Matrix_, Cluster_, Center_> {
 private:
     InitializeKmeansppOptions my_options;
 
@@ -131,14 +156,14 @@ public:
     InitializeKmeanspp() = default;
 
 public:
-    Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Center_* centers) {
+    Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Center_* centers) const {
         size_t nobs = matrix.num_observations();
         if (!nobs) {
             return 0;
         }
 
-        auto sofar = internal::run_kmeanspp(matrix, ncenters, my_options.seed, my_options.num_threads);
-        internal::copy_into_array(sofar, matrix, centers);
+        auto sofar = InitializeKmeanspp_internal::run_kmeanspp(matrix, ncenters, my_options.seed, my_options.num_threads);
+        internal::copy_into_array(matrix, sofar, centers);
         return sofar.size();
     }
 };
