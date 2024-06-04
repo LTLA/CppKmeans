@@ -26,7 +26,7 @@ macro(create_test target)
         #        src/MiniBatch.cpp
         src/InitializeRandom.cpp
         src/InitializeKmeanspp.cpp
-        src/InitializePCAPartition.cpp
+        src/InitializePcaPartition.cpp
         # src/Kmeans.cpp
     )
 

@@ -5,21 +5,28 @@
 
 namespace kmeans {
 
-template<typename DATA_t = double, typename INDEX_t = int, typename CLUSTER_t = int>
-std::vector<DATA_t> compute_wcss(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, const DATA_t* centers, const CLUSTER_t* clusters) {
-    std::vector<DATA_t> wcss(ncenters);
-    for (INDEX_t obs = 0; obs < nobs; ++obs) {
+namespace internal {
+
+template<class Matrix_, typename Cluster_, typename Center_>
+void compute_wcss(const Matrix_& data, Cluster_ ncenters, const Center_* centers, const Cluster_* clusters, Center_* wcss) {
+    auto nobs = data.num_observations();
+    auto ndim = data.num_dimensions();
+    std::fill_n(wcss, ncenters, 0);
+
+    auto work = data.create_workspace(0, nobs);
+    for (decltype(nobs) obs = 0; obs < nobs; ++obs) {
         auto cen = clusters[obs];
-        auto curcenter = centers + cen * ndim;
+        auto curcenter = centers + static_cast<size_t>(cen) * static_cast<size_t>(ndim);
         auto& curwcss = wcss[cen];
 
-        auto curdata = data + obs * ndim;
+        auto curdata = data.get_observation(work);
         for (int dim = 0; dim < ndim; ++dim, ++curcenter, ++curdata) {
-            curwcss += (*curdata - *curcenter) * (*curdata - *curcenter);
+            auto delta = *curdata - *curcenter;
+            curwcss += delta * delta;
         }
     }
+}
 
-    return wcss;
 }
 
 }

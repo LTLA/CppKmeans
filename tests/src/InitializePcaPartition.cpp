@@ -8,25 +8,10 @@
 #include "custom_parallel.h"
 #endif
 
-#include "kmeans/InitializePCAPartition.hpp"
+#include "kmeans/InitializePcaPartition.hpp"
+#include "kmeans/compute_wcss.hpp"
 
-TEST(PCAPartitionUtils, L2normalization) {
-    std::vector<double> x{1,2,3,4};
-    auto output = kmeans::InitializePCAPartition<>::normalize(4, x.data());
-    EXPECT_FLOAT_EQ(output, std::sqrt(30.0));
-
-    EXPECT_FLOAT_EQ(x[0] * 2, x[1]);
-    EXPECT_FLOAT_EQ(x[0] * 3, x[2]);
-    EXPECT_FLOAT_EQ(x[0] * 4, x[3]);
-
-    double l2_again = 0;
-    for (auto v : x) {
-        l2_again += v * v;
-    }
-    EXPECT_FLOAT_EQ(l2_again, 1);
-}
-
-TEST(PCAPartitionUtils, MRSECalculations) {
+TEST(PcaPartitionUtils, MRSECalculations) {
     size_t nr = 7;
     size_t nc = 121;
 
@@ -38,16 +23,17 @@ TEST(PCAPartitionUtils, MRSECalculations) {
     }
 
     // Subset to every 10th element.
-    std::vector<int> chosen;
+    std::vector<size_t> chosen;
     for (size_t c = 7; c < nc; c += 10) {
         chosen.push_back(c);
     }
 
     std::vector<double> center(nr);
-    auto var = kmeans::InitializePCAPartition<>::update_mrse(nr, chosen, data.data(), center.data());
+    auto var = kmeans::InitializePcaPartition_internal::update_center_and_mrse(kmeans::SimpleMatrix(nr, nc, data.data()), chosen, center.data());
+    EXPECT_TRUE(var > 0);
 
     // Reference calculation with no subsets.
-    std::vector<int> chosenref(chosen.size());
+    std::vector<size_t> chosenref(chosen.size());
     std::iota(chosenref.begin(), chosenref.end(), 0);
     std::vector<double> dataref(nr * chosenref.size());
     for (size_t c = 0; c < chosen.size(); ++c) {
@@ -55,19 +41,30 @@ TEST(PCAPartitionUtils, MRSECalculations) {
         std::copy(src, src + nr, dataref.begin() + c * nr);
     }
 
+    kmeans::SimpleMatrix submat(nr, chosen.size(), dataref.data());
     std::vector<double> centerref(nr);
-    auto varref = kmeans::InitializePCAPartition<>::update_mrse(nr, chosenref, dataref.data(), centerref.data());
+    auto varref = kmeans::InitializePcaPartition_internal::update_center_and_mrse(submat, chosenref, centerref.data());
 
     EXPECT_EQ(var, varref);
     EXPECT_EQ(center, centerref);
 
     // Checking the other center method.
-    std::vector<double> anothercenter(nr);
-    kmeans::InitializePCAPartition<>::compute_center(nr, chosen.size(), dataref.data(), anothercenter.data());
-    EXPECT_EQ(center, anothercenter);
+    { 
+        std::vector<double> anothercenter(nr);
+        kmeans::InitializePcaPartition_internal::compute_center(submat, anothercenter.data());
+        EXPECT_EQ(center, anothercenter);
+    }
+
+    // Checking the other WCSS method.
+    {
+        std::vector<double> wcss(1);
+        std::vector<int> clusters(nc);
+        kmeans::internal::compute_wcss(submat, 1, centerref.data(), clusters.data(), wcss.data());
+        EXPECT_FLOAT_EQ(var, wcss[0]/chosen.size());
+    }
 }
 
-TEST(PCAPartitionUtils, PowerMethodBasic) {
+TEST(PcaPartitionUtils, PowerMethodBasic) {
     size_t nr = 3;
     size_t nc = 10;
 
@@ -82,7 +79,7 @@ TEST(PCAPartitionUtils, PowerMethodBasic) {
         std::copy(point.begin(), point.end(), ptr + nr);
     }
 
-    std::vector<int> chosen(nc);
+    std::vector<size_t> chosen(nc);
     std::iota(chosen.begin(), chosen.end(), 0);
 
     std::vector<double> center(point);
@@ -90,9 +87,9 @@ TEST(PCAPartitionUtils, PowerMethodBasic) {
         x /= 2;
     }
 
-    kmeans::InitializePCAPartition init;
     std::mt19937_64 rng;
-    auto output = init.compute_pc1(nr, chosen, data.data(), center.data(), rng);
+    kmeans::InitializePcaPartition_internal::Workspace<double> work(nr);
+    kmeans::InitializePcaPartition_internal::compute_pc1(kmeans::SimpleMatrix(nr, nc, data.data()), chosen, center.data(), rng, work, powerit::Options());
 
     // Computing the expected value.
     double l2 = 0;
@@ -102,11 +99,11 @@ TEST(PCAPartitionUtils, PowerMethodBasic) {
     l2 = std::sqrt(l2);
 
     for (size_t r = 0; r < nr; ++r) {
-        EXPECT_FLOAT_EQ(point[r] / l2, output[r]);
+        EXPECT_FLOAT_EQ(point[r] / l2, work.pc[r]);
     }
 }
 
-TEST(PCAPartitionUtils, PowerMethodComplex) {
+TEST(PcaPartitionUtils, PowerMethodComplex) {
     size_t nr = 5;
     size_t nc = 121;
 
@@ -116,23 +113,24 @@ TEST(PCAPartitionUtils, PowerMethodComplex) {
     for (auto& d : data) {
         d = norm(rng);            
     }
+    kmeans::SimpleMatrix mat(nr, nc, data.data());
 
-    std::vector<int> chosen(nc);
+    std::vector<size_t> chosen(nc);
     std::iota(chosen.begin(), chosen.end(), 0);
     std::vector<double> center(nr);
-    kmeans::InitializePCAPartition<>::compute_center(nr, chosen, data.data(), center.data());
+    kmeans::InitializePcaPartition_internal::compute_center(mat, chosen, center.data());
 
-    kmeans::InitializePCAPartition init;
-    auto output = init.compute_pc1(nr, chosen, data.data(), center.data(), rng);
+    kmeans::InitializePcaPartition_internal::Workspace<double> work(nr);
+    kmeans::InitializePcaPartition_internal::compute_pc1(mat, chosen, center.data(), rng, work, powerit::Options());
 
     // Checking that the variance is indeed maximized on this axis.
-    auto create_projections = [&](const double* ptr) -> std::vector<double> {
+    auto create_projections = [&](const std::vector<double>& axis) -> std::vector<double> {
         std::vector<double> projections(nc);
         for (size_t c = 0; c < nc; ++c) {
             auto dptr = data.data() + c * nr;
             double& proj = projections[c];
             for (size_t r = 0; r < nr; ++r) {
-                proj += (dptr[r] - center[r]) * ptr[r];
+                proj += (dptr[r] - center[r]) * axis[r];
             }
         }
         return projections;
@@ -148,22 +146,30 @@ TEST(PCAPartitionUtils, PowerMethodComplex) {
         return std::make_pair(mean, var);
     };
     
-    auto refproj = create_projections(output.data());
+    auto refproj = create_projections(work.pc);
     auto refstat = compute_stats(refproj);
     EXPECT_TRUE(std::abs(refstat.first) < 1e-6);
 
     for (size_t r = 0; r < nr; ++r) { // shifting the vector slightly and checking that we get a smaller variance.
-        auto modified = output;
+        auto modified = work.pc;
         modified[r] *= 1.1;
-        kmeans::InitializePCAPartition<>::normalize(nr, modified.data());
 
-        auto altproj = create_projections(modified.data());
+        double l2 = 0;
+        for (auto x : modified) {
+            l2 += x * x;
+        }
+        l2 = std::sqrt(l2);
+        for (auto& x : modified) {
+            x /= l2;
+        }
+
+        auto altproj = create_projections(modified);
         auto altstat = compute_stats(altproj);
         EXPECT_TRUE(altstat.second < refstat.second);
     }
 }
 
-TEST(PCAPartitionUtils, PowerMethodSubsetting) {
+TEST(PcaPartitionUtils, PowerMethodSubsetting) {
     size_t nr = 5;
     size_t nc = 121;
 
@@ -173,24 +179,23 @@ TEST(PCAPartitionUtils, PowerMethodSubsetting) {
     for (auto& d : data) {
         d = norm(rng);            
     }
+    kmeans::SimpleMatrix mat(nr, nc, data.data());
 
     // Subset to every 10th element.
-    std::vector<int> chosen;
+    std::vector<size_t> chosen;
     for (size_t c = 7; c < nc; c += 10) {
         chosen.push_back(c);
     }
     std::vector<double> center(nr);
-    kmeans::InitializePCAPartition<>::compute_center(nr, chosen, data.data(), center.data());
-
-    kmeans::InitializePCAPartition init;
-    std::vector<double> output;
+    kmeans::InitializePcaPartition_internal::compute_center(mat, chosen, center.data());
+    kmeans::InitializePcaPartition_internal::Workspace<double> work(nr);
     {
-        std::mt19937_64 rng(2000); // using a fresh rng for exact reproducibility.
-        output = init.compute_pc1(nr, chosen, data.data(), center.data(), rng);
+        std::mt19937_64 rng(2001); // using a fresh rng for exact reproducibility.
+        kmeans::InitializePcaPartition_internal::compute_pc1(mat, chosen, center.data(), rng, work, powerit::Options());
     }
 
     // Reference calculation with no subsets.
-    std::vector<int> chosenref(chosen.size());
+    std::vector<size_t> chosenref(chosen.size());
     std::iota(chosenref.begin(), chosenref.end(), 0);
     std::vector<double> dataref(nr * chosenref.size());
     for (size_t c = 0; c < chosen.size(); ++c) {
@@ -198,21 +203,22 @@ TEST(PCAPartitionUtils, PowerMethodSubsetting) {
         std::copy(src, src + nr, dataref.begin() + c * nr);
     }
 
+    kmeans::InitializePcaPartition_internal::Workspace<double> work2(nr);
     {
-        std::mt19937_64 rng(2000);
-        auto ref = init.compute_pc1(nr, chosenref, dataref.data(), center.data(), rng);
-        EXPECT_EQ(ref, output);
+        std::mt19937_64 rng(2001);
+        kmeans::InitializePcaPartition_internal::compute_pc1(kmeans::SimpleMatrix(nr, chosenref.size(), dataref.data()), chosenref, center.data(), rng, work2, powerit::Options());
     }
+    EXPECT_EQ(work.pc, work2.pc);
 }
 
-using PCAPartitionInitializationTest = TestParamCore<std::tuple<int, int, int> >;
+using PcaPartitionInitializationTest = TestParamCore<std::tuple<int, int, int> >;
 
-TEST_P(PCAPartitionInitializationTest, Basic) {
+TEST_P(PcaPartitionInitializationTest, Basic) {
     auto param = GetParam();
     assemble(param);
     auto ncenters = std::get<2>(param);
 
-    kmeans::InitializePCAPartition init;
+    kmeans::InitializePcaPartition init;
     init.set_seed(ncenters * 10);
 
     std::vector<double> centers(nr * ncenters);
@@ -221,7 +227,7 @@ TEST_P(PCAPartitionInitializationTest, Basic) {
     EXPECT_EQ(nfilled, ncenters);
 }
 
-TEST_P(PCAPartitionInitializationTest, Sanity) {
+TEST_P(PcaPartitionInitializationTest, Sanity) {
     auto param = GetParam();
     assemble(param);
     auto ncenters = std::get<2>(param);
@@ -235,7 +241,7 @@ TEST_P(PCAPartitionInitializationTest, Sanity) {
         std::copy(cIt, cIt + nr, dIt);
     }
 
-    kmeans::InitializePCAPartition init;
+    kmeans::InitializePcaPartition init;
     init.set_seed(ncenters * 100);
 
     std::vector<double> centers(nr * ncenters);
@@ -270,8 +276,8 @@ TEST_P(PCAPartitionInitializationTest, Sanity) {
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    PCAPartitionInitialization,
-    PCAPartitionInitializationTest,
+    PcaPartitionInitialization,
+    PcaPartitionInitializationTest,
     ::testing::Combine(
         ::testing::Values(10, 20), // number of dimensions
         ::testing::Values(200, 2000), // number of observations
@@ -279,13 +285,13 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-using PCAPartitionInitializationEdgeTest = TestParamCore<std::tuple<int, int> >;
+using PcaPartitionInitializationEdgeTest = TestParamCore<std::tuple<int, int> >;
 
-TEST_P(PCAPartitionInitializationEdgeTest, TooManyClusters) {
+TEST_P(PcaPartitionInitializationEdgeTest, TooManyClusters) {
     auto param = GetParam();
     assemble(param);
 
-    kmeans::InitializePCAPartition init;
+    kmeans::InitializePcaPartition init;
     init.set_seed(nc * 100);
 
     std::vector<double> centers(nr * nc);
@@ -300,8 +306,8 @@ TEST_P(PCAPartitionInitializationEdgeTest, TooManyClusters) {
 }
 
 INSTANTIATE_TEST_SUITE_P(
-    PCAPartitionInitialization,
-    PCAPartitionInitializationEdgeTest,
+    PcaPartitionInitialization,
+    PcaPartitionInitializationEdgeTest,
     ::testing::Combine(
         ::testing::Values(10, 20), // number of dimensions
         ::testing::Values(20, 50) // number of observations

@@ -43,7 +43,7 @@ struct InitializePcaPartitionOptions {
 /**
  * @cond
  */
-namespace InitializePcaPartitionsOptions_internal {
+namespace InitializePcaPartition_internal {
 
 template<typename Center_>
 struct Workspace {
@@ -54,22 +54,20 @@ struct Workspace {
 };
 
 template<class Matrix_, typename Center_, class Engine_>
-std::vector<Data_> compute_pc1(
+void compute_pc1(
     const Matrix_& data, 
     const std::vector<typename Matrix_::index_type>& chosen, 
     const Center_* center, 
     Engine_& eng, 
     Workspace<Center_>& work,
-    int nthreads,
-    typename::Matrix_::index_type block_size,
     const powerit::Options& power_opts)
 {
     auto ndim = data.num_dimensions();
     size_t long_ndim = ndim;
 
-    auto work = data.get_workspace(chosen.data(), chosen.size());
+    auto matwork = data.get_workspace(chosen.data(), chosen.size());
     for (size_t i = 0, end = chosen.size(); i < end; ++i) {
-        auto dptr = data.get_observation(work);
+        auto dptr = data.get_observation(matwork);
         for (int j = 0; j < ndim; ++j) {
             work.delta[j] = dptr[j] - center[j];
         }
@@ -88,17 +86,16 @@ std::vector<Data_> compute_pc1(
     for (int j = 0; j < ndim; ++j, src_offset += long_ndim) {
         size_t dest_offset = j;
         size_t src_offset_copy = src_offset;
-        for (decltype(ndim) k = 0; k <= j; ++k, ++src_offset_copy, dest_offset += long_dim) {
-            cov[dest_offset] = cov[src_offset_copy];
+        for (decltype(ndim) k = 0; k <= j; ++k, ++src_offset_copy, dest_offset += long_ndim) {
+            work.cov[dest_offset] = work.cov[src_offset_copy];
         }
     }
 
-    powerit::compute(ndim, cov.data(), work.pc.data(), eng, power_opts);
-    return output;
+    powerit::compute(ndim, work.cov.data(), work.pc.data(), eng, power_opts);
 } 
 
 template<class Matrix_, typename Center_>
-void compute_center(const Matrix_& data, Data_* center) {
+void compute_center(const Matrix_& data, Center_* center) {
     auto ndim = data.num_dimensions();
     std::fill_n(center, ndim, 0);
     auto nobs = data.num_observations();
@@ -117,32 +114,35 @@ void compute_center(const Matrix_& data, Data_* center) {
 }
 
 template<class Matrix_, typename Center_>
-Center_ update_center_and_mrse(const Matrix_& data, const std::vector<typename Matrix_::index_type>& chosen, Center_* center) {
+void compute_center(const Matrix_& data, const std::vector<typename Matrix_::index_type>& chosen, Center_* center) {
     auto ndim = data.num_dimensions();
-
     std::fill_n(center, ndim, 0);
-    {
-        auto work = data.create_workspace(chosen.data(), chosen.size());
-        for (size_t i = 0, end = chosen.size(); i < end; ++i) {
-            auto dptr = data.fetch_observation(work);
-            for (decltype(ndim) d = 0; d < ndim; ++d) {
-                center[d] += dptr[d];
-            }
-        }
+
+    auto work = data.create_workspace(chosen.data(), chosen.size());
+    for (size_t i = 0, end = chosen.size(); i < end; ++i) {
+        auto dptr = data.fetch_observation(work);
         for (decltype(ndim) d = 0; d < ndim; ++d) {
-            center[d] /= nobs;
+            center[d] += dptr[d];
         }
     }
 
+    for (decltype(ndim) d = 0; d < ndim; ++d) {
+        center[d] /= chosen.size();
+    }
+}
+
+template<class Matrix_, typename Center_>
+Center_ update_center_and_mrse(const Matrix_& data, const std::vector<typename Matrix_::index_type>& chosen, Center_* center) {
+    compute_center(data, chosen, center);
+
+    auto ndim = data.num_dimensions();
     Center_ mrse = 0;
-    {
-        auto work = data.create_workspace(chosen.data(), chosen.size());
-        for (size_t i = 0, end = chosen.size(); i < end; ++i) {
-            auto dptr = data.fetch_observation(work);
-            for (decltype(ndim) d = 0; d < ndim; ++d) {
-                Data_ delta = dptr[d] - center[d];
-                mrse += delta * delta;
-            }
+    auto work = data.create_workspace(chosen.data(), chosen.size());
+    for (size_t i = 0, end = chosen.size(); i < end; ++i) {
+        auto dptr = data.fetch_observation(work);
+        for (decltype(ndim) d = 0; d < ndim; ++d) {
+            Center_ delta = dptr[d] - center[d];
+            mrse += delta * delta;
         }
     }
 
@@ -192,7 +192,7 @@ public:
     /**
      * @param options Options for PCA partitioning.
      */
-    InitializePcaPartition(InitializePcaPartition<Data_> options) : my_options(std::move(options)) {}
+    InitializePcaPartition(InitializePcaPartitionOptions options) : my_options(std::move(options)) {}
 
     /**
      * Default constructor.
@@ -203,28 +203,29 @@ private:
     InitializePcaPartitionOptions my_options;
 
 public:
-    Cluster_ run(const Matrix_& data, Cluster_ ncenters, Center_* centers) {
-        auto nobs = matrix.num_observations();
+    Cluster_ run(const Matrix_& data, Cluster_ ncenters, Center_* centers) const {
+        auto nobs = data.num_observations();
         if (nobs == 0) {
             return 0;
         }
 
-        std::mt19937_64 rng(seed);
-        std::priority_queue<std::pair<Data_, Cluster_> > mrse;
-        std::vector<std::vector<Index_> > assignments(ncenters);
+        std::mt19937_64 rng(my_options.seed);
+        std::priority_queue<std::pair<Center_, Cluster_> > mrse;
+        std::vector<std::vector<typename Matrix_::index_type> > assignments(ncenters);
 
-        auto ndim = matrix.num_dimensions();
+        auto ndim = data.num_dimensions();
+        InitializePcaPartition_internal::Workspace<Center_> power_work(ndim);
 
         // Setting up the zero'th cluster. (No need to actually compute the
         // MRSE at this point, as there's nothing to compare it to.)
-        compute_center(matrix, centers);
+        InitializePcaPartition_internal::compute_center(data, centers);
         assignments[0].resize(nobs);
         std::iota(assignments.front().begin(), assignments.front().end(), 0);
-        std::fill_n(clusters, nobs, 0);
+        std::vector<typename Matrix_::index_type> worst_assignments2;
 
         for (Cluster_ cluster = 1; cluster < ncenters; ++cluster) {
-            Index_ worst_cluster = 0;
-            if (worst.size()) {
+            Cluster_ worst_cluster = 0;
+            if (mrse.size()) {
                 worst_cluster = mrse.top().second;
                 mrse.pop();
             }
@@ -232,14 +233,15 @@ public:
             // Extracting the principal component for this bad boy.
             auto worst_center = centers + worst_cluster * ndim;
             auto& worst_assignments = assignments[worst_cluster];
-            auto pc1 = compute_pc1(data, worst_assignments, worst_center, rng);
+            InitializePcaPartition_internal::compute_pc1(data, worst_assignments, worst_center, rng, power_work, my_options.power_iteration_options);
+            const auto& pc1 = power_work.pc;
 
             // Projecting all points in this cluster along PC1. The center lies
             // at zero, so everything positive (on one side of the hyperplane
             // orthogonal to PC1 and passing through the center) gets bumped to
             // the next cluster.
-            std::vector<Index_>& new_assignments = assignments[cluster];
-            std::vector<Index_> worst_assignments2;
+            auto& new_assignments = assignments[cluster];
+            worst_assignments2.clear();
 
             size_t num_in_cluster = worst_assignments.size();
             auto work = data.create_workspace(worst_assignments.data(), num_in_cluster);
@@ -268,15 +270,12 @@ public:
                 return cluster;
             }
 
-            for (auto i : new_assignments) {
-                clusters[i] = cluster;
-            }
-            worst_assignments.swap(worst_assignments2);
-
             // Computing centers and MRSE.
             auto new_center = centers + static_cast<size_t>(cluster) * static_cast<size_t>(ndim); // cast to avoid overflow.
-            mrse.emplace_back(update_center_and_mrse(data, new_assignments, new_center), cluster);
-            mrse.emplace_back(update_center_and_mrse(data, worst_assignments, worst_center), worst_cluster);
+            mrse.emplace_back(InitializePcaPartition_internal::update_center_and_mrse(data, new_assignments, new_center), cluster);
+            mrse.emplace_back(InitializePcaPartition_internal::update_center_and_mrse(data, worst_assignments2, worst_center), worst_cluster);
+
+            worst_assignments.swap(worst_assignments2);
         }
 
         return ncenters;
