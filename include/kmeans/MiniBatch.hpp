@@ -29,8 +29,7 @@ namespace kmeans {
  *
  * The mini-batch approach is similar to Lloyd's algorithm in that it runs through a set of observations, assigns each to the closest centroid, updates the centroids and repeats.
  * The key difference is that each iteration is performed with a random subset of observations (i.e., a "mini-batch"), instead of the full set of observations.
- * This reduces computational time at the cost of some solution quality.
- * In theory, it can also reduce memory usage, though this is not particularly relevant here as we are already assuming that the data can be fully stored in memory.
+ * This reduces computational time and memory usage at the cost of some solution quality.
  * 
  * The update procedure for a cluster's centroid involves adjusting the coordinates by the assigned observations in the mini-batch.
  * The resulting vector can be interpreted as the mean of all observations that have ever been sampled (possibly multiple times) to that cluster.

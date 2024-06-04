@@ -29,7 +29,7 @@ public:
      */
 
     /**
-     * @param[in] data A matrix-like object (see `SimpleMatrix`) containing per-observation data.
+     * @param[in] data A matrix-like object (see `MockMatrix`) containing per-observation data.
      * @param ncenters Number of cluster centers.
      * @param[out] centers Pointer to an array of length equal to `ncenters` multiplied by the number of dimensions in `data`.
      * On output, this will contain the final centroid locations for each cluster, 

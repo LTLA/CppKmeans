@@ -1,0 +1,125 @@
+#ifndef KMEANS_LLOYD_HPP
+#define KMEANS_LLOYD_HPP
+
+#include <vector>
+#include <algorithm>
+
+#include "Refine.hpp"
+#include "Details.hpp"
+#include "QuickSearch.hpp"
+#include "is_edge_case.hpp"
+#include "compute_centroids.hpp"
+#include "compute_wcss.hpp"
+
+/**
+ * @file Lloyd.hpp
+ *
+ * @brief Implements the Lloyd algorithm for k-means clustering.
+ */
+
+namespace kmeans {
+
+/**
+ * @brief Options for `RefineLloyd` construction.
+ */
+struct RefineLloydOptions {
+    /**
+     * Maximum number of iterations.
+     * More iterations increase the opportunity for convergence at the cost of more computational time.
+     */
+    int max_iterations = 10;
+
+    /**
+     * Number of threads to use.
+     */
+    int num_threads = 1;
+};
+
+/**
+ * @brief Implements the Lloyd algorithm for k-means clustering.
+ *
+ * The Lloyd algorithm is the simplest k-means clustering algorithm,
+ * involving several iterations of batch assignments and center calculations.
+ * Specifically, we assign each observation to its closest cluster, and once all points are assigned, we recompute the cluster centroids.
+ * This is repeated until there are no reassignments or the maximum number of iterations is reached.
+ *
+ * In the `Details::status` returned by `run()`, the status codes is either 0 (success) or 2 (maximum iterations reached without convergence).
+ * Previous versions of the library would report a status code of 1 when an empty cluster was observed, but these are now just ignored.
+ *
+ * @tparam Center_ Floating-point type for the data and centroids.
+ * @tparam Cluster_ Integer type for the cluster assignments.
+ * @tparam Index_ Integer type for the observation index.
+ *
+ * @see
+ * Lloyd, S. P. (1982).  
+ * Least squares quantization in PCM.
+ * _IEEE Transactions on Information Theory_ 28, 128-137.
+ */
+template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
+class RefineLloyd : public Refine<Matrix_, Cluster_, Center_> {
+private:
+    RefineLloydOptions my_options;
+
+    typedef typename Matrix_::index_type Index_;
+
+public:
+    /**
+     * @param options Further options to the Lloyd algorithm.
+     */
+    RefineLloyd(RefineLloydOptions options) : my_options(std::move(options)) {}
+
+public:
+    Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Center_* centers, Cluster_* clusters) const {
+        auto nobs = data.num_observations();
+        if (is_edge_case(nobs, ncenters)) {
+            return process_edge_case(data, ncenters, centers, clusters);
+        }
+
+        int iter = 0, status = 0;
+        std::vector<Index_> sizes(ncenters);
+        std::vector<Cluster_> copy(nobs);
+        size_t ndim = data.num_dimensions();
+
+        for (iter = 1; iter <= maxiter; ++iter) {
+            // Nearest-neighbor search to assign to the closest cluster.
+            QuickSearch<Center_, Cluster_> index(ndim, ncenters, centers);
+
+            internal::parallelize(nobs, nthreads, [&](int, Index_ start, Index_ length) {
+                for (Index_ obs = start, end = start + length; obs < end; ++obs) {
+                    copy[obs] = index.find(data + static_cast<size_t>(obs) * ndim); // cast to avoid overflow.
+                }
+            });
+
+            // Checking if it already converged.
+            bool updated = false;
+            for (Index_ obs = 0; obs < nobs; ++obs) {
+                if (copy[obs] != clusters[obs]) {
+                    updated = true;
+                    break;
+                }
+            }
+            if (!updated) {
+                break;
+            }
+            std::copy(copy.begin(), copy.end(), clusters);
+
+            // Counting the number in each cluster.
+            std::fill(sizes.begin(), sizes.end(), 0);
+            for (Index_ obs = 0; obs < nobs; ++obs) {
+                ++sizes[clusters[obs]];
+            }
+
+            compute_centroids(matrix, ncenters, centers, clusters, sizes);
+        }
+
+        if (iter == maxiter + 1) {
+            status = 2;
+        }
+
+        return Details<Center_, Index_>(std::move(sizes), iter, status);
+    }
+};
+
+}
+
+#endif
