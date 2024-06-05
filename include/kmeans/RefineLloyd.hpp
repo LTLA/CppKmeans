@@ -9,7 +9,7 @@
 #include "QuickSearch.hpp"
 #include "is_edge_case.hpp"
 #include "compute_centroids.hpp"
-#include "compute_wcss.hpp"
+#include "parallelize.hpp"
 
 /**
  * @file Lloyd.hpp
@@ -71,19 +71,19 @@ public:
 public:
     Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Center_* centers, Cluster_* clusters) const {
         auto nobs = data.num_observations();
-        if (is_edge_case(nobs, ncenters)) {
-            return process_edge_case(data, ncenters, centers, clusters);
+        if (internal::is_edge_case(nobs, ncenters)) {
+            return internal::process_edge_case(data, ncenters, centers, clusters);
         }
 
         int iter = 0, status = 0;
         std::vector<Index_> sizes(ncenters);
         std::vector<Cluster_> copy(nobs);
-        size_t ndim = data.num_dimensions();
-        internal::QuickSearch<Center_, Cluster_> index;
+        auto ndim = data.num_dimensions();
+        internal::QuickSearch<Center_, Cluster_, decltype(ndim)> index;
 
-        for (iter = 1; iter <= maxiter; ++iter) {
+        for (iter = 1; iter <= my_options.max_iterations; ++iter) {
             index.reset(ndim, ncenters, centers);
-            internal::parallelize(nobs, nthreads, [&](int, Index_ start, Index_ length) {
+            internal::parallelize(nobs, my_options.num_threads, [&](int, Index_ start, Index_ length) {
                 auto work = data.create_workspace(start, length);
                 for (Index_ obs = 0; obs < length; ++obs) {
                     auto dptr = data.get_observation(work);
@@ -108,10 +108,10 @@ public:
             for (Index_ obs = 0; obs < nobs; ++obs) {
                 ++sizes[clusters[obs]];
             }
-            internal::compute_centroids(matrix, ncenters, centers, clusters, sizes);
+            internal::compute_centroids(data, ncenters, centers, clusters, sizes);
         }
 
-        if (iter == maxiter + 1) {
+        if (iter == my_options.max_iterations + 1) {
             status = 2;
         }
 

@@ -51,7 +51,7 @@ TEST(PcaPartitionUtils, MRSECalculations) {
     // Checking the other center method.
     { 
         std::vector<double> anothercenter(nr);
-        kmeans::InitializePcaPartition_internal::compute_center(submat, anothercenter.data());
+        kmeans::internal::compute_centroid(submat, anothercenter.data());
         EXPECT_EQ(center, anothercenter);
     }
 

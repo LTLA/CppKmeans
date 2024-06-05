@@ -22,12 +22,12 @@ macro(create_test target)
     add_executable(
         ${target} 
         #        src/HartiganWong.cpp
-        #        src/Lloyd.cpp
         #        src/MiniBatch.cpp
         src/InitializeRandom.cpp
         src/InitializeKmeanspp.cpp
         src/InitializePcaPartition.cpp
         src/QuickSearch.cpp
+        src/RefineLloyd.cpp
         # src/Kmeans.cpp
     )
 

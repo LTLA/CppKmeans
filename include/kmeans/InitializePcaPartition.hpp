@@ -12,6 +12,7 @@
 #include "powerit/powerit.hpp"
 
 #include "Initialize.hpp"
+#include "compute_centroids.hpp"
 
 /**
  * @file InitializePcaPartition.hpp
@@ -94,25 +95,6 @@ void compute_pc1(
 
     powerit::compute(ndim, work.cov.data(), /* row_major = */ true, work.pc.data(), eng, power_opts);
 } 
-
-template<class Matrix_, typename Center_>
-void compute_center(const Matrix_& data, Center_* center) {
-    auto ndim = data.num_dimensions();
-    std::fill_n(center, ndim, 0);
-    auto nobs = data.num_observations();
-    auto work = data.create_workspace(static_cast<typename Matrix_::index_type>(0), nobs);
-
-    for (decltype(nobs) i = 0; i < nobs; ++i) {
-        auto dptr = data.get_observation(work);
-        for (decltype(ndim) d = 0; d < ndim; ++d) {
-            center[d] += dptr[d];
-        }
-    }
-
-    for (decltype(ndim) d = 0; d < ndim; ++d) {
-        center[d] /= nobs;
-    }
-}
 
 template<class Matrix_, typename Center_>
 void compute_center(const Matrix_& data, const std::vector<typename Matrix_::index_type>& chosen, Center_* center) {
@@ -219,7 +201,7 @@ public:
 
         // Setting up the zero'th cluster. (No need to actually compute the
         // MRSE at this point, as there's nothing to compare it to.)
-        InitializePcaPartition_internal::compute_center(data, centers);
+        internal::compute_centroid(data, centers);
         assignments[0].resize(nobs);
         std::iota(assignments.front().begin(), assignments.front().end(), 0);
         std::vector<typename Matrix_::index_type> replace_assignments;
