@@ -44,7 +44,7 @@ struct RefineLloydOptions {
  * This is repeated until there are no reassignments or the maximum number of iterations is reached.
  *
  * In the `Details::status` returned by `run()`, the status codes is either 0 (success) or 2 (maximum iterations reached without convergence).
- * Previous versions of the library would report a status code of 1 when an empty cluster was observed, but these are now just ignored.
+ * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
  *
  * @tparam Center_ Floating-point type for the data and centroids.
  * @tparam Cluster_ Integer type for the cluster assignments.
@@ -79,14 +79,15 @@ public:
         std::vector<Index_> sizes(ncenters);
         std::vector<Cluster_> copy(nobs);
         size_t ndim = data.num_dimensions();
+        internal::QuickSearch<Center_, Cluster_> index;
 
         for (iter = 1; iter <= maxiter; ++iter) {
-            // Nearest-neighbor search to assign to the closest cluster.
-            QuickSearch<Center_, Cluster_> index(ndim, ncenters, centers);
-
+            index.reset(ndim, ncenters, centers);
             internal::parallelize(nobs, nthreads, [&](int, Index_ start, Index_ length) {
-                for (Index_ obs = start, end = start + length; obs < end; ++obs) {
-                    copy[obs] = index.find(data + static_cast<size_t>(obs) * ndim); // cast to avoid overflow.
+                auto work = data.create_workspace(start, length);
+                for (Index_ obs = 0; obs < length; ++obs) {
+                    auto dptr = data.get_observation(work);
+                    copy[obs] = index.find(dptr); 
                 }
             });
 
@@ -103,20 +104,18 @@ public:
             }
             std::copy(copy.begin(), copy.end(), clusters);
 
-            // Counting the number in each cluster.
             std::fill(sizes.begin(), sizes.end(), 0);
             for (Index_ obs = 0; obs < nobs; ++obs) {
                 ++sizes[clusters[obs]];
             }
-
-            compute_centroids(matrix, ncenters, centers, clusters, sizes);
+            internal::compute_centroids(matrix, ncenters, centers, clusters, sizes);
         }
 
         if (iter == maxiter + 1) {
             status = 2;
         }
 
-        return Details<Center_, Index_>(std::move(sizes), iter, status);
+        return Details<Index_>(std::move(sizes), iter, status);
     }
 };
 

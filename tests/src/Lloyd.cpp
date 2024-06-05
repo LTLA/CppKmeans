@@ -125,28 +125,3 @@ INSTANTIATE_TEST_SUITE_P(
         ::testing::Values(20, 200, 2000) // number of observations 
     )
 );
-
-using LloydQuickNeighborTest = TestParamCore<std::tuple<int, int> >;
-
-TEST_P(LloydQuickNeighborTest, Sweep) {
-    auto param = GetParam();
-    assemble(param);
-
-    // Quick and dirty check to verify that we do get back the right identity.
-    kmeans::QuickSearch index(nr, nc, data.data()); 
-    for (int c = 0; c < nc; ++c) {
-        auto best = index.find(data.data() + c * nr);
-        EXPECT_EQ(c, best);
-    }
-}
-
-INSTANTIATE_TEST_SUITE_P(
-    Lloyd,
-    LloydQuickNeighborTest,
-    ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(2, 10, 50) // number of observations 
-    )
-);
-
-

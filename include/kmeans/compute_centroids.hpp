@@ -5,26 +5,35 @@
 
 namespace kmeans {
 
-template<typename DATA_t = double, typename INDEX_t = int, typename CLUSTER_t = int, class V>
-void compute_centroids(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, const CLUSTER_t* clusters, const V& sizes) {
-    std::fill(centers, centers + ndim * ncenters, 0);
+namespace internal {
 
-    for (INDEX_t obs = 0; obs < nobs; ++obs) {
-        auto copy = centers + clusters[obs] * ndim;
-        auto mine = data + obs * ndim;
-        for (int dim = 0; dim < ndim; ++dim, ++copy, ++mine) {
+template<class Matrix_, typename Cluster_, typename Center_>
+void compute_centroids(const Matrix_& data, Cluster_ ncenters, Center_* centers, const Cluster_* clusters, const std::vector<typename Matrix_::index_type>& sizes) {
+    auto nobs = data.num_observations();
+    auto ndim = data.num_dimensions();
+    size_t long_ndim = ndim;
+    std::fill(centers, centers + long_ndim * static_cast<size_t>(ncenters), 0); // cast to avoid overflow.
+
+    auto work = data.create_workspace(0, nobs);
+    for (decltype(nobs) obs = 0; obs < nobs; ++obs) {
+        auto copy = centers + static_cast<size_t>(clusters[obs]) * long_ndim;
+        auto mine = data.get_observation(work);
+        for (decltype(ndim) dim = 0; dim < ndim; ++dim, ++copy, ++mine) {
             *copy += *mine;
         }
     }
 
-    for (CLUSTER_t cen = 0; cen < ncenters; ++cen) {
-        if (sizes[cen]) {
-            auto curcenter = centers + cen * ndim;
+    for (Cluster_ cen = 0; cen < ncenters; ++cen) {
+        auto s = sizes[cen];
+        if (s) {
+            auto curcenter = centers + static_cast<size_t>(cen) * long_ndim; // cast to avoid overflow.
             for (int dim = 0; dim < ndim; ++dim, ++curcenter) {
-                *curcenter /= sizes[cen];
+                *curcenter /= s;
             }
         }
     }
+}
+
 }
 
 }

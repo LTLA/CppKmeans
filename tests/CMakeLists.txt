@@ -27,6 +27,7 @@ macro(create_test target)
         src/InitializeRandom.cpp
         src/InitializeKmeanspp.cpp
         src/InitializePcaPartition.cpp
+        src/QuickSearch.cpp
         # src/Kmeans.cpp
     )
 
