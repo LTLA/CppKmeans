@@ -19,7 +19,34 @@ TEST_P(QuickSearchTest, Sweep) {
         auto best = index.find(data.data() + c * nr);
         EXPECT_EQ(c, best);
     }
+
+    // A more serious test with non-identical inputs.
+    auto half_nc = nc/2;
+    kmeans::internal::QuickSearch half_index(nr, half_nc, data.data()); 
+    for (int c = half_nc; c < nc; ++c) {
+        auto self = data.data() + c * nr;
+        auto best = half_index.find_with_distance(self);
+
+        double expected_dist = std::numeric_limits<double>::infinity();
+        int expected_best = 0;
+        for (int b = 0; b < half_nc; ++b) {
+            double d2 = 0;
+            auto other = data.data() + b * nr;
+            for (int r = 0; r < nr; ++r) {
+                double delta = other[r] - self[r];
+                d2 += delta * delta;
+            }
+            if (d2 < expected_dist) {
+                expected_best = b;
+                expected_dist = d2;
+            }
+        }
+
+        EXPECT_EQ(expected_best, best.first);
+        EXPECT_EQ(std::sqrt(expected_dist), best.second);
+    }
 }
+
 
 INSTANTIATE_TEST_SUITE_P(
     QuickSearch,
