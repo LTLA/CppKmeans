@@ -149,43 +149,53 @@ public:
 template<typename Index_>
 class LiveSet {
 private:
+    enum class Event : uint8_t { NONE, PAST_OPT, CURRENT_OPT, QUICK, INIT };
+
     /* The problem with the original implementation is that LIVE(L) needs to
      * store at least 2*M, which might cause overflows in Index_. To avoid
      * this, we split this information into two vectors:
      * 
-     * - 'my_had_recent_transfer' specifies whether a transfer occurred in the
-     *   current optimal_transfer call, or in the immediately preceding
-     *   quick_transfer call. If this is truthy, the cluster is live.
+     * - 'my_had_recent_transfer' specifies specifies whether a transfer
+     *   occurred in the current optimal_transfer call, or in the immediately
+     *   preceding quick_transfer call. If this > PAST_OPT, the cluster is 
+     *   definitely live; if it is == PAST_OPT, it may or may not be live.
      * - 'my_last_optimal_transfer' has two interpretations:
-     *   - If 'my_had_recent_transfer[i] = 0', it specifies the observation at
-     *     which the last transfer occurred in previous optimal_transfer call. 
-     *     If this is greater than the current observation, the cluster is live.
-     *   - Otherwise, it specifies the observation at which the last transfer
-     *     occurred in the current optimal_transfer call.
+     *   - If 'my_had_recent_transfer[i] = PAST_OPT', it specifies the
+     *     observation at which the last transfer occurred in previous
+     *     optimal_transfer call. If this is greater than the current
+     *     observation, the cluster is live.
+     *   - If 'my_had_recent_transfer[i] = CURRENT_OPT', it specifies the
+     *     observation at which the last transfer occurred in the current
+     *     optimal_transfer call.
+     *   - Otherwise it is undefined and should not be used.
      *
      * One might think that 'LiveSet::my_last_optimal_transfer' is redundant
      * with 'UpdateHistory::my_last_observation', but the former only tracks
      * optimal transfers while the latter includes quick transfers. 
      */
-    std::vector<uint8_t> my_had_recent_transfer; 
+    std::vector<Event> my_had_recent_transfer; 
     std::vector<Index_> my_last_optimal_transfer;
 
 public:
     template<typename Cluster_>
     LiveSet(Cluster_ ncenters) : 
-        my_had_recent_transfer(ncenters, 1), // initialize at 1 so that everything starts in the live set.
+        my_had_recent_transfer(ncenters, Event::INIT),
         my_last_optimal_transfer(ncenters) 
     {}
 
 public:    
     template<typename Center_>
     bool is_live(Center_ cen, Index_ obs) const {
-        return my_had_recent_transfer[cen] > 0 || my_last_optimal_transfer[cen] > obs;
+        if (my_had_recent_transfer[cen] == Event::PAST_OPT) {
+            return my_last_optimal_transfer[cen] > obs;
+        } else {
+            return my_had_recent_transfer[cen] > Event::PAST_OPT;
+        }
     }
 
     template<typename Center_>
     void set(Center_ cen, Index_ obs) {
-        my_had_recent_transfer[cen] = 1;
+        my_had_recent_transfer[cen] = Event::CURRENT_OPT;
         my_last_optimal_transfer[cen] = obs;
     }
 
@@ -195,33 +205,12 @@ public:
 
         for (size_t cen = 0; cen < ncenters; ++cen) {
             auto& recent = my_had_recent_transfer[cen];
-            auto& last = my_last_optimal_transfer[cen];
-
             if (was_quick_transferred[cen]) {
-                /* If a cluster was updated in the preceding quick_transfer
-                 * call, it is added to the live set throughout the upcoming
-                 * optimal_transfer call. We set last_optimal_transfer to zero
-                 * to reflect the fact that had_recent_transfer was only set to
-                 * 1 via quick transfers, not due to an actual optimal transfer
-                 * in this stage (yet).
-                 */
-                recent = 1;
-                last = 0;
+                recent = Event::QUICK;
+            } else if (recent == Event::CURRENT_OPT) {
+                recent = Event::PAST_OPT;
             } else {
-                /* Otherwise, if there was a transfer in the previous
-                 * optimal_transfer call, we set had_recent_transfer = 0 so
-                 * that that the live check will need to compare
-                 * last_optimal_transfer to the 'obs' to see if there was an
-                 * optimal transfer within the last 'nobs' steps.
-                 */
-                if (recent) {
-                    recent = 0;
-                } else {
-                    /* Otherwise, we set last_optimal_transfer = 0 so that this
-                     * cluster will be considered non-live for any 'obs'.
-                     */
-                    last = 0;
-                }
+                recent = Event::NONE;
             }
         }
     }
