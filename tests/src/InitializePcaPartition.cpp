@@ -59,7 +59,7 @@ TEST(PcaPartitionUtils, MRSECalculations) {
     {
         std::vector<double> wcss(1);
         std::vector<int> clusters(nc);
-        kmeans::internal::compute_wcss(submat, 1, centerref.data(), clusters.data(), wcss.data());
+        kmeans::compute_wcss(submat, 1, centerref.data(), clusters.data(), wcss.data());
         EXPECT_FLOAT_EQ(var, wcss[0]/chosen.size());
     }
 }

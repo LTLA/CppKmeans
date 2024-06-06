@@ -22,6 +22,8 @@ macro(create_test target)
     add_executable(
         ${target} 
         #        src/MiniBatch.cpp
+        src/compute_centroids.cpp
+        src/compute_wcss.cpp
         src/InitializeRandom.cpp
         src/InitializeKmeanspp.cpp
         src/InitializePcaPartition.cpp
