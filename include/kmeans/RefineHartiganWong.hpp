@@ -63,8 +63,8 @@ class UpdateHistory {
 public:
     template<typename Cluster_>
     UpdateHistory(Cluster_ ncenters) : 
-        my_last_iteration_p1(ncenters, init),
-        my_last_observation(ncenters)
+        my_last_observation(ncenters),
+        my_last_iteration_p1(ncenters, init)
     {}
 
 public:
@@ -96,7 +96,8 @@ public:
     // We treat the optimal_transfer as "iteration -1" here.
     template<typename Cluster_>
     void set_optimal(Cluster_ clust, Index_ obs) {
-        set_quick(clust, -1, obs);
+        my_last_iteration_p1[clust] = 0;
+        my_last_observation[clust] = obs;
     }
 
     // Here, iter should be from '[0, max_quick_iterations)'.
@@ -115,12 +116,20 @@ public:
 public:
     template<typename Cluster_>
     bool greater_than(Cluster_ clust, int8_t iter, Index_ obs) const {
-        return my_last_iteration_p1[clust] == iter && my_last_observation[clust] > obs;
+        if (my_last_iteration_p1[clust] == iter) {
+            return my_last_observation[clust] > obs;
+        } else {
+            return my_last_iteration_p1[clust] > iter;
+        }
     }
 
     template<typename Cluster_>
     bool greater_than_or_equal(Cluster_ clust, int8_t iter, Index_ obs) const {
-        return my_last_iteration_p1[clust] == iter && my_last_observation[clust] >= obs;
+        if (my_last_iteration_p1[clust] == iter) {
+            return my_last_observation[clust] >= obs;
+        } else {
+            return my_last_iteration_p1[clust] > iter;
+        }
     }
 };
 
@@ -235,7 +244,7 @@ struct Workspace {
     Index_ optra_steps_since_last_transfer = 0; // i.e., indx
 
 public:
-    Workspace(Index_ nobs, Cluster_ ncenters, Center_* centers, Cluster_* clusters) : 
+    Workspace(Index_ nobs, Cluster_ ncenters) :
         // Sizes taken from the .Fortran() call in stats::kmeans(). 
         second_best_cluster(nobs), 
         cluster_sizes(ncenters),
@@ -305,7 +314,7 @@ constexpr Center_ big_number() {
 }
 
 template<typename Dim_, typename Data_, typename Index_, typename Cluster_, typename Center_>
-void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1, Cluster_ l2, const Center_* centers, Cluster_* best_cluster, Workspace<Center_, Index_, Cluster_>& work) {
+void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1, Cluster_ l2, Center_* centers, Cluster_* best_cluster, Workspace<Center_, Index_, Cluster_>& work) {
     // Yes, casts to float are deliberate here, so that the
     // multipliers can be computed correctly.
     Center_ al1 = work.cluster_sizes[l1], alw = al1 - 1;
@@ -364,8 +373,8 @@ bool optimal_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::
             // Find the cluster with minimum WCSS gain.
             auto l2 = work.second_best_cluster[obs];
             auto original_l2 = l2;
-            auto l1_ptr = centers + long_ndim * static_cast<size_t>(l2); // cast to avoid overflow.
-            auto wcss_gain = squared_distance_from_cluster(obs, l2) * work.gain_multiplier[l2];
+            auto l2_ptr = centers + long_ndim * static_cast<size_t>(l2); // cast to avoid overflow.
+            auto wcss_gain = squared_distance_from_cluster(obs_ptr, l2_ptr, ndim) * work.gain_multiplier[l2];
 
             auto check_best_cluster = [&](Cluster_ cen) {
                 auto cen_ptr = centers + long_ndim * static_cast<size_t>(cen); // cast to avoid overflow.
@@ -459,7 +468,7 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Center_, typ
                 if (work.update_history.greater_than_or_equal(l1, it, obs)) {
                     auto l1_ptr = centers + static_cast<size_t>(l1) * long_ndim; // cast to avoid overflow.
                     obs_ptr = data.get_observation(obs, matwork);
-                    work.wcss_loss[obs] = squared_distance_to_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
+                    work.wcss_loss[obs] = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
                 }
 
                 auto l2 = work.second_best_cluster[obs];
@@ -467,7 +476,7 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Center_, typ
                     if (obs_ptr == NULL) {
                         obs_ptr = data.get_observation(obs, matwork);
                     }
-                    auto l2_ptr = work.centers + static_cast<size_t>(l2) * long_ndim; // cast to avoid overflow.
+                    auto l2_ptr = centers + static_cast<size_t>(l2) * long_ndim; // cast to avoid overflow.
                     auto wcss_gain = squared_distance_from_cluster(obs_ptr, l2_ptr, ndim) * work.gain_multiplier[l2];
 
                     if (wcss_gain < work.wcss_loss[obs]) {
@@ -480,7 +489,7 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Center_, typ
                         work.update_history.set_quick(l1, it, obs);
                         work.update_history.set_quick(l2, it, obs);
 
-                        transfer_point(ndim, obs_ptr, obs, l1, l2, work);
+                        transfer_point(ndim, obs_ptr, obs, l1, l2, centers, best_cluster, work);
                     }
                }
            }
@@ -536,13 +545,13 @@ private:
     typedef typename Matrix_::index_type Index_;
 
 public:
-    Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Center_* centers, Cluster_* clusters) {
+    Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Center_* centers, Cluster_* clusters) const {
         auto nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
             return internal::process_edge_case(data, ncenters, centers, clusters);
         }
 
-        RefineHartiganWong_internal::Workspace<Center_, Index_, Cluster_> work(nobs, ncenters, centers, clusters);
+        RefineHartiganWong_internal::Workspace<Center_, Index_, Cluster_> work(nobs, ncenters);
 
         RefineHartiganWong_internal::find_closest_two_centers(data, ncenters, centers, clusters, work.second_best_cluster, my_options.num_threads);
         for (Index_ obs = 0; obs < nobs; ++obs) {
@@ -591,7 +600,7 @@ public:
             ifault = 2;
         }
 
-        compute_centroids(data, ncenters, centers, clusters, work.cluster_sizes);
+        internal::compute_centroids(data, ncenters, centers, clusters, work.cluster_sizes);
         return Details(std::move(work.cluster_sizes), iter, ifault);
     }
 };

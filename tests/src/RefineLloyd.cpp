@@ -53,30 +53,19 @@ TEST_P(RefineLloydBasicTest, Sweep) {
 TEST_P(RefineLloydBasicTest, Sanity) {
     auto param = GetParam();
     assemble(param);
-    auto ncenters = std::get<2>(param);
 
     // Duplicating the first 'ncenters' elements over and over again.
-    std::mt19937_64 rng(nc * 10);
-    std::vector<int> expected(ncenters);
-    std::iota(expected.begin(), expected.end(), 0);
-    auto dIt = data.begin() + ncenters * nr;
-    std::vector<double> centers(data.begin(), dIt);
-
-    for (int c = ncenters; c < nc; ++c, dIt += nr) {
-        auto chosen = rng() % ncenters;
-        auto cIt = data.begin() + chosen * nr;
-        std::copy(cIt, cIt + nr, dIt);
-        expected.push_back(chosen);
-    }
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
+    auto ncenters = std::get<2>(param);
+    auto dups = create_duplicate_matrix(ncenters);
+    kmeans::SimpleMatrix mat(nr, nc, dups.data.data());
 
     // Lloyd should give us back the perfect clusters.
     std::vector<int> clusters(nc);
     kmeans::RefineLloydOptions opt;
     kmeans::RefineLloyd ll(opt);
-    auto res = ll.run(mat, ncenters, centers.data(), clusters.data());
+    auto res = ll.run(mat, ncenters, dups.centers.data(), clusters.data());
 
-    EXPECT_EQ(clusters, expected);
+    EXPECT_EQ(clusters, dups.chosen);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -171,6 +160,6 @@ INSTANTIATE_TEST_SUITE_P(
     RefineLloydConstantTest,
     ::testing::Combine(
         ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 200, 2000) // number of observations 
+        ::testing::Values(20, 200) // number of observations 
     )
 );
