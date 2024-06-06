@@ -43,7 +43,7 @@ struct RefineLloydOptions {
  * Specifically, we assign each observation to its closest cluster, and once all points are assigned, we recompute the cluster centroids.
  * This is repeated until there are no reassignments or the maximum number of iterations is reached.
  *
- * In the `Details::status` returned by `run()`, the status codes is either 0 (success) or 2 (maximum iterations reached without convergence).
+ * In the `Details::status` returned by `run()`, the status code is either 0 (success) or 2 (maximum iterations reached without convergence).
  * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
  *
  * @tparam Matrix_ Matrix type for the input data.

@@ -21,7 +21,6 @@ include(GoogleTest)
 macro(create_test target)
     add_executable(
         ${target} 
-        #        src/MiniBatch.cpp
         src/compute_centroids.cpp
         src/compute_wcss.cpp
         src/InitializeRandom.cpp
@@ -31,6 +30,7 @@ macro(create_test target)
         src/is_edge_case.cpp
         src/RefineLloyd.cpp
         src/RefineHartiganWong.cpp
+        src/RefineMiniBatch.cpp
         # src/Kmeans.cpp
     )
 

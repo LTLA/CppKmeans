@@ -241,7 +241,10 @@ void find_closest_two_centers(const Matrix_& data, Cluster_ ncenters, const Floa
     auto ndim = data.num_dimensions();
     typedef typename Matrix_::index_type Index_;
 
+    // We assume that there are at least two centers here, otherwise we should
+    // have detected that this was an edge case in RefineHartiganWong::run.
     internal::QuickSearch index(ndim, ncenters, centers);
+
     internal::parallelize(nobs, nthreads, [&](int, Index_ start, Index_ length) -> void {
         auto matwork = data.create_workspace(start, length);
         for (Index_ obs = start, end = start + length; obs < end; ++obs) {
@@ -461,14 +464,20 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Float_, type
  * @brief Implements the Hartigan-Wong algorithm for k-means clustering.
  *
  * The Hartigan-Wong algorithm performs several iterations of transferring points between clusters, 
- * involving a computationally expensive "optimal transfer" step that checks each observation against each cluster for the lowest squared distance;
+ * involving a computationally expensive "optimal transfer" step that checks each observation against each cluster to determine its best assignment,
  * followed by a cheaper "quick transfer" step, which iterates between the best and second-best cluster choices for each observation.
- * The latter enables rapid exploration of the local solution space without the unnecessary expense of repeatedly comparing to all clusters for all observations.
- * In addition, each distance calculation to a cluster accounts for the shift in the means when a point is transferred. 
+ * The latter enables rapid exploration of the local solution space without the unnecessary expense of repeatedly comparing each observation to all clusters.
+ * The choice of "best" cluster for each observation considers the gain/loss in the sum of squares when an observation moves between clusters,
+ * even accounting for the shift in the cluster centers after the transfer.
  * The algorithm terminates when no observation wishes to transfer between clusters.
  *
  * This implementation is derived from the Fortran code underlying the `kmeans` function in the **stats** R package,
  * which in turn is derived from Hartigan and Wong (1979).
+ * 
+ * In the `Details::status` returned by `run()`, the status code is either 0 (success),
+ * 2 (maximum optimal transfer iterations reached without convergence)
+ * or 4 (maximum quick transfer iterations reached without convergence).
+ * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
  * 
  * @tparam Matrix_ Matrix type for the input data.
  * This should satisfy the `MockMatrix` contract.

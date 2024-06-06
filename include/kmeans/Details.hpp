@@ -43,18 +43,9 @@ struct Details {
     int iterations;
 
     /**
-     * The status of the algorithm.
+     * The status of the algorithm on completion.
      * A value of 0 indicates that the algorithm completed successfully.
      * The interpretation of a non-zero value depends on the algorithm.
-     *
-     * For `HartiganWong`:
-     *
-     * - 1: empty cluster detected.
-     * This usually indicates a problem with the initial choice of centroids.
-     * It can also occur in pathological situations with duplicate points.
-     * - 2: maximum iterations reached without convergence. 
-     * - 3: the number of centers is not positive or greater than the number of observations.
-     * - 4: maximum number of quick transfer steps exceeded.
      */
     int status;
 };
