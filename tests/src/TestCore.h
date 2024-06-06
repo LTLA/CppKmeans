@@ -3,83 +3,93 @@
 
 #include <gtest/gtest.h>
 #include <vector>
-#include <numeric>
 #include <algorithm>
+#include <tuple>
 #include <random>
 
-template<class TEST>
-class TestCore : public TEST {
+class TestCore {
 protected:
-    void assemble() {
+    static void assemble(const std::tuple<int, int>& params) {
+        if (last_params == params) {
+            return;
+        }
+        last_params = params;
+
+        nr = std::get<0>(params);
+        nc = std::get<0>(params);
         data.resize(nr * nc);
-        std::mt19937_64 rng(1000);
+
+        std::mt19937_64 rng(nr * 100 + nc);
         std::normal_distribution<> norm(0.0, 1.0);
         for (auto& d : data) {
             d = norm(rng);            
         }
-        return;
     }
- 
-    int nr, nc;
-    std::vector<double> data;
+
+    inline static std::tuple<int, int> last_params;
+    inline static int nr, nc;
+    inline static std::vector<double> data;
 
 protected:
-    std::vector<double> create_centers(const double* raw, int k) const {
+    static std::vector<double> create_centers(int k) {
         std::vector<double> output(k * nr);
-
-        std::vector<int> possible(nc), chosen(k);
-        std::iota(possible.begin(), possible.end(), 0);
-
-        std::mt19937_64 rng(k * 10);
-        std::sample(possible.begin(), possible.end(), chosen.begin(), k, rng);
-
-        double* sofar = output.data();
-        for (auto c : chosen) {
-            std::copy(raw + c * nr, raw + c * nr + nr, sofar);
-            sofar += nr;
+        std::mt19937_64 rng(k * 10 + nr);
+        std::normal_distribution<> norm(0.0, 1.0);
+        for (auto& o : output) {
+            o = norm(rng);
         }
-
         return output;
     }
 
 protected:
-    struct DuplicatedMatrix {
-        std::vector<double> centers;
-        std::vector<int> chosen;
+    struct KnownSimulated {
+        std::vector<int> clusters;
         std::vector<double> data;
     };
 
-    DuplicatedMatrix create_duplicate_matrix(int ncenters) const {
-        DuplicatedMatrix output;
+    static KnownSimulated create_duplicate_matrix(int k) {
+        KnownSimulated output;
+        output.clusters.reserve(k);
 
-        std::mt19937_64 rng(nc * 10);
-        output.chosen.resize(ncenters);
-        std::iota(output.chosen.begin(), output.chosen.end(), 0);
+        output.clusters.resize(k);
+        std::iota(output.clusters.begin(), output.clusters.end(), 0);
 
-        auto dIt = data.begin() + ncenters * nr;
-        output.centers.insert(output.centers.end(), data.begin(), dIt);
         output.data.reserve(nr * nc);
-        output.data.insert(output.data.end(), data.begin(), dIt);
+        output.data.insert(output.data.end(), data.begin(), data.begin() + k * nr);
 
-        for (int c = ncenters; c < nc; ++c, dIt += nr) {
-            auto chosen = rng() % ncenters;
-            auto cIt = output.centers.begin() + chosen * nr;
+        std::mt19937_64 rng(k * 5 + nr);
+        for (int c = k; c < nc; ++c) {
+            auto chosen = rng() % k;
+            auto cIt = output.data.begin() + chosen * nr;
             output.data.insert(output.data.end(), cIt, cIt + nr);
-            output.chosen.push_back(chosen);
+            output.clusters.push_back(chosen);
         }
 
         return output;
     }
-};
 
-template<class PARAM>
-class TestParamCore : public TestCore<::testing::TestWithParam<PARAM> > {
-protected:
-    void assemble(const PARAM& param) {
-        this->nr = std::get<0>(param);
-        this->nc = std::get<1>(param);
-        TestCore<::testing::TestWithParam<PARAM> >::assemble();
-        return;
+    static KnownSimulated create_jittered_matrix(int k) {
+        KnownSimulated output;
+        output.clusters.reserve(nc);
+        output.data.reserve(nr * nc);
+
+        output.clusters.resize(k);
+        std::iota(output.clusters.begin(), output.clusters.end(), 0);
+        std::mt19937_64 rng(k * 10 + nr);
+        for (int c = k; c < nc; ++c) {
+            auto chosen = rng() % k;
+            output.clusters.push_back(chosen);
+        }
+
+        auto dIt = data.begin();
+        for (int c = 0; c < nc; ++c) {
+            auto shift = output.clusters[c] * 100;
+            for (int r = 0; r < nr; ++r) {
+                output.data.push_back(*dIt + shift);
+            }
+        }
+
+        return output;
     }
 };
 

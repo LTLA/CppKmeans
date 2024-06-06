@@ -10,16 +10,18 @@
 
 #include "kmeans/InitializeKmeanspp.hpp"
 
-using KmeansppInitializationTest = TestParamCore<std::tuple<int, int, int> >;
+class KmeansppInitializationTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
+protected:
+    void SetUp() {
+        assemble(std::get<0>(GetParam()));
+    }
+};
 
 TEST_P(KmeansppInitializationTest, Basic) {
-    auto param = GetParam();
-    assemble(param);
-    auto ncenters = std::get<2>(param);
+    auto ncenters = std::get<1>(GetParam());
 
     kmeans::SimpleMatrix mat(nr, nc, data.data());
-
-    int seed = ncenters * 10;
+    int seed = ncenters * 10 + nr + nc;
     auto output = kmeans::InitializeKmeanspp_internal::run_kmeanspp(mat, ncenters, seed, 1);
     EXPECT_EQ(output.size(), ncenters);
 
@@ -72,26 +74,12 @@ TEST_P(KmeansppInitializationTest, Basic) {
 }
 
 TEST_P(KmeansppInitializationTest, Sanity) {
-    auto param = GetParam();
-    assemble(param);
-    auto ncenters = std::get<2>(param);
-
-    // Duplicating the first 'ncenters' elements over and over again.
-    std::vector<int> choices(nc);
-    std::iota(choices.begin(), choices.begin() + ncenters, 0);
-
-    std::mt19937_64 rng(nc * 10);
-    auto dIt = data.begin() + ncenters * nr;
-    for (int c = ncenters; c < nc; ++c, dIt += nr) {
-        auto chosen = rng() % ncenters;
-        auto cIt = data.begin() + chosen * nr;
-        std::copy(cIt, cIt + nr, dIt);
-        choices[c] = chosen;
-    }
+    auto ncenters = std::get<1>(GetParam());
+    auto dups = create_duplicate_matrix(ncenters);
 
     // Expect one entry from each of the first 'ncenters' elements;
     // all others are duplicates and should have sampling probabilities of zero.
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
+    kmeans::SimpleMatrix mat(nr, nc, dups.data.data());
     auto seed = ncenters * 100;
     auto output = kmeans::InitializeKmeanspp_internal::run_kmeanspp(mat, ncenters, seed, 1);
 
@@ -119,18 +107,22 @@ INSTANTIATE_TEST_SUITE_P(
     KmeansppInitialization,
     KmeansppInitializationTest,
     ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 200, 2000), // number of observations
+        ::testing::Combine(
+            ::testing::Values(10, 20), // number of dimensions
+            ::testing::Values(20, 200, 2000) // number of observations
+        ),
         ::testing::Values(2, 5, 10) // number of clusters
     )
 );
 
-using KmeansppInitializationEdgeTest = TestParamCore<std::tuple<int, int> >;
+class KmeansppInitializationEdgeTest : public TestCore, public ::testing::Test<std::tuple<int, int> > {
+protected:
+    void SetUp() {
+        assemble(GetParam());
+    }
+};
 
 TEST_P(KmeansppInitializationEdgeTest, TooManyClusters) {
-    auto param = GetParam();
-    assemble(param);
-
     kmeans::InitializeKmeansppOptions opt;
     opt.seed = nc * 10;
     kmeans::InitializeKmeanspp init(opt);
