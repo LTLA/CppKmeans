@@ -44,23 +44,31 @@ struct RefineHartiganWongOptions {
 namespace RefineHartiganWong_internal {
 
 /* 
- * The class below represents 'ncp', which has a convoluted interpretation.
+ * The class below represents 'ncp', which has a dual interpretation.
  *
  * - In the optimal-transfer stage, NCP(L) stores the step at which cluster L
- *   is last updated.
+ *   was last updated. Each step is just the observation index as the optimal
+ *   transfer only does one pass through the dataset.
  * - In the quick-transfer stage, NCP(L) stores the step at which cluster L is
- *   last updated plus M (i.e., the number of observations).
+ *   last updated plus M (i.e., the number of observations). Here, the step
+ *   corresponding to an observation will be 'M * X + obs' for some integer X
+ *   >= 0, where X is the iteration of the quick transfer.
  *
- * OPerations on 'ncp' are wrapped in functions to account for the fact that we
- * need to shift all the 'ncp' values by two to give some space for the error
- * codes. All interactions with 'ncp' should occur via these utilities.
+ * Note that these two definitions bleed into each other as the NCP(L) set by
+ * optimal_transfer is still being used in the first few iterations of
+ * quick_transfer before it eventually gets written. The easiest way to
+ * interpret this is to consider the optimal transfer as "iteration -1" from
+ * the perspective of the quick transfer iterations. 
  */
 class LastUpdatedAt {
 public:
     template<typename Cluster_>
-    LastUpdatedAt(Cluster_ ncenters) : my_ncp(ncenters, ncp_init) {}
+    LastUpdatedAt(Cluster_ ncenters) : 
+        my_ncp(ncenters, ncp_init)
+    {}
 
 private:
+    // Need to use a big integer that guarantees that we can store large step sizes.
     std::vector<uint64_t> my_ncp;
 
     static constexpr uint64_t ncp_init = 0;
@@ -68,7 +76,13 @@ private:
     static constexpr uint64_t ncp_shift = 2;
 
 public:
-    void reset() {
+    /*
+     * Operations on 'ncp' are wrapped in functions to account for the fact that we
+     * need to shift all the 'ncp' values by two to give some space for the error
+     * codes. All interactions with 'ncp' should occur via these utilities.
+     */
+
+    void set_all_unchanged() {
         std::fill(ncp.begin(), ncp.end(), ncp_unchanged);
     }
 
@@ -93,48 +107,84 @@ public:
     }
 };
 
-// The "live set" is defined as those clusters that had a "recent" transfer of
-// any kind.
+/*
+ * The class below represents 'live', which has a tricky interpretation.
+ *
+ * - Before each optimal transfer call, LIVE(L) stores the observation at which
+ *   cluster L was updated in the _previous_ call.
+ * - During the optimal transfer call, LIVE(L) is updated to the observation at
+ *   which L was updated in this call, plus M (i.e., number of observations).
+ * - After the optimal transfer call, LIVE(L) is updated by subtracting M, so
+ *   that the interpretation is correct in the next call.
+ *
+ * It basically tells us whether there was a recent transfer (optimal or quick)
+ * within the last M steps for a given cluster. If so, the cluster is "live".
+ */
+template<typename Index_>
 class LiveSet {
 private:
-    // The two vectors below constitute 'live'. Basically:
-    //
-    // live[i] = last_optimal_transfer[i] + (had_recent_transfer[i] ? nobs : 0);
-    //
-    // We split them into two to avoid the need to store values up to 2 *
-    // num_obs, which could potentially exceed the bounds of Index_.
+    /* The problem with the original implementation is that LIVE(L) needs to
+     * store at least 2*M, which might cause overflows in Index_. To avoid
+     * this, we split this information into two vectors:
+     * 
+     * - 'my_had_recent_transfer' specifies whether a transfer occurred in the
+     *   current optimal_transfer call, or in the immediately preceding
+     *   quick_transfer call. If this is truthy, the cluster is live.
+     * - 'my_last_optimal_transfer' has two interpretations:
+     *   - If 'my_had_recent_transfer[i] = 0', it specifies the observation at
+     *     which the last transfer occurred in previous optimal_transfer call. 
+     *     If this is greater than the current observation, the cluster is live.
+     *   - Otherwise, it specifies the observation at which the last transfer
+     *     occurred in the current optimal_transfer call.
+     */
     std::vector<uint8_t> my_had_recent_transfer; 
     std::vector<Index_> my_last_optimal_transfer;
 
 public:
     template<typename Cluster_>
-    LiveSet(Cluster_ ncenters) : my_had_recent_transfer(ncenters), my_last_optimal_transfer(ncenters) {}
+    LiveSet(Cluster_ ncenters) : 
+        my_had_recent_transfer(ncenters, 1), // initialize at 1 so that everything starts in the live set.
+        my_last_optimal_transfer(ncenters) 
+    {}
+
+public:    
+    template<typename Center_>
+    bool is_live(Center_ cen, Index_ obs) const {
+        return my_had_recent_transfer[cen] > 0 || my_last_optimal_transfer[cen] > obs;
+    }
+
+    template<typename Center_>
+    void set(Center_ cen, Index_ obs) {
+        my_had_recent_transfer[cen] = 1;
+        my_last_optimal_transfer[cen] = obs;
+    }
 
 public:
-    void set(const std::vector<uint8_t>& was_quick_transferred) {
+    void reset(const std::vector<uint8_t>& was_quick_transferred) {
         size_t ncenters = my_had_recent_transfer.size();
 
-        // This means that had_recent_transfer = 1 OR last_optimal_transfer < obs.
         for (size_t cen = 0; cen < ncenters; ++cen) {
             auto& recent = my_had_recent_transfer[cen];
             auto& last = my_last_optimal_transfer[cen];
 
             if (was_quick_transferred[cen]) {
-                /* If a cluster was updated in the last quick-transfer stage, it is
-                 * added to the live set throughout this stage. We set
-                 * last_optimal_transfer to zero to reflect the fact that
-                 * had_recent_transfer was only set to 1 via quick transfers, not
-                 * due to an actual optimal transfer in this stage (yet).
+                /* If a cluster was updated in the preceding quick_transfer
+                 * call, it is added to the live set throughout the upcoming
+                 * optimal_transfer call. We set last_optimal_transfer to zero
+                 * to reflect the fact that had_recent_transfer was only set to
+                 * 1 via quick transfers, not due to an actual optimal transfer
+                 * in this stage (yet).
                  */
                 recent = 1;
                 last = 0;
             } else {
-                /* Otherwise, if there was a transfer in the previous call, we set
-                 * had_recent_transfer = 0 so that that the live check will
-                 * need to compare last_optimal_transfer to the 'obs' to see if
-                 * there was an optimal transfer within the last 'nobs' steps.
+                /* Otherwise, if there was a transfer in the previous
+                 * optimal_transfer call, we set had_recent_transfer = 0 so
+                 * that that the live check will need to compare
+                 * last_optimal_transfer to the 'obs' to see if there was an
+                 * optimal transfer within the last 'nobs' steps.
                  */
-                else if (recent) {
+                if (recent) {
                     recent = 0;
                 } else {
                     /* Otherwise, we set last_optimal_transfer = 0 so that this
@@ -144,11 +194,6 @@ public:
                 }
             }
         }
-    }
-
-    template<typename Center_, typename Index_ obs>
-    bool is_live(Center_ cen, Index_ obs) const {
-        return my_had_recent_transfer[cen] > 0 || my_last_optimal_transfer[cen] < obs;
     }
 };
 
@@ -178,7 +223,7 @@ public:
         wcss_loss(nobs),
 
         last_updated_at(ncenters),
-        was_quick_transferred(ncenters),
+        was_quick_transferred(ncenters, 1), // this is a hack to get LiveSet to consider everything as live.
         live_set(ncenters)
     {}
 };
@@ -232,13 +277,14 @@ void find_closest_two_centers(const Matrix_& data, Cluster_ ncenters, const Cent
 }
 
 template<typename Center_>
-inline constexpr Center_ big_number() {
+constexpr Center_ big_number() {
     return 1e30; // Some very big number.
 }
 
 template<typename Dim_, typename Data_, typename Index_, typename Cluster_, typename Center_>
 void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1, Cluster_ l2, const Center_* centers, Cluster_* best_cluster, Workspace<Center_, Index_, Cluster_>& work) {
-    // Yes, casts to float are deliberate here.
+    // Yes, casts to float are deliberate here, so that the
+    // multipliers can be computed correctly.
     Center_ al1 = work.cluster_sizes[l1], alw = al1 - 1;
     Center_ al2 = work.cluster_sizes[l2], alt = al2 + 1;
 
@@ -270,43 +316,46 @@ void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1,
  * there is only one pass through the data.
  */
 template<class Matrix_, typename Cluster_, typename Center_>
-void optimal_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::index_type, Cluster_>& work, Cluster_ ncenters, Center_* centers, Cluster_* best_cluster) {
+void optimal_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::index_type, Cluster_>& work, Center_* centers, Cluster_* best_cluster) {
     auto nobs = data.num_observations();
     auto ndim = data.num_dimensions();
     auto matwork = data.create_workspace();
     size_t long_ndim = ndim;
 
-    work.live_set.set(work.was_quick_transferred);
     for (decltype(nobs) obs = 0; obs < nobs; ++obs) { 
         ++work.optra_steps_since_last_transfer;
 
         auto l1 = best_cluster[obs];
         if (work.cluster_sizes[l1] != 1) {
             auto obs_ptr = data.get_observation(obs, matwork);
+
+            // Need to update the WCSS loss if this is (i) the first call to
+            // optimal_transfer, or (ii) if the cluster center was updated
+            // earlier in the current optimal_transfer call.
             auto& wcss_loss = work.wcss_loss[obs];
             if (!work.last_updated_at.is_unchanged(l1)) {
                 auto l1_ptr = centers + long_ndim * static_cast<size_t>(l1); // cast to avoid overflow.
                 wcss_loss = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
             }
 
-            // Find the cluster with minimum R2.
+            // Find the cluster with minimum WCSS gain.
             auto l2 = work.second_best_cluster[obs];
             auto original_l2 = l2;
             auto l1_ptr = centers + long_ndim * static_cast<size_t>(l2); // cast to avoid overflow.
-            auto r2 = squared_distance_from_cluster(obs, l2) * work.gain_multiplier[l2];
+            auto wcss_gain = squared_distance_from_cluster(obs, l2) * work.gain_multiplier[l2];
 
             auto check_best_cluster = [&](Cluster_ cen) {
                 auto cen_ptr = centers + long_ndim * static_cast<size_t>(cen); // cast to avoid overflow.
                 auto candidate = squared_distance_from_cluster(obs_ptr, cen_ptr, ndim) * work.gain_multiplier[cen];
-                if (candidate < r2) {
-                    r2 = candidate;
+                if (candidate < wcss_gain) {
+                    wcss_gain = candidate;
                     l2 = cen;
                 }
             };
 
             // If the best cluster is live, we need to consider all other clusters.
             // Otherwise, we only need to consider other live clusters for transfer.
-            if (work.is_live(l1, obs)) { 
+            if (work.live_set.is_live(l1, obs)) { 
                 for (Cluster_ cen = 0; cen < num_centers; ++cen) {
                     if (cen == l1 || cen == original_l2) {
                         continue;
@@ -318,7 +367,7 @@ void optimal_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::
                     if (cen == l1 || cen == original_l2) {
                         continue;
                     }
-                    if (!work.is_live(l2, obs)) {
+                    if (!work.live_set.is_live(l2, obs)) {
                         continue;
                     }
                     check_best_cluster(cen);
@@ -326,16 +375,13 @@ void optimal_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::
             }
 
             // Deciding whether to make the transfer based on the change to the WCSS.
-            if (r2 >= wcss_loss) {
+            if (wcss_gain >= wcss_loss) {
                 work.second_best_cluster[obs] = l2;
             } else {
                 work.optra_steps_since_last_transfer = 0;
 
-                work.last_optimal_transfer[l1] = obs;
-                work.last_optimal_transfer[l2] = obs;
-                work.had_recent_transfer[l1] = 1;
-                work.had_recent_transfer[l2] = 1;
-
+                work.live_set.set(l1, obs);
+                work.live_set.set(l2, obs);
                 work.last_updated_at.set(l1, obs);
                 work.last_updated_at.set(l2, obs);
 
@@ -387,16 +433,11 @@ bool quick_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::in
                 auto& wcss_loss = work.wcss_loss[obs];
                 const typename Matrix_::data_type* obs_ptr = NULL;
 
-                /* NCP(L) is equal to the step at which cluster L is last updated plus M.
-                 * (AL: M is the notation for the number of observations, a.k.a. 'num_obs').
-                 *
-                 * If ISTEP > NCP(L1), no need to re-compute distance from point I to 
-                 * cluster L1. Note that if cluster L1 is last updated exactly M 
-                 * steps ago, we still need to compute the distance from point I to 
-                 * cluster L1.
-                 */
+                // Need to update the WCSS loss if the cluster was updated recently. 
+                // Otherwise, we must have already updated the WCSS in a previous 
+                // iteration of the outermost loop, so this can be skipped.
                 if (work.last_updated_at.le(l1, istep)) {
-                    auto l1_ptr = work.centers + static_cast<size_t>(l1) * long_ndim; // cast to avoid overflow.
+                    auto l1_ptr = centers + static_cast<size_t>(l1) * long_ndim; // cast to avoid overflow.
                     obs_ptr = data.get_observation(obs, matwork);
                     wcss_loss = squared_distance_to_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
                 }
@@ -496,14 +537,14 @@ public:
         compute_centroids(data, ncenters, centers, clusters, work.cluster_sizes);
 
         for (Center_ cen = 0; cen < ncenters; ++cen) {
-            Center_ num = work.cluster_sizes[cen]; // yes, cast is deliberate here.
+            Center_ num = work.cluster_sizes[cen]; // yes, cast is deliberate here so that the multipliers can be computed correctly.
             work.gain_multiplier[cen] = num / (num + 1);
             work.loss_multiplier[cen] = (num > 1 ? num / (num - 1) : big);
         }
 
         int iter = 0;
         while ((++iter) <= maxiter) {
-            bool finished = optimal_transfer(data, work, ncenters, centers, clusters);
+            bool finished = optimal_transfer(data, work, centers, clusters);
             if (finished) {
                 break;
             }
@@ -522,8 +563,13 @@ public:
                 break;
             }
 
-            // Resetting this before hitting the optimal transfer stage.
-            work.last_updated_at.reset();
+            // If we get to this point, there must have been no transfers in
+            // the final quick_transfer iteration. This also implies that all
+            // WCSS gains are up to date, as the quick_transfer code will
+            // update everything for us, so we can start off as unchanged.
+            work.last_updated_at.set_all_unchanged();
+
+            work.live_set.reset(work.was_quick_transferred);
         }
 
         if (iter == maxiter + 1) {
