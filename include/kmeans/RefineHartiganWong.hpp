@@ -8,6 +8,7 @@
 
 #include "Refine.hpp"
 #include "Details.hpp"
+#include "QuickSearch.hpp"
 #include "parallelize.hpp"
 #include "compute_centroids.hpp"
 #include "is_edge_case.hpp"
@@ -237,38 +238,17 @@ Float_ squared_distance_from_cluster(const Data_* data, const Float_* center, Di
 template<class Matrix_, typename Cluster_, typename Float_>
 void find_closest_two_centers(const Matrix_& data, Cluster_ ncenters, const Float_* centers, Cluster_* best_cluster, std::vector<Cluster_>& second_best_cluster, int nthreads) {
     auto nobs = data.num_observations();
-    size_t ndim = data.num_dimensions();
+    auto ndim = data.num_dimensions();
     typedef typename Matrix_::index_type Index_;
 
+    internal::QuickSearch index(ndim, ncenters, centers);
     internal::parallelize(nobs, nthreads, [&](int, Index_ start, Index_ length) -> void {
         auto matwork = data.create_workspace(start, length);
         for (Index_ obs = start, end = start + length; obs < end; ++obs) {
             auto optr = data.get_observation(matwork);
-
-            auto& best = best_cluster[obs];
-            best = 0;
-            auto best_dist = squared_distance_from_cluster(optr, centers + static_cast<size_t>(best) * ndim, ndim);
-
-            auto& second = second_best_cluster[obs];
-            second = 1;
-            auto second_dist = squared_distance_from_cluster(optr, centers + static_cast<size_t>(second) * ndim, ndim);
-
-            if (best_dist > second_dist) {
-                std::swap(best, second);
-                std::swap(best_dist, second_dist);
-            }
-
-            for (Cluster_ cen = 2; cen < ncenters; ++cen) {
-                auto candidate_dist = squared_distance_from_cluster(optr, centers + static_cast<size_t>(cen) * ndim, ndim);
-                if (candidate_dist < second_dist) {
-                    second_dist = candidate_dist;
-                    second = cen;                    
-                    if (candidate_dist < best_dist) {
-                        std::swap(best_dist, second_dist);
-                        std::swap(best, second);
-                    }
-                }
-            }
+            auto res2 = index.find2(optr);
+            best_cluster[obs] = res2.first;
+            second_best_cluster[obs] = res2.second;
         }
     });
 }

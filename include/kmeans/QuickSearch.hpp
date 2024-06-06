@@ -5,8 +5,8 @@
 #include <random>
 #include <limits>
 #include <cmath>
-#include <tuple>
-#include <iostream>
+#include <queue>
+#include <queue>
 
 namespace kmeans {
 
@@ -113,6 +113,32 @@ private:
         return pos;
     }
 
+public:
+    QuickSearch() = default;
+
+    QuickSearch(Dim_ ndim, Index_ nobs, const Data_* vals) {
+        reset(ndim, nobs, vals);
+    }
+
+    void reset(Dim_ ndim, Index_ nobs, const Data_* vals) {
+        num_dim = ndim;
+        long_num_dim = ndim;
+        items.clear();
+        nodes.clear();
+
+        if (nobs) {
+            items.reserve(nobs);
+            for (Index_ i = 0; i < nobs; ++i) {
+                items.emplace_back(0, i);
+            }
+
+            nodes.reserve(nobs);
+            std::mt19937_64 rand(1234567890u * nobs + ndim); // statistical correctness doesn't matter so we'll just use a deterministically 'random' number.
+            build(0, nobs, vals, rand);
+        }
+    }
+
+
 private:
     template<typename Query_>
     void search_nn(Index_ curnode_index, const Query_* target, Index_& closest_point, Data_& closest_dist) const { 
@@ -144,30 +170,6 @@ private:
     }
 
 public:
-    QuickSearch() = default;
-
-    QuickSearch(Dim_ ndim, Index_ nobs, const Data_* vals) {
-        reset(ndim, nobs, vals);
-    }
-
-    void reset(Dim_ ndim, Index_ nobs, const Data_* vals) {
-        num_dim = ndim;
-        long_num_dim = ndim;
-        items.clear();
-        nodes.clear();
-
-        if (nobs) {
-            items.reserve(nobs);
-            for (Index_ i = 0; i < nobs; ++i) {
-                items.emplace_back(0, i);
-            }
-
-            nodes.reserve(nobs);
-            std::mt19937_64 rand(1234567890u * nobs + ndim); // statistical correctness doesn't matter so we'll just use a deterministically 'random' number.
-            build(0, nobs, vals, rand);
-        }
-    }
-
     template<typename Query_>
     Index_ find(const Query_* query) const {
         Data_ closest_dist = std::numeric_limits<Data_>::max();
@@ -182,6 +184,54 @@ public:
         Index_ closest = 0;
         search_nn(0, query, closest, closest_dist);
         return std::make_pair(closest, closest_dist);
+    }
+
+private:
+    template<typename Query_>
+    void search_nn(Index_ curnode_index, const Query_* target, std::priority_queue<std::pair<Data_, Index_> >& closest) const { 
+        const auto& curnode=nodes[curnode_index];
+        Data_ dist = std::sqrt(raw_distance(curnode.center, target, num_dim));
+
+        auto biggest_dist = closest.top().first;
+        if (dist < biggest_dist) {
+            closest.pop();
+            closest.emplace(dist, curnode.index);
+            biggest_dist = closest.top().first;
+        }
+
+        if (dist < curnode.radius) { // If the target lies within the radius of ball:
+            if (curnode.left != LEAF && dist - biggest_dist <= curnode.radius) { // if there can still be neighbors inside the ball, recursively search left child first
+                search_nn(curnode.left, target, closest);
+            }
+
+            if (curnode.right != LEAF && dist + biggest_dist >= curnode.radius) { // if there can still be neighbors outside the ball, recursively search right child
+                search_nn(curnode.right, target, closest);
+            }
+
+        } else { // If the target lies outside the radius of the ball:
+            if (curnode.right != LEAF && dist + biggest_dist >= curnode.radius) { // if there can still be neighbors outside the ball, recursively search right child first
+                search_nn(curnode.right, target, closest);
+            }
+
+            if (curnode.left != LEAF && dist - biggest_dist <= curnode.radius) { // if there can still be neighbors inside the ball, recursively search left child
+                search_nn(curnode.left, target, closest);
+            }
+        }
+    }
+
+public:
+    template<typename Query_>
+    std::pair<Index_, Index_> find2(const Query_* query) const {
+        std::priority_queue<std::pair<Data_, Index_> > closest;
+        closest.emplace(std::numeric_limits<Data_>::max(), 0);
+        closest.emplace(std::numeric_limits<Data_>::max(), 0);
+        search_nn(0, query, closest);
+
+        std::pair<Index_, Index_> output;
+        output.second = closest.top().second;
+        closest.pop();
+        output.first = closest.top().second;
+        return output;
     }
 };
 

@@ -47,6 +47,39 @@ TEST_P(QuickSearchTest, Sweep) {
     }
 }
 
+TEST_P(QuickSearchTest, TakeTwo) {
+    auto param = GetParam();
+    assemble(param);
+
+    kmeans::internal::QuickSearch index(nr, nc, data.data()); 
+    for (int c = 0; c < nc; ++c) {
+        auto res = index.find2(data.data() + c * nr);
+        EXPECT_EQ(c, res.first);
+
+        auto self = data.data() + c * nr;
+        double expected_dist = std::numeric_limits<double>::infinity();
+        int expected_second = 0;
+        for (int b = 0; b < nc; ++b) {
+            if (b == c) {
+                continue;
+            }
+
+            double d2 = 0;
+            auto other = data.data() + b * nr;
+            for (int r = 0; r < nr; ++r) {
+                double delta = other[r] - self[r];
+                d2 += delta * delta;
+            }
+
+            if (d2 < expected_dist) {
+                expected_second = b;
+                expected_dist = d2;
+            }
+        }
+
+        EXPECT_EQ(expected_second, res.second);
+    }
+}
 
 INSTANTIATE_TEST_SUITE_P(
     QuickSearch,
