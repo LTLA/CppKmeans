@@ -42,7 +42,8 @@ struct RefineHartiganWongOptions {
 namespace RefineHartiganWong_internal {
 
 /* 
- * The class below represents 'ncp', which has a dual interpretation.
+ * The class below represents 'ncp', which has a dual interpretation in the
+ * original Fortran implementation:
  *
  * - In the optimal-transfer stage, NCP(L) stores the step at which cluster L
  *   was last updated. Each step is just the observation index as the optimal
@@ -57,6 +58,10 @@ namespace RefineHartiganWong_internal {
  * quick_transfer before it eventually gets written. The easiest way to
  * interpret this is to consider the optimal transfer as "iteration -1" from
  * the perspective of the quick transfer iterations. 
+ *
+ * In short, this data structure specifies whether a cluster was modified
+ * within the last M steps. This counts steps in both optimal_transfer and
+ * quick_transfer, and considers modifications from both calls.
  */
 template<typename Index_>
 class UpdateHistory {
@@ -66,10 +71,10 @@ public:
 private:
     /* 
      * The problem with the original implementation is that the integers are
-     * expected to hold 'max_quick_iterations * nobs'. For a templated integer
+     * expected to hold 'max_quick_iterations * M'. For a templated integer
      * type, that might not be possible, so instead we split it into two
-     * vectors; one holds the last iteration at which the cluster was modified
-     * plus 1, the other holds the last observation used in the modification.
+     * vectors; one holds the last iteration at which the cluster was modified,
+     * the other holds the last observation used in the modification.
      */
     Index_ my_last_observation = 0;
 
@@ -130,10 +135,10 @@ public:
  *   that the interpretation is correct in the next call.
  *
  * It basically tells us whether there was a recent transfer (optimal or quick)
- * within the last M steps for a given cluster. If so, the cluster is "live".
+ * within the last M steps of optimal_transfer. If so, the cluster is "live".
  */
 template<typename Index_>
-class LiveSet {
+class LiveStatus {
 private:
     enum class Event : uint8_t { NONE, PAST_OPT, CURRENT_OPT, QUICK, INIT };
 
@@ -155,7 +160,7 @@ private:
      *     optimal_transfer call.
      *   - Otherwise it is undefined and should not be used.
      *
-     * One might think that 'LiveSet::my_last_optimal_transfer' is redundant
+     * One might think that 'LiveStatus::my_last_optimal_transfer' is redundant
      * with 'UpdateHistory::my_last_observation', but the former only tracks
      * optimal transfers while the latter includes quick transfers. 
      */
@@ -171,7 +176,7 @@ public:
         }
     }
 
-    void mark(Index_ obs) {
+    void mark_current(Index_ obs) {
         my_had_recent_transfer = Event::CURRENT_OPT;
         my_last_optimal_transfer = obs;
     }
@@ -199,7 +204,7 @@ struct Workspace {
 
     std::vector<UpdateHistory<Index_> > update_history; // i.e., ncp
     std::vector<uint8_t> was_quick_transferred; // i.e., itran
-    std::vector<LiveSet<Index_> > live_set; // i.e., live
+    std::vector<LiveStatus<Index_> > live_set; // i.e., live
 
     Index_ optra_steps_since_last_transfer = 0; // i.e., indx
 
@@ -369,8 +374,8 @@ bool optimal_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::
             } else {
                 work.optra_steps_since_last_transfer = 0;
 
-                live1.mark(obs);
-                work.live_set[l2].mark(obs);
+                live1.mark_current(obs);
+                work.live_set[l2].mark_current(obs);
                 history1.set_optimal(obs);
                 work.update_history[l2].set_optimal(obs);
 
@@ -457,7 +462,8 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Center_, typ
            }
 
            if (steps_since_last_quick_transfer == nobs) {
-               // quitting if no transfer occurred within the past 'nobs' steps.
+               // Quit early if no transfer occurred within the past 'nobs'
+               // steps, as we've already converged for each observation. 
                return std::make_pair(had_transfer, false);
            }
         }
@@ -503,7 +509,7 @@ public:
     RefineHartiganWong(RefineHartiganWongOptions options) : my_options(std::move(options)) {}
 
     /**
-     * Default constructor with default options.
+     * Default constructor. 
      */
     RefineHartiganWong() = default;
 

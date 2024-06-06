@@ -69,7 +69,7 @@ public:
     RefineLloyd(RefineLloydOptions options) : my_options(std::move(options)) {}
 
     /**
-     * Default constructor with default options.
+     * Default constructor. 
      */
     RefineLloyd() = default;
 

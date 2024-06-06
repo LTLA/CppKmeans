@@ -76,86 +76,25 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-using RefineHartiganWongConstantTest = TestParamCore<std::tuple<int, int> >;
+using RefineHartiganWongConstantTest = TestCore<::testing::Test>;
 
-TEST_P(RefineHartiganWongConstantTest, TooMany) {
-    auto param = GetParam();
-    assemble(param);
+TEST_F(RefineHartiganWongConstantTest, Extremes) {
+    nr = 20;
+    nc = 50;
+    assemble();
 
     kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineHartiganWong hw;
+    kmeans::RefineHartiganWong ll;
 
     {
-        std::vector<double> centers(data.size());
+        std::vector<double> centers(nr * nc);
         std::vector<int> clusters(nc);
-        auto res = hw.run(mat, nc, centers.data(), clusters.data());
-
-        // Checking that the averages are just equal to the points.
+        auto res = ll.run(mat, nc, centers.data(), clusters.data());
         EXPECT_EQ(data, centers);
-        EXPECT_EQ(res.sizes, std::vector<int>(nc, 1));
-        EXPECT_EQ(res.iterations, 0);
-        EXPECT_EQ(res.status, 0);
-
-        std::vector<int> ref(nc);
-        std::iota(ref.begin(), ref.end(), 0);
-        EXPECT_EQ(ref, clusters);
     }
 
     {
-        std::vector<double> centers(data.size() + nr);
-        std::vector<int> clusters(nc);
-
-        auto res = hw.run(mat, nc + 1, centers.data(), clusters.data());
-        EXPECT_EQ(res.status, 0);
-
-        std::vector<int> ref(nc);
-        std::iota(ref.begin(), ref.end(), 0);
-        EXPECT_EQ(ref, clusters);
-
-        std::vector<double> truncated(centers.begin(), centers.begin() + data.size());
-        EXPECT_EQ(data, truncated);
-
-        std::vector<int> expected_sizes(nc, 1);
-        expected_sizes.push_back(0);
-        EXPECT_EQ(res.sizes, expected_sizes);
+        auto res0 = ll.run(mat, 0, NULL, NULL);
+        EXPECT_TRUE(res0.sizes.empty());
     }
 }
-
-TEST_P(RefineHartiganWongConstantTest, TooFew) {
-    auto param = GetParam();
-    assemble(param);
-
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineHartiganWong hw;
-
-    std::vector<double> centers(nr);
-    std::vector<int> clusters(nc);
-    auto res = hw.run(mat, 1, centers.data(), clusters.data());
-
-    std::vector<double> averages(nr);
-    size_t i = 0;
-    for (auto d : data) {
-        averages[i] += d;
-        ++i;
-        i %= nr;
-    }
-    for (auto& a : averages) {
-        a /= nc;
-    }
-
-    EXPECT_EQ(centers, averages);
-    EXPECT_EQ(res.iterations, 0);
-
-    // no points at all.
-    auto res0 = hw.run(mat, 0, NULL, NULL);
-    EXPECT_TRUE(res0.sizes.empty());
-}
-
-INSTANTIATE_TEST_SUITE_P(
-    RefineHartiganWong,
-    RefineHartiganWongConstantTest,
-    ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 200) // number of observations 
-    )
-);

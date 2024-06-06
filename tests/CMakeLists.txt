@@ -26,6 +26,7 @@ macro(create_test target)
         src/InitializeKmeanspp.cpp
         src/InitializePcaPartition.cpp
         src/QuickSearch.cpp
+        src/is_edge_case.cpp
         src/RefineLloyd.cpp
         src/RefineHartiganWong.cpp
         # src/Kmeans.cpp
