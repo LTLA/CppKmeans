@@ -14,13 +14,12 @@ namespace kmeans {
  * This defines the expectations for a matrix of observation-level data to be used in `Initialize::run()` and `Refine::run()`.
  * Each matrix should support extraction of the vector of coordinates for each observation.
  */
-template<typename Data_, typename Index_, typename Dim_>
 class MockMatrix {
 public:
     /**
      * @cond
      */
-    MockMatrix(int num_dim, Index_ num_obs, const Data_* data) : my_num_dim(num_dim), my_num_obs(num_obs), my_data(data), my_long_num_dim(num_dim) {}
+    MockMatrix(int num_dim, Index_ num_obs, const double* data) : my_num_dim(num_dim), my_num_obs(num_obs), my_data(data), my_long_num_dim(num_dim) {}
     /**
      * @endcond
      */
@@ -30,19 +29,19 @@ public:
      * Type of the data.
      * Any floating-point type may be used here.
      */
-    typedef Data_ data_type;
+    typedef double data_type;
 
     /**
      * Type for the observation indices.
      * Any integer type may be used here.
      */
-    typedef Index_ index_type;
+    typedef int index_type;
 
     /**
      * Integer type for the dimension indices.
      * Any integer type may be used here.
      */
-    typedef Dim_ dimension_type;
+    typedef int dimension_type;
 
 private:
     dimension_type my_num_dim;
@@ -123,12 +122,12 @@ public:
     };
 
     /**
-     * @param[in] sequence Vector of sorted and unique indices of observations, to be accessed in the provided order.
+     * @param[in] sequence Pointer to an array of sorted and unique indices of observations, to be accessed in the provided order.
      * It is assumed that the vector will not be deallocated before the destruction of the returned `IndexedAccessWorkspace`.
      * @param length Number of observations in `sequence`.
      * @return A new indexed-access workspace, to be passed to `fetch_observation()`.
      */
-    IndexedAccessWorkspace create_workspace(const std::vector<index_type>& sequence) const {
+    IndexedAccessWorkspace create_workspace(const index_type* sequence, [[maybe_unused]] index_type length) const {
         return IndexedAccessWorkspace(sequence);
     }
 

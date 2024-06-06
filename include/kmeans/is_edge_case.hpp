@@ -11,13 +11,13 @@ namespace kmeans {
 
 namespace internal {
 
-template<typename Index_ = int, typename Cluster_ = int>
+template<typename Index_, typename Cluster_>
 bool is_edge_case(Index_ nobs, Cluster_ ncenters) {
     return (ncenters <= 1 || static_cast<Index_>(ncenters) >= nobs);
 }
 
-template<class Matrix_, typename Cluster_, typename Center_>
-Details<typename Matrix_::index_type> process_edge_case(const Matrix_& data, Cluster_ ncenters, Center_* centers, Cluster_* clusters) {
+template<class Matrix_, typename Cluster_, typename Float_>
+Details<typename Matrix_::index_type> process_edge_case(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) {
     auto nobs = data.num_observations();
 
     if (ncenters == 1) {

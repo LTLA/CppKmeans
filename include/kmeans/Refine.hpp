@@ -9,11 +9,12 @@ namespace kmeans {
 /**
  * @brief Interface for all k-means refinement algorithms.
  *
- * @tparam Data_ Floating-point type for the data and centroids.
+ * @tparam Matrix_ Matrix type for the input data.
+ * This should satisfy the `MockMatrix` contract.
  * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Center_ Floating-point type for the centroids.
+ * @tparam Float_ Floating-point type for the centroids.
  */
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
+template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
 class Refine {
 public:
     virtual ~Refine() = default;
@@ -31,7 +32,7 @@ public:
      * @return `centers` and `clusters` are filled, and a `Details` object is returned containing clustering statistics.
      * If `ncenters > nobs`, only the first `nobs` columns of the `centers` array will be filled.
      */
-    virtual Details<typename Matrix_::index_type> run(const Matrix_& data, Cluster_ ncenters, Center_* centers, Cluster_* clusters) const = 0;
+    virtual Details<typename Matrix_::index_type> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const = 0;
 };
 
 }

@@ -7,8 +7,8 @@ namespace kmeans {
 
 namespace internal {
 
-template<class Matrix_, typename Center_>
-void compute_centroid(const Matrix_& data, Center_* center) {
+template<class Matrix_, typename Float_>
+void compute_centroid(const Matrix_& data, Float_* center) {
     auto ndim = data.num_dimensions();
     std::fill_n(center, ndim, 0);
     auto nobs = data.num_observations();
@@ -26,8 +26,8 @@ void compute_centroid(const Matrix_& data, Center_* center) {
     }
 }
 
-template<class Matrix_, typename Cluster_, typename Center_>
-void compute_centroids(const Matrix_& data, Cluster_ ncenters, Center_* centers, const Cluster_* clusters, const std::vector<typename Matrix_::index_type>& sizes) {
+template<class Matrix_, typename Cluster_, typename Float_>
+void compute_centroids(const Matrix_& data, Cluster_ ncenters, Float_* centers, const Cluster_* clusters, const std::vector<typename Matrix_::index_type>& sizes) {
     auto nobs = data.num_observations();
     auto ndim = data.num_dimensions();
     size_t long_ndim = ndim;

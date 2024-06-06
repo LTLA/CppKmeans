@@ -13,7 +13,7 @@
 #include "parallelize.hpp"
 
 /**
- * @file InitializeKmeansPP.hpp
+ * @file InitializeKmeanspp.hpp
  *
  * @brief Class for **kmeans++** initialization.
  */
@@ -133,16 +133,17 @@ std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Clus
  * The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.
  *
  * @tparam Matrix_ Matrix type for the input data.
+ * This should satisfy the `MockMatrix` contract.
  * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Center_ Floating-point type for the centroids.
+ * @tparam Float_ Floating-point type for the centroids.
  *
  * @see
  * Arthur, D. and Vassilvitskii, S. (2007).
  * k-means++: the advantages of careful seeding.
  * _Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms_, 1027-1035.
  */
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
-class InitializeKmeanspp : public Initialize<Matrix_, Cluster_, Center_> {
+template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
+class InitializeKmeanspp : public Initialize<Matrix_, Cluster_, Float_> {
 private:
     InitializeKmeansppOptions my_options;
 
@@ -158,7 +159,7 @@ public:
     InitializeKmeanspp() = default;
 
 public:
-    Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Center_* centers) const {
+    Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Float_* centers) const {
         size_t nobs = matrix.num_observations();
         if (!nobs) {
             return 0;

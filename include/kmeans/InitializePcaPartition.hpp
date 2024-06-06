@@ -47,21 +47,21 @@ struct InitializePcaPartitionOptions {
  */
 namespace InitializePcaPartition_internal {
 
-template<typename Center_>
+template<typename Float_>
 struct Workspace {
     Workspace(size_t ndim) : pc(ndim), delta(ndim), cov(ndim * ndim) {}
-    std::vector<Center_> pc;
-    std::vector<Center_> delta;
-    std::vector<Center_> cov;
+    std::vector<Float_> pc;
+    std::vector<Float_> delta;
+    std::vector<Float_> cov;
 };
 
-template<class Matrix_, typename Center_, class Engine_>
+template<class Matrix_, typename Float_, class Engine_>
 void compute_pc1(
     const Matrix_& data, 
     const std::vector<typename Matrix_::index_type>& chosen, 
-    const Center_* center, 
+    const Float_* center, 
     Engine_& eng, 
-    Workspace<Center_>& work,
+    Workspace<Float_>& work,
     const powerit::Options& power_opts)
 {
     auto ndim = data.num_dimensions();
@@ -96,8 +96,8 @@ void compute_pc1(
     powerit::compute(ndim, work.cov.data(), /* row_major = */ true, work.pc.data(), eng, power_opts);
 } 
 
-template<class Matrix_, typename Center_>
-void compute_center(const Matrix_& data, const std::vector<typename Matrix_::index_type>& chosen, Center_* center) {
+template<class Matrix_, typename Float_>
+void compute_center(const Matrix_& data, const std::vector<typename Matrix_::index_type>& chosen, Float_* center) {
     auto ndim = data.num_dimensions();
     std::fill_n(center, ndim, 0);
 
@@ -114,17 +114,17 @@ void compute_center(const Matrix_& data, const std::vector<typename Matrix_::ind
     }
 }
 
-template<class Matrix_, typename Center_>
-Center_ update_center_and_mrse(const Matrix_& data, const std::vector<typename Matrix_::index_type>& chosen, Center_* center) {
+template<class Matrix_, typename Float_>
+Float_ update_center_and_mrse(const Matrix_& data, const std::vector<typename Matrix_::index_type>& chosen, Float_* center) {
     compute_center(data, chosen, center);
 
     auto ndim = data.num_dimensions();
-    Center_ mrse = 0;
+    Float_ mrse = 0;
     auto work = data.create_workspace(chosen.data(), chosen.size());
     for (size_t i = 0, end = chosen.size(); i < end; ++i) {
         auto dptr = data.get_observation(work);
         for (decltype(ndim) d = 0; d < ndim; ++d) {
-            Center_ delta = dptr[d] - center[d];
+            Float_ delta = dptr[d] - center[d];
             mrse += delta * delta;
         }
     }
@@ -160,17 +160,18 @@ Center_ update_center_and_mrse(const Matrix_& data, const std::vector<typename M
  * This method is not completely deterministic as a randomization step is used in the PCA.
  * Nonetheless, the stochasticity is likely to have a much smaller effect than in the other initialization methods.
  *
- * @tparam Data_ Floating-point type for the data and centroids.
- * @tparam Cluster_ Integer type for the cluster index.
- * @tparam Index_ Integer type for the observation index.
+ * @tparam Matrix_ Matrix type for the input data.
+ * This should satisfy the `MockMatrix` contract.
+ * @tparam Cluster_ Integer type for the cluster assignments.
+ * @tparam Float_ Floating-point type for the centroids.
  *
  * @see
  * Su, T. and Dy, J. G. (2007).
  * In Search of Deterministic Methods for Initializing K-Means and Gaussian Mixture Clustering,
  * _Intelligent Data Analysis_ 11, 319-338.
  */
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
-class InitializePcaPartition : public Initialize<Matrix_, Cluster_, Center_> {
+template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
+class InitializePcaPartition : public Initialize<Matrix_, Cluster_, Float_> {
 public:
     /**
      * @param options Options for PCA partitioning.
@@ -186,18 +187,18 @@ private:
     InitializePcaPartitionOptions my_options;
 
 public:
-    Cluster_ run(const Matrix_& data, Cluster_ ncenters, Center_* centers) const {
+    Cluster_ run(const Matrix_& data, Cluster_ ncenters, Float_* centers) const {
         auto nobs = data.num_observations();
         if (nobs == 0) {
             return 0;
         }
 
         std::mt19937_64 rng(my_options.seed);
-        std::priority_queue<std::pair<Center_, Cluster_> > mrse;
+        std::priority_queue<std::pair<Float_, Cluster_> > mrse;
         std::vector<std::vector<typename Matrix_::index_type> > assignments(ncenters);
 
         auto ndim = data.num_dimensions();
-        InitializePcaPartition_internal::Workspace<Center_> power_work(ndim);
+        InitializePcaPartition_internal::Workspace<Float_> power_work(ndim);
 
         // Setting up the zero'th cluster. (No need to actually compute the
         // MRSE at this point, as there's nothing to compare it to.)
@@ -231,7 +232,7 @@ public:
             for (auto i : worst_assignments) {
                 auto dptr = data.get_observation(work);
 
-                Center_ proj = 0;
+                Float_ proj = 0;
                 for (decltype(ndim) d = 0; d < ndim; ++d) {
                     proj += (dptr[d] - worst_center[d]) * pc1[d];
                 }

@@ -25,7 +25,7 @@ namespace kmeans {
  * @param[out] wcss Pointer to an array of length equal to the number of cluster centers.
  * On output, this will contain the within-cluster sum of squares.
  */
-template<class Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
+template<class Matrix_, typename Cluster_, typename Float_>
 void compute_wcss(const Matrix_& data, Cluster_ ncenters, const Float_* centers, const Cluster_* clusters, Float_* wcss) {
     auto nobs = data.num_observations();
     auto ndim = data.num_dimensions();

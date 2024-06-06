@@ -12,7 +12,7 @@
 #include "parallelize.hpp"
 
 /**
- * @file Lloyd.hpp
+ * @file RefineLloyd.hpp
  *
  * @brief Implements the Lloyd algorithm for k-means clustering.
  */
@@ -46,17 +46,18 @@ struct RefineLloydOptions {
  * In the `Details::status` returned by `run()`, the status codes is either 0 (success) or 2 (maximum iterations reached without convergence).
  * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
  *
- * @tparam Center_ Floating-point type for the data and centroids.
+ * @tparam Matrix_ Matrix type for the input data.
+ * This should satisfy the `MockMatrix` contract.
  * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Index_ Integer type for the observation index.
+ * @tparam Float_ Floating-point type for the centroids.
  *
  * @see
  * Lloyd, S. P. (1982).  
  * Least squares quantization in PCM.
  * _IEEE Transactions on Information Theory_ 28, 128-137.
  */
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
-class RefineLloyd : public Refine<Matrix_, Cluster_, Center_> {
+template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
+class RefineLloyd : public Refine<Matrix_, Cluster_, Float_> {
 private:
     RefineLloydOptions my_options;
 
@@ -74,7 +75,7 @@ public:
     RefineLloyd() = default;
 
 public:
-    Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Center_* centers, Cluster_* clusters) const {
+    Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
         auto nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
             return internal::process_edge_case(data, ncenters, centers, clusters);
@@ -84,7 +85,7 @@ public:
         std::vector<Index_> sizes(ncenters);
         std::vector<Cluster_> copy(nobs);
         auto ndim = data.num_dimensions();
-        internal::QuickSearch<Center_, Cluster_, decltype(ndim)> index;
+        internal::QuickSearch<Float_, Cluster_, decltype(ndim)> index;
 
         for (iter = 1; iter <= my_options.max_iterations; ++iter) {
             index.reset(ndim, ncenters, centers);

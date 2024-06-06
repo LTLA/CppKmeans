@@ -13,7 +13,7 @@
 #include "is_edge_case.hpp"
 
 /**
- * @file HartiganWong.hpp
+ * @file RefineHartiganWong.hpp
  *
  * @brief Implements the Hartigan-Wong algorithm for k-means clustering.
  */
@@ -192,15 +192,15 @@ public:
     }
 };
 
-template<typename Center_, typename Index_, typename Cluster_>
+template<typename Float_, typename Index_, typename Cluster_>
 struct Workspace {
     // Array arguments in the same order as supplied to R's kmns_ function.
     std::vector<Cluster_> second_best_cluster; // i.e., ic2
     std::vector<Index_> cluster_sizes; // i.e., nc
 
-    std::vector<Center_> loss_multiplier; // i.e., an1
-    std::vector<Center_> gain_multiplier; // i.e., an2
-    std::vector<Center_> wcss_loss; // i.e., d
+    std::vector<Float_> loss_multiplier; // i.e., an1
+    std::vector<Float_> gain_multiplier; // i.e., an2
+    std::vector<Float_> wcss_loss; // i.e., d
 
     std::vector<UpdateHistory<Index_> > update_history; // i.e., ncp
     std::vector<uint8_t> was_quick_transferred; // i.e., itran
@@ -224,9 +224,9 @@ public:
     {}
 };
 
-template<typename Data_, typename Center_, typename Dim_>
-Center_ squared_distance_from_cluster(const Data_* data, const Center_* center, Dim_ ndim) {
-    Center_ output = 0;
+template<typename Data_, typename Float_, typename Dim_>
+Float_ squared_distance_from_cluster(const Data_* data, const Float_* center, Dim_ ndim) {
+    Float_ output = 0;
     for (decltype(ndim) dim = 0; dim < ndim; ++dim, ++data, ++center) {
         auto delta = *data - *center;
         output += delta * delta;
@@ -234,8 +234,8 @@ Center_ squared_distance_from_cluster(const Data_* data, const Center_* center, 
     return output;
 }
 
-template<class Matrix_, typename Cluster_, typename Center_>
-void find_closest_two_centers(const Matrix_& data, Cluster_ ncenters, const Center_* centers, Cluster_* best_cluster, std::vector<Cluster_>& second_best_cluster, int nthreads) {
+template<class Matrix_, typename Cluster_, typename Float_>
+void find_closest_two_centers(const Matrix_& data, Cluster_ ncenters, const Float_* centers, Cluster_* best_cluster, std::vector<Cluster_>& second_best_cluster, int nthreads) {
     auto nobs = data.num_observations();
     size_t ndim = data.num_dimensions();
     typedef typename Matrix_::index_type Index_;
@@ -273,17 +273,17 @@ void find_closest_two_centers(const Matrix_& data, Cluster_ ncenters, const Cent
     });
 }
 
-template<typename Center_>
-constexpr Center_ big_number() {
+template<typename Float_>
+constexpr Float_ big_number() {
     return 1e30; // Some very big number.
 }
 
-template<typename Dim_, typename Data_, typename Index_, typename Cluster_, typename Center_>
-void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1, Cluster_ l2, Center_* centers, Cluster_* best_cluster, Workspace<Center_, Index_, Cluster_>& work) {
+template<typename Dim_, typename Data_, typename Index_, typename Cluster_, typename Float_>
+void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1, Cluster_ l2, Float_* centers, Cluster_* best_cluster, Workspace<Float_, Index_, Cluster_>& work) {
     // Yes, casts to float are deliberate here, so that the
     // multipliers can be computed correctly.
-    Center_ al1 = work.cluster_sizes[l1], alw = al1 - 1;
-    Center_ al2 = work.cluster_sizes[l2], alt = al2 + 1;
+    Float_ al1 = work.cluster_sizes[l1], alw = al1 - 1;
+    Float_ al2 = work.cluster_sizes[l2], alt = al2 + 1;
 
     size_t long_ndim = ndim;
     auto copy1 = centers + static_cast<size_t>(l1) * long_ndim; // cast to avoid overflow.
@@ -297,7 +297,7 @@ void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1,
     ++work.cluster_sizes[l2];
 
     work.gain_multiplier[l1] = alw / al1;
-    work.loss_multiplier[l1] = (alw > 1 ? alw / (alw - 1) : big_number<Center_>());
+    work.loss_multiplier[l1] = (alw > 1 ? alw / (alw - 1) : big_number<Float_>());
     work.loss_multiplier[l2] = alt / al2;
     work.gain_multiplier[l2] = alt / (alt + 1);
 
@@ -312,8 +312,8 @@ void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1,
  * maximum reduction in the within-cluster sum of squares. In this stage,
  * there is only one pass through the data.
  */
-template<class Matrix_, typename Cluster_, typename Center_>
-bool optimal_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::index_type, Cluster_>& work, Cluster_ ncenters, Center_* centers, Cluster_* best_cluster) {
+template<class Matrix_, typename Cluster_, typename Float_>
+bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::index_type, Cluster_>& work, Cluster_ ncenters, Float_* centers, Cluster_* best_cluster) {
     auto nobs = data.num_observations();
     auto ndim = data.num_dimensions();
     auto matwork = data.create_workspace();
@@ -404,8 +404,8 @@ bool optimal_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::
  * step. In this stage, we loop through the data until no further change is to
  * take place, or we hit an iteration limit, whichever is first.
  */
-template<class Matrix_, typename Cluster_, typename Center_>
-std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::index_type, Cluster_>& work, Center_* centers, Cluster_* best_cluster) {
+template<class Matrix_, typename Cluster_, typename Float_>
+std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::index_type, Cluster_>& work, Float_* centers, Cluster_* best_cluster) {
     bool had_transfer = false;
     std::fill(work.was_quick_transferred.begin(), work.was_quick_transferred.end(), 0);
 
@@ -490,21 +490,21 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Center_, typ
  * This implementation is derived from the Fortran code underlying the `kmeans` function in the **stats** R package,
  * which in turn is derived from Hartigan and Wong (1979).
  * 
- * @tparam DATA_t Floating-point type for the data and centroids.
- * @tparam CLUSTER_t Integer type for the cluster assignments.
- * @tparam INDEX_t Integer type for the observation index.
- * This should have a maximum positive value that is at least 50 times greater than the maximum expected number of observations.
+ * @tparam Matrix_ Matrix type for the input data.
+ * This should satisfy the `MockMatrix` contract.
+ * @tparam Cluster_ Integer type for the cluster assignments.
+ * @tparam Float_ Floating-point type for the centroids.
  *
  * @see
  * Hartigan, J. A. and Wong, M. A. (1979).
  * Algorithm AS 136: A K-means clustering algorithm.
  * _Applied Statistics_, 28, 100-108.
  */
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
-class RefineHartiganWong : public Refine<Matrix_, Cluster_, Center_> {
+template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
+class RefineHartiganWong : public Refine<Matrix_, Cluster_, Float_> {
 public:
     /**
-     * @param Further options for the Hartigan-Wong algorithm.
+     * @param options Further options for the Hartigan-Wong algorithm.
      */
     RefineHartiganWong(RefineHartiganWongOptions options) : my_options(std::move(options)) {}
 
@@ -518,13 +518,13 @@ private:
     typedef typename Matrix_::index_type Index_;
 
 public:
-    Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Center_* centers, Cluster_* clusters) const {
+    Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
         auto nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
             return internal::process_edge_case(data, ncenters, centers, clusters);
         }
 
-        RefineHartiganWong_internal::Workspace<Center_, Index_, Cluster_> work(nobs, ncenters);
+        RefineHartiganWong_internal::Workspace<Float_, Index_, Cluster_> work(nobs, ncenters);
 
         RefineHartiganWong_internal::find_closest_two_centers(data, ncenters, centers, clusters, work.second_best_cluster, my_options.num_threads);
         for (Index_ obs = 0; obs < nobs; ++obs) {
@@ -532,10 +532,10 @@ public:
         }
         internal::compute_centroids(data, ncenters, centers, clusters, work.cluster_sizes);
 
-        for (Center_ cen = 0; cen < ncenters; ++cen) {
-            Center_ num = work.cluster_sizes[cen]; // yes, cast is deliberate here so that the multipliers can be computed correctly.
+        for (Cluster_ cen = 0; cen < ncenters; ++cen) {
+            Float_ num = work.cluster_sizes[cen]; // yes, cast is deliberate here so that the multipliers can be computed correctly.
             work.gain_multiplier[cen] = num / (num + 1);
-            work.loss_multiplier[cen] = (num > 1 ? num / (num - 1) : RefineHartiganWong_internal::big_number<Center_>());
+            work.loss_multiplier[cen] = (num > 1 ? num / (num - 1) : RefineHartiganWong_internal::big_number<Float_>());
         }
 
         int iter = 0;

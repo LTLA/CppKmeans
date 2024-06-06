@@ -14,10 +14,11 @@ namespace kmeans {
  * @brief Base class for initialization algorithms.
  *
  * @tparam Matrix_ Matrix type for the input data.
+ * This should satisfy the `MockMatrix` contract.
  * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Center_ Floating-point type for the centroids.
+ * @tparam Float_ Floating-point type for the centroids.
  */
-template<class Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Center_ = double>
+template<class Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
 class Initialize {
 public:
     /**
@@ -39,7 +40,7 @@ public:
      * The number of filled centers is returned - this is usually equal to `ncenters`, but may not be if, e.g., `ncenters` is greater than the number of observations.
      * If the returned value is less than `ncenters`, only the first few centers in `centers` will be filled.
      */
-    virtual Cluster_ run(const Matrix_& data, Cluster_ ncenters, Center_* centers) const = 0;
+    virtual Cluster_ run(const Matrix_& data, Cluster_ ncenters, Float_* centers) const = 0;
 };
 
 }
