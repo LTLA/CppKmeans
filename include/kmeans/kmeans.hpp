@@ -54,8 +54,10 @@ Details<typename Matrix_::index_type> compute(
     Float_* centers,
     Cluster_* clusters)
 {
-    initialize.run(data, num_centers, centers);
-    return refine.run(data, num_centers, centers, clusters);
+    auto actual_centers = initialize.run(data, num_centers, centers);
+    auto output = refine.run(data, actual_centers, centers, clusters);
+    output.sizes.resize(num_centers); // restoring the full size.
+    return output;
 }
 
 /**

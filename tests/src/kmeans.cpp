@@ -45,6 +45,24 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
+using KmeansExpandedTest = TestCore<::testing::Test>;
+
+TEST_F(KmeansExpandedTest, Basic) {
+    nr = 50;
+    nc = 10;
+    assemble();
+
+    kmeans::SimpleMatrix mat(nr, nc, data.data());
+    auto res = kmeans::compute(mat, kmeans::InitializeRandom(), kmeans::RefineHartiganWong(), nc + 10);
+    EXPECT_EQ(res.centers.size(), nr * (nc + 10));
+    EXPECT_EQ(res.clusters.size(), nc);
+
+    // Sizes are correctly resized.
+    std::vector<int> counts(nc, 1);
+    counts.insert(counts.end(), 10, 0);
+    EXPECT_EQ(counts, res.details.sizes);
+}
+
 using KmeansSanityTest = TestParamCore<std::tuple<int, int, int, int> >;
 
 TEST_P(KmeansSanityTest, SanityCheck) {

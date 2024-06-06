@@ -32,7 +32,7 @@ struct Details {
 
     /**
      * The number of observations in each cluster.
-     * All values are guaranteed to be positive for non-zero numbers of observations when `status == 0`.
+     * Some clusters may be empty, e.g., when there are more requested centers than clusters.
      */
     std::vector<Index_> sizes;
 
