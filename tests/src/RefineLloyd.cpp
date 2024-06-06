@@ -18,8 +18,7 @@ TEST_P(RefineLloydBasicTest, Sweep) {
     auto centers = create_centers(data.data(), ncenters);
     std::vector<int> clusters(nc);
 
-    kmeans::RefineLloydOptions opt;
-    kmeans::RefineLloyd ll(opt);
+    kmeans::RefineLloyd ll;
     auto res = ll.run(mat, ncenters, centers.data(), clusters.data());
 
     // Checking that there's the specified number of clusters, and that they're all non-empty.
@@ -41,7 +40,7 @@ TEST_P(RefineLloydBasicTest, Sweep) {
         std::vector<int> pclusters(nc);
 
         kmeans::RefineLloydOptions popt;
-        opt.num_threads = 3;
+        popt.num_threads = 3;
         kmeans::RefineLloyd pll(popt);
 
         pll.run(mat, ncenters, pcenters.data(), pclusters.data());
@@ -61,8 +60,7 @@ TEST_P(RefineLloydBasicTest, Sanity) {
 
     // Lloyd should give us back the perfect clusters.
     std::vector<int> clusters(nc);
-    kmeans::RefineLloydOptions opt;
-    kmeans::RefineLloyd ll(opt);
+    kmeans::RefineLloyd ll;
     auto res = ll.run(mat, ncenters, dups.centers.data(), clusters.data());
 
     EXPECT_EQ(clusters, dups.chosen);
@@ -85,8 +83,7 @@ TEST_P(RefineLloydConstantTest, TooMany) {
     assemble(param);
 
     kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineLloydOptions opt;
-    kmeans::RefineLloyd ll(opt);
+    kmeans::RefineLloyd ll;
 
     {
         std::vector<double> centers(data.size());
@@ -129,8 +126,7 @@ TEST_P(RefineLloydConstantTest, TooFew) {
     assemble(param);
 
     kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineLloydOptions opt;
-    kmeans::RefineLloyd ll(opt);
+    kmeans::RefineLloyd ll;
 
     std::vector<double> centers(nr);
     std::vector<int> clusters(nc);

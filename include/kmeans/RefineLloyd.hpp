@@ -68,6 +68,11 @@ public:
      */
     RefineLloyd(RefineLloydOptions options) : my_options(std::move(options)) {}
 
+    /**
+     * Default constructor with default options.
+     */
+    RefineLloyd() = default;
+
 public:
     Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Center_* centers, Cluster_* clusters) const {
         auto nobs = data.num_observations();

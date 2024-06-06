@@ -18,8 +18,7 @@ TEST_P(RefineHartiganWongBasicTest, Sweep) {
     auto centers = create_centers(data.data(), ncenters);
     std::vector<int> clusters(nc);
 
-    kmeans::RefineHartiganWongOptions opt;
-    kmeans::RefineHartiganWong hw(opt);
+    kmeans::RefineHartiganWong hw;
     auto res = hw.run(mat, ncenters, centers.data(), clusters.data());
 
     // Checking that there's the specified number of clusters, and that they're all non-empty.
@@ -38,8 +37,8 @@ TEST_P(RefineHartiganWongBasicTest, Sweep) {
     // Checking paralleization yields the same results.
     {
         kmeans::RefineHartiganWongOptions popt;
-        opt.num_threads = 3;
-        kmeans::RefineHartiganWong phw(opt);
+        popt.num_threads = 3;
+        kmeans::RefineHartiganWong phw(popt);
 
         auto pcenters = create_centers(data.data(), ncenters);
         std::vector<int> pclusters(nc);
@@ -61,9 +60,8 @@ TEST_P(RefineHartiganWongBasicTest, Sanity) {
 
     // HartiganWong should give us back the perfect clusters.
     std::vector<int> clusters(nc);
-    kmeans::RefineHartiganWongOptions opt;
-    kmeans::RefineHartiganWong ll(opt);
-    auto res = ll.run(mat, ncenters, dups.centers.data(), clusters.data());
+    kmeans::RefineHartiganWong hw;
+    auto res = hw.run(mat, ncenters, dups.centers.data(), clusters.data());
 
     EXPECT_EQ(clusters, dups.chosen);
 }
@@ -85,13 +83,12 @@ TEST_P(RefineHartiganWongConstantTest, TooMany) {
     assemble(param);
 
     kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineHartiganWongOptions opt;
-    kmeans::RefineHartiganWong ll(opt);
+    kmeans::RefineHartiganWong hw;
 
     {
         std::vector<double> centers(data.size());
         std::vector<int> clusters(nc);
-        auto res = ll.run(mat, nc, centers.data(), clusters.data());
+        auto res = hw.run(mat, nc, centers.data(), clusters.data());
 
         // Checking that the averages are just equal to the points.
         EXPECT_EQ(data, centers);
@@ -108,7 +105,7 @@ TEST_P(RefineHartiganWongConstantTest, TooMany) {
         std::vector<double> centers(data.size() + nr);
         std::vector<int> clusters(nc);
 
-        auto res = ll.run(mat, nc + 1, centers.data(), clusters.data());
+        auto res = hw.run(mat, nc + 1, centers.data(), clusters.data());
         EXPECT_EQ(res.status, 0);
 
         std::vector<int> ref(nc);
@@ -129,12 +126,11 @@ TEST_P(RefineHartiganWongConstantTest, TooFew) {
     assemble(param);
 
     kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineHartiganWongOptions opt;
-    kmeans::RefineHartiganWong ll(opt);
+    kmeans::RefineHartiganWong hw;
 
     std::vector<double> centers(nr);
     std::vector<int> clusters(nc);
-    auto res = ll.run(mat, 1, centers.data(), clusters.data());
+    auto res = hw.run(mat, 1, centers.data(), clusters.data());
 
     std::vector<double> averages(nr);
     size_t i = 0;
@@ -151,7 +147,7 @@ TEST_P(RefineHartiganWongConstantTest, TooFew) {
     EXPECT_EQ(res.iterations, 0);
 
     // no points at all.
-    auto res0 = ll.run(mat, 0, NULL, NULL);
+    auto res0 = hw.run(mat, 0, NULL, NULL);
     EXPECT_TRUE(res0.sizes.empty());
 }
 

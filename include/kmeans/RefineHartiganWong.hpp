@@ -61,13 +61,6 @@ namespace RefineHartiganWong_internal {
 template<typename Index_>
 class UpdateHistory {
 public:
-    template<typename Cluster_>
-    UpdateHistory(Cluster_ ncenters) : 
-        my_last_observation(ncenters),
-        my_last_iteration_p1(ncenters, init)
-    {}
-
-public:
     static constexpr int8_t max_quick_iterations = 50;
 
 private:
@@ -78,57 +71,50 @@ private:
      * vectors; one holds the last iteration at which the cluster was modified
      * plus 1, the other holds the last observation used in the modification.
      */
-    std::vector<Index_> my_last_observation;
+    Index_ my_last_observation = 0;
 
     // We use 8-bit ints to save some space, with signing for the special values.
-    // We store the last update iteration plus 1 so that we can easily compare
-    // to the next iteration in the quick_transfer loop.
-    std::vector<int8_t> my_last_iteration_p1; 
+    int8_t my_last_iteration = init; 
 
-    static constexpr int8_t init = -2;
-    static constexpr int8_t unchanged = -1;
+    static constexpr int8_t init = -3;
+    static constexpr int8_t unchanged = -2;
 
 public:
-    void set_all_unchanged() {
-        std::fill(my_last_iteration_p1.begin(), my_last_iteration_p1.end(), unchanged);
+    void set_unchanged() {
+        my_last_observation = unchanged;
     }
 
     // We treat the optimal_transfer as "iteration -1" here.
-    template<typename Cluster_>
-    void set_optimal(Cluster_ clust, Index_ obs) {
-        my_last_iteration_p1[clust] = 0;
-        my_last_observation[clust] = obs;
+    void set_optimal(Index_ obs) {
+        my_last_iteration = -1;
+        my_last_observation = obs;
     }
 
     // Here, iter should be from '[0, max_quick_iterations)'.
-    template<typename Cluster_>
-    void set_quick(Cluster_ clust, int8_t iter, Index_ obs) { // iter should be non-negative.
-        my_last_iteration_p1[clust] = iter + 1;
-        my_last_observation[clust] = obs;
+    void set_quick(int8_t iter, Index_ obs) {
+        my_last_iteration = iter;
+        my_last_observation = obs;
     }
 
 public:
-    template<typename Cluster_>
-    bool is_unchanged(Cluster_ clust) const {
-        return my_last_iteration_p1[clust] == unchanged;
+    bool is_unchanged() const {
+        return my_last_iteration == unchanged;
     }
 
 public:
-    template<typename Cluster_>
-    bool greater_than(Cluster_ clust, int8_t iter, Index_ obs) const {
-        if (my_last_iteration_p1[clust] == iter) {
-            return my_last_observation[clust] > obs;
+    bool changed_after(int8_t iter, Index_ obs) const {
+        if (my_last_iteration == iter) {
+            return my_last_observation > obs;
         } else {
-            return my_last_iteration_p1[clust] > iter;
+            return my_last_iteration > iter;
         }
     }
 
-    template<typename Cluster_>
-    bool greater_than_or_equal(Cluster_ clust, int8_t iter, Index_ obs) const {
-        if (my_last_iteration_p1[clust] == iter) {
-            return my_last_observation[clust] >= obs;
+    bool changed_after_or_at(int8_t iter, Index_ obs) const {
+        if (my_last_iteration == iter) {
+            return my_last_observation >= obs;
         } else {
-            return my_last_iteration_p1[clust] > iter;
+            return my_last_iteration > iter;
         }
     }
 };
@@ -160,11 +146,11 @@ private:
      *   preceding quick_transfer call. If this > PAST_OPT, the cluster is 
      *   definitely live; if it is == PAST_OPT, it may or may not be live.
      * - 'my_last_optimal_transfer' has two interpretations:
-     *   - If 'my_had_recent_transfer[i] = PAST_OPT', it specifies the
+     *   - If 'my_had_recent_transfer == PAST_OPT', it specifies the
      *     observation at which the last transfer occurred in previous
      *     optimal_transfer call. If this is greater than the current
      *     observation, the cluster is live.
-     *   - If 'my_had_recent_transfer[i] = CURRENT_OPT', it specifies the
+     *   - If 'my_had_recent_transfer == CURRENT_OPT', it specifies the
      *     observation at which the last transfer occurred in the current
      *     optimal_transfer call.
      *   - Otherwise it is undefined and should not be used.
@@ -173,45 +159,30 @@ private:
      * with 'UpdateHistory::my_last_observation', but the former only tracks
      * optimal transfers while the latter includes quick transfers. 
      */
-    std::vector<Event> my_had_recent_transfer; 
-    std::vector<Index_> my_last_optimal_transfer;
-
-public:
-    template<typename Cluster_>
-    LiveSet(Cluster_ ncenters) : 
-        my_had_recent_transfer(ncenters, Event::INIT),
-        my_last_optimal_transfer(ncenters) 
-    {}
+    Event my_had_recent_transfer = Event::INIT; 
+    Index_ my_last_optimal_transfer = 0;
 
 public:    
-    template<typename Center_>
-    bool is_live(Center_ cen, Index_ obs) const {
-        if (my_had_recent_transfer[cen] == Event::PAST_OPT) {
-            return my_last_optimal_transfer[cen] > obs;
+    bool is_live(Index_ obs) const {
+        if (my_had_recent_transfer == Event::PAST_OPT) {
+            return my_last_optimal_transfer > obs;
         } else {
-            return my_had_recent_transfer[cen] > Event::PAST_OPT;
+            return my_had_recent_transfer > Event::PAST_OPT;
         }
     }
 
-    template<typename Center_>
-    void set(Center_ cen, Index_ obs) {
-        my_had_recent_transfer[cen] = Event::CURRENT_OPT;
-        my_last_optimal_transfer[cen] = obs;
+    void mark(Index_ obs) {
+        my_had_recent_transfer = Event::CURRENT_OPT;
+        my_last_optimal_transfer = obs;
     }
 
-public:
-    void reset(const std::vector<uint8_t>& was_quick_transferred) {
-        size_t ncenters = my_had_recent_transfer.size();
-
-        for (size_t cen = 0; cen < ncenters; ++cen) {
-            auto& recent = my_had_recent_transfer[cen];
-            if (was_quick_transferred[cen]) {
-                recent = Event::QUICK;
-            } else if (recent == Event::CURRENT_OPT) {
-                recent = Event::PAST_OPT;
-            } else {
-                recent = Event::NONE;
-            }
+    void reset(bool was_quick_transferred) {
+        if (was_quick_transferred) {
+            my_had_recent_transfer = Event::QUICK;
+        } else if (my_had_recent_transfer == Event::CURRENT_OPT) {
+            my_had_recent_transfer = Event::PAST_OPT;
+        } else {
+            my_had_recent_transfer = Event::NONE;
         }
     }
 };
@@ -226,9 +197,9 @@ struct Workspace {
     std::vector<Center_> gain_multiplier; // i.e., an2
     std::vector<Center_> wcss_loss; // i.e., d
 
-    UpdateHistory<Index_> update_history; // i.e., ncp
+    std::vector<UpdateHistory<Index_> > update_history; // i.e., ncp
     std::vector<uint8_t> was_quick_transferred; // i.e., itran
-    LiveSet<Index_> live_set; // i.e., live
+    std::vector<LiveSet<Index_> > live_set; // i.e., live
 
     Index_ optra_steps_since_last_transfer = 0; // i.e., indx
 
@@ -354,7 +325,8 @@ bool optimal_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::
             // optimal_transfer, or (ii) if the cluster center was updated
             // earlier in the current optimal_transfer call.
             auto& wcss_loss = work.wcss_loss[obs];
-            if (!work.update_history.is_unchanged(l1)) {
+            auto& history1 = work.update_history[l1];
+            if (!history1.is_unchanged()) {
                 auto l1_ptr = centers + long_ndim * static_cast<size_t>(l1); // cast to avoid overflow.
                 wcss_loss = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
             }
@@ -376,22 +348,18 @@ bool optimal_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::
 
             // If the best cluster is live, we need to consider all other clusters.
             // Otherwise, we only need to consider other live clusters for transfer.
-            if (work.live_set.is_live(l1, obs)) { 
+            auto& live1 = work.live_set[l1];
+            if (live1.is_live(obs)) { 
                 for (Cluster_ cen = 0; cen < ncenters; ++cen) {
-                    if (cen == l1 || cen == original_l2) {
-                        continue;
+                    if (cen != l1 && cen != original_l2) {
+                        check_best_cluster(cen);
                     }
-                    check_best_cluster(cen);
                 }
             } else {
                 for (Cluster_ cen = 0; cen < ncenters; ++cen) {
-                    if (cen == l1 || cen == original_l2) {
-                        continue;
+                    if (cen != l1 && cen != original_l2 && work.live_set[cen].is_live(obs)) {
+                        check_best_cluster(cen);
                     }
-                    if (!work.live_set.is_live(l2, obs)) {
-                        continue;
-                    }
-                    check_best_cluster(cen);
                 }
             }
 
@@ -401,10 +369,10 @@ bool optimal_transfer(const Matrix_& data, Workspace<Center_, typename Matrix_::
             } else {
                 work.optra_steps_since_last_transfer = 0;
 
-                work.live_set.set(l1, obs);
-                work.live_set.set(l2, obs);
-                work.update_history.set_optimal(l1, obs);
-                work.update_history.set_optimal(l2, obs);
+                live1.mark(obs);
+                work.live_set[l2].mark(obs);
+                history1.set_optimal(obs);
+                work.update_history[l2].set_optimal(obs);
 
                 transfer_point(ndim, obs_ptr, obs, l1, l2, centers, best_cluster, work);
             }
@@ -445,23 +413,28 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Center_, typ
     Index_ steps_since_last_quick_transfer = 0;
 
     for (int8_t it = 0; it < UpdateHistory<Index_>::max_quick_iterations; ++it) {
+        int8_t prev_it = it - 1;
+
         for (decltype(nobs) obs = 0; obs < nobs; ++obs) { 
             ++steps_since_last_quick_transfer;
             auto l1 = best_cluster[obs];
+
             if (work.cluster_sizes[l1] != 1) {
                 const typename Matrix_::data_type* obs_ptr = NULL;
 
                 // Need to update the WCSS loss if the cluster was updated recently. 
                 // Otherwise, we must have already updated the WCSS in a previous 
                 // iteration of the outermost loop, so this can be skipped.
-                if (work.update_history.greater_than_or_equal(l1, it, obs)) {
+                auto& history1 = work.update_history[l1];
+                if (history1.changed_after_or_at(prev_it, obs)) {
                     auto l1_ptr = centers + static_cast<size_t>(l1) * long_ndim; // cast to avoid overflow.
                     obs_ptr = data.get_observation(obs, matwork);
                     work.wcss_loss[obs] = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
                 }
 
                 auto l2 = work.second_best_cluster[obs];
-                if (work.update_history.greater_than(l1, it, obs) || work.update_history.greater_than(l2, it, obs)) {
+                auto& history2 = work.update_history[l2];
+                if (history1.changed_after(prev_it, obs) || history2.changed_after(prev_it, obs)) {
                     if (obs_ptr == NULL) {
                         obs_ptr = data.get_observation(obs, matwork);
                     }
@@ -475,8 +448,8 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Center_, typ
                         work.was_quick_transferred[l1] = true;
                         work.was_quick_transferred[l2] = true;
 
-                        work.update_history.set_quick(l1, it, obs);
-                        work.update_history.set_quick(l2, it, obs);
+                        history1.set_quick(it, obs);
+                        history2.set_quick(it, obs);
 
                         transfer_point(ndim, obs_ptr, obs, l1, l2, centers, best_cluster, work);
                     }
@@ -529,6 +502,11 @@ public:
      */
     RefineHartiganWong(RefineHartiganWongOptions options) : my_options(std::move(options)) {}
 
+    /**
+     * Default constructor with default options.
+     */
+    RefineHartiganWong() = default;
+
 private:
     RefineHartiganWongOptions my_options;
     typedef typename Matrix_::index_type Index_;
@@ -580,9 +558,13 @@ public:
             // the final quick_transfer iteration. This implies that all WCSS
             // losses are up to date, as quick_transfer updated everything for
             // us; so we can set the status to 'unchanged' for all clusters.
-            work.update_history.set_all_unchanged();
+            for (auto& u : work.update_history) {
+                u.set_unchanged();
+            }
 
-            work.live_set.reset(work.was_quick_transferred);
+            for (Cluster_ c = 0; c < ncenters; ++c) {
+                work.live_set[c].reset(work.was_quick_transferred[c]);
+            }
         }
 
         if (iter == my_options.max_iterations + 1) {
