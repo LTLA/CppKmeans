@@ -31,7 +31,7 @@ macro(create_test target)
         src/RefineLloyd.cpp
         src/RefineHartiganWong.cpp
         src/RefineMiniBatch.cpp
-        # src/Kmeans.cpp
+        src/kmeans.cpp
     )
 
     target_link_libraries(

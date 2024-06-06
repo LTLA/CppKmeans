@@ -25,7 +25,7 @@ struct Details {
 
     Details(int iterations, int status) : sizes(0), iterations(iterations), status(status) {}
 
-    Details(std::vector<Index_> sizes, int iterations, int status) : sizes(std::move(s)), iterations(iterations), status(status) {} 
+    Details(std::vector<Index_> sizes, int iterations, int status) : sizes(std::move(sizes)), iterations(iterations), status(status) {} 
     /**
      * @endcond
      */

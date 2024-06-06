@@ -53,8 +53,8 @@ Details<typename Matrix_::index_type> compute(
     Float_* centers,
     Cluster_* clusters)
 {
-    initialize->run(data, ncenters, centers);
-    return refine->run(data, ncenters, centers, clusters);
+    initialize.run(data, num_centers, centers);
+    return refine.run(data, num_centers, centers, clusters);
 }
 
 /**
@@ -65,9 +65,11 @@ struct Results {
     /**
      * @cond
      */
-    Results(int ndim, INDEX_t nobs, CLUSTER_t ncenters) : centers(ndim * ncenters), clusters(nobs) {}
+    template<typename Dim_>
+    Results(Dim_ num_dimensions, Index_ num_observations, Cluster_ num_centers) : 
+        centers(num_dimensions * num_centers), clusters(num_observations) {}
 
-    Results() {}
+    Results() = default;
     /**
      * @endcond
      */
@@ -107,14 +109,14 @@ struct Results {
 template<class Matrix_, typename Cluster_, typename Float_>
 Results<Cluster_, Float_, typename Matrix_::index_type> compute(
     const Matrix_& data, 
-    const Initialize<Matrix_, Cluster_, Float_>* initialize, 
-    const Refine<Matrix_, Cluster_, Float_>* refine,
+    const Initialize<Matrix_, Cluster_, Float_>& initialize, 
+    const Refine<Matrix_, Cluster_, Float_>& refine,
     Cluster_ num_centers)
 {
     Results<Cluster_, Float_, typename Matrix_::index_type> output;
     output.clusters.resize(data.num_observations());
     output.centers.resize(static_cast<size_t>(num_centers) * static_cast<size_t>(data.num_dimensions()));
-    output.details = compute(mat, initialize, refine, ncenters, centers, clusters);
+    output.details = compute(data, initialize, refine, num_centers, output.centers.data(), output.clusters.data());
     return output;
 }
 

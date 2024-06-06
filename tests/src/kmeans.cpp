@@ -7,9 +7,7 @@
 #include "custom_parallel.h"
 #endif
 
-#include "kmeans/Kmeans.hpp"
-#include "kmeans/Lloyd.hpp"
-#include "kmeans/MiniBatch.hpp"
+#include "kmeans/kmeans.hpp"
 
 using KmeansBasicTest = TestParamCore<std::tuple<int, int, int> >;
 
@@ -18,9 +16,10 @@ TEST_P(KmeansBasicTest, Sweep) {
     assemble(param);
     auto ncenters = std::get<2>(param);
 
-    std::vector<int> centers(ncenters * nr), clusters(nc);
-
-    auto res = kmeans::Kmeans<>().run(nr, nc, data.data(), ncenters);
+    kmeans::SimpleMatrix mat(nr, nc, data.data());
+    auto res = kmeans::compute(mat, kmeans::InitializeRandom(), kmeans::RefineHartiganWong(), ncenters);
+    EXPECT_EQ(res.clusters.size(), nc);
+    EXPECT_EQ(res.centers.size(), ncenters * nr);
 
     // Checking that there's the specified number of clusters, and that they're all non-empty.
     std::vector<int> counts(ncenters);
@@ -34,16 +33,6 @@ TEST_P(KmeansBasicTest, Sweep) {
     }
 
     EXPECT_TRUE(res.details.iterations > 0);
-
-    // Checking that the WCSS calculations are correct.
-    const auto& wcss = res.details.withinss;
-    for (int i = 0; i < ncenters; ++i) {
-        if (counts[i] > 1) {
-            EXPECT_TRUE(wcss[i] > 0);
-        } else {
-            EXPECT_EQ(wcss[i], 0);
-        }
-    }
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -77,16 +66,17 @@ TEST_P(KmeansSanityTest, SanityCheck) {
     std::unique_ptr<kmeans::Refine<> > ptr;
     auto algo = std::get<3>(param);
     if (algo == 1) {
-        auto xptr = new kmeans::HartiganWong<>();
+        auto xptr = new kmeans::RefineHartiganWong<>();
         ptr.reset(xptr);
     } else if (algo == 2) {
-        auto xptr = new kmeans::Lloyd<>();
+        auto xptr = new kmeans::RefineLloyd<>();
         ptr.reset(xptr);
     } else if (algo == 3) {
-        auto xptr = new kmeans::MiniBatch<>();
+        auto xptr = new kmeans::RefineMiniBatch<>();
         ptr.reset(xptr);
     }
-    auto res = kmeans::Kmeans<>().run(nr, nc, data.data(), ncenters, NULL, ptr.get());
+
+    auto res = kmeans::compute(kmeans::SimpleMatrix(nr, nc, data.data()), kmeans::InitializeKmeanspp(), *ptr, ncenters);
 
     // Checking that every 'ncenters'-th element is the same.
     std::vector<int> last_known(ncenters, -1);
