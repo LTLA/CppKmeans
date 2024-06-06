@@ -16,10 +16,11 @@ namespace kmeans {
  * @tparam Cluster_ Integer type for the cluster assignments.
  * @tparam Float_ Floating-point type for the centers and output.
  *
- * @param[in] data A matrix-like object (see `MockMatrix`) containing per-observation data.
+ * @param data A matrix-like object (see `MockMatrix`) containing per-observation data.
  * @param ncenters Number of cluster centers.
- * @param[in] centers Pointer to an array where columns are cluster centers and rows are dimensions (from `data.num_dimensions()`).
- * This should contain the initial centroid locations for each cluster.
+ * @param[in] centers Pointer to an array of length equal to the product of `num_centers` and `data.num_dimensions()`.
+ * This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers.
+ * Each column should contain the initial centroid location for its cluster.
  * @param[in] clusters Pointer to an array of length equal to the number of observations (from `data.num_observations()`).
  * This should contain the 0-based cluster assignment for each observation.
  * @param[out] wcss Pointer to an array of length equal to the number of cluster centers.

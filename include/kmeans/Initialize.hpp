@@ -30,17 +30,17 @@ public:
      */
 
     /**
-     * @param[in] data A matrix-like object (see `MockMatrix`) containing per-observation data.
-     * @param ncenters Number of cluster centers.
-     * @param[out] centers Pointer to an array of length equal to `ncenters` multiplied by the number of dimensions in `data`.
-     * On output, this will contain the final centroid locations for each cluster, 
-     * where columns are cluster centers and rows are dimensions in column-major order.
+     * @param data A matrix-like object (see `MockMatrix`) containing per-observation data.
+     * @param num_centers Number of cluster centers.
+     * @param[out] centers Pointer to an array of length equal to the product of `num_centers` and `data.num_dimensions()`.
+     * This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers.
+     * On output, each column will contain the final centroid locations for each cluster.
      *
      * @return `centers` is filled with the new cluster centers.
-     * The number of filled centers is returned - this is usually equal to `ncenters`, but may not be if, e.g., `ncenters` is greater than the number of observations.
-     * If the returned value is less than `ncenters`, only the first few centers in `centers` will be filled.
+     * The number of filled centers is returned - this is usually equal to `num_centers`, but may not be if, e.g., `num_centers` is greater than the number of observations.
+     * If the returned value is less than `num_centers`, only the first few centers in `centers` will be filled.
      */
-    virtual Cluster_ run(const Matrix_& data, Cluster_ ncenters, Float_* centers) const = 0;
+    virtual Cluster_ run(const Matrix_& data, Cluster_ num_centers, Float_* centers) const = 0;
 };
 
 }

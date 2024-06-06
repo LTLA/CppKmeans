@@ -20,19 +20,19 @@ public:
     virtual ~Refine() = default;
 
     /**
-     * @param[in] data A matrix-like object (see `MockMatrix`) containing per-observation data.
-     * @param ncenters Number of cluster centers.
-     * @param[in, out] centers Pointer to an array where columns are cluster centers and rows are dimensions (from `data.num_dimensions()`).
-     * On input, this should contain the initial centroid locations for each cluster.
-     * Data should be stored in column-major order.
-     * On output, this will contain the final centroid locations for each cluster.
+     * @param data A matrix-like object (see `MockMatrix`) containing per-observation data.
+     * @param num_centers Number of cluster centers.
+     * @param[in, out] centers Pointer to an array of length equal to the product of `num_centers` and `data.num_dimensions()`.
+     * This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers.
+     * On input, each column should contain the initial centroid location for its cluster.
+     * On output, each column will contain the final centroid locations for each cluster.
      * @param[out] clusters Pointer to an array of length equal to the number of observations (from `data.num_observations()`).
      * On output, this will contain the cluster assignment for each observation.
      *
      * @return `centers` and `clusters` are filled, and a `Details` object is returned containing clustering statistics.
-     * If `ncenters > nobs`, only the first `nobs` columns of the `centers` array will be filled.
+     * If `num_centers` is greater than `data.num_observations()`, only the first `data.num_observations()` columns of the `centers` array will be filled.
      */
-    virtual Details<typename Matrix_::index_type> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const = 0;
+    virtual Details<typename Matrix_::index_type> run(const Matrix_& data, Cluster_ num_centers, Float_* centers, Cluster_* clusters) const = 0;
 };
 
 }

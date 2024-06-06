@@ -21,11 +21,11 @@ struct Details {
     /**
      * @cond
      */
-    Details() : iterations(0), status(0) {}
+    Details() = default;
 
-    Details(int it, int st) : sizes(0), iterations(it), status(st) {}
+    Details(int iterations, int status) : sizes(0), iterations(iterations), status(status) {}
 
-    Details(std::vector<Index_> s, int it, int st) : sizes(std::move(s)), iterations(it), status(st) {} 
+    Details(std::vector<Index_> sizes, int iterations, int status) : sizes(std::move(s)), iterations(iterations), status(status) {} 
     /**
      * @endcond
      */
@@ -40,14 +40,14 @@ struct Details {
      * The number of iterations used to achieve convergence.
      * This value may be greater than the `maxit` if convergence was not achieved, see `status`.
      */
-    int iterations;
+    int iterations = 0;
 
     /**
      * The status of the algorithm on completion.
      * A value of 0 indicates that the algorithm completed successfully.
      * The interpretation of a non-zero value depends on the algorithm.
      */
-    int status;
+    int status = 0;
 };
 
 }

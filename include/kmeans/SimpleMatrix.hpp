@@ -21,12 +21,12 @@ template<typename Data_, typename Index_>
 class SimpleMatrix {
 public:
     /**
-     * @param num_dim Number of dimensions.
-     * @param num_obs Number of observations.
+     * @param num_dimensions Number of dimensions.
+     * @param num_observations Number of observations.
      * @param[in] data Pointer to an array of length `num_dim * num_obs`, containing a column-major matrix of observation data.
      * It is expected that the array will not be deallocated during the lifetime of this `SimpleMatrix` instance.
      */
-    SimpleMatrix(int num_dim, Index_ num_obs, const Data_* data) : my_num_dim(num_dim), my_num_obs(num_obs), my_data(data), my_long_num_dim(num_dim) {}
+    SimpleMatrix(int num_dimensions, Index_ num_observations, const Data_* data) : my_num_dim(num_dimensions), my_num_obs(num_observations), my_data(data), my_long_num_dim(num_dimensions) {}
 
 private:
     int my_num_dim;
