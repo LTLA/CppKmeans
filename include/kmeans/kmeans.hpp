@@ -4,6 +4,7 @@
 #include "Details.hpp"
 #include "Refine.hpp"
 #include "Initialize.hpp"
+#include "MockMatrix.hpp"
 
 #include "InitializeKmeanspp.hpp"
 #include "InitializeRandom.hpp"

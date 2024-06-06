@@ -19,7 +19,7 @@ public:
     /**
      * @cond
      */
-    MockMatrix(int num_dim, Index_ num_obs, const double* data) : my_num_dim(num_dim), my_num_obs(num_obs), my_data(data), my_long_num_dim(num_dim) {}
+    MockMatrix(int num_dim, int num_obs, const double* data) : my_num_dim(num_dim), my_num_obs(num_obs), my_data(data), my_long_num_dim(num_dim) {}
     /**
      * @endcond
      */
@@ -113,8 +113,8 @@ public:
         /**
          * @cond
          */
-        IndexedAccessWorkspace(const std::vector<index_type>& sequence) : sequence(sequence) {}
-        const std::vector<index_type>& sequence;
+        IndexedAccessWorkspace(const index_type* sequence) : sequence(sequence) {}
+        const index_type* sequence;
         index_type at = 0;
         /**
          * @endcond
@@ -137,7 +137,7 @@ public:
      * @param workspace Random-access workspace for fetching.
      * @return Pointer to an array of length equal to `num_dimensions()`, containing the coordinates for this observation.
      */
-    const data_type* get_observation(Index_ i, [[maybe_unused]] RandomAccessWorkspace& workspace) const {
+    const data_type* get_observation(int i, [[maybe_unused]] RandomAccessWorkspace& workspace) const {
         return my_data + static_cast<size_t>(i) * my_long_num_dim; // avoid overflow during multiplication.
     } 
 

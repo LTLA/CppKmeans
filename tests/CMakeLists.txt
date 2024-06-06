@@ -23,6 +23,8 @@ macro(create_test target)
         ${target} 
         src/compute_centroids.cpp
         src/compute_wcss.cpp
+        src/MockMatrix.cpp
+        src/InitializeNone.cpp
         src/InitializeRandom.cpp
         src/InitializeKmeanspp.cpp
         src/InitializePcaPartition.cpp
