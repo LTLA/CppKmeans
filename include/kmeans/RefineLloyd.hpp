@@ -91,7 +91,7 @@ public:
             index.reset(ndim, ncenters, centers);
             internal::parallelize(nobs, my_options.num_threads, [&](int, Index_ start, Index_ length) {
                 auto work = data.create_workspace(start, length);
-                for (Index_ obs = 0; obs < length; ++obs) {
+                for (Index_ obs = start, end = start + length; obs < end; ++obs) {
                     auto dptr = data.get_observation(work);
                     copy[obs] = index.find(dptr); 
                 }
