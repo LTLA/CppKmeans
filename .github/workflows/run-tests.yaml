@@ -43,7 +43,15 @@ jobs:
     - name: Run the tests
       run: |
         cd build
-        ctest
+        # Avoid using ctest because it's so slow; it starts a
+        # new process for each individual test, which is crazy.
+        for exe in $(ctest --show-only=json-v1 | jq -r ".tests[] | .command | .[0]"  | sort | uniq)
+        do
+            echo "#### RUNNING ${exe} ####"
+            echo 
+            ${exe} --gtest_brief=1
+            echo
+        done 
 
     - name: Generate code coverage
       if: ${{ matrix.config.os == 'ubuntu-latest' }}
