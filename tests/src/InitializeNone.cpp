@@ -10,14 +10,15 @@
 
 #include "kmeans/InitializeNone.hpp"
 
-using InitializeNoneTest = TestCore<::testing::Test>;
+class InitializeNoneTest : public TestCore, public ::testing::Test {
+protected:
+    void SetUp() {
+        assemble({ 50, 20 });
+    }
+};
 
 TEST_F(InitializeNoneTest, Basic) {
-    nr = 50;
-    nc = 20;
-    assemble();
-
-    std::vector<double> centers = create_centers(data.data(), 3);
+    std::vector<double> centers = create_centers(3);
     auto original = centers;
 
     kmeans::InitializeNone init;

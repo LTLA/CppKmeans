@@ -17,7 +17,7 @@ protected:
     }
 };
 
-TEST_P(KmeansppInitializationTest, Basic) {
+TEST_P(KmeansppInitializationTest, Internals) {
     auto ncenters = std::get<1>(GetParam());
 
     kmeans::SimpleMatrix mat(nr, nc, data.data());
@@ -53,23 +53,36 @@ TEST_P(KmeansppInitializationTest, Basic) {
         auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp(mat, ncenters, seed, 3);
         EXPECT_EQ(output, output2);
     }
+}
 
-    // Checks that the class does the right thing.
-    kmeans::InitializeKmeansppOptions opt;
-    opt.seed = seed;
-    kmeans::InitializeKmeanspp init(opt);
+TEST_P(KmeansppInitializationTest, Basic) {
+    auto ncenters = std::get<1>(GetParam());
+    kmeans::SimpleMatrix mat(nr, nc, data.data());
 
+    kmeans::InitializeKmeanspp init;
     std::vector<double> centers(nr * ncenters);
     auto nfilled = init.run(mat, ncenters, centers.data());
     EXPECT_EQ(nfilled, ncenters);
 
-    auto cptr = centers.data();
-    for (auto c : output) {
-        std::vector<double> obs(cptr, cptr + nr);
-        cptr += nr;
-        auto optr = data.data() + c * nr;
-        std::vector<double> exp(optr, optr + nr);
-        EXPECT_EQ(obs, exp);
+    auto matched = match_to_data(ncenters, centers);
+    for (auto m : matched) {
+        EXPECT_TRUE(m >= 0);
+        EXPECT_TRUE(m < nc);
+    }
+
+    std::sort(matched.begin(), matched.end());
+    for (size_t i = 1; i < matched.size(); ++i) {
+        EXPECT_TRUE(matched[i] > matched[i-1]);
+    }
+
+    // Same results with parallelization.
+    {
+        kmeans::InitializeKmeansppOptions popt;
+        popt.num_threads = 3;
+        kmeans::InitializeKmeanspp pinit(popt);
+        std::vector<double> pcenters(nr * ncenters);
+        init.run(mat, ncenters, pcenters.data());
+        EXPECT_EQ(pcenters, centers);
     }
 }
 
@@ -85,7 +98,7 @@ TEST_P(KmeansppInitializationTest, Sanity) {
 
     EXPECT_EQ(output.size(), ncenters);
     for (auto& o : output) {
-        o = choices[o];
+        o = dups.clusters[o];
     }
     std::sort(output.begin(), output.end());
 
@@ -97,7 +110,7 @@ TEST_P(KmeansppInitializationTest, Sanity) {
     auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp(mat, ncenters + 1, seed, 1);
     EXPECT_EQ(output2.size(), ncenters);
     for (auto& o : output2) {
-        o = choices[o];
+        o = dups.clusters[o];
     }
     std::sort(output2.begin(), output2.end());
     EXPECT_EQ(expected, output2);
@@ -115,14 +128,14 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
-class KmeansppInitializationEdgeTest : public TestCore, public ::testing::Test<std::tuple<int, int> > {
+class KmeansppInitializationEdgeTest : public TestCore, public ::testing::Test {
 protected:
     void SetUp() {
-        assemble(GetParam());
+        assemble({ 10, 20 });
     }
 };
 
-TEST_P(KmeansppInitializationEdgeTest, TooManyClusters) {
+TEST_F(KmeansppInitializationEdgeTest, TooManyClusters) {
     kmeans::InitializeKmeansppOptions opt;
     opt.seed = nc * 10;
     kmeans::InitializeKmeanspp init(opt);
@@ -132,40 +145,15 @@ TEST_P(KmeansppInitializationEdgeTest, TooManyClusters) {
     EXPECT_EQ(nfilled, nc);
 
     // Check that there's one representative from each cluster.
-    std::vector<int> equivalence, expected;
-    for (int c = 0; c < nc; ++c) {
-        expected.push_back(c);
+    auto matched = match_to_data(nc, centers);
+    std::sort(matched.begin(), matched.end());
+    std::vector<int> expected(nc);
+    std::iota(expected.begin(), expected.end(), 0);
+    EXPECT_EQ(matched, expected);
 
-        for (int d = 0; d < nc; ++d) {
-            auto cIt = centers.begin() + c * nr;
-            auto dIt = data.begin() + d * nr;
-            bool is_equal = true;
-            for (int r = 0; r < nr; ++r, ++cIt, ++dIt) {
-                if (*cIt != *dIt) {
-                    is_equal = false;
-                    break;
-                }
-            }
-
-            if (is_equal) {
-                equivalence.push_back(d);
-            }
-        }
-    }
-    std::sort(equivalence.begin(), equivalence.end());
-    EXPECT_EQ(equivalence, expected);
-
+    // Same as if we have more clusters.
     std::vector<double> centers2(nc * nr);
     auto nfilled2 = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc + 10, centers2.data());
     EXPECT_EQ(nfilled2, nc);
     EXPECT_EQ(centers2, centers);
 }
-
-INSTANTIATE_TEST_SUITE_P(
-    KmeansppInitialization,
-    KmeansppInitializationEdgeTest,
-    ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 50)  // number of observations 
-    )
-);

@@ -9,12 +9,15 @@
 #include "kmeans/compute_centroids.hpp"
 #include "kmeans/SimpleMatrix.hpp"
 
-using ComputeWcssTest = TestParamCore<std::tuple<int, int, int> >;
+class ComputeWcssTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
+protected:
+    void SetUp() {
+        assemble(std::get<0>(GetParam()));
+    }
+};
 
 TEST_P(ComputeWcssTest, Basic) {
-    auto param = GetParam();
-    assemble(param);
-    auto ncenters = std::get<2>(param);
+    auto ncenters = std::get<1>(GetParam());
     kmeans::SimpleMatrix mat(nr, nc, data.data());
 
     std::vector<int> clusters(nc);
@@ -47,8 +50,10 @@ INSTANTIATE_TEST_SUITE_P(
     ComputeWcss,
     ComputeWcssTest,
     ::testing::Combine(
-        ::testing::Values(5, 10, 20),
-        ::testing::Values(50, 100),
+        ::testing::Combine(
+            ::testing::Values(5, 10, 20),
+            ::testing::Values(50, 100)
+        ),
         ::testing::Values(3, 7, 11) // number of clusters
     )
 );

@@ -8,11 +8,14 @@
 #include "kmeans/is_edge_case.hpp"
 #include "kmeans/SimpleMatrix.hpp"
 
-using EdgeCaseTest = TestParamCore<std::tuple<int, int> >;
+class EdgeCaseTest : public TestCore, public ::testing::TestWithParam<std::tuple<int, int> > {
+protected:
+    void SetUp() {
+        assemble(GetParam());
+    }
+};
 
 TEST_P(EdgeCaseTest, TooMany) {
-    auto param = GetParam();
-    assemble(param);
     kmeans::SimpleMatrix mat(nr, nc, data.data());
 
     {

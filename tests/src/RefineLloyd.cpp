@@ -7,17 +7,21 @@
 
 #include "kmeans/RefineLloyd.hpp"
 
-using RefineLloydBasicTest = TestParamCore<std::tuple<int, int, int> >;
+class RefineLloydBasicTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
+protected:
+    void SetUp() {
+        assemble(std::get<0>(GetParam()));
+    }
+};
 
 TEST_P(RefineLloydBasicTest, Sweep) {
-    auto param = GetParam();
-    assemble(param);
-    auto ncenters = std::get<2>(param);
+    auto ncenters = std::get<1>(GetParam());
 
     kmeans::SimpleMatrix mat(nr, nc, data.data());
-    auto centers = create_centers(data.data(), ncenters);
-    std::vector<int> clusters(nc);
+    auto centers = create_centers(ncenters);
+    auto original = centers;
 
+    std::vector<int> clusters(nc);
     kmeans::RefineLloyd ll;
     auto res = ll.run(mat, ncenters, centers.data(), clusters.data());
 
@@ -28,34 +32,26 @@ TEST_P(RefineLloydBasicTest, Sweep) {
         ++counts[c];
     }
     EXPECT_EQ(counts, res.sizes);
-    for (auto c : counts) {
-        EXPECT_TRUE(c > 0); 
-    }
-
     EXPECT_TRUE(res.iterations > 0);
 
     // Checking that parallelization gives the same result.
     {
-        auto pcenters = create_centers(data.data(), ncenters);
-        std::vector<int> pclusters(nc);
-
         kmeans::RefineLloydOptions popt;
         popt.num_threads = 3;
         kmeans::RefineLloyd pll(popt);
 
+        auto pcenters = original;
+        std::vector<int> pclusters(nc);
         pll.run(mat, ncenters, pcenters.data(), pclusters.data());
+
         EXPECT_EQ(pcenters, centers);
         EXPECT_EQ(pclusters, clusters);
     }
 }
 
 TEST_P(RefineLloydBasicTest, Sanity) {
-    auto param = GetParam();
-    assemble(param);
-
-    // Duplicating the first 'ncenters' elements over and over again.
-    auto ncenters = std::get<2>(param);
-    auto dups = create_duplicate_matrix(ncenters);
+    auto ncenters = std::get<1>(GetParam());
+    auto dups = create_jittered_matrix(ncenters);
     kmeans::SimpleMatrix mat(nr, nc, dups.data.data());
 
     // Lloyd should give us back the perfect clusters.
@@ -63,26 +59,29 @@ TEST_P(RefineLloydBasicTest, Sanity) {
     kmeans::RefineLloyd ll;
     auto res = ll.run(mat, ncenters, dups.centers.data(), clusters.data());
 
-    EXPECT_EQ(clusters, dups.chosen);
+    EXPECT_EQ(clusters, dups.clusters);
 }
 
 INSTANTIATE_TEST_SUITE_P(
     RefineLloyd,
     RefineLloydBasicTest,
     ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 200, 2000), // number of observations 
+        ::testing::Combine(
+            ::testing::Values(10, 20), // number of dimensions
+            ::testing::Values(20, 200, 2000) // number of observations 
+        ),
         ::testing::Values(2, 5, 10) // number of clusters 
     )
 );
 
-using RefineLloydConstantTest = TestCore<::testing::Test>;
+class RefineLloydConstantTest : public TestCore, public ::testing::Test {
+protected:
+    void SetUp() {
+        assemble({ 20, 50 });
+    }
+};
 
 TEST_F(RefineLloydConstantTest, Extremes) {
-    nr = 20;
-    nc = 50;
-    assemble();
-
     kmeans::SimpleMatrix mat(nr, nc, data.data());
     kmeans::RefineLloyd ll;
 

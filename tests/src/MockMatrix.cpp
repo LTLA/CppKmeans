@@ -7,13 +7,13 @@
 
 #include "kmeans/kmeans.hpp"
 
-using MockMatrixTest = TestCore<::testing::Test>;
+class MockMatrixTest : public TestCore, public ::testing::Test {
+    void SetUp() {
+        assemble({ 20, 50 });
+    }
+};
 
 TEST_F(MockMatrixTest, Basic) {
-    nr = 20;
-    nc = 50;
-    assemble();
-
     kmeans::MockMatrix mock(nr, nc, data.data());
     EXPECT_EQ(mock.num_dimensions(), nr);
     EXPECT_EQ(mock.num_observations(), nc);

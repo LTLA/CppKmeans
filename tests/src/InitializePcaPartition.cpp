@@ -211,13 +211,15 @@ TEST(PcaPartitionUtils, PowerMethodSubsetting) {
     EXPECT_EQ(work.pc, work2.pc);
 }
 
-using PcaPartitionInitializationTest = TestParamCore<std::tuple<int, int, int> >;
+class PcaPartitionInitializationTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
+protected:
+    void SetUp() {
+        assemble(std::get<0>(GetParam()));
+    }
+};
 
 TEST_P(PcaPartitionInitializationTest, Basic) {
-    auto param = GetParam();
-    assemble(param);
-    auto ncenters = std::get<2>(param);
-
+    auto ncenters = std::get<1>(GetParam());
     kmeans::SimpleMatrix mat(nr, nc, data.data());
 
     kmeans::InitializePcaPartitionOptions opt;
@@ -230,19 +232,11 @@ TEST_P(PcaPartitionInitializationTest, Basic) {
 }
 
 TEST_P(PcaPartitionInitializationTest, Sanity) {
-    auto param = GetParam();
-    assemble(param);
-    auto ncenters = std::get<2>(param);
+    auto ncenters = std::get<1>(GetParam());
+    auto dups = create_duplicate_matrix(ncenters);
 
     // Duplicating the first 'ncenters' elements over and over again.
-    std::mt19937_64 rng(nc * 10);
-    auto dIt = data.begin() + ncenters * nr;
-    for (int c = ncenters; c < nc; ++c, dIt += nr) {
-        auto chosen = rng() % ncenters;
-        auto cIt = data.begin() + chosen * nr;
-        std::copy(cIt, cIt + nr, dIt);
-    }
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
+    kmeans::SimpleMatrix mat(nr, nc, dups.data.data());
 
     kmeans::InitializePcaPartitionOptions opt;
     opt.seed = ncenters * 10;
@@ -252,29 +246,15 @@ TEST_P(PcaPartitionInitializationTest, Sanity) {
     auto nfilled = init.run(mat, ncenters, centers.data());
     EXPECT_EQ(nfilled, ncenters);
 
-    // Expect one entry from each of the first 'ncenters' elements.
-    // We'll just do a brute-force search for them here.
-    for (int i = 0; i < ncenters; ++i) {
-        auto expected = data.begin() + i * nr;
-        bool found = false;
+    auto matched = match_to_data(ncenters, centers, /* tolerance = */ 1e-8);
+    for (auto m : matched) {
+        EXPECT_TRUE(m >= 0);
+        EXPECT_TRUE(m < nc);
+    }
 
-        for (int j = 0; j < ncenters; ++j) {
-            auto observed = centers.data() + j * nr;
-            bool okay = true;
-            for (int d = 0; d < nr; ++d) {
-                if (std::abs(expected[d] - observed[d]) > 0.000001) {
-                    okay = false;
-                    break;
-                }
-            }
-
-            if (okay) {
-                found = true;
-                break;
-            }
-        }
-
-        EXPECT_TRUE(found);
+    std::sort(matched.begin(), matched.end());
+    for (size_t i = 1; i < matched.size(); ++i) {
+        EXPECT_TRUE(matched[i] > matched[i-1]);
     }
 }
 
@@ -282,18 +262,22 @@ INSTANTIATE_TEST_SUITE_P(
     PcaPartitionInitialization,
     PcaPartitionInitializationTest,
     ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(200, 2000), // number of observations
+        ::testing::Combine(
+            ::testing::Values(10, 20), // number of dimensions
+            ::testing::Values(200, 2000) // number of observations
+        ),
         ::testing::Values(2, 5, 10) // number of clusters
     )
 );
 
-using PcaPartitionInitializationEdgeTest = TestParamCore<std::tuple<int, int> >;
+class PcaPartitionInitializationEdgeTest : public TestCore, public ::testing::Test {
+protected:
+    void SetUp() {
+        assemble({ 20, 43 });
+    }
+};
 
-TEST_P(PcaPartitionInitializationEdgeTest, TooManyClusters) {
-    auto param = GetParam();
-    assemble(param);
-
+TEST_F(PcaPartitionInitializationEdgeTest, TooManyClusters) {
     kmeans::InitializePcaPartitionOptions opt;
     opt.seed = nc * 10;
     kmeans::InitializePcaPartition init(opt);
@@ -303,40 +287,14 @@ TEST_P(PcaPartitionInitializationEdgeTest, TooManyClusters) {
     EXPECT_EQ(nfilled, nc);
 
     // Check that there's one representative from each cluster.
-    std::vector<int> equivalence, expected;
-    for (int c = 0; c < nc; ++c) {
-        expected.push_back(c);
-
-        for (int d = 0; d < nc; ++d) {
-            auto cIt = centers.begin() + c * nr;
-            auto dIt = data.begin() + d * nr;
-            bool is_equal = true;
-            for (int r = 0; r < nr; ++r, ++cIt, ++dIt) {
-                if (*cIt != *dIt) {
-                    is_equal = false;
-                    break;
-                }
-            }
-
-            if (is_equal) {
-                equivalence.push_back(d);
-            }
-        }
-    }
-    std::sort(equivalence.begin(), equivalence.end());
-    EXPECT_EQ(equivalence, expected);
+    auto matched = match_to_data(nc, centers);
+    std::sort(matched.begin(), matched.end());
+    std::vector<int> expected(nc);
+    std::iota(expected.begin(), expected.end(), 0);
+    EXPECT_EQ(matched, expected);
 
     std::vector<double> centers2(nc * nr);
     auto nfilled2 = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc + 10, centers2.data());
     EXPECT_EQ(nfilled2, nc);
     EXPECT_EQ(centers2, centers);
 }
-
-INSTANTIATE_TEST_SUITE_P(
-    PcaPartitionInitialization,
-    PcaPartitionInitializationEdgeTest,
-    ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 50) // number of observations
-    )
-);

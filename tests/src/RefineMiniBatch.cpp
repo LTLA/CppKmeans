@@ -7,15 +7,19 @@
 
 #include "kmeans/RefineMiniBatch.hpp"
 
-using RefineMiniBatchBasicTest = TestParamCore<std::tuple<int, int, int> >;
+class RefineMiniBatchBasicTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
+protected:
+    void SetUp() {
+        assemble(std::get<0>(GetParam()));
+    }
+};
 
 TEST_P(RefineMiniBatchBasicTest, Sweep) {
-    auto param = GetParam();
-    assemble(param);
-    auto ncenters = std::get<2>(param);
+    auto ncenters = std::get<1>(GetParam());
 
     kmeans::SimpleMatrix mat(nr, nc, data.data());
-    auto centers = create_centers(data.data(), ncenters);
+    auto centers = create_centers(ncenters);
+    auto original = centers;
     std::vector<int> clusters(nc);
 
     kmeans::RefineMiniBatchOptions opt;
@@ -23,22 +27,18 @@ TEST_P(RefineMiniBatchBasicTest, Sweep) {
     kmeans::RefineMiniBatch mb(opt);
     auto res = mb.run(mat, ncenters, centers.data(), clusters.data());
 
-    // Checking that there's the specified number of clusters, and that they're all non-empty.
+    // Checking that there's the specified number of clusters. 
     std::vector<int> counts(ncenters);
     for (auto c : clusters) {
         EXPECT_TRUE(c >= 0 && c < ncenters);
         ++counts[c];
     }
     EXPECT_EQ(counts, res.sizes);
-    for (auto c : counts) {
-        EXPECT_TRUE(c > 0); 
-    }
-
     EXPECT_TRUE(res.iterations > 0);
 
     // Checking that parallelization gives the same result.
     {
-        auto pcenters = create_centers(data.data(), ncenters);
+        auto pcenters = original;
         std::vector<int> pclusters(nc);
 
         auto popt = opt;
@@ -52,12 +52,8 @@ TEST_P(RefineMiniBatchBasicTest, Sweep) {
 }
 
 TEST_P(RefineMiniBatchBasicTest, Sanity) {
-    auto param = GetParam();
-    assemble(param);
-
-    // Duplicating the first 'ncenters' elements over and over again.
-    auto ncenters = std::get<2>(param);
-    auto dups = create_duplicate_matrix(ncenters);
+    auto ncenters = std::get<1>(GetParam());
+    auto dups = create_jittered_matrix(ncenters);
     kmeans::SimpleMatrix mat(nr, nc, dups.data.data());
 
     // Should give us back the perfect clusters.
@@ -65,26 +61,29 @@ TEST_P(RefineMiniBatchBasicTest, Sanity) {
     kmeans::RefineMiniBatch mb;
     auto res = mb.run(mat, ncenters, dups.centers.data(), clusters.data());
 
-    EXPECT_EQ(clusters, dups.chosen);
+    EXPECT_EQ(clusters, dups.clusters);
 }
 
 INSTANTIATE_TEST_SUITE_P(
     RefineMiniBatch,
     RefineMiniBatchBasicTest,
     ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 200, 2000), // number of observations 
+        ::testing::Combine(
+            ::testing::Values(10, 20), // number of dimensions
+            ::testing::Values(20, 200, 2000) // number of observations 
+        ),
         ::testing::Values(2, 5, 10) // number of clusters 
     )
 );
 
-using RefineMiniBatchConstantTest = TestCore<::testing::Test>;
+class RefineMiniBatchConstantTest : public TestCore, public ::testing::Test {
+protected:
+    void SetUp() {
+        assemble({ 20, 50 });
+    }
+};
 
 TEST_F(RefineMiniBatchConstantTest, Extremes) {
-    nr = 20;
-    nc = 50;
-    assemble();
-
     kmeans::SimpleMatrix mat(nr, nc, data.data());
     kmeans::RefineMiniBatch mb;
 

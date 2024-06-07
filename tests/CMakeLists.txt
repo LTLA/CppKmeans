@@ -21,19 +21,19 @@ include(GoogleTest)
 macro(create_test target)
     add_executable(
         ${target} 
-        #        src/compute_centroids.cpp
-        #        src/compute_wcss.cpp
-        #        src/MockMatrix.cpp
-        #        src/InitializeNone.cpp
-        #        src/InitializeRandom.cpp
+        src/compute_centroids.cpp
+        src/compute_wcss.cpp
+        src/MockMatrix.cpp
+        src/InitializeNone.cpp
+        src/InitializeRandom.cpp
         src/InitializeKmeanspp.cpp
-        #        src/InitializePcaPartition.cpp
-        #        src/QuickSearch.cpp
-        #        src/is_edge_case.cpp
-        #        src/RefineLloyd.cpp
-        #        src/RefineHartiganWong.cpp
-        #        src/RefineMiniBatch.cpp
-        #        src/kmeans.cpp
+        src/InitializePcaPartition.cpp
+        src/QuickSearch.cpp
+        src/is_edge_case.cpp
+        src/RefineLloyd.cpp
+        src/RefineHartiganWong.cpp
+        src/RefineMiniBatch.cpp
+        src/kmeans.cpp
     )
 
     target_link_libraries(

@@ -7,12 +7,14 @@
 
 #include "kmeans/QuickSearch.hpp"
 
-using QuickSearchTest = TestParamCore<std::tuple<int, int> >;
+class QuickSearchTest : public TestCore, public ::testing::TestWithParam<std::tuple<int, int> > {
+protected:
+    void SetUp() {
+        assemble(GetParam());
+    }
+};
 
 TEST_P(QuickSearchTest, Sweep) {
-    auto param = GetParam();
-    assemble(param);
-
     // Quick and dirty check to verify that we do get back the right identity.
     kmeans::internal::QuickSearch index(nr, nc, data.data()); 
     for (int c = 0; c < nc; ++c) {

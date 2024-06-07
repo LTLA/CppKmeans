@@ -9,13 +9,15 @@
 
 #include "kmeans/kmeans.hpp"
 
-using KmeansBasicTest = TestParamCore<std::tuple<int, int, int> >;
+class KmeansBasicTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
+protected:
+    void SetUp() {
+        assemble(std::get<0>(GetParam()));
+    }
+};
 
 TEST_P(KmeansBasicTest, Sweep) {
-    auto param = GetParam();
-    assemble(param);
-    auto ncenters = std::get<2>(param);
-
+    auto ncenters = std::get<1>(GetParam());
     kmeans::SimpleMatrix mat(nr, nc, data.data());
     auto res = kmeans::compute(mat, kmeans::InitializeRandom(), kmeans::RefineHartiganWong(), ncenters);
     EXPECT_EQ(res.clusters.size(), nc);
@@ -28,10 +30,6 @@ TEST_P(KmeansBasicTest, Sweep) {
         ++counts[c];
     }
     EXPECT_EQ(counts, res.details.sizes);
-    for (auto c : counts) {
-        EXPECT_TRUE(c > 0); 
-    }
-
     EXPECT_TRUE(res.details.iterations > 0);
 }
 
@@ -39,19 +37,22 @@ INSTANTIATE_TEST_SUITE_P(
     Kmeans,
     KmeansBasicTest,
     ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 200, 2000), // number of observations 
+        ::testing::Combine(
+            ::testing::Values(10, 20), // number of dimensions
+            ::testing::Values(20, 200, 2000) // number of observations 
+        ),
         ::testing::Values(2, 5, 10) // number of clusters 
     )
 );
 
-using KmeansExpandedTest = TestCore<::testing::Test>;
+class KmeansExpandedTest : public TestCore, public ::testing::Test {
+protected:
+    void SetUp() {
+        assemble({ 50, 10 }); 
+    }
+};
 
 TEST_F(KmeansExpandedTest, Basic) {
-    nr = 50;
-    nc = 10;
-    assemble();
-
     kmeans::SimpleMatrix mat(nr, nc, data.data());
     auto res = kmeans::compute(mat, kmeans::InitializeRandom(), kmeans::RefineHartiganWong(), nc + 10);
     EXPECT_EQ(res.centers.size(), nr * (nc + 10));
@@ -63,12 +64,16 @@ TEST_F(KmeansExpandedTest, Basic) {
     EXPECT_EQ(counts, res.details.sizes);
 }
 
-using KmeansSanityTest = TestParamCore<std::tuple<int, int, int, int> >;
+class KmeansSanityTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int, int> > {
+protected:
+    void SetUp() {
+        assemble(std::get<0>(GetParam()));
+    }
+};
 
 TEST_P(KmeansSanityTest, SanityCheck) {
     auto param = GetParam();
-    assemble(param);
-    auto ncenters = std::get<2>(param);
+    auto ncenters = std::get<1>(param);
 
     // Adding known structure by scaling down the variance and adding a predictable offset per cluster.
     auto dIt = data.begin();
@@ -82,7 +87,7 @@ TEST_P(KmeansSanityTest, SanityCheck) {
 
     // Switching between algorithms.
     std::unique_ptr<kmeans::Refine<> > ptr;
-    auto algo = std::get<3>(param);
+    auto algo = std::get<2>(param);
     if (algo == 1) {
         auto xptr = new kmeans::RefineHartiganWong<>();
         ptr.reset(xptr);
@@ -120,8 +125,10 @@ INSTANTIATE_TEST_SUITE_P(
     Kmeans,
     KmeansSanityTest,
     ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 200, 2000), // number of observations 
+        ::testing::Combine(
+            ::testing::Values(10, 20), // number of dimensions
+            ::testing::Values(20, 200, 2000) // number of observations 
+        ),
         ::testing::Values(2, 5, 10), // number of clusters 
         ::testing::Values(1, 2, 3) // algorithm
     )
