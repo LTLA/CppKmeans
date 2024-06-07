@@ -4,6 +4,11 @@
 #include "Details.hpp"
 #include "SimpleMatrix.hpp"
 
+/**
+ * @file Refine.hpp
+ * @brief Interface for k-means refinement.
+ */
+
 namespace kmeans {
 
 /**
