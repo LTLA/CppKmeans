@@ -3,38 +3,51 @@
 
 #include <numeric>
 #include <algorithm>
-#include "compute_wcss.hpp"
+
+#include "Details.hpp"
 #include "compute_centroids.hpp"
 
 namespace kmeans {
 
-template<typename INDEX_t = int, typename CLUSTER_t = int>
-bool is_edge_case(INDEX_t nobs, CLUSTER_t ncenters) {
-    return (ncenters <= 1 || static_cast<INDEX_t>(ncenters) >= nobs);
+namespace internal {
+
+template<typename Index_, typename Cluster_>
+bool is_edge_case(Index_ nobs, Cluster_ ncenters) {
+    return (ncenters <= 1 || static_cast<Index_>(ncenters) >= nobs);
 }
 
-template<typename DATA_t = double, typename INDEX_t = int, typename CLUSTER_t = int>
-Details<DATA_t, INDEX_t> process_edge_case(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
+template<class Matrix_, typename Cluster_, typename Float_>
+Details<typename Matrix_::index_type> process_edge_case(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) {
+    auto nobs = data.num_observations();
+
     if (ncenters == 1) {
         // All points in cluster 0.
-        std::fill(clusters, clusters + nobs, 0);
-        std::vector<INDEX_t> sizes(1, nobs);
-        compute_centroids(ndim, nobs, data, ncenters, centers, clusters, sizes);
-        auto wcss = compute_wcss(ndim, nobs, data, ncenters, centers, clusters);
-        return Details(std::move(sizes), std::move(wcss), 0, 0);
+        std::fill_n(clusters, nobs, 0);
+        std::vector<typename Matrix_::index_type> sizes(1, nobs);
+        compute_centroid(data, centers);
+        return Details(std::move(sizes), 0, 0);
 
     } else if (ncenters >= nobs) {
         // Special case, each observation is a center.
         std::iota(clusters, clusters + nobs, 0);
-        std::vector<INDEX_t> sizes(ncenters);
-        std::fill(sizes.begin(), sizes.begin() + nobs, 1);
-        compute_centroids(ndim, nobs, data, ncenters, centers, clusters, sizes);
-        auto wcss = compute_wcss(ndim, nobs, data, ncenters, centers, clusters);
-        return Details(std::move(sizes), std::move(wcss), 0, (ncenters > nobs ? 3 : 0));
+        std::vector<typename Matrix_::index_type> sizes(ncenters);
+        std::fill_n(sizes.begin(), nobs, 1);
+
+        auto ndim = data.num_dimensions();
+        auto work = data.create_workspace(0, nobs);
+        auto cptr = centers;
+        for (decltype(nobs) o = 0; o < nobs; ++o, cptr += ndim) {
+            auto ptr = data.get_observation(work);
+            std::copy_n(ptr, ndim, cptr);
+        }
+
+        return Details(std::move(sizes), 0, 0);
 
     } else { //i.e., ncenters == 0, provided is_edge_case is true.
-        return Details<DATA_t, INDEX_t>(0, 3);
+        return Details<typename Matrix_::index_type>(0, 0);
     }
+}
+
 }
 
 }

@@ -5,174 +5,237 @@
 #include <random>
 #include <limits>
 #include <cmath>
-#include <tuple>
-#include <iostream>
+#include <queue>
+#include <queue>
 
 namespace kmeans {
 
+namespace internal {
+
 /* Adapted from http://stevehanov.ca/blog/index.php?id=130 */
-template<typename DATA_t = double, typename CLUSTER_t = int> 
+template<typename Data_, typename Index_, typename Dim_>
 class QuickSearch {
 private:
-    int num_dim;
-    CLUSTER_t num_obs;
-    const DATA_t* reference;
+    Dim_ num_dim;
+    size_t long_num_dim;
 
-    static DATA_t normalize(DATA_t x) {
-        return std::sqrt(x);
-    }
-
-    static DATA_t raw_distance(const DATA_t* x, const DATA_t* y, int ndim) {
-        DATA_t output = 0;
-        for (int i = 0; i < ndim; ++i, ++x, ++y) {
-            output += (*x - *y) * (*x - *y);
+    template<typename Query_>
+    static Data_ raw_distance(const Data_* x, const Query_* y, Dim_ ndim) {
+        Data_ output = 0;
+        for (Dim_ i = 0; i < ndim; ++i, ++x, ++y) {
+            Data_ delta = *x - *y;
+            output += delta * delta;
         }
         return output;
     }
 
 private:
-    typedef int NodeIndex_t;
-    static const NodeIndex_t LEAF_MARKER=-1;
+    typedef std::pair<Data_, Index_> DataPoint; 
+    std::vector<DataPoint> items;
 
-    // Single node of a VP tree (has a point and radius; left children are closer to point than the radius)
+    // Index_ might be unsigned, so we use zero as the LEAF marker.
+    static const Index_ LEAF = 0;
     struct Node {
-        DATA_t threshold;  // radius 
-        CLUSTER_t index; // original index of current vantage point 
-        NodeIndex_t left;  // node index of the next vantage point for all children closer than 'threshold' from the current vantage point
-        NodeIndex_t right; // node index of the next vantage point for all children further than 'threshold' from the current vantage point
-        Node(NodeIndex_t i=0) : threshold(0), index(i), left(LEAF_MARKER), right(LEAF_MARKER) {}
+        const Data_* center = NULL;
+        Data_ radius = 0; 
+
+        // Original index of current vantage point 
+        Index_ index = 0;
+
+        // Node index of the next vantage point for all children closer than 'threshold' from the current vantage point.
+        // This must be > 0, as the first node in 'nodes' is the root and cannot be referenced from other nodes.
+        Index_ left = LEAF;  
+
+        // Node index of the next vantage point for all children further than 'threshold' from the current vantage point.
+        // This must be > 0, as the first node in 'nodes' is the root and cannot be referenced from other nodes.
+        Index_ right = LEAF; 
     };
     std::vector<Node> nodes;
 
-    typedef std::tuple<CLUSTER_t, const DATA_t*, DATA_t> DataPoint; // internal distances computed using "DATA_t" type, even if output is returned with DISTANCE_t.
+    template<class Engine_>
+    Index_ build(Index_ lower, Index_ upper, const Data_* coords, Engine_& rng) {
+        /* 
+         * We're assuming that lower < upper at each point within this
+         * recursion. This requires some protection at the call site
+         * when nobs = 0, see the reset() function.
+         */
 
-    template<class SAMPLER>
-    NodeIndex_t buildFromPoints(NodeIndex_t lower, NodeIndex_t upper, std::vector<DataPoint>& items, SAMPLER& rng) {
-        if (upper == lower) {     // indicates that we're done here!
-            return LEAF_MARKER;
-        }
+        Index_ pos = nodes.size();
+        nodes.emplace_back();
+        Node& node = nodes.back(); // this is safe during recursion because we reserved 'nodes' already to the number of observations, see reset().
 
-        NodeIndex_t pos = nodes.size();
-        nodes.resize(pos + 1);
-        Node& node=nodes.back();
-            
-        NodeIndex_t gap = upper - lower;
-        if (gap > 1) {      // if we did not arrive at leaf yet
+        Index_ gap = upper - lower;
+        if (gap > 1) { // not yet at a leaft.
 
             /* Choose an arbitrary point and move it to the start of the [lower, upper)
              * interval in 'items'; this is our new vantage point.
              * 
              * Yes, I know that the modulo method does not provide strictly
              * uniform values but statistical correctness doesn't really matter
-             * here... but reproducibility across platforms does matter, and
-             * std::uniform_int_distribution is implementation-dependent!
+             * here, and I don't want std::uniform_int_distribution's
+             * implementation-specific behavior.
              */
-            NodeIndex_t i = static_cast<NodeIndex_t>(rng() % gap + lower);
+            Index_ i = (rng() % gap + lower);
             std::swap(items[lower], items[i]);
             const auto& vantage = items[lower];
+            node.index = vantage.second;
+            const Data_* vantage_ptr = coords + static_cast<size_t>(vantage.second) * long_num_dim; // cast to avoid overflow.
+            node.center = vantage_ptr;
 
             // Compute distances to the new vantage point.
-            const DATA_t* ref = std::get<1>(vantage);
-            for (NodeIndex_t i = lower + 1; i < upper; ++i) {
-                const DATA_t* loc = std::get<1>(items[i]);
-                std::get<2>(items[i]) = raw_distance(ref, loc, num_dim);
+            for (Index_ i = lower + 1; i < upper; ++i) {
+                const Data_* loc = coords + static_cast<size_t>(items[i].second) * long_num_dim; // cast to avoid overflow.
+                items[i].first = raw_distance(vantage_ptr, loc, num_dim);
             }
 
             // Partition around the median distance from the vantage point.
-            NodeIndex_t median = lower + gap/2;
-            std::nth_element(items.begin() + lower + 1, items.begin() + median, items.begin() + upper,
-                [&](const DataPoint& left, const DataPoint& right) -> bool {
-                    return std::get<2>(left) < std::get<2>(right);
-                }
-            );
-           
-            // Threshold of the new node will be the distance to the median
-            node.threshold = normalize(std::get<2>(items[median]));
+            Index_ median = lower + gap/2;
+            Index_ lower_p1 = lower + 1; // excluding the vantage point itself, obviously.
+            std::nth_element(items.begin() + lower_p1, items.begin() + median, items.begin() + upper);
 
-            // Recursively build tree
-            node.index = std::get<0>(vantage);
-            node.left = buildFromPoints(lower + 1, median, items, rng);
-            node.right = buildFromPoints(median, upper, items, rng);
+            // Radius of the new node will be the distance to the median.
+            node.radius = std::sqrt(items[median].first);
+
+            // Recursively build tree.
+            if (lower_p1 < median) {
+                node.left = build(lower_p1, median, coords, rng);
+            }
+            if (median < upper) {
+                node.right = build(median, upper, coords, rng);
+            }
+
         } else {
-            node.index = std::get<0>(items[lower]);
+            const auto& leaf = items[lower];
+            node.index = leaf.second;
+            node.center = coords + static_cast<size_t>(leaf.second) * long_num_dim; // cast to avoid overflow.
         }
-        
+
         return pos;
     }
 
+public:
+    QuickSearch() = default;
+
+    QuickSearch(Dim_ ndim, Index_ nobs, const Data_* vals) {
+        reset(ndim, nobs, vals);
+    }
+
+    void reset(Dim_ ndim, Index_ nobs, const Data_* vals) {
+        num_dim = ndim;
+        long_num_dim = ndim;
+        items.clear();
+        nodes.clear();
+
+        if (nobs) {
+            items.reserve(nobs);
+            for (Index_ i = 0; i < nobs; ++i) {
+                items.emplace_back(0, i);
+            }
+
+            nodes.reserve(nobs);
+            std::mt19937_64 rand(1234567890u * nobs + ndim); // statistical correctness doesn't matter so we'll just use a deterministically 'random' number.
+            build(0, nobs, vals, rand);
+        }
+    }
+
+
 private:
-    template<typename INPUT_t>
-    void search_nn(NodeIndex_t curnode_index, const INPUT_t* target, CLUSTER_t& closest, DATA_t& tau) const { 
-        if (curnode_index == LEAF_MARKER) { // indicates that we're done here
-            return;
-        }
-        
-        // Compute distance between target and current node
+    template<typename Query_>
+    void search_nn(Index_ curnode_index, const Query_* target, Index_& closest_point, Data_& closest_dist) const { 
         const auto& curnode=nodes[curnode_index];
-        DATA_t dist = normalize(raw_distance(reference + curnode.index * num_dim, target, num_dim));
-
-        // If current node within radius tau
-        if (dist < tau) {
-            closest = curnode.index;
-            tau = dist;
+        Data_ dist = std::sqrt(raw_distance(curnode.center, target, num_dim));
+        if (dist < closest_dist) {
+            closest_point = curnode.index;
+            closest_dist = dist;
         }
 
-        // Return if we arrived at a leaf
-        if (curnode.left == LEAF_MARKER && curnode.right == LEAF_MARKER) {
-            return;
-        }
-        
-        // If the target lies within the radius of ball
-        if (dist < curnode.threshold) {
-            if (dist - tau <= curnode.threshold) {         // if there can still be neighbors inside the ball, recursively search left child first
-                search_nn(curnode.left, target, closest, tau);
+        if (dist < curnode.radius) { // If the target lies within the radius of ball:
+            if (curnode.left != LEAF && dist - closest_dist <= curnode.radius) { // if there can still be neighbors inside the ball, recursively search left child first
+                search_nn(curnode.left, target, closest_point, closest_dist);
             }
-            
-            if (dist + tau >= curnode.threshold) {         // if there can still be neighbors outside the ball, recursively search right child
-                search_nn(curnode.right, target, closest, tau);
+
+            if (curnode.right != LEAF && dist + closest_dist >= curnode.radius) { // if there can still be neighbors outside the ball, recursively search right child
+                search_nn(curnode.right, target, closest_point, closest_dist);
             }
-        
-        // If the target lies outsize the radius of the ball
-        } else {
-            if (dist + tau >= curnode.threshold) {         // if there can still be neighbors outside the ball, recursively search right child first
-                search_nn(curnode.right, target, closest, tau);
+
+        } else { // If the target lies outside the radius of the ball:
+            if (curnode.right != LEAF && dist + closest_dist >= curnode.radius) { // if there can still be neighbors outside the ball, recursively search right child first
+                search_nn(curnode.right, target, closest_point, closest_dist);
             }
-            
-            if (dist - tau <= curnode.threshold) {         // if there can still be neighbors inside the ball, recursively search left child
-                search_nn(curnode.left, target, closest, tau);
+
+            if (curnode.left != LEAF && dist - closest_dist <= curnode.radius) { // if there can still be neighbors inside the ball, recursively search left child
+                search_nn(curnode.left, target, closest_point, closest_dist);
             }
         }
     }
 
 public:
-    QuickSearch(CLUSTER_t ndim, CLUSTER_t nobs, const DATA_t* vals) : num_dim(ndim), num_obs(nobs), reference(vals) {
-        std::vector<DataPoint> items;
-        items.reserve(num_obs);
-        auto ptr = vals;
-        for (CLUSTER_t i = 0; i < num_obs; ++i, ptr += num_dim) {
-            items.push_back(DataPoint(i, ptr, 0));
-        }
-
-        nodes.reserve(num_obs);
-        std::mt19937_64 rand(1234567890); // seed doesn't really matter, we don't need statistical correctness here.
-        buildFromPoints(0, num_obs, items, rand);
-        return;
-    }
-
-    CLUSTER_t find(const DATA_t* query) const {
-        DATA_t tau = std::numeric_limits<DATA_t>::max();
-        CLUSTER_t closest = 0;
-        search_nn(0, query, closest, tau);
+    template<typename Query_>
+    Index_ find(const Query_* query) const {
+        Data_ closest_dist = std::numeric_limits<Data_>::max();
+        Index_ closest = 0;
+        search_nn(0, query, closest, closest_dist);
         return closest;
     }
 
-    std::pair<CLUSTER_t, DATA_t> find_with_distance(const DATA_t* query) const {
-        DATA_t tau = std::numeric_limits<DATA_t>::max();
-        CLUSTER_t closest = 0;
-        search_nn(0, query, closest, tau);
-        return std::make_pair(closest, tau);
+    template<typename Query_>
+    std::pair<Index_, Data_> find_with_distance(const Query_* query) const {
+        Data_ closest_dist = std::numeric_limits<Data_>::max();
+        Index_ closest = 0;
+        search_nn(0, query, closest, closest_dist);
+        return std::make_pair(closest, closest_dist);
+    }
+
+private:
+    template<typename Query_>
+    void search_nn(Index_ curnode_index, const Query_* target, std::priority_queue<std::pair<Data_, Index_> >& closest) const { 
+        const auto& curnode=nodes[curnode_index];
+        Data_ dist = std::sqrt(raw_distance(curnode.center, target, num_dim));
+
+        auto biggest_dist = closest.top().first;
+        if (dist < biggest_dist) {
+            closest.pop();
+            closest.emplace(dist, curnode.index);
+            biggest_dist = closest.top().first;
+        }
+
+        if (dist < curnode.radius) { // If the target lies within the radius of ball:
+            if (curnode.left != LEAF && dist - biggest_dist <= curnode.radius) { // if there can still be neighbors inside the ball, recursively search left child first
+                search_nn(curnode.left, target, closest);
+            }
+
+            if (curnode.right != LEAF && dist + biggest_dist >= curnode.radius) { // if there can still be neighbors outside the ball, recursively search right child
+                search_nn(curnode.right, target, closest);
+            }
+
+        } else { // If the target lies outside the radius of the ball:
+            if (curnode.right != LEAF && dist + biggest_dist >= curnode.radius) { // if there can still be neighbors outside the ball, recursively search right child first
+                search_nn(curnode.right, target, closest);
+            }
+
+            if (curnode.left != LEAF && dist - biggest_dist <= curnode.radius) { // if there can still be neighbors inside the ball, recursively search left child
+                search_nn(curnode.left, target, closest);
+            }
+        }
+    }
+
+public:
+    template<typename Query_>
+    std::pair<Index_, Index_> find2(const Query_* query) const {
+        std::priority_queue<std::pair<Data_, Index_> > closest;
+        closest.emplace(std::numeric_limits<Data_>::max(), 0);
+        closest.emplace(std::numeric_limits<Data_>::max(), 0);
+        search_nn(0, query, closest);
+
+        std::pair<Index_, Index_> output;
+        output.second = closest.top().second;
+        closest.pop();
+        output.first = closest.top().second;
+        return output;
     }
 };
+
+}
 
 }
 

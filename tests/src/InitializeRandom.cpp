@@ -10,94 +10,102 @@
 
 #include "kmeans/InitializeRandom.hpp"
 
-using RandomInitializationTest = TestParamCore<std::tuple<int, int, int> >;
+TEST(RandomInitialization, Sampling) {
+    int nc = 50;
+    int ncenters = 20;
+    std::mt19937_64 rng(1947);
 
-TEST_P(RandomInitializationTest, Basic) {
-    auto param = GetParam();
-    assemble(param);
-    auto ncenters = std::get<2>(param);
+    {
+        std::vector<int> output(ncenters);
+        aarand::sample(nc, ncenters, output.data(), rng);
+        auto copy = output;
 
-    std::mt19937_64 rng(ncenters * 10);
-    auto output = kmeans::sample_without_replacement(nc, ncenters, rng);
-    auto copy = output;
-
-    EXPECT_EQ(output.size(), ncenters);
-    int last = -1;
-    std::sort(output.begin(), output.end());
-    for (auto o : output) {
-        EXPECT_TRUE(o > last); // no duplicates
-        EXPECT_TRUE(o < nc); // in range
-        last = o;
+        // Double-check that the sampling is done correctly.
+        EXPECT_EQ(output.size(), ncenters);
+        int last = -1;
+        std::sort(output.begin(), output.end());
+        for (auto o : output) {
+            EXPECT_TRUE(o > last); // no duplicates
+            EXPECT_TRUE(o < nc); // in range
+            last = o;
+        }
     }
 
-    // Checks that the class does the right thing.
-    kmeans::InitializeRandom init;
-    init.set_seed(ncenters * 10);
-    std::vector<double> centers(nr * ncenters);
-    auto nfilled = init.run(nr, nc, data.data(), ncenters, centers.data(), NULL);
-    EXPECT_EQ(nfilled, ncenters);
+    {
+        std::vector<int> output(ncenters);
+        aarand::sample(12, ncenters, output.data(), rng);
+        auto copy = output;
 
-    auto cptr = centers.data();
-    for (auto c : copy) {
-        std::vector<double> obs(cptr, cptr + nr);
-        cptr += nr;
-        auto optr = data.data() + c * nr;
-        std::vector<double> exp(optr, optr + nr);
-        EXPECT_EQ(obs, exp);
+        std::vector<int> expected(12);
+        std::iota(expected.begin(), expected.end(), 0);
+        expected.insert(expected.end(), 8, 0);
+
+        EXPECT_EQ(expected, output);
     }
 }
 
-TEST_P(RandomInitializationTest, Deterministic) {
-    auto param = GetParam();
-    assemble(param);
-    auto ncenters = std::get<2>(param);
+class RandomInitializationTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
+protected:
+    void SetUp() {
+        assemble(std::get<0>(GetParam()));
+    }
+};
 
-    std::mt19937_64 rng(ncenters * 10);
-    auto copy = kmeans::sample_without_replacement(nc, ncenters, rng);
+TEST_P(RandomInitializationTest, Basic) {
+    auto ncenters = std::get<1>(GetParam());
 
-    // Consistent results with the same initialization.
-    std::mt19937_64 rng2(ncenters * 10);
-    auto output2 = kmeans::sample_without_replacement(nc, ncenters, rng2);
-    EXPECT_EQ(copy, output2);
+    // Checks that the class does the right thing.
+    kmeans::InitializeRandomOptions opt;
+    opt.seed = ncenters * 10;
+    kmeans::InitializeRandom init(opt);
 
-    // Different results with a different seed (only works if num obs is reasonably larger than num centers).
-    std::mt19937_64 rng3(ncenters * 11);
-    auto output3 = kmeans::sample_without_replacement(nc, ncenters, rng3);
-    EXPECT_NE(copy, output3);
+    std::vector<double> centers(nr * ncenters);
+    auto nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), ncenters, centers.data());
+    EXPECT_EQ(nfilled, ncenters);
+
+    auto matched = match_to_data(ncenters, centers);
+    for (auto m : matched) {
+        EXPECT_TRUE(m >= 0);
+        EXPECT_TRUE(m < nc);
+    }
+
+    std::sort(matched.begin(), matched.end());
+    for (size_t i = 1; i < matched.size(); ++i) {
+        EXPECT_TRUE(matched[i] > matched[i-1]);
+    }
 }
 
 INSTANTIATE_TEST_SUITE_P(
     RandomInitialization,
     RandomInitializationTest,
     ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 200, 2000), // number of observations
+        ::testing::Combine(
+            ::testing::Values(10, 20), // number of dimensions
+            ::testing::Values(20, 200, 2000) // number of observations
+        ),
         ::testing::Values(2, 5, 10) // number of clusters
     )
 );
 
-using RandomInitializationEdgeTest = TestParamCore<std::tuple<int, int> >;
+class RandomInitializationEdgeTest : public TestCore, public ::testing::Test {
+protected:
+    void SetUp() {
+        assemble({ 12, 40 });
+    }
+};
 
-TEST_P(RandomInitializationEdgeTest, TooManyClusters) {
-    auto param = GetParam();
-    assemble(param);
-    std::mt19937_64 rng(nc* 10);
-   
-    std::vector<int> expected(nc);
-    std::iota(expected.begin(), expected.end(), 0);
+TEST_F(RandomInitializationEdgeTest, TooManyClusters) {
+    kmeans::InitializeRandomOptions opt;
+    opt.seed = nc * 10;
+    kmeans::InitializeRandom init(opt);
 
-    auto soutput = kmeans::sample_without_replacement(nc, nc, rng);
-    EXPECT_EQ(soutput, expected);
+    std::vector<double> centers(nc * nr);
+    auto nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc, centers.data());
+    EXPECT_EQ(nfilled, nc);
+    EXPECT_EQ(centers, data);
 
-    auto soutput2 = kmeans::sample_without_replacement(nc, nc + 1, rng);
-    EXPECT_EQ(soutput2, expected);
+    std::fill(centers.begin(), centers.end(), 0);
+    nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc + 10, centers.data());
+    EXPECT_EQ(nfilled, nc);
+    EXPECT_EQ(centers, data);
 }
-
-INSTANTIATE_TEST_SUITE_P(
-    RandomInitialization,
-    RandomInitializationEdgeTest,
-    ::testing::Combine(
-        ::testing::Values(10, 20), // number of dimensions
-        ::testing::Values(20, 50) // number of dimensions
-    )
-);

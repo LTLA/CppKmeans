@@ -5,8 +5,10 @@
 #include <cstdint>
 #include <random>
 
-#include "Base.hpp"
-#include "random.hpp"
+#include "Initialize.hpp"
+#include "copy_into_array.hpp"
+
+#include "aarand/aarand.hpp"
 
 /**
  * @file InitializeRandom.hpp
@@ -17,71 +19,46 @@
 namespace kmeans {
 
 /**
- * @cond
+ * @brief Options to use for `InitializeRandom`.
  */
-template<class V, typename DATA_t>
-void copy_into_array(const V& chosen, int ndim, const DATA_t* in, DATA_t* out) {
-    for (auto c : chosen) {
-        auto ptr = in + c * ndim;
-        std::copy(ptr, ptr + ndim, out);
-        out += ndim;
-    }
-    return;
-}
-/**
- * @endcond
- */
+struct InitializeRandomOptions {
+    /**
+     * Random seed to use to construct the PRNG prior to sampling.
+     */
+    uint64_t seed = 6523u;
+};
 
 /**
- * @brief Initialize starting points by sampling random observations without replacement.
+ * @brief Initialize by sampling random observations without replacement.
  *
- * @tparam DATA_t Floating-point type for the data and centroids.
- * @tparam CLUSTER_t Integer type for the cluster index.
- * @tparam INDEX_t Integer type for the observation index.
+ * @tparam Matrix_ Matrix type for the input data.
+ * This should satisfy the `MockMatrix` contract.
+ * @tparam Cluster_ Integer type for the cluster assignments.
+ * @tparam Float_ Floating-point type for the centroids.
  */
-template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
-class InitializeRandom : public Initialize<DATA_t, CLUSTER_t, INDEX_t> { 
+template<class Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
+class InitializeRandom : public Initialize<Matrix_, Cluster_, Float_> { 
+private:
+    InitializeRandomOptions my_options;
+
 public:
     /**
-     * @brief Default parameter settings.
+     * @param options Options for random initialization.
      */
-    struct Defaults {
-        /**
-         * See `set_seed()` for more details.
-         */
-        static constexpr uint64_t seed = 6523u;
-    };
+    InitializeRandom(InitializeRandomOptions options) : my_options(std::move(options)) {}
 
     /**
-     * @param s Random seed to use to construct the PRNG prior to sampling.
-     *
-     * @return A reference to this `InitializeRandom` object.
+     * Default constructor.
      */
-    InitializeRandom& set_seed(uint64_t s = Defaults::seed) {
-        seed = s;
-        return *this;
-    }
-private:
-    uint64_t seed = Defaults::seed;
+    InitializeRandom() = default;
+
 public:
-    /*
-     * @param ndim Number of dimensions.
-     * @param nobs Number of observations.
-     * @param data Pointer to an array where the dimensions are rows and the observations are columns.
-     * Data should be stored in column-major format.
-     * @param ncenters Number of centers to pick.
-     * @param[out] centers Pointer to a `ndim`-by-`ncenters` array where columns are cluster centers and rows are dimensions. 
-     * On output, this will contain the final centroid locations for each cluster.
-     * Data should be stored in column-major order.
-     * @param clusters Ignored in this method.
-     *
-     * @return `centers` is filled with the new cluster centers.
-     * The number of filled centers is returned, see `Initializer::run()`.
-     */
-    CLUSTER_t run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t*) {
-        std::mt19937_64 eng(seed);
-        auto chosen = sample_without_replacement(nobs, ncenters, eng);
-        copy_into_array(chosen, ndim, data, centers);
+    Cluster_ run(const Matrix_& data, Cluster_ ncenters, Float_* centers) const {
+        std::mt19937_64 eng(my_options.seed);
+        auto nobs = data.num_observations();
+        std::vector<typename Matrix_::index_type> chosen(std::min(nobs, static_cast<typename Matrix_::index_type>(ncenters)));
+        aarand::sample(nobs, ncenters, chosen.begin(), eng);
+        internal::copy_into_array(data, chosen, centers);
         return chosen.size();
     }
 };

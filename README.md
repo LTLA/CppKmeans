@@ -21,35 +21,61 @@ The Hartigan-Wong implementation is derived from the Fortran code in the R **sta
 
 // assorted boilerplate here...
 
-auto res = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters);
+// Wrap your matrix in a SimpleMatrix.
+kmeans::SimpleMatrix kmat(ndim, nobs, matrix.data());
+
+auto res = kmeans::compute(
+    kmat,
+    kmeans::InitializeKmeanspp(), // initialize with kmeans++
+    kmeans::RefineLloyd(), // refine with Lloyd's algorithm
+    ncenters 
+);
+
 res.centers; // Matrix of centroid coordinates, stored in column-major format
 res.clusters; // Vector of cluster assignments
 res.details; // Details from the clustering algorithm
+
+// Compute the WCSS if we want it:
+std::vector<double> wcss(ncenters);
+kmeans::compute_wcss(
+    kmat, 
+    ncenters, 
+    res.centers.data(), 
+    res.clusters.data(), 
+    wcss.data()
+);
 ```
 
-If you already allocated arrays for the centroids and clusters, you can fill the arrays directly:
+If we already allocated arrays for the centroids and clusters, we can fill the arrays directly:
 
 ```cpp
 std::vector<double> centers(ndim * ncenters);
 std::vector<int> clusters(nobs);
-auto deets = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters, 
-                                  centers.data(), clusters.data());
-deets.withinss;
-deets.sizes;
+
+auto deets = kmeans::compute(
+    kmat,
+    kmeans::InitializeRandom(), // random initialization
+    kmeans::RefineHartiganWong(), // refine with Hartigan-Wong 
+    ncenters 
+    centers.data(),
+    clusters.data()
+);
 ```
 
-If you want to fiddle with parameters, use the relevant setters:
+We can tune the clustering by passing options into the constructors of the relevant classes:
 
 ```cpp
-kmeans::Kmeans km;
-km.set_seed(42);
-auto res2 = km.run(ndim, nobs, matrix.data(), ncenters);
+kmeans::InitializePcaPartitionOptions pp_opt;
+pp_opt.power_iteration_options.iterations = 200;
+pp_opt.seed = 42;
+kmeans::InitializePcaPartitions pp(pp_opt);
 
-// Or change the underlying algorithms for initialization/refinement:
-kmeans::InitializeRandom rd;
-kmeans::Lloyd ll;
-ll.set_max_iterations(100);
-auto res3 = kmeans::Kmeans().run(ndim, nobs, matrix.data(), ncenters, &rd, &ll);
+kmeans::RefineLloydOptions ll_opt;
+ll_opt.max_iterations = 10;
+ll_opt.num_threads = 3;
+kmeans::RefineLloyd ll(ll_opt);
+
+auto res2 = kmeans::compute(kmat, pp, ll, ncenters);
 ```
 
 See the [reference documentation](https://ltla.github.io/CppKmeans) for more details.

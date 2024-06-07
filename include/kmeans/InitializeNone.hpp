@@ -1,7 +1,7 @@
 #ifndef KMEANS_INITIALIZE_NONE_HPP
 #define KMEANS_INITIALIZE_NONE_HPP 
 
-#include "Base.hpp"
+#include "Initialize.hpp"
 #include <algorithm>
 
 /**
@@ -13,29 +13,20 @@
 namespace kmeans {
 
 /**
- * @brief Perform "initialization" by just using the input cluster centers.
+ * @brief No-op "initialization" with existing cluster centers.
  *
- * @tparam DATA_t Floating-point type for the data and centroids.
- * @tparam CLUSTER_t Integer type for the cluster index.
- * @tparam INDEX_t Integer type for the observation index.
+ * @tparam Matrix_ Matrix type for the input data.
+ * This should satisfy the `MockMatrix` contract.
+ * @tparam Cluster_ Integer type for the cluster assignments.
+ * @tparam Float_ Floating-point type for the centroids.
+ * 
+ * This class assumes that that cluster centers are already present in the `centers` array, and returns them without modification.
  */
-template<typename DATA_t = double, typename CLUSTER_t = int, typename INDEX_t = int>
-class InitializeNone : public Initialize<DATA_t, CLUSTER_t, INDEX_t> { 
+template<class Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
+class InitializeNone : public Initialize<Matrix_, Cluster_, Float_> { 
 public:
-    /*
-     * @param ndim Number of dimensions.
-     * @param nobs Number of observations.
-     * @param data Pointer to an array where the dimensions are rows and the observations are columns.
-     * Data should be stored in column-major format.
-     * @param ncenters Number of centers to pick.
-     * @param centers Pointer to a `ndim`-by-`ncenters` array where columns are cluster centers and rows are dimensions. 
-     * This is left unchanged.
-     * @param clusters Ignored in this method.
-     *
-     * @return The smaller of `ncenters` and `nobs` is returned, see `Initialize::run()`.
-     */
-    CLUSTER_t run(int ndim, INDEX_t nobs, const DATA_t* data, CLUSTER_t ncenters, DATA_t* centers, CLUSTER_t* clusters) {
-        return std::min(nobs, static_cast<INDEX_t>(ncenters));
+    Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Float_*) const {
+        return std::min(matrix.num_observations(), static_cast<typename Matrix_::index_type>(ncenters));
     }
 };
 
