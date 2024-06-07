@@ -1,0 +1,5 @@
+<map id="kmeans::InitializeKmeanspp&lt; Matrix_, Cluster_, Float_ &gt;" name="kmeans::InitializeKmeanspp&lt; Matrix_, Cluster_, Float_ &gt;">
+<area shape="rect" id="Node000001" title="k&#45;means++ initialization of Arthur and Vassilvitskii (2007)." alt="" coords="5,109,189,150"/>
+<area shape="rect" id="Node000002" href="$classkmeans_1_1Initialize.html" title="Base class for initialization algorithms." alt="" coords="30,5,164,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,77,100,109,94,109,94,77"/>
+</map>

@@ -1,5 +1,0 @@
-<map id="kmeans::Lloyd&lt; DATA_t, CLUSTER_t, INDEX_t &gt;" name="kmeans::Lloyd&lt; DATA_t, CLUSTER_t, INDEX_t &gt;">
-<area shape="rect" id="Node000001" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="5,94,186,135"/>
-<area shape="rect" id="Node000002" href="$classkmeans_1_1Refine.html" title="Base class for all k&#45;means refinement algorithms." alt="" coords="5,5,186,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,61,98,94,93,94,93,61"/>
-</map>

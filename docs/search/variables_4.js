@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['max_5fchange_5fproportion_0',['max_change_proportion',['../structkmeans_1_1MiniBatch_1_1Defaults.html#ab394950ce8dfbf34307abdda70dc5356',1,'kmeans::MiniBatch::Defaults']]],
-  ['max_5fiterations_1',['max_iterations',['../structkmeans_1_1HartiganWong_1_1Defaults.html#aeecfd08b28ac8822fa747075427a66af',1,'kmeans::HartiganWong::Defaults::max_iterations'],['../structkmeans_1_1Lloyd_1_1Defaults.html#a93a7abee6114638e44f344d901700079',1,'kmeans::Lloyd::Defaults::max_iterations'],['../structkmeans_1_1MiniBatch_1_1Defaults.html#ac1a93819db11765ac40729b4ed3cb7cb',1,'kmeans::MiniBatch::Defaults::max_iterations']]]
+  ['max_5fchange_5fproportion_0',['max_change_proportion',['../structkmeans_1_1RefineMiniBatchOptions.html#a8facb9fb31d589bb41fa9e196e1e15e4',1,'kmeans::RefineMiniBatchOptions']]],
+  ['max_5fiterations_1',['max_iterations',['../structkmeans_1_1RefineHartiganWongOptions.html#a84e571b7448c1fc74dec8419feb0b0c9',1,'kmeans::RefineHartiganWongOptions::max_iterations'],['../structkmeans_1_1RefineLloydOptions.html#ac927615927b93f499bbabb24cfc3fb9a',1,'kmeans::RefineLloydOptions::max_iterations'],['../structkmeans_1_1RefineMiniBatchOptions.html#a8a4b7d596a2c1780d645739904948bd4',1,'kmeans::RefineMiniBatchOptions::max_iterations']]]
 ];
