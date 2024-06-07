@@ -6,7 +6,7 @@
 #include <limits>
 #include <cmath>
 #include <queue>
-#include <queue>
+#include <cstdint>
 
 namespace kmeans {
 
@@ -133,7 +133,14 @@ public:
             }
 
             nodes.reserve(nobs);
-            std::mt19937_64 rand(1234567890u * nobs + ndim); // statistical correctness doesn't matter so we'll just use a deterministically 'random' number.
+
+            // Statistical correctness doesn't matter (aside from tie breaking)
+            // so we'll just use a deterministically 'random' number to ensure
+            // we get the same ties for any given dataset but a different stream
+            // of numbers between datasets. Casting to get well-defined overflow. 
+            uint64_t base = 1234567890, m1 = nobs, m2 = ndim;
+            std::mt19937_64 rand(base * m1 +  m2);
+
             build(0, nobs, vals, rand);
         }
     }
