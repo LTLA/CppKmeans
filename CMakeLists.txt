@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(kmeans
-    VERSION 2.0.0
+    VERSION 3.0.0
     DESCRIPTION "A C++ port of the Hartigan-Wong k-means algorithm"
     LANGUAGES CXX)
 
@@ -20,8 +20,8 @@ option(KMEANS_FETCH_EXTERN "Automatically fetch CppKmeans's external dependencie
 if(KMEANS_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
-    find_package(ltla_aarand CONFIG REQUIRED)
-    find_package(ltla_powerit CONFIG REQUIRED)
+    find_package(ltla_aarand 1.0.0 CONFIG REQUIRED)
+    find_package(ltla_powerit 2.0.0 CONFIG REQUIRED)
 endif()
 
 target_link_libraries(kmeans INTERFACE ltla::aarand ltla::powerit)
@@ -56,5 +56,10 @@ configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/Config.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/ltla_kmeansConfig.cmake"
     INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ltla_kmeans)
 
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/ltla_kmeansConfigVersion.cmake"
+    COMPATIBILITY SameMajorVersion)
+
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ltla_kmeansConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/ltla_kmeansConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ltla_kmeans)
