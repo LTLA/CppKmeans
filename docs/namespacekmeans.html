@@ -143,6 +143,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea" id="r_abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplParams" colspan="2">template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </td></tr>
+<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#abaf3a7fbf7e5d39ff76d69ffce0e61ea">compute_wcss</a> (const Matrix_ &amp;data, Cluster_ ncenters, const Float_ *centers, const Cluster_ *clusters, Float_ *wcss)</td></tr>
+<tr class="separator:abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64f6ccaa526e32d13525286022463d70" id="r_a64f6ccaa526e32d13525286022463d70"><td class="memTemplParams" colspan="2">template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </td></tr>
 <tr class="memitem:a64f6ccaa526e32d13525286022463d70"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; typename Matrix_::index_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#a64f6ccaa526e32d13525286022463d70">compute</a> (const Matrix_ &amp;data, const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Matrix_, Cluster_, Float_ &gt; &amp;initialize, const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Matrix_, Cluster_, Float_ &gt; &amp;refine, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters)</td></tr>
 <tr class="separator:a64f6ccaa526e32d13525286022463d70"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -281,6 +284,72 @@ template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </div>
     <tr><td class="paramdir"></td><td class="paramname">num_centers</td><td>Number of cluster centers. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. On output, each column should contain the initial centroid location for its cluster. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">clusters</td><td>Pointer to an array of length equal to the number of observations (from <code>data.num_observations()</code>). On output, this will contain the 0-based cluster assignment for each observation. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abaf3a7fbf7e5d39ff76d69ffce0e61ea" name="abaf3a7fbf7e5d39ff76d69ffce0e61ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abaf3a7fbf7e5d39ff76d69ffce0e61ea">&#9670;&#160;</a></span>compute_wcss()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void kmeans::compute_wcss </td>
+          <td>(</td>
+          <td class="paramtype">const Matrix_ &amp;&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Cluster_&#160;</td>
+          <td class="paramname"><em>ncenters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Float_ *&#160;</td>
+          <td class="paramname"><em>centers</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Cluster_ *&#160;</td>
+          <td class="paramname"><em>clusters</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Float_ *&#160;</td>
+          <td class="paramname"><em>wcss</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Matrix_</td><td>Matrix type for the input data, satisfying the <code><a class="el" href="classkmeans_1_1MockMatrix.html" title="Compile-time interface for matrix data.">MockMatrix</a></code> contract. </td></tr>
+    <tr><td class="paramname">Cluster_</td><td>Integer type for the cluster assignments. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type for the centers and output.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir"></td><td class="paramname">data</td><td>A matrix-like object (see <code><a class="el" href="classkmeans_1_1MockMatrix.html" title="Compile-time interface for matrix data.">MockMatrix</a></code>) containing per-observation data. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">ncenters</td><td>Number of cluster centers. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. Each column should contain the initial centroid location for its cluster. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">clusters</td><td>Pointer to an array of length equal to the number of observations (from <code>data.num_observations()</code>). This should contain the 0-based cluster assignment for each observation. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">wcss</td><td>Pointer to an array of length equal to the number of cluster centers. On output, this will contain the within-cluster sum of squares. </td></tr>
   </table>
   </dd>
 </dl>

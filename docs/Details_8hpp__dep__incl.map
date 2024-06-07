@@ -1,6 +1,6 @@
 <map id="kmeans/Details.hpp" name="kmeans/Details.hpp">
 <area shape="rect" id="Node000001" title="Report detailed clustering statistics." alt="" coords="219,5,354,31"/>
-<area shape="rect" id="Node000002" href="$Refine_8hpp_source.html" title=" " alt="" coords="221,79,352,105"/>
+<area shape="rect" id="Node000002" href="$Refine_8hpp.html" title="Interface for k&#45;means refinement." alt="" coords="221,79,352,105"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="289,46,289,79,284,79,284,46"/>
 <area shape="rect" id="Node000003" href="$RefineHartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="32,153,245,178"/>
 <area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="258,42,211,81,175,120,149,154,145,151,171,117,207,77,255,38"/>

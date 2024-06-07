@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans/Details.hpp File Reference</title>
+<title>kmeans: kmeans/compute_wcss.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -76,67 +76,55 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
-  <div class="headertitle"><div class="title">Details.hpp File Reference</div></div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#func-members">Functions</a>  </div>
+  <div class="headertitle"><div class="title">compute_wcss.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Report detailed clustering statistics.  
+<p>Compute within-cluster sum of squares.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;vector&gt;</code><br />
+<div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
+<code>#include &quot;<a class="el" href="SimpleMatrix_8hpp_source.html">SimpleMatrix.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
-Include dependency graph for Details.hpp:</div>
+Include dependency graph for compute_wcss.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="Details_8hpp__incl.png" border="0" usemap="#akmeans_2Details_8hpp" alt=""/></div>
-<map name="akmeans_2Details_8hpp" id="akmeans_2Details_8hpp">
-<area shape="rect" title="Report detailed clustering statistics." alt="" coords="5,5,141,31"/>
-<area shape="rect" title=" " alt="" coords="44,79,102,105"/>
-<area shape="poly" title=" " alt="" coords="76,31,76,63,70,63,70,31"/>
+<div class="center"><img src="compute__wcss_8hpp__incl.png" border="0" usemap="#akmeans_2compute__wcss_8hpp" alt=""/></div>
+<map name="akmeans_2compute__wcss_8hpp" id="akmeans_2compute__wcss_8hpp">
+<area shape="rect" title="Compute within&#45;cluster sum of squares." alt="" coords="11,5,194,31"/>
+<area shape="rect" title=" " alt="" coords="5,79,80,105"/>
+<area shape="poly" title=" " alt="" coords="95,33,64,69,60,65,91,30"/>
+<area shape="rect" href="SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="104,79,224,105"/>
+<area shape="poly" title=" " alt="" coords="115,29,146,65,142,69,111,33"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="Details_8hpp__dep__incl.png" border="0" usemap="#akmeans_2Details_8hppdep" alt=""/></div>
-<map name="akmeans_2Details_8hppdep" id="akmeans_2Details_8hppdep">
-<area shape="rect" title="Report detailed clustering statistics." alt="" coords="219,5,354,31"/>
-<area shape="rect" href="Refine_8hpp.html" title="Interface for k&#45;means refinement." alt="" coords="221,79,352,105"/>
-<area shape="poly" title=" " alt="" coords="289,46,289,79,284,79,284,46"/>
-<area shape="rect" href="RefineHartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="32,153,245,178"/>
-<area shape="poly" title=" " alt="" coords="258,42,211,81,175,120,149,154,145,151,171,117,207,77,255,38"/>
-<area shape="rect" href="kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="212,226,353,252"/>
-<area shape="poly" title=" " alt="" coords="207,37,128,59,89,73,55,90,29,108,13,129,9,151,22,177,33,187,51,196,99,211,156,221,211,229,211,234,155,227,98,216,49,200,30,191,18,180,4,152,8,127,25,105,52,85,87,68,126,54,205,32"/>
-<area shape="rect" href="RefineLloyd_8hpp.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="320,153,482,178"/>
-<area shape="poly" title=" " alt="" coords="322,38,345,55,366,77,388,117,400,151,395,153,383,119,362,81,341,59,318,42"/>
-<area shape="rect" href="RefineMiniBatch_8hpp.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="506,153,696,178"/>
-<area shape="poly" title=" " alt="" coords="327,35,576,150,574,154,325,40"/>
-<area shape="poly" title=" " alt="" coords="249,114,165,154,162,150,246,109"/>
-<area shape="poly" title=" " alt="" coords="288,120,285,226,280,226,283,120"/>
-<area shape="poly" title=" " alt="" coords="320,111,383,150,380,154,317,116"/>
-<area shape="poly" title=" " alt="" coords="356,106,548,149,547,155,354,111"/>
-<area shape="poly" title=" " alt="" coords="177,183,259,223,257,228,175,188"/>
-<area shape="poly" title=" " alt="" coords="369,189,304,228,301,223,367,184"/>
-<area shape="poly" title=" " alt="" coords="533,185,337,228,336,223,531,180"/>
+<div class="center"><img src="compute__wcss_8hpp__dep__incl.png" border="0" usemap="#akmeans_2compute__wcss_8hppdep" alt=""/></div>
+<map name="akmeans_2compute__wcss_8hppdep" id="akmeans_2compute__wcss_8hppdep">
+<area shape="rect" title="Compute within&#45;cluster sum of squares." alt="" coords="5,5,189,31"/>
+<area shape="rect" href="kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="26,79,168,105"/>
+<area shape="poly" title=" " alt="" coords="100,46,100,79,94,79,94,46"/>
 </map>
 </div>
 </div>
-<p><a href="Details_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="compute__wcss_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1Details.html">kmeans::Details&lt; Index_ &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Additional statistics from the k-means algorithm.  <a href="structkmeans_1_1Details.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespacekmeans" id="r_namespacekmeans"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacekmeans.html">kmeans</a></td></tr>
 <tr class="memdesc:namespacekmeans"><td class="mdescLeft">&#160;</td><td class="mdescRight">Namespace for k-means clustering. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea" id="r_abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplParams" colspan="2">template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </td></tr>
+<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#abaf3a7fbf7e5d39ff76d69ffce0e61ea">kmeans::compute_wcss</a> (const Matrix_ &amp;data, Cluster_ ncenters, const Float_ *centers, const Cluster_ *clusters, Float_ *wcss)</td></tr>
+<tr class="separator:abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Report detailed clustering statistics. </p>
+<div class="textblock"><p>Compute within-cluster sum of squares. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

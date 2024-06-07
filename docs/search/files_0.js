@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['details_2ehpp_0',['Details.hpp',['../Details_8hpp.html',1,'']]]
+  ['compute_5fwcss_2ehpp_0',['compute_wcss.hpp',['../compute__wcss_8hpp.html',1,'']]]
 ];

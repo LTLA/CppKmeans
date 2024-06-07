@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans/InitializeKmeanspp.hpp File Reference</title>
+<title>kmeans: kmeans/Refine.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -78,65 +78,54 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a>  </div>
-  <div class="headertitle"><div class="title">InitializeKmeanspp.hpp File Reference</div></div>
+  <div class="headertitle"><div class="title">Refine.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Class for <b>kmeans++</b> initialization.  
+<p>Interface for k-means refinement.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;algorithm&gt;</code><br />
-<code>#include &lt;cstdint&gt;</code><br />
-<code>#include &quot;aarand/aarand.hpp&quot;</code><br />
-<code>#include &quot;<a class="el" href="Initialize_8hpp_source.html">Initialize.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="Details_8hpp_source.html">Details.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="SimpleMatrix_8hpp_source.html">SimpleMatrix.hpp</a>&quot;</code><br />
-<code>#include &quot;copy_into_array.hpp&quot;</code><br />
-<code>#include &quot;parallelize.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
-Include dependency graph for InitializeKmeanspp.hpp:</div>
+Include dependency graph for Refine.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="InitializeKmeanspp_8hpp__incl.png" border="0" usemap="#akmeans_2InitializeKmeanspp_8hpp" alt=""/></div>
-<map name="akmeans_2InitializeKmeanspp_8hpp" id="akmeans_2InitializeKmeanspp_8hpp">
-<area shape="rect" title="Class for kmeans++ initialization." alt="" coords="297,5,502,31"/>
-<area shape="rect" title=" " alt="" coords="5,79,63,105"/>
-<area shape="poly" title=" " alt="" coords="321,34,210,54,79,81,78,76,209,48,320,29"/>
-<area shape="rect" title=" " alt="" coords="86,79,161,105"/>
-<area shape="poly" title=" " alt="" coords="353,34,176,80,175,75,352,29"/>
-<area shape="rect" title=" " alt="" coords="185,79,246,105"/>
-<area shape="poly" title=" " alt="" coords="369,34,261,76,259,71,367,29"/>
-<area shape="rect" title=" " alt="" coords="269,79,396,105"/>
-<area shape="poly" title=" " alt="" coords="390,33,356,69,352,66,386,29"/>
-<area shape="rect" href="Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="420,79,512,105"/>
-<area shape="poly" title=" " alt="" coords="412,29,446,66,442,69,408,33"/>
-<area shape="rect" href="SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="447,153,568,178"/>
-<area shape="poly" title=" " alt="" coords="457,29,495,47,513,61,527,78,533,93,533,109,524,140,519,138,528,109,527,94,522,80,509,65,493,52,454,34"/>
-<area shape="rect" title=" " alt="" coords="588,79,723,105"/>
-<area shape="poly" title=" " alt="" coords="443,29,598,72,596,77,442,34"/>
-<area shape="rect" title=" " alt="" coords="747,79,849,105"/>
-<area shape="poly" title=" " alt="" coords="469,29,732,76,731,81,468,34"/>
-<area shape="poly" title=" " alt="" coords="475,104,495,138,490,141,471,106"/>
+<div class="center"><img src="Refine_8hpp__incl.png" border="0" usemap="#akmeans_2Refine_8hpp" alt=""/></div>
+<map name="akmeans_2Refine_8hpp" id="akmeans_2Refine_8hpp">
+<area shape="rect" title="Interface for k&#45;means refinement." alt="" coords="45,5,176,31"/>
+<area shape="rect" href="Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="5,79,91,105"/>
+<area shape="poly" title=" " alt="" coords="102,33,71,69,67,65,98,29"/>
+<area shape="rect" href="SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="115,79,235,105"/>
+<area shape="poly" title=" " alt="" coords="123,29,156,66,152,69,119,33"/>
+<area shape="rect" title=" " alt="" coords="19,153,77,178"/>
+<area shape="poly" title=" " alt="" coords="51,105,51,137,45,137,45,105"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="InitializeKmeanspp_8hpp__dep__incl.png" border="0" usemap="#akmeans_2InitializeKmeanspp_8hppdep" alt=""/></div>
-<map name="akmeans_2InitializeKmeanspp_8hppdep" id="akmeans_2InitializeKmeanspp_8hppdep">
-<area shape="rect" title="Class for kmeans++ initialization." alt="" coords="5,5,210,31"/>
-<area shape="rect" href="kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="37,79,178,105"/>
-<area shape="poly" title=" " alt="" coords="110,46,110,79,105,79,105,46"/>
+<div class="center"><img src="Refine_8hpp__dep__incl.png" border="0" usemap="#akmeans_2Refine_8hppdep" alt=""/></div>
+<map name="akmeans_2Refine_8hppdep" id="akmeans_2Refine_8hppdep">
+<area shape="rect" title="Interface for k&#45;means refinement." alt="" coords="249,5,380,31"/>
+<area shape="rect" href="RefineHartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="5,79,219,105"/>
+<area shape="poly" title=" " alt="" coords="267,39,147,81,146,76,265,34"/>
+<area shape="rect" href="kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="244,153,385,178"/>
+<area shape="poly" title=" " alt="" coords="300,45,284,80,283,99,288,119,307,151,303,154,283,121,278,100,279,78,295,43"/>
+<area shape="rect" href="RefineLloyd_8hpp.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="294,79,456,105"/>
+<area shape="poly" title=" " alt="" coords="336,41,367,77,363,80,332,44"/>
+<area shape="rect" href="RefineMiniBatch_8hpp.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="480,79,669,105"/>
+<area shape="poly" title=" " alt="" coords="374,33,531,76,530,81,373,38"/>
+<area shape="poly" title=" " alt="" coords="162,108,281,150,279,155,160,113"/>
+<area shape="poly" title=" " alt="" coords="357,118,327,154,323,150,353,115"/>
+<area shape="poly" title=" " alt="" coords="517,112,360,155,358,149,515,107"/>
 </map>
 </div>
 </div>
-<p><a href="InitializeKmeanspp_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="Refine_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1InitializeKmeansppOptions.html">kmeans::InitializeKmeansppOptions</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <b>k-means++</b> initialization.  <a href="structkmeans_1_1InitializeKmeansppOptions.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializeKmeanspp.html">kmeans::InitializeKmeanspp&lt; Matrix_, Cluster_, Float_ &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><b>k-means++</b> initialization of Arthur and Vassilvitskii (2007).  <a href="classkmeans_1_1InitializeKmeanspp.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Refine.html">kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface for all k-means refinement algorithms.  <a href="classkmeans_1_1Refine.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -146,7 +135,7 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Class for <b>kmeans++</b> initialization. </p>
+<div class="textblock"><p>Interface for k-means refinement. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

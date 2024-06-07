@@ -1,22 +1,20 @@
 <map id="kmeans/InitializeKmeanspp.hpp" name="kmeans/InitializeKmeanspp.hpp">
-<area shape="rect" id="Node000001" title="Class for kmeans++ initialization." alt="" coords="261,5,466,31"/>
+<area shape="rect" id="Node000001" title="Class for kmeans++ initialization." alt="" coords="297,5,502,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,63,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="305,34,83,82,78,83,77,77,81,76,303,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="405,153,479,178"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,27,199,36,147,50,130,61,120,72,119,86,128,103,145,116,170,127,240,144,319,154,389,159,389,165,318,159,239,149,169,132,142,121,124,106,113,87,115,70,126,56,145,46,198,30,260,22"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="139,79,199,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="331,34,215,77,213,72,329,29"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="222,79,350,105"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="352,34,312,70,308,66,348,30"/>
-<area shape="rect" id="Node000006" href="$Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="660,79,752,105"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="422,29,645,75,644,80,421,34"/>
-<area shape="rect" id="Node000007" href="$SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="687,153,808,178"/>
-<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="466,17,552,22,641,32,718,49,747,62,767,77,774,92,775,108,765,140,760,138,770,108,769,93,763,81,744,66,716,54,640,37,552,27,466,23"/>
-<area shape="rect" id="Node000008" href="$copy__into__array_8hpp_source.html" title=" " alt="" coords="374,79,510,105"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="378,30,419,66,416,70,375,34"/>
-<area shape="rect" id="Node000009" href="$parallelize_8hpp_source.html" title=" " alt="" coords="534,79,636,105"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="402,29,534,71,532,76,400,34"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="715,104,735,138,730,141,711,106"/>
-<area shape="poly" id="edge9_Node000008_Node000003" title=" " alt="" coords="445,105,445,137,439,137,439,105"/>
-<area shape="poly" id="edge11_Node000009_Node000003" title=" " alt="" coords="562,108,481,148,479,143,559,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="321,34,210,54,79,81,78,76,209,48,320,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="86,79,161,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="353,34,176,80,175,75,352,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="185,79,246,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="369,34,261,76,259,71,367,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="269,79,396,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="390,33,356,69,352,66,386,29"/>
+<area shape="rect" id="Node000006" href="$Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="420,79,512,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="412,29,446,66,442,69,408,33"/>
+<area shape="rect" id="Node000007" href="$SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="447,153,568,178"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="457,29,495,47,513,61,527,78,533,93,533,109,524,140,519,138,528,109,527,94,522,80,509,65,493,52,454,34"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="588,79,723,105"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="443,29,598,72,596,77,442,34"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="747,79,849,105"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="469,29,732,76,731,81,468,34"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="475,104,495,138,490,141,471,106"/>
 </map>
