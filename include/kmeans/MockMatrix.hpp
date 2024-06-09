@@ -68,12 +68,12 @@ public:
     /**
      * @brief Workspace for random access to observations.
      *
-     * This may be used by matrix implementations to store temporary data structures that can be re-used in each call to `fetch_observation()`.
+     * This may be used by matrix implementations to store temporary data structures that can be re-used in each call to `get_observation()`.
      */
     struct RandomAccessWorkspace {};
 
     /**
-     * @return A new random-access workspace, to be passed to `fetch_observation()`.
+     * @return A new random-access workspace, to be passed to `get_observation()`.
      */
     RandomAccessWorkspace create_workspace() const {
         return RandomAccessWorkspace();
@@ -82,7 +82,7 @@ public:
     /**
      * @brief Workspace for access to consecutive observations.
      *
-     * This may be used by matrix implementations to store temporary data structures that can be re-used in each call to `fetch_observation()`.
+     * This may be used by matrix implementations to store temporary data structures that can be re-used in each call to `get_observation()`.
      */
     struct ConsecutiveAccessWorkspace {
         /**
@@ -98,7 +98,7 @@ public:
     /**
      * @param start Start of the contiguous block to be accessed consecutively.
      * @param length Length of the contiguous block to be accessed consecutively.
-     * @return A new consecutive-access workspace, to be passed to `fetch_observation()`.
+     * @return A new consecutive-access workspace, to be passed to `get_observation()`.
      */
     ConsecutiveAccessWorkspace create_workspace(index_type start, [[maybe_unused]] index_type length) const {
         return ConsecutiveAccessWorkspace(start);
@@ -107,7 +107,7 @@ public:
     /**
      * @brief Workspace for access to a indexed subset of observations.
      *
-     * This may be used by matrix implementations to store temporary data structures that can be re-used in each call to `fetch_observation()`.
+     * This may be used by matrix implementations to store temporary data structures that can be re-used in each call to `get_observation()`.
      */
     struct IndexedAccessWorkspace {
         /**
@@ -125,7 +125,7 @@ public:
      * @param[in] sequence Pointer to an array of sorted and unique indices of observations, to be accessed in the provided order.
      * It is assumed that the vector will not be deallocated before the destruction of the returned `IndexedAccessWorkspace`.
      * @param length Number of observations in `sequence`.
-     * @return A new indexed-access workspace, to be passed to `fetch_observation()`.
+     * @return A new indexed-access workspace, to be passed to `get_observation()`.
      */
     IndexedAccessWorkspace create_workspace(const index_type* sequence, [[maybe_unused]] index_type length) const {
         return IndexedAccessWorkspace(sequence);
@@ -133,9 +133,9 @@ public:
 
 public:
     /**
-     * @param i Index of the observation to fetch.
-     * @param workspace Random-access workspace for fetching.
-     * @return Pointer to an array of length equal to `num_dimensions()`, containing the coordinates for this observation.
+     * @param i Index of the observation .
+     * @param workspace Random-access workspace. 
+     * @return Pointer to an array of length equal to `num_dimensions()`, containing the coordinates for observation `i`.
      */
     const data_type* get_observation(int i, [[maybe_unused]] RandomAccessWorkspace& workspace) const {
         return my_data + static_cast<size_t>(i) * my_long_num_dim; // avoid overflow during multiplication.
@@ -151,7 +151,7 @@ public:
 
     /**
      * @param workspace Indexed access workspace. 
-     * @return Pointer to an array of length equal to `num_dimensions()`, containing the coordinates for the next observation.
+     * @return Pointer to an array of length equal to `num_dimensions()`, containing the coordinates for the next observation in the sequence.
      */
     const data_type* get_observation(IndexedAccessWorkspace& workspace) const {
         return my_data + static_cast<size_t>(workspace.sequence[workspace.at++]) * my_long_num_dim; // avoid overflow during multiplication.
