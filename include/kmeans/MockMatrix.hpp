@@ -89,7 +89,7 @@ public:
          * @cond
          */
         ConsecutiveAccessWorkspace(index_type start) : at(start) {}
-        index_type at;
+        size_t at;
         /**
          * @endcond
          */
@@ -115,7 +115,7 @@ public:
          */
         IndexedAccessWorkspace(const index_type* sequence) : sequence(sequence) {}
         const index_type* sequence;
-        index_type at = 0;
+        size_t at = 0;
         /**
          * @endcond
          */
@@ -146,7 +146,7 @@ public:
      * @return Pointer to an array of length equal to `num_dimensions()`, containing the coordinates for the next observation.
      */
     const data_type* get_observation(ConsecutiveAccessWorkspace& workspace) const {
-        return my_data + static_cast<size_t>(workspace.at++) * my_long_num_dim; // avoid overflow during multiplication.
+        return my_data + (workspace.at++) * my_long_num_dim; // everything is already a size_t.
     } 
 
     /**
