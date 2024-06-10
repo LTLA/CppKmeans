@@ -41,7 +41,7 @@ void compute_wcss(const Matrix_& data, Cluster_ ncenters, const Float_* centers,
 
         auto curdata = data.get_observation(work);
         for (decltype(ndim) dim = 0; dim < ndim; ++dim, ++curcenter, ++curdata) {
-            auto delta = *curdata - *curcenter;
+            Float_ delta = static_cast<Float_>(*curdata) - *curcenter; // cast for consistent precision regardless of Data_.
             curwcss += delta * delta;
         }
     }

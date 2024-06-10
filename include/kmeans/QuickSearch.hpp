@@ -13,24 +13,24 @@ namespace kmeans {
 namespace internal {
 
 /* Adapted from http://stevehanov.ca/blog/index.php?id=130 */
-template<typename Data_, typename Index_, typename Dim_>
+template<typename Float_, typename Index_, typename Dim_>
 class QuickSearch {
 private:
     Dim_ num_dim;
     size_t long_num_dim;
 
     template<typename Query_>
-    static Data_ raw_distance(const Data_* x, const Query_* y, Dim_ ndim) {
-        Data_ output = 0;
+    static Float_ raw_distance(const Float_* x, const Query_* y, Dim_ ndim) {
+        Float_ output = 0;
         for (Dim_ i = 0; i < ndim; ++i, ++x, ++y) {
-            Data_ delta = *x - *y;
+            Float_ delta = *x - static_cast<Float_>(*y); // cast to ensure consistent precision regardless of Query_.
             output += delta * delta;
         }
         return output;
     }
 
 private:
-    typedef std::pair<Data_, Index_> DataPoint;
+    typedef std::pair<Float_, Index_> DataPoint;
     std::vector<DataPoint> items;
 
 private:
@@ -38,8 +38,8 @@ private:
     static const Index_ LEAF = 0;
 
     struct Node {
-        const Data_* center = NULL;
-        Data_ radius = 0;
+        const Float_* center = NULL;
+        Float_ radius = 0;
 
         // Original index of current vantage point
         Index_ index = 0;
@@ -57,7 +57,7 @@ private:
 
 private:
     template<class Engine_>
-    Index_ build(Index_ lower, Index_ upper, const Data_* coords, Engine_& rng) {
+    Index_ build(Index_ lower, Index_ upper, const Float_* coords, Engine_& rng) {
         /*
          * We're assuming that lower < upper at each point within this
          * recursion. This requires some protection at the call site
@@ -83,12 +83,12 @@ private:
             std::swap(items[lower], items[i]);
             const auto& vantage = items[lower];
             node.index = vantage.second;
-            const Data_* vantage_ptr = coords + static_cast<size_t>(vantage.second) * long_num_dim; // cast to avoid overflow.
+            const Float_* vantage_ptr = coords + static_cast<size_t>(vantage.second) * long_num_dim; // cast to avoid overflow.
             node.center = vantage_ptr;
 
             // Compute distances to the new vantage point.
             for (Index_ i = lower + 1; i < upper; ++i) {
-                const Data_* loc = coords + static_cast<size_t>(items[i].second) * long_num_dim; // cast to avoid overflow.
+                const Float_* loc = coords + static_cast<size_t>(items[i].second) * long_num_dim; // cast to avoid overflow.
                 items[i].first = raw_distance(vantage_ptr, loc, num_dim);
             }
 
@@ -120,11 +120,11 @@ private:
 public:
     QuickSearch() = default;
 
-    QuickSearch(Dim_ ndim, Index_ nobs, const Data_* vals) {
+    QuickSearch(Dim_ ndim, Index_ nobs, const Float_* vals) {
         reset(ndim, nobs, vals);
     }
 
-    void reset(Dim_ ndim, Index_ nobs, const Data_* vals) {
+    void reset(Dim_ ndim, Index_ nobs, const Float_* vals) {
         num_dim = ndim;
         long_num_dim = ndim;
         items.clear();
@@ -152,9 +152,9 @@ public:
 
 private:
     template<typename Query_>
-    void search_nn(Index_ curnode_index, const Query_* target, Index_& closest_point, Data_& closest_dist) const {
+    void search_nn(Index_ curnode_index, const Query_* target, Index_& closest_point, Float_& closest_dist) const {
         const auto& curnode=nodes[curnode_index];
-        Data_ dist = std::sqrt(raw_distance(curnode.center, target, num_dim));
+        Float_ dist = std::sqrt(raw_distance(curnode.center, target, num_dim));
         if (dist < closest_dist) {
             closest_point = curnode.index;
             closest_dist = dist;
@@ -183,15 +183,15 @@ private:
 public:
     template<typename Query_>
     Index_ find(const Query_* query) const {
-        Data_ closest_dist = std::numeric_limits<Data_>::max();
+        Float_ closest_dist = std::numeric_limits<Float_>::max();
         Index_ closest = 0;
         search_nn(0, query, closest, closest_dist);
         return closest;
     }
 
     template<typename Query_>
-    std::pair<Index_, Data_> find_with_distance(const Query_* query) const {
-        Data_ closest_dist = std::numeric_limits<Data_>::max();
+    std::pair<Index_, Float_> find_with_distance(const Query_* query) const {
+        Float_ closest_dist = std::numeric_limits<Float_>::max();
         Index_ closest = 0;
         search_nn(0, query, closest, closest_dist);
         return std::make_pair(closest, closest_dist);
@@ -199,9 +199,9 @@ public:
 
 private:
     template<typename Query_>
-    void search_nn(Index_ curnode_index, const Query_* target, std::priority_queue<std::pair<Data_, Index_> >& closest) const {
+    void search_nn(Index_ curnode_index, const Query_* target, std::priority_queue<std::pair<Float_, Index_> >& closest) const {
         const auto& curnode=nodes[curnode_index];
-        Data_ dist = std::sqrt(raw_distance(curnode.center, target, num_dim));
+        Float_ dist = std::sqrt(raw_distance(curnode.center, target, num_dim));
 
         auto biggest_dist = closest.top().first;
         if (dist < biggest_dist) {
@@ -235,9 +235,9 @@ public:
     std::pair<Index_, Index_> find2(const Query_* query) const {
         // There better be two or more observations in this dataset,
         // otherwise one of the placeholders will end up being reported!
-        std::priority_queue<std::pair<Data_, Index_> > closest;
-        closest.emplace(std::numeric_limits<Data_>::max(), 0);
-        closest.emplace(std::numeric_limits<Data_>::max(), 0);
+        std::priority_queue<std::pair<Float_, Index_> > closest;
+        closest.emplace(std::numeric_limits<Float_>::max(), 0);
+        closest.emplace(std::numeric_limits<Float_>::max(), 0);
         search_nn(0, query, closest);
 
         std::pair<Index_, Index_> output;

@@ -17,7 +17,7 @@ void compute_centroid(const Matrix_& data, Float_* center) {
     for (decltype(nobs) i = 0; i < nobs; ++i) {
         auto dptr = data.get_observation(work);
         for (decltype(ndim) d = 0; d < ndim; ++d) {
-            center[d] += dptr[d];
+            center[d] += static_cast<Float_>(dptr[d]); // cast for consistent precision regardless of Matrix_::data_type.
         }
     }
 
@@ -38,7 +38,8 @@ void compute_centroids(const Matrix_& data, Cluster_ ncenters, Float_* centers, 
         auto copy = centers + static_cast<size_t>(clusters[obs]) * long_ndim;
         auto mine = data.get_observation(work);
         for (decltype(ndim) dim = 0; dim < ndim; ++dim, ++copy, ++mine) {
-            *copy += *mine;
+            *copy += static_cast<Float_>(*mine); // cast for consistent precision regardless of Matrix_::data_type.
+
         }
     }
 

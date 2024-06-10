@@ -42,13 +42,13 @@ struct InitializeKmeansppOptions {
  */
 namespace InitializeKmeanspp_internal {
 
-template<typename Data_, typename Index_, class Engine_>
-Index_ weighted_sample(const std::vector<Data_>& cumulative, const std::vector<Data_>& mindist, Index_ nobs, Engine_& eng) {
+template<typename Float_, typename Index_, class Engine_>
+Index_ weighted_sample(const std::vector<Float_>& cumulative, const std::vector<Float_>& mindist, Index_ nobs, Engine_& eng) {
     auto total = cumulative.back();
     Index_ chosen_id = 0;
 
     do {
-        const Data_ sampled_weight = total * aarand::standard_uniform(eng);
+        const Float_ sampled_weight = total * aarand::standard_uniform<Float_>(eng);
         chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();
 
         // We wrap this in a do/while to defend against edge cases where
@@ -63,16 +63,15 @@ Index_ weighted_sample(const std::vector<Data_>& cumulative, const std::vector<D
     return chosen_id;
 }
 
-template<class Matrix_, typename Cluster_>
+template<typename Float_, class Matrix_, typename Cluster_>
 std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, uint64_t seed, int nthreads) {
-    typedef typename Matrix_::data_type Data_;
     typedef typename Matrix_::index_type Index_;
     typedef typename Matrix_::dimension_type Dim_;
 
     auto nobs = data.num_observations();
     auto ndim = data.num_dimensions();
-    std::vector<Data_> mindist(nobs, 1);
-    std::vector<Data_> cumulative(nobs);
+    std::vector<Float_> mindist(nobs, 1);
+    std::vector<Float_> cumulative(nobs);
     std::vector<Index_> sofar;
     sofar.reserve(ncenters);
     std::mt19937_64 eng(seed);
@@ -89,9 +88,9 @@ std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Clus
                         auto acopy = data.get_observation(obs, curwork);
                         auto scopy = last_ptr;
 
-                        Data_ r2 = 0;
+                        Float_ r2 = 0;
                         for (Dim_ dim = 0; dim < ndim; ++dim, ++acopy, ++scopy) {
-                            Data_ delta = (*acopy - *scopy);
+                            Float_ delta = static_cast<Float_>(*acopy) - static_cast<Float_>(*scopy); // cast to ensure consistent precision regardless of Data_.
                             r2 += delta * delta;
                         }
 
@@ -166,7 +165,7 @@ public:
             return 0;
         }
 
-        auto sofar = InitializeKmeanspp_internal::run_kmeanspp(matrix, ncenters, my_options.seed, my_options.num_threads);
+        auto sofar = InitializeKmeanspp_internal::run_kmeanspp<Float_>(matrix, ncenters, my_options.seed, my_options.num_threads);
         internal::copy_into_array(matrix, sofar, centers);
         return sofar.size();
     }

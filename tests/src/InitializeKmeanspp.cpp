@@ -22,7 +22,7 @@ TEST_P(KmeansppInitializationTest, Internals) {
 
     kmeans::SimpleMatrix mat(nr, nc, data.data());
     int seed = ncenters * 10 + nr + nc;
-    auto output = kmeans::InitializeKmeanspp_internal::run_kmeanspp(mat, ncenters, seed, 1);
+    auto output = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters, seed, 1);
     EXPECT_EQ(output.size(), ncenters);
 
     // Check that a reasonable selection is made.
@@ -39,18 +39,18 @@ TEST_P(KmeansppInitializationTest, Internals) {
 
     // Consistent results with the same initialization.
     {
-        auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp(mat, ncenters, seed, 1);
+        auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters, seed, 1);
         EXPECT_EQ(output, output2);
         
         // Different results with a different seed (note that this only works
         // if num obs is reasonably larger than num centers).
-        auto output3 = kmeans::InitializeKmeanspp_internal::run_kmeanspp(mat, ncenters, seed + 1, 1);
+        auto output3 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters, seed + 1, 1);
         EXPECT_NE(output, output3);
     }
 
     // Check that parallelization gives the same result.
     {
-        auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp(mat, ncenters, seed, 3);
+        auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters, seed, 3);
         EXPECT_EQ(output, output2);
     }
 }
@@ -94,7 +94,7 @@ TEST_P(KmeansppInitializationTest, Sanity) {
     // all others are duplicates and should have sampling probabilities of zero.
     kmeans::SimpleMatrix mat(nr, nc, dups.data.data());
     auto seed = ncenters * 100;
-    auto output = kmeans::InitializeKmeanspp_internal::run_kmeanspp(mat, ncenters, seed, 1);
+    auto output = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters, seed, 1);
 
     EXPECT_EQ(output.size(), ncenters);
     for (auto& o : output) {
@@ -107,7 +107,7 @@ TEST_P(KmeansppInitializationTest, Sanity) {
     EXPECT_EQ(expected, output);
 
     // If more clusters are requested, we detect that only duplicates are available and we bail early.
-    auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp(mat, ncenters + 1, seed, 1);
+    auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters + 1, seed, 1);
     EXPECT_EQ(output2.size(), ncenters);
     for (auto& o : output2) {
         o = dups.clusters[o];

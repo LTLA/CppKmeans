@@ -153,11 +153,13 @@ public:
                 const auto c = clusters[o];
                 auto& n = total_sampled[c];
                 ++n;
+
                 Float_ mult = static_cast<Float_>(1)/static_cast<Float_>(n);
                 auto ccopy = centers + static_cast<size_t>(c) * long_ndim;
                 auto ocopy = data.get_observation(work);
+
                 for (decltype(ndim) d = 0; d < ndim; ++d, ++ocopy, ++ccopy) {
-                    (*ccopy) += (*ocopy - *ccopy) * mult;
+                    (*ccopy) += (static_cast<Float_>(*ocopy) - *ccopy) * mult; // cast to ensure consistent precision regardless of Matrix_::data_type.
                 }
             }
 

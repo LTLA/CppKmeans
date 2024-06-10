@@ -229,7 +229,7 @@ template<typename Data_, typename Float_, typename Dim_>
 Float_ squared_distance_from_cluster(const Data_* data, const Float_* center, Dim_ ndim) {
     Float_ output = 0;
     for (decltype(ndim) dim = 0; dim < ndim; ++dim, ++data, ++center) {
-        auto delta = *data - *center;
+        Float_ delta = static_cast<Float_>(*data) - *center; // cast to float for consistent precision regardless of Data_.
         output += delta * delta;
     }
     return output;
@@ -237,14 +237,14 @@ Float_ squared_distance_from_cluster(const Data_* data, const Float_* center, Di
 
 template<class Matrix_, typename Cluster_, typename Float_>
 void find_closest_two_centers(const Matrix_& data, Cluster_ ncenters, const Float_* centers, Cluster_* best_cluster, std::vector<Cluster_>& second_best_cluster, int nthreads) {
-    auto nobs = data.num_observations();
     auto ndim = data.num_dimensions();
-    typedef typename Matrix_::index_type Index_;
 
     // We assume that there are at least two centers here, otherwise we should
     // have detected that this was an edge case in RefineHartiganWong::run.
-    internal::QuickSearch index(ndim, ncenters, centers);
+    internal::QuickSearch<Float_, Cluster_, decltype(ndim)> index(ndim, ncenters, centers);
 
+    auto nobs = data.num_observations();
+    typedef typename Matrix_::index_type Index_;
     internal::parallelize(nobs, nthreads, [&](int, Index_ start, Index_ length) -> void {
         auto matwork = data.create_workspace(start, length);
         for (Index_ obs = start, end = start + length; obs < end; ++obs) {
@@ -272,8 +272,9 @@ void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1,
     auto copy1 = centers + static_cast<size_t>(l1) * long_ndim; // cast to avoid overflow.
     auto copy2 = centers + static_cast<size_t>(l2) * long_ndim;
     for (decltype(ndim) dim = 0; dim < ndim; ++dim, ++copy1, ++copy2, ++obs_ptr) {
-        *copy1 = (*copy1 * al1 - *obs_ptr) / alw;
-        *copy2 = (*copy2 * al2 + *obs_ptr) / alt;
+        Float_ oval = *obs_ptr; // cast to float for consistent precision regardless of Data_.
+        *copy1 = (*copy1 * al1 - oval) / alw;
+        *copy2 = (*copy2 * al2 + oval) / alt;
     }
 
     --work.cluster_sizes[l1];

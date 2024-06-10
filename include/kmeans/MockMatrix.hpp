@@ -28,18 +28,19 @@ public:
     /**
      * Type of the data.
      * Any floating-point type may be used here.
+     * Note that this type is only used for data storage; all calculations are done using the `Float_` type in `Refine` and `Initialize`.
      */
     typedef double data_type;
 
     /**
      * Type for the observation indices.
-     * Any integer type may be used here.
+     * Any integer type may be used here, as long as it is large enough to hold the number of observations.
      */
     typedef int index_type;
 
     /**
      * Integer type for the dimension indices.
-     * Any integer type may be used here.
+     * Any integer type may be used here, as long as it is large enough to hold the number of dimensions..
      */
     typedef int dimension_type;
 

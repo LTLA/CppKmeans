@@ -71,7 +71,7 @@ void compute_pc1(
     for (size_t i = 0, end = chosen.size(); i < end; ++i) {
         auto dptr = data.get_observation(matwork);
         for (decltype(ndim) j = 0; j < ndim; ++j) {
-            work.delta[j] = dptr[j] - center[j];
+            work.delta[j] = static_cast<Float_>(dptr[j]) - center[j]; // cast to ensure consistent precision regardless of Data_.
         }
 
         size_t offset = 0;
@@ -105,7 +105,7 @@ void compute_center(const Matrix_& data, const std::vector<typename Matrix_::ind
     for (size_t i = 0, end = chosen.size(); i < end; ++i) {
         auto dptr = data.get_observation(work);
         for (decltype(ndim) d = 0; d < ndim; ++d) {
-            center[d] += dptr[d];
+            center[d] += static_cast<Float_>(dptr[d]); // cast to ensure consistent precision regardless of Data_.
         }
     }
 
@@ -124,7 +124,7 @@ Float_ update_center_and_mrse(const Matrix_& data, const std::vector<typename Ma
     for (size_t i = 0, end = chosen.size(); i < end; ++i) {
         auto dptr = data.get_observation(work);
         for (decltype(ndim) d = 0; d < ndim; ++d) {
-            Float_ delta = dptr[d] - center[d];
+            Float_ delta = static_cast<Float_>(dptr[d]) - center[d]; // cast to ensure consistent precision regardless of Data_.
             mrse += delta * delta;
         }
     }
@@ -233,8 +233,8 @@ public:
                 auto dptr = data.get_observation(work);
 
                 Float_ proj = 0;
-                for (decltype(ndim) d = 0; d < ndim; ++d) {
-                    proj += (dptr[d] - worst_center[d]) * pc1[d];
+                for (decltype(ndim) d = 0; d < ndim; ++d, ++dptr) {
+                    proj += (static_cast<Float_>(*dptr) - worst_center[d]) * pc1[d]; // cast for consistent precision regardless of Data_.
                 }
 
                 if (proj > 0) {
