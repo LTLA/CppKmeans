@@ -34,7 +34,7 @@ Details<typename Matrix_::index_type> process_edge_case(const Matrix_& data, Clu
         std::fill_n(sizes.begin(), nobs, 1);
 
         auto ndim = data.num_dimensions();
-        auto work = data.create_workspace(0, nobs);
+        auto work = data.create_workspace(static_cast<typename Matrix_::index_type>(0), nobs);
         auto cptr = centers;
         for (decltype(nobs) o = 0; o < nobs; ++o, cptr += ndim) {
             auto ptr = data.get_observation(work);

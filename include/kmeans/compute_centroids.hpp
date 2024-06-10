@@ -33,7 +33,7 @@ void compute_centroids(const Matrix_& data, Cluster_ ncenters, Float_* centers, 
     size_t long_ndim = ndim;
     std::fill(centers, centers + long_ndim * static_cast<size_t>(ncenters), 0); // cast to avoid overflow.
 
-    auto work = data.create_workspace(0, nobs);
+    auto work = data.create_workspace(static_cast<typename Matrix_::index_type>(0), nobs);
     for (decltype(nobs) obs = 0; obs < nobs; ++obs) {
         auto copy = centers + static_cast<size_t>(clusters[obs]) * long_ndim;
         auto mine = data.get_observation(work);
