@@ -87,149 +87,150 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define KMEANS_INITIALIZE_KMEANSPP_HPP</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;aarand/aarand.hpp&quot;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="Initialize_8hpp.html">Initialize.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="SimpleMatrix_8hpp.html">SimpleMatrix.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;copy_into_array.hpp&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;parallelize.hpp&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacekmeans.html">kmeans</a> {</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="foldopen" id="foldopen00026" data-start="{" data-end="};">
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="structkmeans_1_1InitializeKmeansppOptions.html">   26</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structkmeans_1_1InitializeKmeansppOptions.html">InitializeKmeansppOptions</a> {</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="structkmeans_1_1InitializeKmeansppOptions.html#acf0d2057e8792438afe8bf8a82d03307">   30</a></span>    uint64_t <a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#acf0d2057e8792438afe8bf8a82d03307">seed</a> = 6523u;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="structkmeans_1_1InitializeKmeansppOptions.html#ab013d5b005343f214102ec1e1d1916c6">   36</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#ab013d5b005343f214102ec1e1d1916c6">num_threads</a> = 1;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>};</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;random&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;aarand/aarand.hpp&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="Initialize_8hpp.html">Initialize.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="SimpleMatrix_8hpp.html">SimpleMatrix.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;copy_into_array.hpp&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;parallelize.hpp&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacekmeans.html">kmeans</a> {</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="foldopen" id="foldopen00027" data-start="{" data-end="};">
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="structkmeans_1_1InitializeKmeansppOptions.html">   27</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structkmeans_1_1InitializeKmeansppOptions.html">InitializeKmeansppOptions</a> {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structkmeans_1_1InitializeKmeansppOptions.html#acf0d2057e8792438afe8bf8a82d03307">   31</a></span>    uint64_t <a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#acf0d2057e8792438afe8bf8a82d03307">seed</a> = 6523u;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="structkmeans_1_1InitializeKmeansppOptions.html#ab013d5b005343f214102ec1e1d1916c6">   37</a></span>    <span class="keywordtype">int</span> <a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#ab013d5b005343f214102ec1e1d1916c6">num_threads</a> = 1;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>};</div>
 </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">namespace </span>InitializeKmeanspp_internal {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Index_, <span class="keyword">class</span> Engine_&gt;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>Index_ weighted_sample(<span class="keyword">const</span> std::vector&lt;Data_&gt;&amp; cumulative, <span class="keyword">const</span> std::vector&lt;Data_&gt;&amp; mindist, Index_ nobs, Engine_&amp; eng) {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    <span class="keyword">auto</span> total = cumulative.back();</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    Index_ chosen_id = 0;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordflow">do</span> {</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        <span class="keyword">const</span> Data_ sampled_weight = total * aarand::standard_uniform(eng);</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="comment">// We wrap this in a do/while to defend against edge cases where</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="comment">// ties are chosen. The most obvious of these is when you get a</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="comment">// `sampled_weight` of zero _and_ there exists a bunch of zeros at</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="comment">// the start of `cumulative`. One could also get unexpected ties</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="comment">// from limited precision in floating point comparisons, so we&#39;ll</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="comment">// just be safe and implement a loop here, in the same vein as</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="comment">// uniform01.</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    } <span class="keywordflow">while</span> (chosen_id == nobs || mindist[chosen_id] == 0);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keywordflow">return</span> chosen_id;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>}</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> Matrix_, <span class="keyword">typename</span> Cluster_&gt;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>std::vector&lt;typename Matrix_::index_type&gt; run_kmeanspp(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ ncenters, uint64_t seed, <span class="keywordtype">int</span> nthreads) {</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Matrix_::data_type Data_;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Matrix_::index_type Index_;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Matrix_::dimension_type Dim_;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>    <span class="keyword">auto</span> nobs = data.num_observations();</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    std::vector&lt;Data_&gt; mindist(nobs, 1);</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    std::vector&lt;Data_&gt; cumulative(nobs);</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    std::vector&lt;Index_&gt; sofar;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    sofar.reserve(ncenters);</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    std::mt19937_64 eng(seed);</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keyword">auto</span> last_work = data.create_workspace();</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">for</span> (Cluster_ cen = 0; cen &lt; ncenters; ++cen) {</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keywordflow">if</span> (!sofar.empty()) {</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>            <span class="keyword">auto</span> last_ptr = data.get_observation(sofar.back(), last_work);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>            internal::parallelize(nobs, nthreads, [&amp;](<span class="keywordtype">int</span>, Index_ start, Index_ length) {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>                <span class="keyword">auto</span> curwork = data.create_workspace();</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                <span class="keywordflow">for</span> (Index_ obs = start, end = start + length; obs &lt; end; ++obs) {</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                    <span class="keywordflow">if</span> (mindist[obs]) {</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                        <span class="keyword">auto</span> acopy = data.get_observation(obs, curwork);</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                        <span class="keyword">auto</span> scopy = last_ptr;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>                        Data_ r2 = 0;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                        <span class="keywordflow">for</span> (Dim_ dim = 0; dim &lt; ndim; ++dim, ++acopy, ++scopy) {</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                            Data_ delta = (*acopy - *scopy);</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                            r2 += delta * delta;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                        }</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                        <span class="keywordflow">if</span> (cen == 1 || r2 &lt; mindist[obs]) {</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                            mindist[obs] = r2;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                        }</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                    }</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                }</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>            });</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        }</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        cumulative[0] = mindist[0];</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        <span class="keywordflow">for</span> (Index_ i = 1; i &lt; nobs; ++i) {</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>            cumulative[i] = cumulative[i-1] + mindist[i];</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        }</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="keyword">const</span> <span class="keyword">auto</span> total = cumulative.back();</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">if</span> (total == 0) { <span class="comment">// a.k.a. only duplicates left.</span></div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        }</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="keyword">auto</span> chosen_id = weighted_sample(cumulative, mindist, nobs, eng);</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        mindist[chosen_id] = 0;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        sofar.push_back(chosen_id);</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    }</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">return</span> sofar;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>}</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>}</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Matrix_ = SimpleMatrix&lt;<span class="keywordtype">double</span>, <span class="keywordtype">int</span>&gt;, <span class="keyword">typename</span> Cluster_ = <span class="keywordtype">int</span>, <span class="keyword">typename</span> Float_ = <span class="keywordtype">double</span>&gt;</div>
-<div class="foldopen" id="foldopen00146" data-start="{" data-end="};">
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html">  146</a></span><span class="keyword">class </span><a class="code hl_class" href="classkmeans_1_1InitializeKmeanspp.html">InitializeKmeanspp</a> : <span class="keyword">public</span> <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&lt;Matrix_, Cluster_, Float_&gt; {</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <a class="code hl_struct" href="structkmeans_1_1InitializeKmeansppOptions.html">InitializeKmeansppOptions</a> my_options;</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html#a1c22523b6848531771c3056e6db44f31">  154</a></span>    <a class="code hl_function" href="classkmeans_1_1InitializeKmeanspp.html#a1c22523b6848531771c3056e6db44f31">InitializeKmeanspp</a>(<a class="code hl_struct" href="structkmeans_1_1InitializeKmeansppOptions.html">InitializeKmeansppOptions</a> options) : my_options(std::move(options)) {}</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html#a16ee2db4571dce8fa1639fbf003b997c">  159</a></span>    <a class="code hl_function" href="classkmeans_1_1InitializeKmeanspp.html#a16ee2db4571dce8fa1639fbf003b997c">InitializeKmeanspp</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00162" data-start="{" data-end="}">
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">  162</a></span>    Cluster_ <a class="code hl_function" href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">run</a>(<span class="keyword">const</span> Matrix_&amp; matrix, Cluster_ ncenters, Float_* centers)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <span class="keywordtype">size_t</span> nobs = matrix.num_observations();</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keywordflow">if</span> (!nobs) {</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        }</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        <span class="keyword">auto</span> sofar = InitializeKmeanspp_internal::run_kmeanspp(matrix, ncenters, my_options.<a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#acf0d2057e8792438afe8bf8a82d03307">seed</a>, my_options.<a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#ab013d5b005343f214102ec1e1d1916c6">num_threads</a>);</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        internal::copy_into_array(matrix, sofar, centers);</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        <span class="keywordflow">return</span> sofar.size();</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    }</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">namespace </span>InitializeKmeanspp_internal {</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Index_, <span class="keyword">class</span> Engine_&gt;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>Index_ weighted_sample(<span class="keyword">const</span> std::vector&lt;Data_&gt;&amp; cumulative, <span class="keyword">const</span> std::vector&lt;Data_&gt;&amp; mindist, Index_ nobs, Engine_&amp; eng) {</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    <span class="keyword">auto</span> total = cumulative.back();</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    Index_ chosen_id = 0;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">do</span> {</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>        <span class="keyword">const</span> Data_ sampled_weight = total * aarand::standard_uniform(eng);</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>        <span class="comment">// We wrap this in a do/while to defend against edge cases where</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>        <span class="comment">// ties are chosen. The most obvious of these is when you get a</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        <span class="comment">// `sampled_weight` of zero _and_ there exists a bunch of zeros at</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        <span class="comment">// the start of `cumulative`. One could also get unexpected ties</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="comment">// from limited precision in floating point comparisons, so we&#39;ll</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="comment">// just be safe and implement a loop here, in the same vein as</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        <span class="comment">// uniform01.</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    } <span class="keywordflow">while</span> (chosen_id == nobs || mindist[chosen_id] == 0);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    <span class="keywordflow">return</span> chosen_id;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> Matrix_, <span class="keyword">typename</span> Cluster_&gt;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>std::vector&lt;typename Matrix_::index_type&gt; run_kmeanspp(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ ncenters, uint64_t seed, <span class="keywordtype">int</span> nthreads) {</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Matrix_::data_type Data_;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Matrix_::index_type Index_;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Matrix_::dimension_type Dim_;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    <span class="keyword">auto</span> nobs = data.num_observations();</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>    <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    std::vector&lt;Data_&gt; mindist(nobs, 1);</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    std::vector&lt;Data_&gt; cumulative(nobs);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    std::vector&lt;Index_&gt; sofar;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    sofar.reserve(ncenters);</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    std::mt19937_64 eng(seed);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span> </div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keyword">auto</span> last_work = data.create_workspace();</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">for</span> (Cluster_ cen = 0; cen &lt; ncenters; ++cen) {</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        <span class="keywordflow">if</span> (!sofar.empty()) {</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>            <span class="keyword">auto</span> last_ptr = data.get_observation(sofar.back(), last_work);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>            internal::parallelize(nobs, nthreads, [&amp;](<span class="keywordtype">int</span>, Index_ start, Index_ length) {</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>                <span class="keyword">auto</span> curwork = data.create_workspace();</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>                <span class="keywordflow">for</span> (Index_ obs = start, end = start + length; obs &lt; end; ++obs) {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>                    <span class="keywordflow">if</span> (mindist[obs]) {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>                        <span class="keyword">auto</span> acopy = data.get_observation(obs, curwork);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>                        <span class="keyword">auto</span> scopy = last_ptr;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>                        Data_ r2 = 0;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                        <span class="keywordflow">for</span> (Dim_ dim = 0; dim &lt; ndim; ++dim, ++acopy, ++scopy) {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                            Data_ delta = (*acopy - *scopy);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                            r2 += delta * delta;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                        }</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                        <span class="keywordflow">if</span> (cen == 1 || r2 &lt; mindist[obs]) {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                            mindist[obs] = r2;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                        }</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                    }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                }</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            });</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        }</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>        cumulative[0] = mindist[0];</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>        <span class="keywordflow">for</span> (Index_ i = 1; i &lt; nobs; ++i) {</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>            cumulative[i] = cumulative[i-1] + mindist[i];</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>        }</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keyword">const</span> <span class="keyword">auto</span> total = cumulative.back();</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>        <span class="keywordflow">if</span> (total == 0) { <span class="comment">// a.k.a. only duplicates left.</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        }</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <span class="keyword">auto</span> chosen_id = weighted_sample(cumulative, mindist, nobs, eng);</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        mindist[chosen_id] = 0;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        sofar.push_back(chosen_id);</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    }</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <span class="keywordflow">return</span> sofar;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>}</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>}</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Matrix_ = SimpleMatrix&lt;<span class="keywordtype">double</span>, <span class="keywordtype">int</span>&gt;, <span class="keyword">typename</span> Cluster_ = <span class="keywordtype">int</span>, <span class="keyword">typename</span> Float_ = <span class="keywordtype">double</span>&gt;</div>
+<div class="foldopen" id="foldopen00147" data-start="{" data-end="};">
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html">  147</a></span><span class="keyword">class </span><a class="code hl_class" href="classkmeans_1_1InitializeKmeanspp.html">InitializeKmeanspp</a> : <span class="keyword">public</span> <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&lt;Matrix_, Cluster_, Float_&gt; {</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <a class="code hl_struct" href="structkmeans_1_1InitializeKmeansppOptions.html">InitializeKmeansppOptions</a> my_options;</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span> </div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html#a1c22523b6848531771c3056e6db44f31">  155</a></span>    <a class="code hl_function" href="classkmeans_1_1InitializeKmeanspp.html#a1c22523b6848531771c3056e6db44f31">InitializeKmeanspp</a>(<a class="code hl_struct" href="structkmeans_1_1InitializeKmeansppOptions.html">InitializeKmeansppOptions</a> options) : my_options(std::move(options)) {}</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html#a16ee2db4571dce8fa1639fbf003b997c">  160</a></span>    <a class="code hl_function" href="classkmeans_1_1InitializeKmeanspp.html#a16ee2db4571dce8fa1639fbf003b997c">InitializeKmeanspp</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00163" data-start="{" data-end="}">
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">  163</a></span>    Cluster_ <a class="code hl_function" href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">run</a>(<span class="keyword">const</span> Matrix_&amp; matrix, Cluster_ ncenters, Float_* centers)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keywordtype">size_t</span> nobs = matrix.num_observations();</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>        <span class="keywordflow">if</span> (!nobs) {</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        }</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        <span class="keyword">auto</span> sofar = InitializeKmeanspp_internal::run_kmeanspp(matrix, ncenters, my_options.<a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#acf0d2057e8792438afe8bf8a82d03307">seed</a>, my_options.<a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#ab013d5b005343f214102ec1e1d1916c6">num_threads</a>);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        internal::copy_into_array(matrix, sofar, centers);</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        <span class="keywordflow">return</span> sofar.size();</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    }</div>
 </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>};</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>};</div>
 </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>}</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>}</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aInitialize_8hpp_html"><div class="ttname"><a href="Initialize_8hpp.html">Initialize.hpp</a></div><div class="ttdoc">Interface for k-means initialization.</div></div>
 <div class="ttc" id="aSimpleMatrix_8hpp_html"><div class="ttname"><a href="SimpleMatrix_8hpp.html">SimpleMatrix.hpp</a></div><div class="ttdoc">Wrapper for a simple dense matrix.</div></div>
-<div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html">kmeans::InitializeKmeanspp</a></div><div class="ttdoc">k-means++ initialization of Arthur and Vassilvitskii (2007).</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:146</div></div>
+<div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html">kmeans::InitializeKmeanspp</a></div><div class="ttdoc">k-means++ initialization of Arthur and Vassilvitskii (2007).</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:147</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html_a16ee2db4571dce8fa1639fbf003b997c"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html#a16ee2db4571dce8fa1639fbf003b997c">kmeans::InitializeKmeanspp::InitializeKmeanspp</a></div><div class="ttdeci">InitializeKmeanspp()=default</div></div>
-<div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html_a1c22523b6848531771c3056e6db44f31"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html#a1c22523b6848531771c3056e6db44f31">kmeans::InitializeKmeanspp::InitializeKmeanspp</a></div><div class="ttdeci">InitializeKmeanspp(InitializeKmeansppOptions options)</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:154</div></div>
-<div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html_ad604e3891c525d3ea6b7744579fde9b1"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">kmeans::InitializeKmeanspp::run</a></div><div class="ttdeci">Cluster_ run(const Matrix_ &amp;matrix, Cluster_ ncenters, Float_ *centers) const</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:162</div></div>
+<div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html_a1c22523b6848531771c3056e6db44f31"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html#a1c22523b6848531771c3056e6db44f31">kmeans::InitializeKmeanspp::InitializeKmeanspp</a></div><div class="ttdeci">InitializeKmeanspp(InitializeKmeansppOptions options)</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:155</div></div>
+<div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html_ad604e3891c525d3ea6b7744579fde9b1"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">kmeans::InitializeKmeanspp::run</a></div><div class="ttdeci">Cluster_ run(const Matrix_ &amp;matrix, Cluster_ ncenters, Float_ *centers) const</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:163</div></div>
 <div class="ttc" id="aclasskmeans_1_1Initialize_html"><div class="ttname"><a href="classkmeans_1_1Initialize.html">kmeans::Initialize</a></div><div class="ttdoc">Base class for initialization algorithms.</div><div class="ttdef"><b>Definition</b> Initialize.hpp:22</div></div>
 <div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:12</div></div>
-<div class="ttc" id="astructkmeans_1_1InitializeKmeansppOptions_html"><div class="ttname"><a href="structkmeans_1_1InitializeKmeansppOptions.html">kmeans::InitializeKmeansppOptions</a></div><div class="ttdoc">Options for k-means++ initialization.</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:26</div></div>
-<div class="ttc" id="astructkmeans_1_1InitializeKmeansppOptions_html_ab013d5b005343f214102ec1e1d1916c6"><div class="ttname"><a href="structkmeans_1_1InitializeKmeansppOptions.html#ab013d5b005343f214102ec1e1d1916c6">kmeans::InitializeKmeansppOptions::num_threads</a></div><div class="ttdeci">int num_threads</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:36</div></div>
-<div class="ttc" id="astructkmeans_1_1InitializeKmeansppOptions_html_acf0d2057e8792438afe8bf8a82d03307"><div class="ttname"><a href="structkmeans_1_1InitializeKmeansppOptions.html#acf0d2057e8792438afe8bf8a82d03307">kmeans::InitializeKmeansppOptions::seed</a></div><div class="ttdeci">uint64_t seed</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:30</div></div>
+<div class="ttc" id="astructkmeans_1_1InitializeKmeansppOptions_html"><div class="ttname"><a href="structkmeans_1_1InitializeKmeansppOptions.html">kmeans::InitializeKmeansppOptions</a></div><div class="ttdoc">Options for k-means++ initialization.</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:27</div></div>
+<div class="ttc" id="astructkmeans_1_1InitializeKmeansppOptions_html_ab013d5b005343f214102ec1e1d1916c6"><div class="ttname"><a href="structkmeans_1_1InitializeKmeansppOptions.html#ab013d5b005343f214102ec1e1d1916c6">kmeans::InitializeKmeansppOptions::num_threads</a></div><div class="ttdeci">int num_threads</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:37</div></div>
+<div class="ttc" id="astructkmeans_1_1InitializeKmeansppOptions_html_acf0d2057e8792438afe8bf8a82d03307"><div class="ttname"><a href="structkmeans_1_1InitializeKmeansppOptions.html#acf0d2057e8792438afe8bf8a82d03307">kmeans::InitializeKmeansppOptions::seed</a></div><div class="ttdeci">uint64_t seed</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:31</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
