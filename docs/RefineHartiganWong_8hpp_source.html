@@ -297,7 +297,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>Float_ squared_distance_from_cluster(<span class="keyword">const</span> Data_* data, <span class="keyword">const</span> Float_* center, Dim_ ndim) {</div>
 <div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    Float_ output = 0;</div>
 <div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(ndim) dim = 0; dim &lt; ndim; ++dim, ++data, ++center) {</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        <span class="keyword">auto</span> delta = *data - *center;</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        Float_ delta = <span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(*data) - *center; <span class="comment">// cast to float for consistent precision regardless of Data_.</span></div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>        output += delta * delta;</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    }</div>
 <div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>    <span class="keywordflow">return</span> output;</div>
@@ -305,14 +305,14 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> Matrix_, <span class="keyword">typename</span> Cluster_, <span class="keyword">typename</span> Float_&gt;</div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span><span class="keywordtype">void</span> find_closest_two_centers(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ ncenters, <span class="keyword">const</span> Float_* centers, Cluster_* best_cluster, std::vector&lt;Cluster_&gt;&amp; second_best_cluster, <span class="keywordtype">int</span> nthreads) {</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <span class="keyword">auto</span> nobs = data.num_observations();</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>    <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Matrix_::index_type Index_;</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    <span class="comment">// We assume that there are at least two centers here, otherwise we should</span></div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>    <span class="comment">// have detected that this was an edge case in RefineHartiganWong::run.</span></div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    internal::QuickSearch index(ndim, ncenters, centers);</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>    <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span> </div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <span class="comment">// We assume that there are at least two centers here, otherwise we should</span></div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>    <span class="comment">// have detected that this was an edge case in RefineHartiganWong::run.</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>    internal::QuickSearch&lt;Float_, Cluster_, <span class="keyword">decltype</span>(ndim)&gt; index(ndim, ncenters, centers);</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span> </div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    <span class="keyword">auto</span> nobs = data.num_observations();</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Matrix_::index_type Index_;</div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>    internal::parallelize(nobs, nthreads, [&amp;](<span class="keywordtype">int</span>, Index_ start, Index_ length) -&gt; <span class="keywordtype">void</span> {</div>
 <div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>        <span class="keyword">auto</span> matwork = data.create_workspace(start, length);</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>        <span class="keywordflow">for</span> (Index_ obs = start, end = start + length; obs &lt; end; ++obs) {</div>
@@ -340,278 +340,279 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>    <span class="keyword">auto</span> copy1 = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(l1) * long_ndim; <span class="comment">// cast to avoid overflow.</span></div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    <span class="keyword">auto</span> copy2 = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(l2) * long_ndim;</div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(ndim) dim = 0; dim &lt; ndim; ++dim, ++copy1, ++copy2, ++obs_ptr) {</div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        *copy1 = (*copy1 * al1 - *obs_ptr) / alw;</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        *copy2 = (*copy2 * al2 + *obs_ptr) / alt;</div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    }</div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span> </div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    --work.cluster_sizes[l1];</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    ++work.cluster_sizes[l2];</div>
-<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span> </div>
-<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>    work.gain_multiplier[l1] = alw / al1;</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    work.loss_multiplier[l1] = (alw &gt; 1 ? alw / (alw - 1) : big_number&lt;Float_&gt;());</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    work.loss_multiplier[l2] = alt / al2;</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    work.gain_multiplier[l2] = alt / (alt + 1);</div>
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    best_cluster[obs_id] = l2;</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    work.second_best_cluster[obs_id] = l1;</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>}</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="comment">/* ALGORITHM AS 136.1  APPL. STATIST. (1979) VOL.28, NO.1</span></div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="comment"> * This is the OPtimal TRAnsfer stage.</span></div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="comment"> *             ----------------------</span></div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="comment"> * Each point is re-assigned, if necessary, to the cluster that will induce a</span></div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="comment"> * maximum reduction in the within-cluster sum of squares. In this stage,</span></div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="comment"> * there is only one pass through the data.</span></div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> Matrix_, <span class="keyword">typename</span> Cluster_, <span class="keyword">typename</span> Float_&gt;</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span><span class="keywordtype">bool</span> optimal_transfer(<span class="keyword">const</span> Matrix_&amp; data, Workspace&lt;Float_, typename Matrix_::index_type, Cluster_&gt;&amp; work, Cluster_ ncenters, Float_* centers, Cluster_* best_cluster) {</div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>    <span class="keyword">auto</span> nobs = data.num_observations();</div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    <span class="keyword">auto</span> matwork = data.create_workspace();</div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    <span class="keywordtype">size_t</span> long_ndim = ndim;</div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span> </div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(nobs) obs = 0; obs &lt; nobs; ++obs) { </div>
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>        ++work.optra_steps_since_last_transfer;</div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span> </div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>        <span class="keyword">auto</span> l1 = best_cluster[obs];</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        <span class="keywordflow">if</span> (work.cluster_sizes[l1] != 1) {</div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>            <span class="keyword">auto</span> obs_ptr = data.get_observation(obs, matwork);</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span> </div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>            <span class="comment">// Need to update the WCSS loss if this is (i) the first call to</span></div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>            <span class="comment">// optimal_transfer, or (ii) if the cluster center was updated</span></div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            <span class="comment">// earlier in the current optimal_transfer call.</span></div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            <span class="keyword">auto</span>&amp; wcss_loss = work.wcss_loss[obs];</div>
-<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>            <span class="keyword">auto</span>&amp; history1 = work.update_history[l1];</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>            <span class="keywordflow">if</span> (!history1.is_unchanged()) {</div>
-<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>                <span class="keyword">auto</span> l1_ptr = centers + long_ndim * <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(l1); <span class="comment">// cast to avoid overflow.</span></div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>                wcss_loss = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>            }</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span> </div>
-<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            <span class="comment">// Find the cluster with minimum WCSS gain.</span></div>
-<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>            <span class="keyword">auto</span> l2 = work.second_best_cluster[obs];</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>            <span class="keyword">auto</span> original_l2 = l2;</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>            <span class="keyword">auto</span> l2_ptr = centers + long_ndim * <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(l2); <span class="comment">// cast to avoid overflow.</span></div>
-<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>            <span class="keyword">auto</span> wcss_gain = squared_distance_from_cluster(obs_ptr, l2_ptr, ndim) * work.gain_multiplier[l2];</div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span> </div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>            <span class="keyword">auto</span> check_best_cluster = [&amp;](Cluster_ cen) {</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>                <span class="keyword">auto</span> cen_ptr = centers + long_ndim * <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(cen); <span class="comment">// cast to avoid overflow.</span></div>
-<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                <span class="keyword">auto</span> candidate = squared_distance_from_cluster(obs_ptr, cen_ptr, ndim) * work.gain_multiplier[cen];</div>
-<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                <span class="keywordflow">if</span> (candidate &lt; wcss_gain) {</div>
-<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>                    wcss_gain = candidate;</div>
-<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                    l2 = cen;</div>
-<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                }</div>
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            };</div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span> </div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            <span class="comment">// If the best cluster is live, we need to consider all other clusters.</span></div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            <span class="comment">// Otherwise, we only need to consider other live clusters for transfer.</span></div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            <span class="keyword">auto</span>&amp; live1 = work.live_set[l1];</div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            <span class="keywordflow">if</span> (live1.is_live(obs)) { </div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>                <span class="keywordflow">for</span> (Cluster_ cen = 0; cen &lt; ncenters; ++cen) {</div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>                    <span class="keywordflow">if</span> (cen != l1 &amp;&amp; cen != original_l2) {</div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>                        check_best_cluster(cen);</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>                    }</div>
-<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>                }</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>                <span class="keywordflow">for</span> (Cluster_ cen = 0; cen &lt; ncenters; ++cen) {</div>
-<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>                    <span class="keywordflow">if</span> (cen != l1 &amp;&amp; cen != original_l2 &amp;&amp; work.live_set[cen].is_live(obs)) {</div>
-<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>                        check_best_cluster(cen);</div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>                    }</div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>                }</div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>            }</div>
-<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span> </div>
-<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>            <span class="comment">// Deciding whether to make the transfer based on the change to the WCSS.</span></div>
-<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>            <span class="keywordflow">if</span> (wcss_gain &gt;= wcss_loss) {</div>
-<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>                work.second_best_cluster[obs] = l2;</div>
-<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>                work.optra_steps_since_last_transfer = 0;</div>
-<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span> </div>
-<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span>                live1.mark_current(obs);</div>
-<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>                work.live_set[l2].mark_current(obs);</div>
-<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                history1.set_optimal(obs);</div>
-<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                work.update_history[l2].set_optimal(obs);</div>
-<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span> </div>
-<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>                transfer_point(ndim, obs_ptr, obs, l1, l2, centers, best_cluster, work);</div>
-<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>            }</div>
-<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        }</div>
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span> </div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        <span class="comment">// Stop if we&#39;ve iterated through the entire dataset and no transfer of</span></div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        <span class="comment">// any kind took place, be it optimal or quick.</span></div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        <span class="keywordflow">if</span> (work.optra_steps_since_last_transfer == nobs) {</div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>        }</div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>    }</div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span> </div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>} </div>
-<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="comment">/* ALGORITHM AS 136.2  APPL. STATIST. (1979) VOL.28, NO.1 </span></div>
-<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span><span class="comment"> * This is the Quick TRANsfer stage. </span></div>
-<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span><span class="comment"> *             -------------------- </span></div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span><span class="comment"> * IC1(I) is the cluster which point I currently belongs to.</span></div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span><span class="comment"> * IC2(I) is the cluster which point I is most likely to be transferred to.</span></div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span><span class="comment"> *</span></div>
-<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span><span class="comment"> * For each point I, IC1(I) &amp; IC2(I) are switched, if necessary, to reduce</span></div>
-<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span><span class="comment"> * within-cluster sum of squares. The cluster centres are updated after each</span></div>
-<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span><span class="comment"> * step. In this stage, we loop through the data until no further change is to</span></div>
-<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span><span class="comment"> * take place, or we hit an iteration limit, whichever is first.</span></div>
-<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> Matrix_, <span class="keyword">typename</span> Cluster_, <span class="keyword">typename</span> Float_&gt;</div>
-<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span>std::pair&lt;bool, bool&gt; quick_transfer(<span class="keyword">const</span> Matrix_&amp; data, Workspace&lt;Float_, typename Matrix_::index_type, Cluster_&gt;&amp; work, Float_* centers, Cluster_* best_cluster) {</div>
-<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>    <span class="keywordtype">bool</span> had_transfer = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    std::fill(work.was_quick_transferred.begin(), work.was_quick_transferred.end(), 0);</div>
-<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span> </div>
-<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>    <span class="keyword">auto</span> nobs = data.num_observations();</div>
-<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keyword">auto</span> matwork = data.create_workspace();</div>
-<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
-<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    <span class="keywordtype">size_t</span> long_ndim = data.num_dimensions();</div>
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span> </div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>    <span class="keyword">typedef</span> <span class="keyword">decltype</span>(nobs) Index_;</div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    Index_ steps_since_last_quick_transfer = 0;</div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span> </div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>    <span class="keywordflow">for</span> (int8_t it = 0; it &lt; UpdateHistory&lt;Index_&gt;::max_quick_iterations; ++it) {</div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>        int8_t prev_it = it - 1;</div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span> </div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>        <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(nobs) obs = 0; obs &lt; nobs; ++obs) { </div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>            ++steps_since_last_quick_transfer;</div>
-<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>            <span class="keyword">auto</span> l1 = best_cluster[obs];</div>
-<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span> </div>
-<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>            <span class="keywordflow">if</span> (work.cluster_sizes[l1] != 1) {</div>
-<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>                <span class="keyword">const</span> <span class="keyword">typename</span> Matrix_::data_type* obs_ptr = NULL;</div>
-<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span> </div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>                <span class="comment">// Need to update the WCSS loss if the cluster was updated recently. </span></div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>                <span class="comment">// Otherwise, we must have already updated the WCSS in a previous </span></div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>                <span class="comment">// iteration of the outermost loop, so this can be skipped.</span></div>
-<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>                <span class="keyword">auto</span>&amp; history1 = work.update_history[l1];</div>
-<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>                <span class="keywordflow">if</span> (history1.changed_after_or_at(prev_it, obs)) {</div>
-<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>                    <span class="keyword">auto</span> l1_ptr = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(l1) * long_ndim; <span class="comment">// cast to avoid overflow.</span></div>
-<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>                    obs_ptr = data.get_observation(obs, matwork);</div>
-<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>                    work.wcss_loss[obs] = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];</div>
-<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>                }</div>
-<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span> </div>
-<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span>                <span class="keyword">auto</span> l2 = work.second_best_cluster[obs];</div>
-<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>                <span class="keyword">auto</span>&amp; history2 = work.update_history[l2];</div>
-<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>                <span class="keywordflow">if</span> (history1.changed_after(prev_it, obs) || history2.changed_after(prev_it, obs)) {</div>
-<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>                    <span class="keywordflow">if</span> (obs_ptr == NULL) {</div>
-<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>                        obs_ptr = data.get_observation(obs, matwork);</div>
-<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>                    }</div>
-<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>                    <span class="keyword">auto</span> l2_ptr = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(l2) * long_ndim; <span class="comment">// cast to avoid overflow.</span></div>
-<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>                    <span class="keyword">auto</span> wcss_gain = squared_distance_from_cluster(obs_ptr, l2_ptr, ndim) * work.gain_multiplier[l2];</div>
-<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span> </div>
-<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span>                    <span class="keywordflow">if</span> (wcss_gain &lt; work.wcss_loss[obs]) {</div>
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>                        had_transfer = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>                        steps_since_last_quick_transfer = 0;</div>
-<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span> </div>
-<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>                        work.was_quick_transferred[l1] = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>                        work.was_quick_transferred[l2] = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span> </div>
-<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>                        history1.set_quick(it, obs);</div>
-<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>                        history2.set_quick(it, obs);</div>
-<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span> </div>
-<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>                        transfer_point(ndim, obs_ptr, obs, l1, l2, centers, best_cluster, work);</div>
-<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>                    }</div>
-<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>               }</div>
-<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>           }</div>
-<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span> </div>
-<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span>           <span class="keywordflow">if</span> (steps_since_last_quick_transfer == nobs) {</div>
-<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>               <span class="comment">// Quit early if no transfer occurred within the past &#39;nobs&#39;</span></div>
-<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>               <span class="comment">// steps, as we&#39;ve already converged for each observation. </span></div>
-<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>               <span class="keywordflow">return</span> std::make_pair(had_transfer, <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>           }</div>
-<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>        }</div>
-<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>    } </div>
-<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span> </div>
-<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span>    <span class="keywordflow">return</span> std::make_pair(had_transfer, <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>}</div>
-<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span> </div>
-<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span>}</div>
-<div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Matrix_ = SimpleMatrix&lt;<span class="keywordtype">double</span>, <span class="keywordtype">int</span>&gt;, <span class="keyword">typename</span> Cluster_ = <span class="keywordtype">int</span>, <span class="keyword">typename</span> Float_ = <span class="keywordtype">double</span>&gt;</div>
-<div class="foldopen" id="foldopen00493" data-start="{" data-end="};">
-<div class="line"><a id="l00493" name="l00493"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineHartiganWong.html">  493</a></span><span class="keyword">class </span><a class="code hl_class" href="classkmeans_1_1RefineHartiganWong.html">RefineHartiganWong</a> : <span class="keyword">public</span> <a class="code hl_class" href="classkmeans_1_1Refine.html">Refine</a>&lt;Matrix_, Cluster_, Float_&gt; {</div>
-<div class="line"><a id="l00494" name="l00494"></a><span class="lineno">  494</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00498" name="l00498"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineHartiganWong.html#a59310ce1efac8541beec0d52b2a2e35b">  498</a></span>    <a class="code hl_function" href="classkmeans_1_1RefineHartiganWong.html#a59310ce1efac8541beec0d52b2a2e35b">RefineHartiganWong</a>(<a class="code hl_struct" href="structkmeans_1_1RefineHartiganWongOptions.html">RefineHartiganWongOptions</a> options) : my_options(std::move(options)) {}</div>
-<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span> </div>
-<div class="line"><a id="l00503" name="l00503"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineHartiganWong.html#ac6c5197f3530b5c80d8d855e286e0e0f">  503</a></span>    <a class="code hl_function" href="classkmeans_1_1RefineHartiganWong.html#ac6c5197f3530b5c80d8d855e286e0e0f">RefineHartiganWong</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00504" name="l00504"></a><span class="lineno">  504</span> </div>
-<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span>    <a class="code hl_struct" href="structkmeans_1_1RefineHartiganWongOptions.html">RefineHartiganWongOptions</a> my_options;</div>
-<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Matrix_::index_type Index_;</div>
-<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span> </div>
-<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00510" data-start="{" data-end="}">
-<div class="line"><a id="l00510" name="l00510"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineHartiganWong.html#aa62eae756acd3af6a4c7e9c62ef59d5d">  510</a></span>    <a class="code hl_struct" href="structkmeans_1_1Details.html">Details&lt;Index_&gt;</a> <a class="code hl_function" href="classkmeans_1_1RefineHartiganWong.html#aa62eae756acd3af6a4c7e9c62ef59d5d">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ ncenters, Float_* centers, Cluster_* clusters)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span>        <span class="keyword">auto</span> nobs = data.num_observations();</div>
-<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>        <span class="keywordflow">if</span> (internal::is_edge_case(nobs, ncenters)) {</div>
-<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>            <span class="keywordflow">return</span> internal::process_edge_case(data, ncenters, centers, clusters);</div>
-<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>        }</div>
-<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span> </div>
-<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span>        RefineHartiganWong_internal::Workspace&lt;Float_, Index_, Cluster_&gt; work(nobs, ncenters);</div>
-<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span> </div>
-<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span>        RefineHartiganWong_internal::find_closest_two_centers(data, ncenters, centers, clusters, work.second_best_cluster, my_options.<a class="code hl_variable" href="structkmeans_1_1RefineHartiganWongOptions.html#adb9b7e433dd11a8f4e3fd76e0fc466a5">num_threads</a>);</div>
-<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>        <span class="keywordflow">for</span> (Index_ obs = 0; obs &lt; nobs; ++obs) {</div>
-<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>            ++work.cluster_sizes[clusters[obs]];</div>
-<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>        }</div>
-<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>        internal::compute_centroids(data, ncenters, centers, clusters, work.cluster_sizes);</div>
-<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span> </div>
-<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span>        <span class="keywordflow">for</span> (Cluster_ cen = 0; cen &lt; ncenters; ++cen) {</div>
-<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>            Float_ num = work.cluster_sizes[cen]; <span class="comment">// yes, cast is deliberate here so that the multipliers can be computed correctly.</span></div>
-<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>            work.gain_multiplier[cen] = num / (num + 1);</div>
-<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>            work.loss_multiplier[cen] = (num &gt; 1 ? num / (num - 1) : RefineHartiganWong_internal::big_number&lt;Float_&gt;());</div>
-<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>        }</div>
-<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span> </div>
-<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span>        <span class="keywordtype">int</span> iter = 0;</div>
-<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>        <span class="keywordtype">int</span> ifault = 0;</div>
-<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>        <span class="keywordflow">while</span> ((++iter) &lt;= my_options.<a class="code hl_variable" href="structkmeans_1_1RefineHartiganWongOptions.html#a84e571b7448c1fc74dec8419feb0b0c9">max_iterations</a>) {</div>
-<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>            <span class="keywordtype">bool</span> finished = RefineHartiganWong_internal::optimal_transfer(data, work, ncenters, centers, clusters);</div>
-<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>            <span class="keywordflow">if</span> (finished) {</div>
-<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>            }</div>
-<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span> </div>
-<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span>            <span class="keyword">auto</span> quick_status = RefineHartiganWong_internal::quick_transfer(data, work, centers, clusters);</div>
-<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>            <span class="keywordflow">if</span> (quick_status.second) { <span class="comment">// Hit the quick transfer iteration limit.</span></div>
-<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>                ifault = 4;</div>
-<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>            }</div>
-<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>            <span class="keywordflow">if</span> (quick_status.first) { <span class="comment">// At least one transfer was performed.</span></div>
-<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>                work.optra_steps_since_last_transfer = 0;</div>
-<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>            }</div>
-<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span> </div>
-<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span>            <span class="comment">// If there are only two clusters, there is no need to re-enter the optimal transfer stage. </span></div>
-<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>            <span class="keywordflow">if</span> (ncenters == 2) {</div>
-<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>                <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>            }</div>
-<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span> </div>
-<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span>            <span class="comment">// If we get to this point, there must have been no transfers in</span></div>
-<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>            <span class="comment">// the final quick_transfer iteration. This implies that all WCSS</span></div>
-<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>            <span class="comment">// losses are up to date, as quick_transfer updated everything for</span></div>
-<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>            <span class="comment">// us; so we can set the status to &#39;unchanged&#39; for all clusters.</span></div>
-<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; u : work.update_history) {</div>
-<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>                u.set_unchanged();</div>
-<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>            }</div>
-<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span> </div>
-<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span>            <span class="keywordflow">for</span> (Cluster_ c = 0; c &lt; ncenters; ++c) {</div>
-<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>                work.live_set[c].reset(work.was_quick_transferred[c]);</div>
-<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>            }</div>
-<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>        }</div>
-<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span> </div>
-<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span>        <span class="keywordflow">if</span> (iter == my_options.<a class="code hl_variable" href="structkmeans_1_1RefineHartiganWongOptions.html#a84e571b7448c1fc74dec8419feb0b0c9">max_iterations</a> + 1) {</div>
-<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>            ifault = 2;</div>
-<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>        }</div>
-<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span> </div>
-<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span>        internal::compute_centroids(data, ncenters, centers, clusters, work.cluster_sizes);</div>
-<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>        <span class="keywordflow">return</span> <a class="code hl_struct" href="structkmeans_1_1Details.html">Details</a>(std::move(work.cluster_sizes), iter, ifault);</div>
-<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>    }</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        Float_ oval = *obs_ptr; <span class="comment">// cast to float for consistent precision regardless of Data_.</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>        *copy1 = (*copy1 * al1 - oval) / alw;</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        *copy2 = (*copy2 * al2 + oval) / alt;</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    }</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span> </div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    --work.cluster_sizes[l1];</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    ++work.cluster_sizes[l2];</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>    work.gain_multiplier[l1] = alw / al1;</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    work.loss_multiplier[l1] = (alw &gt; 1 ? alw / (alw - 1) : big_number&lt;Float_&gt;());</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    work.loss_multiplier[l2] = alt / al2;</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>    work.gain_multiplier[l2] = alt / (alt + 1);</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span> </div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    best_cluster[obs_id] = l2;</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    work.second_best_cluster[obs_id] = l1;</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>}</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="comment">/* ALGORITHM AS 136.1  APPL. STATIST. (1979) VOL.28, NO.1</span></div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="comment"> * This is the OPtimal TRAnsfer stage.</span></div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="comment"> *             ----------------------</span></div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="comment"> * Each point is re-assigned, if necessary, to the cluster that will induce a</span></div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="comment"> * maximum reduction in the within-cluster sum of squares. In this stage,</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="comment"> * there is only one pass through the data.</span></div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> Matrix_, <span class="keyword">typename</span> Cluster_, <span class="keyword">typename</span> Float_&gt;</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span><span class="keywordtype">bool</span> optimal_transfer(<span class="keyword">const</span> Matrix_&amp; data, Workspace&lt;Float_, typename Matrix_::index_type, Cluster_&gt;&amp; work, Cluster_ ncenters, Float_* centers, Cluster_* best_cluster) {</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>    <span class="keyword">auto</span> nobs = data.num_observations();</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    <span class="keyword">auto</span> matwork = data.create_workspace();</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span>    <span class="keywordtype">size_t</span> long_ndim = ndim;</div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span> </div>
+<div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(nobs) obs = 0; obs &lt; nobs; ++obs) { </div>
+<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span>        ++work.optra_steps_since_last_transfer;</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span> </div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>        <span class="keyword">auto</span> l1 = best_cluster[obs];</div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>        <span class="keywordflow">if</span> (work.cluster_sizes[l1] != 1) {</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>            <span class="keyword">auto</span> obs_ptr = data.get_observation(obs, matwork);</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>            <span class="comment">// Need to update the WCSS loss if this is (i) the first call to</span></div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>            <span class="comment">// optimal_transfer, or (ii) if the cluster center was updated</span></div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>            <span class="comment">// earlier in the current optimal_transfer call.</span></div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>            <span class="keyword">auto</span>&amp; wcss_loss = work.wcss_loss[obs];</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>            <span class="keyword">auto</span>&amp; history1 = work.update_history[l1];</div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>            <span class="keywordflow">if</span> (!history1.is_unchanged()) {</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>                <span class="keyword">auto</span> l1_ptr = centers + long_ndim * <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(l1); <span class="comment">// cast to avoid overflow.</span></div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>                wcss_loss = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>            }</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span> </div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>            <span class="comment">// Find the cluster with minimum WCSS gain.</span></div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>            <span class="keyword">auto</span> l2 = work.second_best_cluster[obs];</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>            <span class="keyword">auto</span> original_l2 = l2;</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>            <span class="keyword">auto</span> l2_ptr = centers + long_ndim * <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(l2); <span class="comment">// cast to avoid overflow.</span></div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>            <span class="keyword">auto</span> wcss_gain = squared_distance_from_cluster(obs_ptr, l2_ptr, ndim) * work.gain_multiplier[l2];</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span> </div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>            <span class="keyword">auto</span> check_best_cluster = [&amp;](Cluster_ cen) {</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>                <span class="keyword">auto</span> cen_ptr = centers + long_ndim * <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(cen); <span class="comment">// cast to avoid overflow.</span></div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>                <span class="keyword">auto</span> candidate = squared_distance_from_cluster(obs_ptr, cen_ptr, ndim) * work.gain_multiplier[cen];</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>                <span class="keywordflow">if</span> (candidate &lt; wcss_gain) {</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>                    wcss_gain = candidate;</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>                    l2 = cen;</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                }</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>            };</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span> </div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            <span class="comment">// If the best cluster is live, we need to consider all other clusters.</span></div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>            <span class="comment">// Otherwise, we only need to consider other live clusters for transfer.</span></div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>            <span class="keyword">auto</span>&amp; live1 = work.live_set[l1];</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>            <span class="keywordflow">if</span> (live1.is_live(obs)) { </div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span>                <span class="keywordflow">for</span> (Cluster_ cen = 0; cen &lt; ncenters; ++cen) {</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>                    <span class="keywordflow">if</span> (cen != l1 &amp;&amp; cen != original_l2) {</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>                        check_best_cluster(cen);</div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>                    }</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>                }</div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>                <span class="keywordflow">for</span> (Cluster_ cen = 0; cen &lt; ncenters; ++cen) {</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>                    <span class="keywordflow">if</span> (cen != l1 &amp;&amp; cen != original_l2 &amp;&amp; work.live_set[cen].is_live(obs)) {</div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>                        check_best_cluster(cen);</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>                    }</div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>                }</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>            }</div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span> </div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>            <span class="comment">// Deciding whether to make the transfer based on the change to the WCSS.</span></div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>            <span class="keywordflow">if</span> (wcss_gain &gt;= wcss_loss) {</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>                work.second_best_cluster[obs] = l2;</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>                work.optra_steps_since_last_transfer = 0;</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno">  361</span>                live1.mark_current(obs);</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>                work.live_set[l2].mark_current(obs);</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>                history1.set_optimal(obs);</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno">  364</span>                work.update_history[l2].set_optimal(obs);</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span> </div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>                transfer_point(ndim, obs_ptr, obs, l1, l2, centers, best_cluster, work);</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>            }</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>        }</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span> </div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        <span class="comment">// Stop if we&#39;ve iterated through the entire dataset and no transfer of</span></div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        <span class="comment">// any kind took place, be it optimal or quick.</span></div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>        <span class="keywordflow">if</span> (work.optra_steps_since_last_transfer == nobs) {</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        }</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span>    }</div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span> </div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>} </div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span> </div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span><span class="comment">/* ALGORITHM AS 136.2  APPL. STATIST. (1979) VOL.28, NO.1 </span></div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span><span class="comment"> * This is the Quick TRANsfer stage. </span></div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span><span class="comment"> *             -------------------- </span></div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span><span class="comment"> * IC1(I) is the cluster which point I currently belongs to.</span></div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span><span class="comment"> * IC2(I) is the cluster which point I is most likely to be transferred to.</span></div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span><span class="comment"> *</span></div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span><span class="comment"> * For each point I, IC1(I) &amp; IC2(I) are switched, if necessary, to reduce</span></div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span><span class="comment"> * within-cluster sum of squares. The cluster centres are updated after each</span></div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span><span class="comment"> * step. In this stage, we loop through the data until no further change is to</span></div>
+<div class="line"><a id="l00389" name="l00389"></a><span class="lineno">  389</span><span class="comment"> * take place, or we hit an iteration limit, whichever is first.</span></div>
+<div class="line"><a id="l00390" name="l00390"></a><span class="lineno">  390</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00391" name="l00391"></a><span class="lineno">  391</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> Matrix_, <span class="keyword">typename</span> Cluster_, <span class="keyword">typename</span> Float_&gt;</div>
+<div class="line"><a id="l00392" name="l00392"></a><span class="lineno">  392</span>std::pair&lt;bool, bool&gt; quick_transfer(<span class="keyword">const</span> Matrix_&amp; data, Workspace&lt;Float_, typename Matrix_::index_type, Cluster_&gt;&amp; work, Float_* centers, Cluster_* best_cluster) {</div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    <span class="keywordtype">bool</span> had_transfer = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    std::fill(work.was_quick_transferred.begin(), work.was_quick_transferred.end(), 0);</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span> </div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>    <span class="keyword">auto</span> nobs = data.num_observations();</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>    <span class="keyword">auto</span> matwork = data.create_workspace();</div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>    <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>    <span class="keywordtype">size_t</span> long_ndim = data.num_dimensions();</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span> </div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>    <span class="keyword">typedef</span> <span class="keyword">decltype</span>(nobs) Index_;</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>    Index_ steps_since_last_quick_transfer = 0;</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span> </div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>    <span class="keywordflow">for</span> (int8_t it = 0; it &lt; UpdateHistory&lt;Index_&gt;::max_quick_iterations; ++it) {</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>        int8_t prev_it = it - 1;</div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span> </div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>        <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(nobs) obs = 0; obs &lt; nobs; ++obs) { </div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>            ++steps_since_last_quick_transfer;</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>            <span class="keyword">auto</span> l1 = best_cluster[obs];</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span> </div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>            <span class="keywordflow">if</span> (work.cluster_sizes[l1] != 1) {</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>                <span class="keyword">const</span> <span class="keyword">typename</span> Matrix_::data_type* obs_ptr = NULL;</div>
+<div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span> </div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>                <span class="comment">// Need to update the WCSS loss if the cluster was updated recently. </span></div>
+<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>                <span class="comment">// Otherwise, we must have already updated the WCSS in a previous </span></div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>                <span class="comment">// iteration of the outermost loop, so this can be skipped.</span></div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>                <span class="keyword">auto</span>&amp; history1 = work.update_history[l1];</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>                <span class="keywordflow">if</span> (history1.changed_after_or_at(prev_it, obs)) {</div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>                    <span class="keyword">auto</span> l1_ptr = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(l1) * long_ndim; <span class="comment">// cast to avoid overflow.</span></div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span>                    obs_ptr = data.get_observation(obs, matwork);</div>
+<div class="line"><a id="l00421" name="l00421"></a><span class="lineno">  421</span>                    work.wcss_loss[obs] = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];</div>
+<div class="line"><a id="l00422" name="l00422"></a><span class="lineno">  422</span>                }</div>
+<div class="line"><a id="l00423" name="l00423"></a><span class="lineno">  423</span> </div>
+<div class="line"><a id="l00424" name="l00424"></a><span class="lineno">  424</span>                <span class="keyword">auto</span> l2 = work.second_best_cluster[obs];</div>
+<div class="line"><a id="l00425" name="l00425"></a><span class="lineno">  425</span>                <span class="keyword">auto</span>&amp; history2 = work.update_history[l2];</div>
+<div class="line"><a id="l00426" name="l00426"></a><span class="lineno">  426</span>                <span class="keywordflow">if</span> (history1.changed_after(prev_it, obs) || history2.changed_after(prev_it, obs)) {</div>
+<div class="line"><a id="l00427" name="l00427"></a><span class="lineno">  427</span>                    <span class="keywordflow">if</span> (obs_ptr == NULL) {</div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>                        obs_ptr = data.get_observation(obs, matwork);</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>                    }</div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>                    <span class="keyword">auto</span> l2_ptr = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(l2) * long_ndim; <span class="comment">// cast to avoid overflow.</span></div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>                    <span class="keyword">auto</span> wcss_gain = squared_distance_from_cluster(obs_ptr, l2_ptr, ndim) * work.gain_multiplier[l2];</div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span> </div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>                    <span class="keywordflow">if</span> (wcss_gain &lt; work.wcss_loss[obs]) {</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>                        had_transfer = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>                        steps_since_last_quick_transfer = 0;</div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span> </div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>                        work.was_quick_transferred[l1] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>                        work.was_quick_transferred[l2] = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span> </div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>                        history1.set_quick(it, obs);</div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>                        history2.set_quick(it, obs);</div>
+<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span> </div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>                        transfer_point(ndim, obs_ptr, obs, l1, l2, centers, best_cluster, work);</div>
+<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>                    }</div>
+<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span>               }</div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>           }</div>
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno">  447</span> </div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span>           <span class="keywordflow">if</span> (steps_since_last_quick_transfer == nobs) {</div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span>               <span class="comment">// Quit early if no transfer occurred within the past &#39;nobs&#39;</span></div>
+<div class="line"><a id="l00450" name="l00450"></a><span class="lineno">  450</span>               <span class="comment">// steps, as we&#39;ve already converged for each observation. </span></div>
+<div class="line"><a id="l00451" name="l00451"></a><span class="lineno">  451</span>               <span class="keywordflow">return</span> std::make_pair(had_transfer, <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00452" name="l00452"></a><span class="lineno">  452</span>           }</div>
+<div class="line"><a id="l00453" name="l00453"></a><span class="lineno">  453</span>        }</div>
+<div class="line"><a id="l00454" name="l00454"></a><span class="lineno">  454</span>    } </div>
+<div class="line"><a id="l00455" name="l00455"></a><span class="lineno">  455</span> </div>
+<div class="line"><a id="l00456" name="l00456"></a><span class="lineno">  456</span>    <span class="keywordflow">return</span> std::make_pair(had_transfer, <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00457" name="l00457"></a><span class="lineno">  457</span>}</div>
+<div class="line"><a id="l00458" name="l00458"></a><span class="lineno">  458</span> </div>
+<div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span>}</div>
+<div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Matrix_ = SimpleMatrix&lt;<span class="keywordtype">double</span>, <span class="keywordtype">int</span>&gt;, <span class="keyword">typename</span> Cluster_ = <span class="keywordtype">int</span>, <span class="keyword">typename</span> Float_ = <span class="keywordtype">double</span>&gt;</div>
+<div class="foldopen" id="foldopen00494" data-start="{" data-end="};">
+<div class="line"><a id="l00494" name="l00494"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineHartiganWong.html">  494</a></span><span class="keyword">class </span><a class="code hl_class" href="classkmeans_1_1RefineHartiganWong.html">RefineHartiganWong</a> : <span class="keyword">public</span> <a class="code hl_class" href="classkmeans_1_1Refine.html">Refine</a>&lt;Matrix_, Cluster_, Float_&gt; {</div>
+<div class="line"><a id="l00495" name="l00495"></a><span class="lineno">  495</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00499" name="l00499"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineHartiganWong.html#a59310ce1efac8541beec0d52b2a2e35b">  499</a></span>    <a class="code hl_function" href="classkmeans_1_1RefineHartiganWong.html#a59310ce1efac8541beec0d52b2a2e35b">RefineHartiganWong</a>(<a class="code hl_struct" href="structkmeans_1_1RefineHartiganWongOptions.html">RefineHartiganWongOptions</a> options) : my_options(std::move(options)) {}</div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span> </div>
+<div class="line"><a id="l00504" name="l00504"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineHartiganWong.html#ac6c5197f3530b5c80d8d855e286e0e0f">  504</a></span>    <a class="code hl_function" href="classkmeans_1_1RefineHartiganWong.html#ac6c5197f3530b5c80d8d855e286e0e0f">RefineHartiganWong</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00505" name="l00505"></a><span class="lineno">  505</span> </div>
+<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span>    <a class="code hl_struct" href="structkmeans_1_1RefineHartiganWongOptions.html">RefineHartiganWongOptions</a> my_options;</div>
+<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span>    <span class="keyword">typedef</span> <span class="keyword">typename</span> Matrix_::index_type Index_;</div>
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span> </div>
+<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00511" data-start="{" data-end="}">
+<div class="line"><a id="l00511" name="l00511"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineHartiganWong.html#aa62eae756acd3af6a4c7e9c62ef59d5d">  511</a></span>    <a class="code hl_struct" href="structkmeans_1_1Details.html">Details&lt;Index_&gt;</a> <a class="code hl_function" href="classkmeans_1_1RefineHartiganWong.html#aa62eae756acd3af6a4c7e9c62ef59d5d">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ ncenters, Float_* centers, Cluster_* clusters)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span>        <span class="keyword">auto</span> nobs = data.num_observations();</div>
+<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span>        <span class="keywordflow">if</span> (internal::is_edge_case(nobs, ncenters)) {</div>
+<div class="line"><a id="l00514" name="l00514"></a><span class="lineno">  514</span>            <span class="keywordflow">return</span> internal::process_edge_case(data, ncenters, centers, clusters);</div>
+<div class="line"><a id="l00515" name="l00515"></a><span class="lineno">  515</span>        }</div>
+<div class="line"><a id="l00516" name="l00516"></a><span class="lineno">  516</span> </div>
+<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span>        RefineHartiganWong_internal::Workspace&lt;Float_, Index_, Cluster_&gt; work(nobs, ncenters);</div>
+<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span> </div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span>        RefineHartiganWong_internal::find_closest_two_centers(data, ncenters, centers, clusters, work.second_best_cluster, my_options.<a class="code hl_variable" href="structkmeans_1_1RefineHartiganWongOptions.html#adb9b7e433dd11a8f4e3fd76e0fc466a5">num_threads</a>);</div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span>        <span class="keywordflow">for</span> (Index_ obs = 0; obs &lt; nobs; ++obs) {</div>
+<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span>            ++work.cluster_sizes[clusters[obs]];</div>
+<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span>        }</div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span>        internal::compute_centroids(data, ncenters, centers, clusters, work.cluster_sizes);</div>
+<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span> </div>
+<div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span>        <span class="keywordflow">for</span> (Cluster_ cen = 0; cen &lt; ncenters; ++cen) {</div>
+<div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span>            Float_ num = work.cluster_sizes[cen]; <span class="comment">// yes, cast is deliberate here so that the multipliers can be computed correctly.</span></div>
+<div class="line"><a id="l00527" name="l00527"></a><span class="lineno">  527</span>            work.gain_multiplier[cen] = num / (num + 1);</div>
+<div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span>            work.loss_multiplier[cen] = (num &gt; 1 ? num / (num - 1) : RefineHartiganWong_internal::big_number&lt;Float_&gt;());</div>
+<div class="line"><a id="l00529" name="l00529"></a><span class="lineno">  529</span>        }</div>
+<div class="line"><a id="l00530" name="l00530"></a><span class="lineno">  530</span> </div>
+<div class="line"><a id="l00531" name="l00531"></a><span class="lineno">  531</span>        <span class="keywordtype">int</span> iter = 0;</div>
+<div class="line"><a id="l00532" name="l00532"></a><span class="lineno">  532</span>        <span class="keywordtype">int</span> ifault = 0;</div>
+<div class="line"><a id="l00533" name="l00533"></a><span class="lineno">  533</span>        <span class="keywordflow">while</span> ((++iter) &lt;= my_options.<a class="code hl_variable" href="structkmeans_1_1RefineHartiganWongOptions.html#a84e571b7448c1fc74dec8419feb0b0c9">max_iterations</a>) {</div>
+<div class="line"><a id="l00534" name="l00534"></a><span class="lineno">  534</span>            <span class="keywordtype">bool</span> finished = RefineHartiganWong_internal::optimal_transfer(data, work, ncenters, centers, clusters);</div>
+<div class="line"><a id="l00535" name="l00535"></a><span class="lineno">  535</span>            <span class="keywordflow">if</span> (finished) {</div>
+<div class="line"><a id="l00536" name="l00536"></a><span class="lineno">  536</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00537" name="l00537"></a><span class="lineno">  537</span>            }</div>
+<div class="line"><a id="l00538" name="l00538"></a><span class="lineno">  538</span> </div>
+<div class="line"><a id="l00539" name="l00539"></a><span class="lineno">  539</span>            <span class="keyword">auto</span> quick_status = RefineHartiganWong_internal::quick_transfer(data, work, centers, clusters);</div>
+<div class="line"><a id="l00540" name="l00540"></a><span class="lineno">  540</span>            <span class="keywordflow">if</span> (quick_status.second) { <span class="comment">// Hit the quick transfer iteration limit.</span></div>
+<div class="line"><a id="l00541" name="l00541"></a><span class="lineno">  541</span>                ifault = 4;</div>
+<div class="line"><a id="l00542" name="l00542"></a><span class="lineno">  542</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00543" name="l00543"></a><span class="lineno">  543</span>            }</div>
+<div class="line"><a id="l00544" name="l00544"></a><span class="lineno">  544</span>            <span class="keywordflow">if</span> (quick_status.first) { <span class="comment">// At least one transfer was performed.</span></div>
+<div class="line"><a id="l00545" name="l00545"></a><span class="lineno">  545</span>                work.optra_steps_since_last_transfer = 0;</div>
+<div class="line"><a id="l00546" name="l00546"></a><span class="lineno">  546</span>            }</div>
+<div class="line"><a id="l00547" name="l00547"></a><span class="lineno">  547</span> </div>
+<div class="line"><a id="l00548" name="l00548"></a><span class="lineno">  548</span>            <span class="comment">// If there are only two clusters, there is no need to re-enter the optimal transfer stage. </span></div>
+<div class="line"><a id="l00549" name="l00549"></a><span class="lineno">  549</span>            <span class="keywordflow">if</span> (ncenters == 2) {</div>
+<div class="line"><a id="l00550" name="l00550"></a><span class="lineno">  550</span>                <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00551" name="l00551"></a><span class="lineno">  551</span>            }</div>
+<div class="line"><a id="l00552" name="l00552"></a><span class="lineno">  552</span> </div>
+<div class="line"><a id="l00553" name="l00553"></a><span class="lineno">  553</span>            <span class="comment">// If we get to this point, there must have been no transfers in</span></div>
+<div class="line"><a id="l00554" name="l00554"></a><span class="lineno">  554</span>            <span class="comment">// the final quick_transfer iteration. This implies that all WCSS</span></div>
+<div class="line"><a id="l00555" name="l00555"></a><span class="lineno">  555</span>            <span class="comment">// losses are up to date, as quick_transfer updated everything for</span></div>
+<div class="line"><a id="l00556" name="l00556"></a><span class="lineno">  556</span>            <span class="comment">// us; so we can set the status to &#39;unchanged&#39; for all clusters.</span></div>
+<div class="line"><a id="l00557" name="l00557"></a><span class="lineno">  557</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; u : work.update_history) {</div>
+<div class="line"><a id="l00558" name="l00558"></a><span class="lineno">  558</span>                u.set_unchanged();</div>
+<div class="line"><a id="l00559" name="l00559"></a><span class="lineno">  559</span>            }</div>
+<div class="line"><a id="l00560" name="l00560"></a><span class="lineno">  560</span> </div>
+<div class="line"><a id="l00561" name="l00561"></a><span class="lineno">  561</span>            <span class="keywordflow">for</span> (Cluster_ c = 0; c &lt; ncenters; ++c) {</div>
+<div class="line"><a id="l00562" name="l00562"></a><span class="lineno">  562</span>                work.live_set[c].reset(work.was_quick_transferred[c]);</div>
+<div class="line"><a id="l00563" name="l00563"></a><span class="lineno">  563</span>            }</div>
+<div class="line"><a id="l00564" name="l00564"></a><span class="lineno">  564</span>        }</div>
+<div class="line"><a id="l00565" name="l00565"></a><span class="lineno">  565</span> </div>
+<div class="line"><a id="l00566" name="l00566"></a><span class="lineno">  566</span>        <span class="keywordflow">if</span> (iter == my_options.<a class="code hl_variable" href="structkmeans_1_1RefineHartiganWongOptions.html#a84e571b7448c1fc74dec8419feb0b0c9">max_iterations</a> + 1) {</div>
+<div class="line"><a id="l00567" name="l00567"></a><span class="lineno">  567</span>            ifault = 2;</div>
+<div class="line"><a id="l00568" name="l00568"></a><span class="lineno">  568</span>        }</div>
+<div class="line"><a id="l00569" name="l00569"></a><span class="lineno">  569</span> </div>
+<div class="line"><a id="l00570" name="l00570"></a><span class="lineno">  570</span>        internal::compute_centroids(data, ncenters, centers, clusters, work.cluster_sizes);</div>
+<div class="line"><a id="l00571" name="l00571"></a><span class="lineno">  571</span>        <span class="keywordflow">return</span> <a class="code hl_struct" href="structkmeans_1_1Details.html">Details</a>(std::move(work.cluster_sizes), iter, ifault);</div>
+<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>    }</div>
 </div>
-<div class="line"><a id="l00572" name="l00572"></a><span class="lineno">  572</span>};</div>
+<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span>};</div>
 </div>
-<div class="line"><a id="l00573" name="l00573"></a><span class="lineno">  573</span> </div>
-<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span>}</div>
-<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span> </div>
-<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00574" name="l00574"></a><span class="lineno">  574</span> </div>
+<div class="line"><a id="l00575" name="l00575"></a><span class="lineno">  575</span>}</div>
+<div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span> </div>
+<div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aDetails_8hpp_html"><div class="ttname"><a href="Details_8hpp.html">Details.hpp</a></div><div class="ttdoc">Report detailed clustering statistics.</div></div>
 <div class="ttc" id="aRefine_8hpp_html"><div class="ttname"><a href="Refine_8hpp.html">Refine.hpp</a></div><div class="ttdoc">Interface for k-means refinement.</div></div>
-<div class="ttc" id="aclasskmeans_1_1RefineHartiganWong_html"><div class="ttname"><a href="classkmeans_1_1RefineHartiganWong.html">kmeans::RefineHartiganWong</a></div><div class="ttdoc">Implements the Hartigan-Wong algorithm for k-means clustering.</div><div class="ttdef"><b>Definition</b> RefineHartiganWong.hpp:493</div></div>
-<div class="ttc" id="aclasskmeans_1_1RefineHartiganWong_html_a59310ce1efac8541beec0d52b2a2e35b"><div class="ttname"><a href="classkmeans_1_1RefineHartiganWong.html#a59310ce1efac8541beec0d52b2a2e35b">kmeans::RefineHartiganWong::RefineHartiganWong</a></div><div class="ttdeci">RefineHartiganWong(RefineHartiganWongOptions options)</div><div class="ttdef"><b>Definition</b> RefineHartiganWong.hpp:498</div></div>
-<div class="ttc" id="aclasskmeans_1_1RefineHartiganWong_html_aa62eae756acd3af6a4c7e9c62ef59d5d"><div class="ttname"><a href="classkmeans_1_1RefineHartiganWong.html#aa62eae756acd3af6a4c7e9c62ef59d5d">kmeans::RefineHartiganWong::run</a></div><div class="ttdeci">Details&lt; Index_ &gt; run(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers, Cluster_ *clusters) const</div><div class="ttdef"><b>Definition</b> RefineHartiganWong.hpp:510</div></div>
+<div class="ttc" id="aclasskmeans_1_1RefineHartiganWong_html"><div class="ttname"><a href="classkmeans_1_1RefineHartiganWong.html">kmeans::RefineHartiganWong</a></div><div class="ttdoc">Implements the Hartigan-Wong algorithm for k-means clustering.</div><div class="ttdef"><b>Definition</b> RefineHartiganWong.hpp:494</div></div>
+<div class="ttc" id="aclasskmeans_1_1RefineHartiganWong_html_a59310ce1efac8541beec0d52b2a2e35b"><div class="ttname"><a href="classkmeans_1_1RefineHartiganWong.html#a59310ce1efac8541beec0d52b2a2e35b">kmeans::RefineHartiganWong::RefineHartiganWong</a></div><div class="ttdeci">RefineHartiganWong(RefineHartiganWongOptions options)</div><div class="ttdef"><b>Definition</b> RefineHartiganWong.hpp:499</div></div>
+<div class="ttc" id="aclasskmeans_1_1RefineHartiganWong_html_aa62eae756acd3af6a4c7e9c62ef59d5d"><div class="ttname"><a href="classkmeans_1_1RefineHartiganWong.html#aa62eae756acd3af6a4c7e9c62ef59d5d">kmeans::RefineHartiganWong::run</a></div><div class="ttdeci">Details&lt; Index_ &gt; run(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers, Cluster_ *clusters) const</div><div class="ttdef"><b>Definition</b> RefineHartiganWong.hpp:511</div></div>
 <div class="ttc" id="aclasskmeans_1_1RefineHartiganWong_html_ac6c5197f3530b5c80d8d855e286e0e0f"><div class="ttname"><a href="classkmeans_1_1RefineHartiganWong.html#ac6c5197f3530b5c80d8d855e286e0e0f">kmeans::RefineHartiganWong::RefineHartiganWong</a></div><div class="ttdeci">RefineHartiganWong()=default</div></div>
 <div class="ttc" id="aclasskmeans_1_1Refine_html"><div class="ttname"><a href="classkmeans_1_1Refine.html">kmeans::Refine</a></div><div class="ttdoc">Interface for all k-means refinement algorithms.</div><div class="ttdef"><b>Definition</b> Refine.hpp:23</div></div>
 <div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:12</div></div>

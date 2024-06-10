@@ -108,7 +108,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>        <span class="keyword">auto</span> curdata = data.get_observation(work);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>        <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(ndim) dim = 0; dim &lt; ndim; ++dim, ++curcenter, ++curdata) {</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            <span class="keyword">auto</span> delta = *curdata - *curcenter;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            Float_ delta = <span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(*curdata) - *curcenter; <span class="comment">// cast for consistent precision regardless of Data_.</span></div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>            curwcss += delta * delta;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>        }</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    }</div>

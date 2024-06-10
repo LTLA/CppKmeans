@@ -144,7 +144,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Type of the data. Any floating-point type may be used here. </p>
+<p>Type of the data. Any floating-point type may be used here. Note that this type is only used for data storage; all calculations are done using the <code>Float_</code> type in <code><a class="el" href="classkmeans_1_1Refine.html" title="Interface for all k-means refinement algorithms.">Refine</a></code> and <code><a class="el" href="classkmeans_1_1Initialize.html" title="Base class for initialization algorithms.">Initialize</a></code>. </p>
 
 </div>
 </div>
@@ -159,7 +159,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Integer type for the dimension indices. Any integer type may be used here. </p>
+<p>Integer type for the dimension indices. Any integer type may be used here, as long as it is large enough to hold the number of dimensions.. </p>
 
 </div>
 </div>
@@ -174,7 +174,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Type for the observation indices. Any integer type may be used here. </p>
+<p>Type for the observation indices. Any integer type may be used here, as long as it is large enough to hold the number of observations. </p>
 
 </div>
 </div>
