@@ -30,31 +30,35 @@ private:
     }
 
 private:
-    typedef std::pair<Data_, Index_> DataPoint; 
+    typedef std::pair<Data_, Index_> DataPoint;
     std::vector<DataPoint> items;
 
+private:
     // Index_ might be unsigned, so we use zero as the LEAF marker.
     static const Index_ LEAF = 0;
+
     struct Node {
         const Data_* center = NULL;
-        Data_ radius = 0; 
+        Data_ radius = 0;
 
-        // Original index of current vantage point 
+        // Original index of current vantage point
         Index_ index = 0;
 
         // Node index of the next vantage point for all children closer than 'threshold' from the current vantage point.
         // This must be > 0, as the first node in 'nodes' is the root and cannot be referenced from other nodes.
-        Index_ left = LEAF;  
+        Index_ left = LEAF;
 
         // Node index of the next vantage point for all children further than 'threshold' from the current vantage point.
         // This must be > 0, as the first node in 'nodes' is the root and cannot be referenced from other nodes.
-        Index_ right = LEAF; 
+        Index_ right = LEAF;
     };
+
     std::vector<Node> nodes;
 
+private:
     template<class Engine_>
     Index_ build(Index_ lower, Index_ upper, const Data_* coords, Engine_& rng) {
-        /* 
+        /*
          * We're assuming that lower < upper at each point within this
          * recursion. This requires some protection at the call site
          * when nobs = 0, see the reset() function.
@@ -65,11 +69,11 @@ private:
         Node& node = nodes.back(); // this is safe during recursion because we reserved 'nodes' already to the number of observations, see reset().
 
         Index_ gap = upper - lower;
-        if (gap > 1) { // not yet at a leaft.
+        if (gap > 1) { // not yet at a leaf.
 
             /* Choose an arbitrary point and move it to the start of the [lower, upper)
              * interval in 'items'; this is our new vantage point.
-             * 
+             *
              * Yes, I know that the modulo method does not provide strictly
              * uniform values but statistical correctness doesn't really matter
              * here, and I don't want std::uniform_int_distribution's
@@ -137,7 +141,7 @@ public:
             // Statistical correctness doesn't matter (aside from tie breaking)
             // so we'll just use a deterministically 'random' number to ensure
             // we get the same ties for any given dataset but a different stream
-            // of numbers between datasets. Casting to get well-defined overflow. 
+            // of numbers between datasets. Casting to get well-defined overflow.
             uint64_t base = 1234567890, m1 = nobs, m2 = ndim;
             std::mt19937_64 rand(base * m1 +  m2);
 
@@ -148,7 +152,7 @@ public:
 
 private:
     template<typename Query_>
-    void search_nn(Index_ curnode_index, const Query_* target, Index_& closest_point, Data_& closest_dist) const { 
+    void search_nn(Index_ curnode_index, const Query_* target, Index_& closest_point, Data_& closest_dist) const {
         const auto& curnode=nodes[curnode_index];
         Data_ dist = std::sqrt(raw_distance(curnode.center, target, num_dim));
         if (dist < closest_dist) {
@@ -195,7 +199,7 @@ public:
 
 private:
     template<typename Query_>
-    void search_nn(Index_ curnode_index, const Query_* target, std::priority_queue<std::pair<Data_, Index_> >& closest) const { 
+    void search_nn(Index_ curnode_index, const Query_* target, std::priority_queue<std::pair<Data_, Index_> >& closest) const {
         const auto& curnode=nodes[curnode_index];
         Data_ dist = std::sqrt(raw_distance(curnode.center, target, num_dim));
 
@@ -229,6 +233,8 @@ private:
 public:
     template<typename Query_>
     std::pair<Index_, Index_> find2(const Query_* query) const {
+        // There better be two or more observations in this dataset,
+        // otherwise one of the placeholders will end up being reported!
         std::priority_queue<std::pair<Data_, Index_> > closest;
         closest.emplace(std::numeric_limits<Data_>::max(), 0);
         closest.emplace(std::numeric_limits<Data_>::max(), 0);
