@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['simplematrix_0',['SimpleMatrix',['../classkmeans_1_1SimpleMatrix.html#a52c6c92575e8e6b7e2504b4078e2c0f5',1,'kmeans::SimpleMatrix']]]
+  ['simplematrix_0',['SimpleMatrix',['../classkmeans_1_1SimpleMatrix.html#a821d29aaeb8a2efa3015cc83de8e4d40',1,'kmeans::SimpleMatrix']]]
 ];
