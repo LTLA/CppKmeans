@@ -2,6 +2,7 @@
 #define KMEANS_INITIALIZE_KMEANSPP_HPP
 
 #include <vector>
+#include <random>
 #include <algorithm>
 #include <cstdint>
 
