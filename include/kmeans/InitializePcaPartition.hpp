@@ -70,7 +70,7 @@ void compute_pc1(
     auto matwork = data.create_workspace(chosen.data(), chosen.size());
     for (size_t i = 0, end = chosen.size(); i < end; ++i) {
         auto dptr = data.get_observation(matwork);
-        for (int j = 0; j < ndim; ++j) {
+        for (decltype(ndim) j = 0; j < ndim; ++j) {
             work.delta[j] = dptr[j] - center[j];
         }
 
@@ -85,7 +85,7 @@ void compute_pc1(
 
     // Filling in the other side of the matrix, to enable cache-efficient multiplication.
     size_t src_offset = 0;
-    for (int j = 0; j < ndim; ++j, src_offset += long_ndim) {
+    for (decltype(ndim) j = 0; j < ndim; ++j, src_offset += long_ndim) {
         size_t dest_offset = j;
         size_t src_offset_copy = src_offset;
         for (decltype(ndim) k = 0; k <= j; ++k, ++src_offset_copy, dest_offset += long_ndim) {
