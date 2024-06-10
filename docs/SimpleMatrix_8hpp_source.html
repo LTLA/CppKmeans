@@ -114,13 +114,13 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">struct </span>ConsecutiveAccessWorkspace {</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>        ConsecutiveAccessWorkspace(index_type start) : at(start) {}</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        index_type at;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>        <span class="keywordtype">size_t</span> at;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    };</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    <span class="keyword">struct </span>IndexedAccessWorkspace {</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        IndexedAccessWorkspace(<span class="keyword">const</span> index_type* sequence) : sequence(sequence) {}</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keyword">const</span> index_type* sequence;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        index_type at = 0;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        <span class="keywordtype">size_t</span> at = 0;</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    };</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keyword">public</span>:</div>
@@ -149,7 +149,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    } </div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    <span class="keyword">const</span> data_type* get_observation(ConsecutiveAccessWorkspace&amp; workspace)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keywordflow">return</span> my_data + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(workspace.at++) * my_long_num_dim; <span class="comment">// avoid overflow during multiplication.</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keywordflow">return</span> my_data + (workspace.at++) * my_long_num_dim; <span class="comment">// everything is already a size_t.</span></div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    } </div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    <span class="keyword">const</span> data_type* get_observation(IndexedAccessWorkspace&amp; workspace)<span class="keyword"> const </span>{</div>

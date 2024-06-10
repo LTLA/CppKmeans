@@ -130,7 +130,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="foldopen" id="foldopen00087" data-start="{" data-end="};">
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="structkmeans_1_1MockMatrix_1_1ConsecutiveAccessWorkspace.html">   87</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structkmeans_1_1MockMatrix_1_1ConsecutiveAccessWorkspace.html">ConsecutiveAccessWorkspace</a> {</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>        <a class="code hl_struct" href="structkmeans_1_1MockMatrix_1_1ConsecutiveAccessWorkspace.html">ConsecutiveAccessWorkspace</a>(<a class="code hl_typedef" href="classkmeans_1_1MockMatrix.html#a286b214cb1d705686dd1de276307f670">index_type</a> start) : at(start) {}</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <a class="code hl_typedef" href="classkmeans_1_1MockMatrix.html#a286b214cb1d705686dd1de276307f670">index_type</a> at;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordtype">size_t</span> at;</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    };</div>
 </div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
@@ -144,7 +144,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="structkmeans_1_1MockMatrix_1_1IndexedAccessWorkspace.html">  112</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="structkmeans_1_1MockMatrix_1_1IndexedAccessWorkspace.html">IndexedAccessWorkspace</a> {</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        <a class="code hl_struct" href="structkmeans_1_1MockMatrix_1_1IndexedAccessWorkspace.html">IndexedAccessWorkspace</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="classkmeans_1_1MockMatrix.html#a286b214cb1d705686dd1de276307f670">index_type</a>* sequence) : sequence(sequence) {}</div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="keyword">const</span> <a class="code hl_typedef" href="classkmeans_1_1MockMatrix.html#a286b214cb1d705686dd1de276307f670">index_type</a>* sequence;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <a class="code hl_typedef" href="classkmeans_1_1MockMatrix.html#a286b214cb1d705686dd1de276307f670">index_type</a> at = 0;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keywordtype">size_t</span> at = 0;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    };</div>
 </div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
@@ -163,7 +163,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span> </div>
 <div class="foldopen" id="foldopen00148" data-start="{" data-end="}">
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno"><a class="line" href="classkmeans_1_1MockMatrix.html#a51080775497cb638404a8096892ca8c8">  148</a></span>    <span class="keyword">const</span> <a class="code hl_typedef" href="classkmeans_1_1MockMatrix.html#a2756254ac2fadd78cc76b9b2156143de">data_type</a>* <a class="code hl_function" href="classkmeans_1_1MockMatrix.html#a51080775497cb638404a8096892ca8c8">get_observation</a>(<a class="code hl_struct" href="structkmeans_1_1MockMatrix_1_1ConsecutiveAccessWorkspace.html">ConsecutiveAccessWorkspace</a>&amp; workspace)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        <span class="keywordflow">return</span> my_data + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(workspace.at++) * my_long_num_dim; <span class="comment">// avoid overflow during multiplication.</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        <span class="keywordflow">return</span> my_data + (workspace.at++) * my_long_num_dim; <span class="comment">// everything is already a size_t.</span></div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    } </div>
 </div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
