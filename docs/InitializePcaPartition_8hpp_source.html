@@ -94,7 +94,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;aarand/aarand.hpp&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;powerit/powerit.hpp&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="codeRef" href="https://ltla.github.io/powerit/powerit_8hpp.html">powerit/powerit.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="Initialize_8hpp.html">Initialize.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;compute_centroids.hpp&quot;</span></div>
@@ -103,7 +103,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="foldopen" id="foldopen00027" data-start="{" data-end="};">
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="structkmeans_1_1InitializePcaPartitionOptions.html">   27</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structkmeans_1_1InitializePcaPartitionOptions.html">InitializePcaPartitionOptions</a> {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structkmeans_1_1InitializePcaPartitionOptions.html#aae54f365770bdc4cbb4398d7868536c3">   31</a></span>    powerit::Options <a class="code hl_variable" href="structkmeans_1_1InitializePcaPartitionOptions.html#aae54f365770bdc4cbb4398d7868536c3">power_iteration_options</a>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structkmeans_1_1InitializePcaPartitionOptions.html#aae54f365770bdc4cbb4398d7868536c3">   31</a></span>    <a class="code hl_structRef" href="https://ltla.github.io/powerit/structpowerit_1_1Options.html">powerit::Options</a> <a class="code hl_variable" href="structkmeans_1_1InitializePcaPartitionOptions.html#aae54f365770bdc4cbb4398d7868536c3">power_iteration_options</a>;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="structkmeans_1_1InitializePcaPartitionOptions.html#a68075e7854df8e74f0a7eaaa1b95b1ae">   37</a></span>    <span class="keywordtype">double</span> <a class="code hl_variable" href="structkmeans_1_1InitializePcaPartitionOptions.html#a68075e7854df8e74f0a7eaaa1b95b1ae">size_adjustment</a> = 1;</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
@@ -128,7 +128,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    <span class="keyword">const</span> Float_* center, </div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    Engine_&amp; eng, </div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    Workspace&lt;Float_&gt;&amp; work,</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keyword">const</span> powerit::Options&amp; power_opts)</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="keyword">const</span> <a class="code hl_structRef" href="https://ltla.github.io/powerit/structpowerit_1_1Options.html">powerit::Options</a>&amp; power_opts)</div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>{</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keywordtype">size_t</span> long_ndim = ndim;</div>
@@ -159,7 +159,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>        }</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    }</div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    powerit::compute(ndim, work.cov.data(), <span class="comment">/* row_major = */</span> <span class="keyword">true</span>, work.pc.data(), eng, power_opts);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <a class="code hl_functionRef" href="https://ltla.github.io/powerit/namespacepowerit.html#a807c3e8dc3a452ccfddfb19f481b9389">powerit::compute</a>(ndim, work.cov.data(), <span class="comment">/* row_major = */</span> <span class="keyword">true</span>, work.pc.data(), eng, power_opts);</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>} </div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> Matrix_, <span class="keyword">typename</span> Float_&gt;</div>
@@ -306,10 +306,13 @@ $(document).ready(function() { init_codefold(0); });
 <div class="ttc" id="aclasskmeans_1_1InitializePcaPartition_html_af6d35eb9635f3c35b44294ba777513a8"><div class="ttname"><a href="classkmeans_1_1InitializePcaPartition.html#af6d35eb9635f3c35b44294ba777513a8">kmeans::InitializePcaPartition::InitializePcaPartition</a></div><div class="ttdeci">InitializePcaPartition()=default</div></div>
 <div class="ttc" id="aclasskmeans_1_1Initialize_html"><div class="ttname"><a href="classkmeans_1_1Initialize.html">kmeans::Initialize</a></div><div class="ttdoc">Base class for initialization algorithms.</div><div class="ttdef"><b>Definition</b> Initialize.hpp:22</div></div>
 <div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:12</div></div>
+<div class="ttc" id="anamespacepowerit_html_a807c3e8dc3a452ccfddfb19f481b9389"><div class="ttname"><a href="https://ltla.github.io/powerit/namespacepowerit.html#a807c3e8dc3a452ccfddfb19f481b9389">powerit::compute</a></div><div class="ttdeci">Result&lt; Data_ &gt; compute(size_t order, const Data_ *matrix, bool row_major, Data_ *vector, Engine_ &amp;engine, const Options &amp;opt)</div></div>
+<div class="ttc" id="apowerit_8hpp_html"><div class="ttname"><a href="https://ltla.github.io/powerit/powerit_8hpp.html">powerit.hpp</a></div></div>
 <div class="ttc" id="astructkmeans_1_1InitializePcaPartitionOptions_html"><div class="ttname"><a href="structkmeans_1_1InitializePcaPartitionOptions.html">kmeans::InitializePcaPartitionOptions</a></div><div class="ttdoc">Options for InitializePcaPartition.</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:27</div></div>
 <div class="ttc" id="astructkmeans_1_1InitializePcaPartitionOptions_html_a68075e7854df8e74f0a7eaaa1b95b1ae"><div class="ttname"><a href="structkmeans_1_1InitializePcaPartitionOptions.html#a68075e7854df8e74f0a7eaaa1b95b1ae">kmeans::InitializePcaPartitionOptions::size_adjustment</a></div><div class="ttdeci">double size_adjustment</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:37</div></div>
 <div class="ttc" id="astructkmeans_1_1InitializePcaPartitionOptions_html_a966e01854b00ca80d8ffbc273888f096"><div class="ttname"><a href="structkmeans_1_1InitializePcaPartitionOptions.html#a966e01854b00ca80d8ffbc273888f096">kmeans::InitializePcaPartitionOptions::seed</a></div><div class="ttdeci">uint64_t seed</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:42</div></div>
 <div class="ttc" id="astructkmeans_1_1InitializePcaPartitionOptions_html_aae54f365770bdc4cbb4398d7868536c3"><div class="ttname"><a href="structkmeans_1_1InitializePcaPartitionOptions.html#aae54f365770bdc4cbb4398d7868536c3">kmeans::InitializePcaPartitionOptions::power_iteration_options</a></div><div class="ttdeci">powerit::Options power_iteration_options</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:31</div></div>
+<div class="ttc" id="astructpowerit_1_1Options_html"><div class="ttname"><a href="https://ltla.github.io/powerit/structpowerit_1_1Options.html">powerit::Options</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -16,5 +16,5 @@ var searchData=
   ['initializerandom_13',['initializerandom',['../classkmeans_1_1InitializeRandom.html',1,'kmeans::InitializeRandom&lt; Matrix_, Cluster_, Float_ &gt;'],['../classkmeans_1_1InitializeRandom.html#a666141f5963775f2a5a3b9db248ad347',1,'kmeans::InitializeRandom::InitializeRandom(InitializeRandomOptions options)'],['../classkmeans_1_1InitializeRandom.html#aeb65e9b5002be1a5d2772ca03a713d85',1,'kmeans::InitializeRandom::InitializeRandom()=default']]],
   ['initializerandom_2ehpp_14',['InitializeRandom.hpp',['../InitializeRandom_8hpp.html',1,'']]],
   ['initializerandomoptions_15',['InitializeRandomOptions',['../structkmeans_1_1InitializeRandomOptions.html',1,'kmeans']]],
-  ['iterations_16',['iterations',['../structkmeans_1_1Details.html#a899c7cad07aebcf16ca6d09ab0734f5a',1,'kmeans::Details']]]
+  ['iterations_16',['iterations',['https://ltla.github.io/powerit/structpowerit_1_1Options.html#a840c57cd50dc00391798227b1e1b76d5',1,'powerit::Options::iterations'],['https://ltla.github.io/powerit/structpowerit_1_1Result.html#af2bd95e01d14a0ecfe856f7edd92193f',1,'powerit::Result::iterations'],['../structkmeans_1_1Details.html#a899c7cad07aebcf16ca6d09ab0734f5a',1,'kmeans::Details::iterations']]]
 ];
