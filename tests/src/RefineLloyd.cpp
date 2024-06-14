@@ -97,3 +97,13 @@ TEST_F(RefineLloydConstantTest, Extremes) {
         EXPECT_TRUE(res0.sizes.empty());
     }
 }
+
+TEST(RefineLloyd, Options) {
+    kmeans::RefineLloydOptions opt;
+    opt.num_threads = 10;
+    kmeans::RefineLloyd ref(opt);
+    EXPECT_EQ(ref.get_options().num_threads, 10);
+
+    ref.get_options().num_threads = 9;
+    EXPECT_EQ(ref.get_options().num_threads, 9);
+}

@@ -99,3 +99,13 @@ TEST_F(RefineMiniBatchConstantTest, Extremes) {
         EXPECT_TRUE(res0.sizes.empty());
     }
 }
+
+TEST(RefineMiniBatch, Options) {
+    kmeans::RefineMiniBatchOptions opt;
+    opt.num_threads = 10;
+    kmeans::RefineMiniBatch ref(opt);
+    EXPECT_EQ(ref.get_options().num_threads, 10);
+
+    ref.get_options().num_threads = 9;
+    EXPECT_EQ(ref.get_options().num_threads, 9);
+}

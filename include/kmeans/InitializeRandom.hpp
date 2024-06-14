@@ -53,6 +53,15 @@ public:
     InitializeRandom() = default;
 
 public:
+    /**
+     * @return Options for random initialization,
+     * to be modified prior to calling `run()`.
+     */
+    InitializeRandomOptions& get_options() {
+        return my_options;
+    }
+
+public:
     Cluster_ run(const Matrix_& data, Cluster_ ncenters, Float_* centers) const {
         std::mt19937_64 eng(my_options.seed);
         auto nobs = data.num_observations();

@@ -83,17 +83,27 @@ protected:
 
 TEST_F(RefineHartiganWongConstantTest, Extremes) {
     kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineHartiganWong ll;
+    kmeans::RefineHartiganWong hw;
 
     {
         std::vector<double> centers(nr * nc);
         std::vector<int> clusters(nc);
-        auto res = ll.run(mat, nc, centers.data(), clusters.data());
+        auto res = hw.run(mat, nc, centers.data(), clusters.data());
         EXPECT_EQ(data, centers);
     }
 
     {
-        auto res0 = ll.run(mat, 0, NULL, NULL);
+        auto res0 = hw.run(mat, 0, NULL, NULL);
         EXPECT_TRUE(res0.sizes.empty());
     }
+}
+
+TEST(RefineHartiganWong, Options) {
+    kmeans::RefineHartiganWongOptions opt;
+    opt.num_threads = 10;
+    kmeans::RefineHartiganWong ref(opt);
+    EXPECT_EQ(ref.get_options().num_threads, 10);
+
+    ref.get_options().num_threads = 9;
+    EXPECT_EQ(ref.get_options().num_threads, 9);
 }

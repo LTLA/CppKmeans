@@ -136,9 +136,7 @@ protected:
 };
 
 TEST_F(KmeansppInitializationEdgeTest, TooManyClusters) {
-    kmeans::InitializeKmeansppOptions opt;
-    opt.seed = nc * 10;
-    kmeans::InitializeKmeanspp init(opt);
+    kmeans::InitializeKmeanspp init;
 
     std::vector<double> centers(nc * nr);
     auto nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc, centers.data());
@@ -156,4 +154,14 @@ TEST_F(KmeansppInitializationEdgeTest, TooManyClusters) {
     auto nfilled2 = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc + 10, centers2.data());
     EXPECT_EQ(nfilled2, nc);
     EXPECT_EQ(centers2, centers);
+}
+
+TEST(KmeansppInitialization, Options) {
+    kmeans::InitializeKmeansppOptions opt;
+    opt.seed = 12345;
+    kmeans::InitializeKmeanspp init(opt);
+    EXPECT_EQ(init.get_options().seed, 12345);
+
+    init.get_options().seed = 99999;
+    EXPECT_EQ(init.get_options().seed, 99999);
 }

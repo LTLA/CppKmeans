@@ -159,6 +159,15 @@ public:
     InitializeKmeanspp() = default;
 
 public:
+    /**
+     * @return Options for **kmeans++** partitioning,
+     * to be modified prior to calling `run()`.
+     */
+    InitializeKmeansppOptions& get_options() {
+        return my_options;
+    }
+
+public:
     Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Float_* centers) const {
         size_t nobs = matrix.num_observations();
         if (!nobs) {

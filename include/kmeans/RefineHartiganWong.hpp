@@ -508,6 +508,15 @@ private:
     typedef typename Matrix_::index_type Index_;
 
 public:
+    /**
+     * @return Options for Hartigan-Wong clustering,
+     * to be modified prior to calling `run()`.
+     */
+    RefineHartiganWongOptions& get_options() {
+        return my_options;
+    }
+
+public:
     Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
         auto nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {

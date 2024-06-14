@@ -278,9 +278,7 @@ protected:
 };
 
 TEST_F(PcaPartitionInitializationEdgeTest, TooManyClusters) {
-    kmeans::InitializePcaPartitionOptions opt;
-    opt.seed = nc * 10;
-    kmeans::InitializePcaPartition init(opt);
+    kmeans::InitializePcaPartition init;
 
     std::vector<double> centers(nc * nr);
     auto nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc, centers.data());
@@ -297,4 +295,14 @@ TEST_F(PcaPartitionInitializationEdgeTest, TooManyClusters) {
     auto nfilled2 = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc + 10, centers2.data());
     EXPECT_EQ(nfilled2, nc);
     EXPECT_EQ(centers2, centers);
+}
+
+TEST(PcaPartitionInitialization, Options) {
+    kmeans::InitializePcaPartitionOptions opt;
+    opt.seed = 12345;
+    kmeans::InitializePcaPartition init(opt);
+    EXPECT_EQ(init.get_options().seed, 12345);
+
+    init.get_options().seed = 99999;
+    EXPECT_EQ(init.get_options().seed, 99999);
 }

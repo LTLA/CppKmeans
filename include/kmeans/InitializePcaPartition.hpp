@@ -187,6 +187,15 @@ private:
     InitializePcaPartitionOptions my_options;
 
 public:
+    /**
+     * @return Options for PCA partitioning,
+     * to be modified prior to calling `run()`.
+     */
+    InitializePcaPartitionOptions& get_options() {
+        return my_options;
+    }
+
+public:
     Cluster_ run(const Matrix_& data, Cluster_ ncenters, Float_* centers) const {
         auto nobs = data.num_observations();
         if (nobs == 0) {

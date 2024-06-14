@@ -95,9 +95,7 @@ protected:
 };
 
 TEST_F(RandomInitializationEdgeTest, TooManyClusters) {
-    kmeans::InitializeRandomOptions opt;
-    opt.seed = nc * 10;
-    kmeans::InitializeRandom init(opt);
+    kmeans::InitializeRandom init;
 
     std::vector<double> centers(nc * nr);
     auto nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc, centers.data());
@@ -108,4 +106,14 @@ TEST_F(RandomInitializationEdgeTest, TooManyClusters) {
     nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc + 10, centers.data());
     EXPECT_EQ(nfilled, nc);
     EXPECT_EQ(centers, data);
+}
+
+TEST(RandomInitialization, Options) {
+    kmeans::InitializeRandomOptions opt;
+    opt.seed = 12345;
+    kmeans::InitializeRandom init(opt);
+    EXPECT_EQ(init.get_options().seed, 12345);
+
+    init.get_options().seed = 99999;
+    EXPECT_EQ(init.get_options().seed, 99999);
 }

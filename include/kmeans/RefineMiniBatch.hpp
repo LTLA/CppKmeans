@@ -102,6 +102,15 @@ public:
      */
     RefineMiniBatch() = default;
 
+public:
+    /**
+     * @return Options for mini-batch partitioning,
+     * to be modified prior to calling `run()`.
+     */
+    RefineMiniBatchOptions& get_options() {
+        return my_options;
+    }
+
 private:
     RefineMiniBatchOptions my_options;
 

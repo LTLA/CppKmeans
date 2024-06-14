@@ -75,6 +75,15 @@ public:
     RefineLloyd() = default;
 
 public:
+    /**
+     * @return Options for Lloyd clustering,
+     * to be modified prior to calling `run()`.
+     */
+    RefineLloydOptions& get_options() {
+        return my_options;
+    }
+
+public:
     Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
         auto nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
