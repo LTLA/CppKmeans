@@ -201,30 +201,38 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html#a16ee2db4571dce8fa1639fbf003b997c">  159</a></span>    <a class="code hl_function" href="classkmeans_1_1InitializeKmeanspp.html#a16ee2db4571dce8fa1639fbf003b997c">InitializeKmeanspp</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00162" data-start="{" data-end="}">
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">  162</a></span>    Cluster_ <a class="code hl_function" href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">run</a>(<span class="keyword">const</span> Matrix_&amp; matrix, Cluster_ ncenters, Float_* centers)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>        <span class="keywordtype">size_t</span> nobs = matrix.num_observations();</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>        <span class="keywordflow">if</span> (!nobs) {</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        }</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        <span class="keyword">auto</span> sofar = InitializeKmeanspp_internal::run_kmeanspp&lt;Float_&gt;(matrix, ncenters, my_options.<a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#acf0d2057e8792438afe8bf8a82d03307">seed</a>, my_options.<a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#ab013d5b005343f214102ec1e1d1916c6">num_threads</a>);</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>        internal::copy_into_array(matrix, sofar, centers);</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        <span class="keywordflow">return</span> sofar.size();</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    }</div>
+<div class="foldopen" id="foldopen00166" data-start="{" data-end="}">
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html#adbefce29c846d0dcc3a5040e751877e1">  166</a></span>    <a class="code hl_struct" href="structkmeans_1_1InitializeKmeansppOptions.html">InitializeKmeansppOptions</a>&amp; <a class="code hl_function" href="classkmeans_1_1InitializeKmeanspp.html#adbefce29c846d0dcc3a5040e751877e1">get_options</a>() {</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        <span class="keywordflow">return</span> my_options;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    }</div>
 </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>};</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00171" data-start="{" data-end="}">
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">  171</a></span>    Cluster_ <a class="code hl_function" href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">run</a>(<span class="keyword">const</span> Matrix_&amp; matrix, Cluster_ ncenters, Float_* centers)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        <span class="keywordtype">size_t</span> nobs = matrix.num_observations();</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        <span class="keywordflow">if</span> (!nobs) {</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        }</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        <span class="keyword">auto</span> sofar = InitializeKmeanspp_internal::run_kmeanspp&lt;Float_&gt;(matrix, ncenters, my_options.<a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#acf0d2057e8792438afe8bf8a82d03307">seed</a>, my_options.<a class="code hl_variable" href="structkmeans_1_1InitializeKmeansppOptions.html#ab013d5b005343f214102ec1e1d1916c6">num_threads</a>);</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        internal::copy_into_array(matrix, sofar, centers);</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        <span class="keywordflow">return</span> sofar.size();</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    }</div>
 </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>}</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>};</div>
+</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span> </div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>}</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aInitialize_8hpp_html"><div class="ttname"><a href="Initialize_8hpp.html">Initialize.hpp</a></div><div class="ttdoc">Interface for k-means initialization.</div></div>
 <div class="ttc" id="aSimpleMatrix_8hpp_html"><div class="ttname"><a href="SimpleMatrix_8hpp.html">SimpleMatrix.hpp</a></div><div class="ttdoc">Wrapper for a simple dense matrix.</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html">kmeans::InitializeKmeanspp</a></div><div class="ttdoc">k-means++ initialization of Arthur and Vassilvitskii (2007).</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:146</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html_a16ee2db4571dce8fa1639fbf003b997c"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html#a16ee2db4571dce8fa1639fbf003b997c">kmeans::InitializeKmeanspp::InitializeKmeanspp</a></div><div class="ttdeci">InitializeKmeanspp()=default</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html_a1c22523b6848531771c3056e6db44f31"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html#a1c22523b6848531771c3056e6db44f31">kmeans::InitializeKmeanspp::InitializeKmeanspp</a></div><div class="ttdeci">InitializeKmeanspp(InitializeKmeansppOptions options)</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:154</div></div>
-<div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html_ad604e3891c525d3ea6b7744579fde9b1"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">kmeans::InitializeKmeanspp::run</a></div><div class="ttdeci">Cluster_ run(const Matrix_ &amp;matrix, Cluster_ ncenters, Float_ *centers) const</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:162</div></div>
+<div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html_ad604e3891c525d3ea6b7744579fde9b1"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1">kmeans::InitializeKmeanspp::run</a></div><div class="ttdeci">Cluster_ run(const Matrix_ &amp;matrix, Cluster_ ncenters, Float_ *centers) const</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:171</div></div>
+<div class="ttc" id="aclasskmeans_1_1InitializeKmeanspp_html_adbefce29c846d0dcc3a5040e751877e1"><div class="ttname"><a href="classkmeans_1_1InitializeKmeanspp.html#adbefce29c846d0dcc3a5040e751877e1">kmeans::InitializeKmeanspp::get_options</a></div><div class="ttdeci">InitializeKmeansppOptions &amp; get_options()</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:166</div></div>
 <div class="ttc" id="aclasskmeans_1_1Initialize_html"><div class="ttname"><a href="classkmeans_1_1Initialize.html">kmeans::Initialize</a></div><div class="ttdoc">Base class for initialization algorithms.</div><div class="ttdef"><b>Definition</b> Initialize.hpp:22</div></div>
 <div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:12</div></div>
 <div class="ttc" id="astructkmeans_1_1InitializeKmeansppOptions_html"><div class="ttname"><a href="structkmeans_1_1InitializeKmeansppOptions.html">kmeans::InitializeKmeansppOptions</a></div><div class="ttdoc">Options for k-means++ initialization.</div><div class="ttdef"><b>Definition</b> InitializeKmeanspp.hpp:27</div></div>

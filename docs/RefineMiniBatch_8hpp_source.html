@@ -129,132 +129,140 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineMiniBatch.html#af986fb5542f856f6628adbddeeae3803">  103</a></span>    <a class="code hl_function" href="classkmeans_1_1RefineMiniBatch.html#af986fb5542f856f6628adbddeeae3803">RefineMiniBatch</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <a class="code hl_struct" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> my_options;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00109" data-start="{" data-end="}">
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23">  109</a></span>    <a class="code hl_struct" href="structkmeans_1_1Details.html">Details&lt;typename Matrix_::index_type&gt;</a> <a class="code hl_function" href="classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ ncenters, Float_* centers, Cluster_* clusters)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        <span class="keyword">auto</span> nobs = data.num_observations();</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">if</span> (internal::is_edge_case(nobs, ncenters)) {</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            <span class="keywordflow">return</span> internal::process_edge_case(data, ncenters, centers, clusters);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        }</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span> </div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        <span class="keywordtype">int</span> iter = 0, status = 0;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        std::vector&lt;uint64_t&gt; total_sampled(ncenters); <span class="comment">// holds the number of sampled observations across iterations, so we need a large integer.</span></div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        std::vector&lt;Cluster_&gt; previous(nobs);</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keyword">typedef</span> <span class="keyword">decltype</span>(nobs) Index_;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        std::vector&lt;uint64_t&gt; last_changed(ncenters), last_sampled(ncenters); <span class="comment">// holds the number of sampled/changed observation for the last few iterations.</span></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        Index_ actual_batch_size = nobs;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        <span class="keyword">typedef</span> <span class="keyword">typename</span> std::conditional&lt;std::is_signed&lt;Index_&gt;::value, int, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&gt;::type SafeCompInt; <span class="comment">// waiting for C++20&#39;s comparison functions...</span></div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span>SafeCompInt<span class="keyword">&gt;</span>(actual_batch_size) &gt; my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#adf33e7ea378417d901a1480073d505c6">batch_size</a>) {</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            actual_batch_size = my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#adf33e7ea378417d901a1480073d505c6">batch_size</a>;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        }</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        std::vector&lt;Index_&gt; chosen(actual_batch_size);</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        std::mt19937_64 eng(my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#aa7a1dda3a142c5f2b4221af7fc8f05b9">seed</a>);</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        <span class="keywordtype">size_t</span> long_ndim = ndim;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        internal::QuickSearch&lt;Float_, Cluster_, <span class="keyword">decltype</span>(ndim)&gt; index;</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        <span class="keywordflow">for</span> (iter = 1; iter &lt;= my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#a8a4b7d596a2c1780d645739904948bd4">max_iterations</a>; ++iter) {</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            aarand::sample(nobs, actual_batch_size, chosen.data(), eng);</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            <span class="keywordflow">if</span> (iter &gt; 1) {</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> o : chosen) {</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                    previous[o] = clusters[o];</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                }</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>            }</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>            index.reset(ndim, ncenters, centers);</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>            internal::parallelize(actual_batch_size, my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#ab246828d63b19dc11ad86ab8c01ec10e">num_threads</a>, [&amp;](<span class="keywordtype">int</span>, Index_ start, Index_ length) {</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>                auto work = data.create_workspace(chosen.data() + start, length);</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>                for (Index_ s = start, end = start + length; s &lt; end; ++s) {</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                    auto ptr = data.get_observation(work);</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                    clusters[chosen[s]] = index.find(ptr);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00110" data-start="{" data-end="}">
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineMiniBatch.html#a9dcc167f01735fd861addae939acf45b">  110</a></span>    <a class="code hl_struct" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a>&amp; <a class="code hl_function" href="classkmeans_1_1RefineMiniBatch.html#a9dcc167f01735fd861addae939acf45b">get_options</a>() {</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">return</span> my_options;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    }</div>
+</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <a class="code hl_struct" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> my_options;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00118" data-start="{" data-end="}">
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23">  118</a></span>    <a class="code hl_struct" href="structkmeans_1_1Details.html">Details&lt;typename Matrix_::index_type&gt;</a> <a class="code hl_function" href="classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ ncenters, Float_* centers, Cluster_* clusters)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="keyword">auto</span> nobs = data.num_observations();</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="keywordflow">if</span> (internal::is_edge_case(nobs, ncenters)) {</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>            <span class="keywordflow">return</span> internal::process_edge_case(data, ncenters, centers, clusters);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        }</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>        <span class="keywordtype">int</span> iter = 0, status = 0;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>        std::vector&lt;uint64_t&gt; total_sampled(ncenters); <span class="comment">// holds the number of sampled observations across iterations, so we need a large integer.</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        std::vector&lt;Cluster_&gt; previous(nobs);</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="keyword">typedef</span> <span class="keyword">decltype</span>(nobs) Index_;</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        std::vector&lt;uint64_t&gt; last_changed(ncenters), last_sampled(ncenters); <span class="comment">// holds the number of sampled/changed observation for the last few iterations.</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>        Index_ actual_batch_size = nobs;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>        <span class="keyword">typedef</span> <span class="keyword">typename</span> std::conditional&lt;std::is_signed&lt;Index_&gt;::value, int, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span>&gt;::type SafeCompInt; <span class="comment">// waiting for C++20&#39;s comparison functions...</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        <span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span>SafeCompInt<span class="keyword">&gt;</span>(actual_batch_size) &gt; my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#adf33e7ea378417d901a1480073d505c6">batch_size</a>) {</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            actual_batch_size = my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#adf33e7ea378417d901a1480073d505c6">batch_size</a>;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        }</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        std::vector&lt;Index_&gt; chosen(actual_batch_size);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        std::mt19937_64 eng(my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#aa7a1dda3a142c5f2b4221af7fc8f05b9">seed</a>);</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        <span class="keywordtype">size_t</span> long_ndim = ndim;</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        internal::QuickSearch&lt;Float_, Cluster_, <span class="keyword">decltype</span>(ndim)&gt; index;</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        <span class="keywordflow">for</span> (iter = 1; iter &lt;= my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#a8a4b7d596a2c1780d645739904948bd4">max_iterations</a>; ++iter) {</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>            aarand::sample(nobs, actual_batch_size, chosen.data(), eng);</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>            <span class="keywordflow">if</span> (iter &gt; 1) {</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> o : chosen) {</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>                    previous[o] = clusters[o];</div>
 <div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                }</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            });</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            }</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            <span class="comment">// Updating the means for each cluster.</span></div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            <span class="keyword">auto</span> work = data.create_workspace(chosen.data(), actual_batch_size);</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> o : chosen) {</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                <span class="keyword">const</span> <span class="keyword">auto</span> c = clusters[o];</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                <span class="keyword">auto</span>&amp; n = total_sampled[c];</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                ++n;</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                Float_ mult = <span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(1)/<span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(n);</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                <span class="keyword">auto</span> ccopy = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(c) * long_ndim;</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                <span class="keyword">auto</span> ocopy = data.get_observation(work);</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span> </div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(ndim) d = 0; d &lt; ndim; ++d, ++ocopy, ++ccopy) {</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                    (*ccopy) += (<span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(*ocopy) - *ccopy) * mult; <span class="comment">// cast to ensure consistent precision regardless of Matrix_::data_type.</span></div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                }</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>            }</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            index.reset(ndim, ncenters, centers);</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            internal::parallelize(actual_batch_size, my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#ab246828d63b19dc11ad86ab8c01ec10e">num_threads</a>, [&amp;](<span class="keywordtype">int</span>, Index_ start, Index_ length) {</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                auto work = data.create_workspace(chosen.data() + start, length);</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                for (Index_ s = start, end = start + length; s &lt; end; ++s) {</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                    auto ptr = data.get_observation(work);</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>                    clusters[chosen[s]] = index.find(ptr);</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>                }</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            });</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="comment">// Updating the means for each cluster.</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            <span class="keyword">auto</span> work = data.create_workspace(chosen.data(), actual_batch_size);</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> o : chosen) {</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                <span class="keyword">const</span> <span class="keyword">auto</span> c = clusters[o];</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                <span class="keyword">auto</span>&amp; n = total_sampled[c];</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                ++n;</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="comment">// Checking for updates.</span></div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            <span class="keywordflow">if</span> (iter != 1) {</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> o : chosen) {</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                    <span class="keyword">auto</span> p = previous[o];</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                    ++(last_sampled[p]);</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                    <span class="keyword">auto</span> c = clusters[o];</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                    <span class="keywordflow">if</span> (p != c) {</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>                        ++(last_sampled[c]);</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>                        ++(last_changed[p]);</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                        ++(last_changed[c]);</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>                    }</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                }</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                <span class="keywordflow">if</span> (iter % my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#a93b37ae839d05eeaed1a9685f6d9112a">convergence_history</a> == 1) {</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                    <span class="keywordtype">bool</span> too_many_changes = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                    <span class="keywordflow">for</span> (Cluster_ c = 0; c &lt; ncenters; ++c) {</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                        <span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(last_changed[c]) &gt;= <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(last_sampled[c]) * my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#a8facb9fb31d589bb41fa9e196e1e15e4">max_change_proportion</a>) {</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                            too_many_changes = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                            <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                        }</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                    }</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                Float_ mult = <span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(1)/<span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(n);</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                <span class="keyword">auto</span> ccopy = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(c) * long_ndim;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                <span class="keyword">auto</span> ocopy = data.get_observation(work);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>                <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(ndim) d = 0; d &lt; ndim; ++d, ++ocopy, ++ccopy) {</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>                    (*ccopy) += (<span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(*ocopy) - *ccopy) * mult; <span class="comment">// cast to ensure consistent precision regardless of Matrix_::data_type.</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                }</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            }</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>            <span class="comment">// Checking for updates.</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>            <span class="keywordflow">if</span> (iter != 1) {</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                <span class="keywordflow">for</span> (<span class="keyword">auto</span> o : chosen) {</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>                    <span class="keyword">auto</span> p = previous[o];</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                    ++(last_sampled[p]);</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                    <span class="keyword">auto</span> c = clusters[o];</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                    <span class="keywordflow">if</span> (p != c) {</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                        ++(last_sampled[c]);</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                        ++(last_changed[p]);</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                        ++(last_changed[c]);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                    }</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                }</div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                    <span class="keywordflow">if</span> (!too_many_changes) {</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                    }</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                    std::fill(last_sampled.begin(), last_sampled.end(), 0);</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                    std::fill(last_changed.begin(), last_changed.end(), 0);</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                }</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            }</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        }</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                <span class="keywordflow">if</span> (iter % my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#a93b37ae839d05eeaed1a9685f6d9112a">convergence_history</a> == 1) {</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                    <span class="keywordtype">bool</span> too_many_changes = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                    <span class="keywordflow">for</span> (Cluster_ c = 0; c &lt; ncenters; ++c) {</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                        <span class="keywordflow">if</span> (<span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(last_changed[c]) &gt;= <span class="keyword">static_cast&lt;</span><span class="keywordtype">double</span><span class="keyword">&gt;</span>(last_sampled[c]) * my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#a8facb9fb31d589bb41fa9e196e1e15e4">max_change_proportion</a>) {</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                            too_many_changes = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>                        }</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                    }</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        <span class="keywordflow">if</span> (iter == my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#a8a4b7d596a2c1780d645739904948bd4">max_iterations</a> + 1) {</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            status = 2;</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        }</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <span class="comment">// Run through all observations to make sure they have the latest cluster assignments.</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        index.reset(ndim, ncenters, centers);</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        internal::parallelize(nobs, my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#ab246828d63b19dc11ad86ab8c01ec10e">num_threads</a>, [&amp;](<span class="keywordtype">int</span>, Index_ start, Index_ length) {</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            auto work = data.create_workspace(start, length);</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            for (Index_ s = start, end = start + length; s &lt; end; ++s) {</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                auto ptr = data.get_observation(work);</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                clusters[s] = index.find(ptr);</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            }</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        });</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span> </div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        std::vector&lt;Index_&gt; cluster_sizes(ncenters);</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <span class="keywordflow">for</span> (Index_ o = 0; o &lt; nobs; ++o) {</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            ++cluster_sizes[clusters[o]];</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        }</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span> </div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        internal::compute_centroids(data, ncenters, centers, clusters, cluster_sizes);</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        <span class="keywordflow">return</span> Details&lt;Index_&gt;(std::move(cluster_sizes), iter, status);</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    }</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>                    <span class="keywordflow">if</span> (!too_many_changes) {</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>                        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>                    }</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>                    std::fill(last_sampled.begin(), last_sampled.end(), 0);</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>                    std::fill(last_changed.begin(), last_changed.end(), 0);</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>                }</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            }</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        }</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        <span class="keywordflow">if</span> (iter == my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#a8a4b7d596a2c1780d645739904948bd4">max_iterations</a> + 1) {</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            status = 2;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        }</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <span class="comment">// Run through all observations to make sure they have the latest cluster assignments.</span></div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>        index.reset(ndim, ncenters, centers);</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        internal::parallelize(nobs, my_options.<a class="code hl_variable" href="structkmeans_1_1RefineMiniBatchOptions.html#ab246828d63b19dc11ad86ab8c01ec10e">num_threads</a>, [&amp;](<span class="keywordtype">int</span>, Index_ start, Index_ length) {</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            auto work = data.create_workspace(start, length);</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>            for (Index_ s = start, end = start + length; s &lt; end; ++s) {</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                auto ptr = data.get_observation(work);</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                clusters[s] = index.find(ptr);</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            }</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>        });</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        std::vector&lt;Index_&gt; cluster_sizes(ncenters);</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        <span class="keywordflow">for</span> (Index_ o = 0; o &lt; nobs; ++o) {</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>            ++cluster_sizes[clusters[o]];</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        }</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span> </div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>        internal::compute_centroids(data, ncenters, centers, clusters, cluster_sizes);</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>        <span class="keywordflow">return</span> Details&lt;Index_&gt;(std::move(cluster_sizes), iter, status);</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    }</div>
 </div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>};</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>};</div>
 </div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span> </div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>}</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>}</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aDetails_8hpp_html"><div class="ttname"><a href="Details_8hpp.html">Details.hpp</a></div><div class="ttdoc">Report detailed clustering statistics.</div></div>
 <div class="ttc" id="aRefine_8hpp_html"><div class="ttname"><a href="Refine_8hpp.html">Refine.hpp</a></div><div class="ttdoc">Interface for k-means refinement.</div></div>
 <div class="ttc" id="aclasskmeans_1_1RefineMiniBatch_html"><div class="ttname"><a href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a></div><div class="ttdoc">Implements the mini-batch algorithm for k-means clustering.</div><div class="ttdef"><b>Definition</b> RefineMiniBatch.hpp:93</div></div>
-<div class="ttc" id="aclasskmeans_1_1RefineMiniBatch_html_a27b64fa05415d34baaca48009f059b23"><div class="ttname"><a href="classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23">kmeans::RefineMiniBatch::run</a></div><div class="ttdeci">Details&lt; typename Matrix_::index_type &gt; run(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers, Cluster_ *clusters) const</div><div class="ttdef"><b>Definition</b> RefineMiniBatch.hpp:109</div></div>
+<div class="ttc" id="aclasskmeans_1_1RefineMiniBatch_html_a27b64fa05415d34baaca48009f059b23"><div class="ttname"><a href="classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23">kmeans::RefineMiniBatch::run</a></div><div class="ttdeci">Details&lt; typename Matrix_::index_type &gt; run(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers, Cluster_ *clusters) const</div><div class="ttdef"><b>Definition</b> RefineMiniBatch.hpp:118</div></div>
+<div class="ttc" id="aclasskmeans_1_1RefineMiniBatch_html_a9dcc167f01735fd861addae939acf45b"><div class="ttname"><a href="classkmeans_1_1RefineMiniBatch.html#a9dcc167f01735fd861addae939acf45b">kmeans::RefineMiniBatch::get_options</a></div><div class="ttdeci">RefineMiniBatchOptions &amp; get_options()</div><div class="ttdef"><b>Definition</b> RefineMiniBatch.hpp:110</div></div>
 <div class="ttc" id="aclasskmeans_1_1RefineMiniBatch_html_abb41cd2d2168b65dd63fc0bf386a38b4"><div class="ttname"><a href="classkmeans_1_1RefineMiniBatch.html#abb41cd2d2168b65dd63fc0bf386a38b4">kmeans::RefineMiniBatch::RefineMiniBatch</a></div><div class="ttdeci">RefineMiniBatch(RefineMiniBatchOptions options)</div><div class="ttdef"><b>Definition</b> RefineMiniBatch.hpp:98</div></div>
 <div class="ttc" id="aclasskmeans_1_1RefineMiniBatch_html_af986fb5542f856f6628adbddeeae3803"><div class="ttname"><a href="classkmeans_1_1RefineMiniBatch.html#af986fb5542f856f6628adbddeeae3803">kmeans::RefineMiniBatch::RefineMiniBatch</a></div><div class="ttdeci">RefineMiniBatch()=default</div></div>
 <div class="ttc" id="aclasskmeans_1_1Refine_html"><div class="ttname"><a href="classkmeans_1_1Refine.html">kmeans::Refine</a></div><div class="ttdoc">Interface for all k-means refinement algorithms.</div><div class="ttdef"><b>Definition</b> Refine.hpp:23</div></div>

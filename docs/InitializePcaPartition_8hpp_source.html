@@ -211,98 +211,106 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    <a class="code hl_struct" href="structkmeans_1_1InitializePcaPartitionOptions.html">InitializePcaPartitionOptions</a> my_options;</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00190" data-start="{" data-end="}">
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializePcaPartition.html#a974f052d629831befd808a8d08503f48">  190</a></span>    Cluster_ <a class="code hl_function" href="classkmeans_1_1InitializePcaPartition.html#a974f052d629831befd808a8d08503f48">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ ncenters, Float_* centers)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        <span class="keyword">auto</span> nobs = data.num_observations();</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        <span class="keywordflow">if</span> (nobs == 0) {</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        }</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        std::mt19937_64 rng(my_options.<a class="code hl_variable" href="structkmeans_1_1InitializePcaPartitionOptions.html#a966e01854b00ca80d8ffbc273888f096">seed</a>);</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        std::priority_queue&lt;std::pair&lt;Float_, Cluster_&gt; &gt; mrse;</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>        std::vector&lt;std::vector&lt;typename Matrix_::index_type&gt; &gt; assignments(ncenters);</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        InitializePcaPartition_internal::Workspace&lt;Float_&gt; power_work(ndim);</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        <span class="comment">// Setting up the zero&#39;th cluster. (No need to actually compute the</span></div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="comment">// MRSE at this point, as there&#39;s nothing to compare it to.)</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        internal::compute_centroid(data, centers);</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        assignments[0].resize(nobs);</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        std::iota(assignments.front().begin(), assignments.front().end(), 0);</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>        std::vector&lt;typename Matrix_::index_type&gt; replace_assignments;</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span> </div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        <span class="keywordflow">for</span> (Cluster_ cluster = 1; cluster &lt; ncenters; ++cluster) {</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            Cluster_ worst_cluster = 0;</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            <span class="keywordflow">if</span> (mrse.size()) {</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                worst_cluster = mrse.top().second;</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                mrse.pop();</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>            }</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span> </div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            <span class="comment">// Extracting the principal component for this bad boy.</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            <span class="keyword">auto</span> worst_center = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(worst_cluster) * <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(ndim); <span class="comment">// cast to avoid overflow.</span></div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>            <span class="keyword">auto</span>&amp; worst_assignments = assignments[worst_cluster];</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>            InitializePcaPartition_internal::compute_pc1(data, worst_assignments, worst_center, rng, power_work, my_options.<a class="code hl_variable" href="structkmeans_1_1InitializePcaPartitionOptions.html#aae54f365770bdc4cbb4398d7868536c3">power_iteration_options</a>);</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; pc1 = power_work.pc;</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span> </div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>            <span class="comment">// Projecting all points in this cluster along PC1. The center lies</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>            <span class="comment">// at zero, so everything positive (on one side of the hyperplane</span></div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            <span class="comment">// orthogonal to PC1 and passing through the center) gets bumped to</span></div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>            <span class="comment">// the next cluster.</span></div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            <span class="keyword">auto</span>&amp; new_assignments = assignments[cluster];</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            replace_assignments.clear();</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            <span class="keywordtype">size_t</span> num_in_cluster = worst_assignments.size();</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            <span class="keyword">auto</span> work = data.create_workspace(worst_assignments.data(), num_in_cluster);</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : worst_assignments) {</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                <span class="keyword">auto</span> dptr = data.get_observation(work);</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>                Float_ proj = 0;</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>                <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(ndim) d = 0; d &lt; ndim; ++d, ++dptr) {</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>                    proj += (<span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(*dptr) - worst_center[d]) * pc1[d]; <span class="comment">// cast for consistent precision regardless of Data_.</span></div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                }</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                <span class="keywordflow">if</span> (proj &gt; 0) {</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                    new_assignments.push_back(i);</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>                    replace_assignments.push_back(i);</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                }</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            }</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span> </div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            <span class="comment">// If one or the other is empty, then this entire procedure short</span></div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>            <span class="comment">// circuits as all future iterations will just re-select this</span></div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>            <span class="comment">// cluster (which won&#39;t get partitioned properly anyway). In the</span></div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>            <span class="comment">// bigger picture, the quick exit out of the iterations is correct</span></div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>            <span class="comment">// as we should only fail to partition in this manner if all points</span></div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>            <span class="comment">// within each remaining cluster are identical.</span></div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>            <span class="keywordflow">if</span> (new_assignments.empty() || replace_assignments.empty()) {</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>                <span class="keywordflow">return</span> cluster;</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>            }</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            <span class="comment">// Computing centers and MRSE.</span></div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            <span class="keyword">auto</span> new_center = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(cluster) * <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(ndim); <span class="comment">// cast to avoid overflow.</span></div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            <span class="keyword">auto</span> new_mrse = InitializePcaPartition_internal::update_center_and_mrse(data, new_assignments, new_center);</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>            mrse.emplace(new_mrse, cluster);</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span> </div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            <span class="keyword">auto</span> replace_mrse = InitializePcaPartition_internal::update_center_and_mrse(data, replace_assignments, worst_center);</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            mrse.emplace(replace_mrse, worst_cluster);</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>            worst_assignments.swap(replace_assignments);</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>        }</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>        <span class="keywordflow">return</span> ncenters;</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>    }</div>
+<div class="foldopen" id="foldopen00194" data-start="{" data-end="}">
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializePcaPartition.html#a139982fdabf9e7a7734895a0e1c8f09b">  194</a></span>    <a class="code hl_struct" href="structkmeans_1_1InitializePcaPartitionOptions.html">InitializePcaPartitionOptions</a>&amp; <a class="code hl_function" href="classkmeans_1_1InitializePcaPartition.html#a139982fdabf9e7a7734895a0e1c8f09b">get_options</a>() {</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        <span class="keywordflow">return</span> my_options;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    }</div>
 </div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>};</div>
-</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>}</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span> </div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00199" data-start="{" data-end="}">
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializePcaPartition.html#a974f052d629831befd808a8d08503f48">  199</a></span>    Cluster_ <a class="code hl_function" href="classkmeans_1_1InitializePcaPartition.html#a974f052d629831befd808a8d08503f48">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ ncenters, Float_* centers)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        <span class="keyword">auto</span> nobs = data.num_observations();</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <span class="keywordflow">if</span> (nobs == 0) {</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>        }</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        std::mt19937_64 rng(my_options.<a class="code hl_variable" href="structkmeans_1_1InitializePcaPartitionOptions.html#a966e01854b00ca80d8ffbc273888f096">seed</a>);</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        std::priority_queue&lt;std::pair&lt;Float_, Cluster_&gt; &gt; mrse;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>        std::vector&lt;std::vector&lt;typename Matrix_::index_type&gt; &gt; assignments(ncenters);</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>        InitializePcaPartition_internal::Workspace&lt;Float_&gt; power_work(ndim);</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>        <span class="comment">// Setting up the zero&#39;th cluster. (No need to actually compute the</span></div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>        <span class="comment">// MRSE at this point, as there&#39;s nothing to compare it to.)</span></div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        internal::compute_centroid(data, centers);</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        assignments[0].resize(nobs);</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        std::iota(assignments.front().begin(), assignments.front().end(), 0);</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        std::vector&lt;typename Matrix_::index_type&gt; replace_assignments;</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>        <span class="keywordflow">for</span> (Cluster_ cluster = 1; cluster &lt; ncenters; ++cluster) {</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>            Cluster_ worst_cluster = 0;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>            <span class="keywordflow">if</span> (mrse.size()) {</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                worst_cluster = mrse.top().second;</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                mrse.pop();</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>            }</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span> </div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>            <span class="comment">// Extracting the principal component for this bad boy.</span></div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            <span class="keyword">auto</span> worst_center = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(worst_cluster) * <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(ndim); <span class="comment">// cast to avoid overflow.</span></div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            <span class="keyword">auto</span>&amp; worst_assignments = assignments[worst_cluster];</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>            InitializePcaPartition_internal::compute_pc1(data, worst_assignments, worst_center, rng, power_work, my_options.<a class="code hl_variable" href="structkmeans_1_1InitializePcaPartitionOptions.html#aae54f365770bdc4cbb4398d7868536c3">power_iteration_options</a>);</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; pc1 = power_work.pc;</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span> </div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>            <span class="comment">// Projecting all points in this cluster along PC1. The center lies</span></div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>            <span class="comment">// at zero, so everything positive (on one side of the hyperplane</span></div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>            <span class="comment">// orthogonal to PC1 and passing through the center) gets bumped to</span></div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            <span class="comment">// the next cluster.</span></div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            <span class="keyword">auto</span>&amp; new_assignments = assignments[cluster];</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            replace_assignments.clear();</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>            <span class="keywordtype">size_t</span> num_in_cluster = worst_assignments.size();</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            <span class="keyword">auto</span> work = data.create_workspace(worst_assignments.data(), num_in_cluster);</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : worst_assignments) {</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                <span class="keyword">auto</span> dptr = data.get_observation(work);</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>                Float_ proj = 0;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>                <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(ndim) d = 0; d &lt; ndim; ++d, ++dptr) {</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>                    proj += (<span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(*dptr) - worst_center[d]) * pc1[d]; <span class="comment">// cast for consistent precision regardless of Data_.</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                }</div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                <span class="keywordflow">if</span> (proj &gt; 0) {</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                    new_assignments.push_back(i);</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                    replace_assignments.push_back(i);</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>                }</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            }</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            <span class="comment">// If one or the other is empty, then this entire procedure short</span></div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>            <span class="comment">// circuits as all future iterations will just re-select this</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            <span class="comment">// cluster (which won&#39;t get partitioned properly anyway). In the</span></div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>            <span class="comment">// bigger picture, the quick exit out of the iterations is correct</span></div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>            <span class="comment">// as we should only fail to partition in this manner if all points</span></div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>            <span class="comment">// within each remaining cluster are identical.</span></div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            <span class="keywordflow">if</span> (new_assignments.empty() || replace_assignments.empty()) {</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>                <span class="keywordflow">return</span> cluster;</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            }</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>            <span class="comment">// Computing centers and MRSE.</span></div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>            <span class="keyword">auto</span> new_center = centers + <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(cluster) * <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(ndim); <span class="comment">// cast to avoid overflow.</span></div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>            <span class="keyword">auto</span> new_mrse = InitializePcaPartition_internal::update_center_and_mrse(data, new_assignments, new_center);</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            mrse.emplace(new_mrse, cluster);</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span> </div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>            <span class="keyword">auto</span> replace_mrse = InitializePcaPartition_internal::update_center_and_mrse(data, replace_assignments, worst_center);</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>            mrse.emplace(replace_mrse, worst_cluster);</div>
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>            worst_assignments.swap(replace_assignments);</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>        }</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span> </div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        <span class="keywordflow">return</span> ncenters;</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    }</div>
+</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>};</div>
+</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span> </div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>}</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span> </div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aInitialize_8hpp_html"><div class="ttname"><a href="Initialize_8hpp.html">Initialize.hpp</a></div><div class="ttdoc">Interface for k-means initialization.</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializePcaPartition_html"><div class="ttname"><a href="classkmeans_1_1InitializePcaPartition.html">kmeans::InitializePcaPartition</a></div><div class="ttdoc">Implements the PCA partitioning method of Su and Dy (2007).</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:174</div></div>
+<div class="ttc" id="aclasskmeans_1_1InitializePcaPartition_html_a139982fdabf9e7a7734895a0e1c8f09b"><div class="ttname"><a href="classkmeans_1_1InitializePcaPartition.html#a139982fdabf9e7a7734895a0e1c8f09b">kmeans::InitializePcaPartition::get_options</a></div><div class="ttdeci">InitializePcaPartitionOptions &amp; get_options()</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:194</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializePcaPartition_html_a45eb829ec1229e30c5ad1d1a8b8fc3e9"><div class="ttname"><a href="classkmeans_1_1InitializePcaPartition.html#a45eb829ec1229e30c5ad1d1a8b8fc3e9">kmeans::InitializePcaPartition::InitializePcaPartition</a></div><div class="ttdeci">InitializePcaPartition(InitializePcaPartitionOptions options)</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:179</div></div>
-<div class="ttc" id="aclasskmeans_1_1InitializePcaPartition_html_a974f052d629831befd808a8d08503f48"><div class="ttname"><a href="classkmeans_1_1InitializePcaPartition.html#a974f052d629831befd808a8d08503f48">kmeans::InitializePcaPartition::run</a></div><div class="ttdeci">Cluster_ run(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers) const</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:190</div></div>
+<div class="ttc" id="aclasskmeans_1_1InitializePcaPartition_html_a974f052d629831befd808a8d08503f48"><div class="ttname"><a href="classkmeans_1_1InitializePcaPartition.html#a974f052d629831befd808a8d08503f48">kmeans::InitializePcaPartition::run</a></div><div class="ttdeci">Cluster_ run(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers) const</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:199</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializePcaPartition_html_af6d35eb9635f3c35b44294ba777513a8"><div class="ttname"><a href="classkmeans_1_1InitializePcaPartition.html#af6d35eb9635f3c35b44294ba777513a8">kmeans::InitializePcaPartition::InitializePcaPartition</a></div><div class="ttdeci">InitializePcaPartition()=default</div></div>
 <div class="ttc" id="aclasskmeans_1_1Initialize_html"><div class="ttname"><a href="classkmeans_1_1Initialize.html">kmeans::Initialize</a></div><div class="ttdoc">Base class for initialization algorithms.</div><div class="ttdef"><b>Definition</b> Initialize.hpp:22</div></div>
 <div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:12</div></div>

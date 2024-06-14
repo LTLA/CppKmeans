@@ -203,6 +203,13 @@
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
+      <type>InitializeKmeansppOptions &amp;</type>
+      <name>get_options</name>
+      <anchorfile>classkmeans_1_1InitializeKmeanspp.html</anchorfile>
+      <anchor>adbefce29c846d0dcc3a5040e751877e1</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>Cluster_</type>
       <name>run</name>
       <anchorfile>classkmeans_1_1InitializeKmeanspp.html</anchorfile>
@@ -265,6 +272,13 @@
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
+      <type>InitializePcaPartitionOptions &amp;</type>
+      <name>get_options</name>
+      <anchorfile>classkmeans_1_1InitializePcaPartition.html</anchorfile>
+      <anchor>a139982fdabf9e7a7734895a0e1c8f09b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>Cluster_</type>
       <name>run</name>
       <anchorfile>classkmeans_1_1InitializePcaPartition.html</anchorfile>
@@ -317,6 +331,13 @@
       <anchorfile>classkmeans_1_1InitializeRandom.html</anchorfile>
       <anchor>aeb65e9b5002be1a5d2772ca03a713d85</anchor>
       <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>InitializeRandomOptions &amp;</type>
+      <name>get_options</name>
+      <anchorfile>classkmeans_1_1InitializeRandom.html</anchorfile>
+      <anchor>abd3fa787272780fefff3e5c155205d60</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>Cluster_</type>
@@ -461,6 +482,13 @@
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
+      <type>RefineHartiganWongOptions &amp;</type>
+      <name>get_options</name>
+      <anchorfile>classkmeans_1_1RefineHartiganWong.html</anchorfile>
+      <anchor>a80055363a9a1fc59d0410e519e3aed65</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>Details&lt; Index_ &gt;</type>
       <name>run</name>
       <anchorfile>classkmeans_1_1RefineHartiganWong.html</anchorfile>
@@ -508,6 +536,13 @@
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
+      <type>RefineLloydOptions &amp;</type>
+      <name>get_options</name>
+      <anchorfile>classkmeans_1_1RefineLloyd.html</anchorfile>
+      <anchor>aef58a16f494e80d04162902ffbf44779</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
       <type>Details&lt; Index_ &gt;</type>
       <name>run</name>
       <anchorfile>classkmeans_1_1RefineLloyd.html</anchorfile>
@@ -553,6 +588,13 @@
       <anchorfile>classkmeans_1_1RefineMiniBatch.html</anchorfile>
       <anchor>af986fb5542f856f6628adbddeeae3803</anchor>
       <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>RefineMiniBatchOptions &amp;</type>
+      <name>get_options</name>
+      <anchorfile>classkmeans_1_1RefineMiniBatch.html</anchorfile>
+      <anchor>a9dcc167f01735fd861addae939acf45b</anchor>
+      <arglist>()</arglist>
     </member>
     <member kind="function">
       <type>Details&lt; typename Matrix_::index_type &gt;</type>

@@ -115,26 +115,34 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeRandom.html#aeb65e9b5002be1a5d2772ca03a713d85">   53</a></span>    <a class="code hl_function" href="classkmeans_1_1InitializeRandom.html#aeb65e9b5002be1a5d2772ca03a713d85">InitializeRandom</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00056" data-start="{" data-end="}">
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeRandom.html#a643fd61c3cbf53a813b9c9d5c3b95387">   56</a></span>    Cluster_ <a class="code hl_function" href="classkmeans_1_1InitializeRandom.html#a643fd61c3cbf53a813b9c9d5c3b95387">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ ncenters, Float_* centers)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        std::mt19937_64 eng(my_options.<a class="code hl_variable" href="structkmeans_1_1InitializeRandomOptions.html#a90f47cd2ef6c910423f90cc4f5678602">seed</a>);</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        <span class="keyword">auto</span> nobs = data.num_observations();</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>        std::vector&lt;typename Matrix_::index_type&gt; chosen(std::min(nobs, <span class="keyword">static_cast&lt;</span>typename Matrix_::index_type<span class="keyword">&gt;</span>(ncenters)));</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>        aarand::sample(nobs, ncenters, chosen.begin(), eng);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        internal::copy_into_array(data, chosen, centers);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>        <span class="keywordflow">return</span> chosen.size();</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    }</div>
+<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeRandom.html#abd3fa787272780fefff3e5c155205d60">   60</a></span>    <a class="code hl_struct" href="structkmeans_1_1InitializeRandomOptions.html">InitializeRandomOptions</a>&amp; <a class="code hl_function" href="classkmeans_1_1InitializeRandom.html#abd3fa787272780fefff3e5c155205d60">get_options</a>() {</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>        <span class="keywordflow">return</span> my_options;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
 </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>};</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00065" data-start="{" data-end="}">
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classkmeans_1_1InitializeRandom.html#a643fd61c3cbf53a813b9c9d5c3b95387">   65</a></span>    Cluster_ <a class="code hl_function" href="classkmeans_1_1InitializeRandom.html#a643fd61c3cbf53a813b9c9d5c3b95387">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ ncenters, Float_* centers)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>        std::mt19937_64 eng(my_options.<a class="code hl_variable" href="structkmeans_1_1InitializeRandomOptions.html#a90f47cd2ef6c910423f90cc4f5678602">seed</a>);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>        <span class="keyword">auto</span> nobs = data.num_observations();</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>        std::vector&lt;typename Matrix_::index_type&gt; chosen(std::min(nobs, <span class="keyword">static_cast&lt;</span>typename Matrix_::index_type<span class="keyword">&gt;</span>(ncenters)));</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>        aarand::sample(nobs, ncenters, chosen.begin(), eng);</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>        internal::copy_into_array(data, chosen, centers);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>        <span class="keywordflow">return</span> chosen.size();</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    }</div>
 </div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>}</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>};</div>
+</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>}</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aInitialize_8hpp_html"><div class="ttname"><a href="Initialize_8hpp.html">Initialize.hpp</a></div><div class="ttdoc">Interface for k-means initialization.</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializeRandom_html"><div class="ttname"><a href="classkmeans_1_1InitializeRandom.html">kmeans::InitializeRandom</a></div><div class="ttdoc">Initialize by sampling random observations without replacement.</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:40</div></div>
-<div class="ttc" id="aclasskmeans_1_1InitializeRandom_html_a643fd61c3cbf53a813b9c9d5c3b95387"><div class="ttname"><a href="classkmeans_1_1InitializeRandom.html#a643fd61c3cbf53a813b9c9d5c3b95387">kmeans::InitializeRandom::run</a></div><div class="ttdeci">Cluster_ run(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers) const</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:56</div></div>
+<div class="ttc" id="aclasskmeans_1_1InitializeRandom_html_a643fd61c3cbf53a813b9c9d5c3b95387"><div class="ttname"><a href="classkmeans_1_1InitializeRandom.html#a643fd61c3cbf53a813b9c9d5c3b95387">kmeans::InitializeRandom::run</a></div><div class="ttdeci">Cluster_ run(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers) const</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:65</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializeRandom_html_a666141f5963775f2a5a3b9db248ad347"><div class="ttname"><a href="classkmeans_1_1InitializeRandom.html#a666141f5963775f2a5a3b9db248ad347">kmeans::InitializeRandom::InitializeRandom</a></div><div class="ttdeci">InitializeRandom(InitializeRandomOptions options)</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:48</div></div>
+<div class="ttc" id="aclasskmeans_1_1InitializeRandom_html_abd3fa787272780fefff3e5c155205d60"><div class="ttname"><a href="classkmeans_1_1InitializeRandom.html#abd3fa787272780fefff3e5c155205d60">kmeans::InitializeRandom::get_options</a></div><div class="ttdeci">InitializeRandomOptions &amp; get_options()</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:60</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializeRandom_html_aeb65e9b5002be1a5d2772ca03a713d85"><div class="ttname"><a href="classkmeans_1_1InitializeRandom.html#aeb65e9b5002be1a5d2772ca03a713d85">kmeans::InitializeRandom::InitializeRandom</a></div><div class="ttdeci">InitializeRandom()=default</div></div>
 <div class="ttc" id="aclasskmeans_1_1Initialize_html"><div class="ttname"><a href="classkmeans_1_1Initialize.html">kmeans::Initialize</a></div><div class="ttdoc">Base class for initialization algorithms.</div><div class="ttdef"><b>Definition</b> Initialize.hpp:22</div></div>
 <div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:12</div></div>
