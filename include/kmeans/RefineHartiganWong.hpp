@@ -312,7 +312,9 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
 
             // Need to update the WCSS loss if this is (i) the first call to
             // optimal_transfer, or (ii) if the cluster center was updated
-            // earlier in the current optimal_transfer call.
+            // earlier in the current optimal_transfer call. No need to worry
+            // about quick_transfer as all WCSS losses are guaranteed to be
+            // accurate when we exit from that function.
             auto& wcss_loss = work.wcss_loss[obs];
             auto& history1 = work.update_history[l1];
             if (!history1.is_unchanged()) {
@@ -414,6 +416,10 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Float_, type
                 // Need to update the WCSS loss if the cluster was updated recently. 
                 // Otherwise, we must have already updated the WCSS in a previous 
                 // iteration of the outermost loop, so this can be skipped.
+                //
+                // Note that we use changed_at_or_after; if the same
+                // observation was changed in the previous iteration of the
+                // outermost loop, its WCSS loss won't have been updated yet.
                 auto& history1 = work.update_history[l1];
                 if (history1.changed_after_or_at(prev_it, obs)) {
                     auto l1_ptr = centers + static_cast<size_t>(l1) * long_ndim; // cast to avoid overflow.
@@ -421,6 +427,10 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Float_, type
                     work.wcss_loss[obs] = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
                 }
 
+                // If neither the best or second-best clusters have changed
+                // after the previous iteration that we visited this
+                // observation, then there's no point reevaluating the
+                // transfer, because nothing's going to be different anyway.
                 auto l2 = work.second_best_cluster[obs];
                 auto& history2 = work.update_history[l2];
                 if (history1.changed_after(prev_it, obs) || history2.changed_after(prev_it, obs)) {
