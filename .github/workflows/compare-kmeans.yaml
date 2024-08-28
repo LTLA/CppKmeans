@@ -17,6 +17,18 @@ jobs:
     - name: Get latest CMake
       uses: lukka/get-cmake@latest
 
+    - name: Prebuild stuff
+      run: cmake -S . -B build -DKMEANS_TESTS=OFF
+
+    - name: Set the package directory
+      run: echo "R_PKG_DIR=${R_HOME}/site-library" >> $GITHUB_ENV
+
+    - name: Restore the package directory
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.R_PKG_DIR }}
+        key: preinstalled-packages
+
     - name: Install packages
       shell: Rscript {0}
       run: |
