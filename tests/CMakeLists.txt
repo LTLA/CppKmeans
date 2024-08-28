@@ -14,50 +14,36 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
+add_executable(
+    libtest 
+    src/compute_centroids.cpp
+    src/compute_wcss.cpp
+    src/MockMatrix.cpp
+    src/InitializeNone.cpp
+    src/InitializeRandom.cpp
+    src/InitializeKmeanspp.cpp
+    src/InitializePcaPartition.cpp
+    src/QuickSearch.cpp
+    src/is_edge_case.cpp
+    src/RefineLloyd.cpp
+    src/RefineHartiganWong.cpp
+    src/RefineMiniBatch.cpp
+    src/kmeans.cpp
+)
+
+target_link_libraries(
+    libtest
+    gtest_main
+    kmeans
+)
+
+target_compile_options(libtest PRIVATE -Wall -Wextra -Wpedantic -Werror)
+
 set(CODE_COVERAGE OFF CACHE BOOL "Enable coverage testing for tests")
+if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(libtest PRIVATE -O0 -g --coverage)
+    target_link_options(libtest PRIVATE --coverage)
+endif()
 
 include(GoogleTest)
-
-macro(create_test target)
-    add_executable(
-        ${target} 
-        src/compute_centroids.cpp
-        src/compute_wcss.cpp
-        src/MockMatrix.cpp
-        src/InitializeNone.cpp
-        src/InitializeRandom.cpp
-        src/InitializeKmeanspp.cpp
-        src/InitializePcaPartition.cpp
-        src/QuickSearch.cpp
-        src/is_edge_case.cpp
-        src/RefineLloyd.cpp
-        src/RefineHartiganWong.cpp
-        src/RefineMiniBatch.cpp
-        src/kmeans.cpp
-    )
-
-    target_link_libraries(
-        ${target}
-        gtest_main
-        kmeans
-    )
-
-    target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Werror)
-
-    if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-        target_compile_options(${target} PRIVATE -O0 -g --coverage)
-        target_link_options(${target} PRIVATE --coverage)
-    endif()
-
-    gtest_discover_tests(${target})
-endmacro()
-
-create_test(libtest)
-create_test(cuspartest)
-target_compile_definitions(cuspartest PRIVATE CUSTOM_PARALLEL_TEST=1)
-
-find_package(OpenMP)
-if(OpenMP_FOUND)
-    create_test(omptest)
-    target_link_libraries(omptest OpenMP::OpenMP_CXX)
-endif()
+gtest_discover_tests(libtest)

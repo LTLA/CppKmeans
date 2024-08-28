@@ -12,6 +12,9 @@ if (!file.exists("kmeans")) {
 if (!file.exists("aarand")) {
     file.symlink("../../build/_deps/aarand-src/include/aarand", "aarand")
 }
+if (!file.exists("subpar")) {
+    file.symlink("../../build/_deps/subpar-src/include/subpar", "subpar")
+}
 sourceCpp("test.cpp")
 
 library(testthat)

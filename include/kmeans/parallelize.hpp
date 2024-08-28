@@ -1,36 +1,20 @@
-#ifndef KMEANS_UTILS_HPP
-#define KMEANS_UTILS_HPP
+#ifndef KMEANS_PARALLELIZE_HPP 
+#define KMEANS_PARALLELIZE_HPP
 
-#include <algorithm>
+/**
+ * @file parallelize.hpp
+ * @brief Utilities for parallelization.
+ */
 
-namespace kmeans {
+#ifndef KMEANS_CUSTOM_PARALLEL
+#include "subpar/subpar.hpp"
 
-namespace internal {
-
-template<typename Index_, class Function_>
-void parallelize(Index_ ntasks, int nthreads, Function_ fun) {
-    if (nthreads > 1) {
-#if defined(KMEANS_CUSTOM_PARALLEL)
-        KMEANS_CUSTOM_PARALLEL(ntasks, nthreads, std::move(fun));
-        return;
-
-#elif defined(_OPENMP) 
-        Index_ per_thread = (ntasks / nthreads) + (ntasks % nthreads > 0);
-        #pragma omp parallel for num_threads(nthreads)
-        for (int t = 0; t < nthreads; ++t) {
-            Index_ start = per_thread * t;
-            Index_ length = std::min(ntasks - start, per_thread);
-            fun(t, start, length);
-        }
-        return;
+/**
+ * Function-like macro implementing the parallelization scheme for the **kmeans** library.
+ * If undefined by the user, it defaults to `subpar::parallelize()`.
+ * Any user-defined macro should accept the same arguments as `subpar::parallelize()`.
+ */ 
+#define KMEANS_CUSTOM_PARALLEL ::subpar::parallelize
 #endif
-    }
-
-    fun(0, 0, ntasks);
-}
-
-}
-
-}
 
 #endif
