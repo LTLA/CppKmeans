@@ -23,13 +23,15 @@
 <area shape="rect" id="Node000012" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="782,153,867,178"/>
 <area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="665,27,761,46,800,60,825,77,833,92,836,107,835,138,829,138,831,108,828,93,821,81,798,64,760,51,664,32"/>
 <area shape="rect" id="Node000014" title=" " alt="" coords="992,79,1113,105"/>
-<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="656,29,978,76,977,81,656,34"/>
+<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="656,29,977,76,976,81,655,34"/>
 <area shape="rect" id="Node000015" title=" " alt="" coords="1137,79,1262,105"/>
 <area shape="poly" id="edge16_Node000001_Node000015" title=" " alt="" coords="665,26,870,47,1121,76,1121,81,870,52,665,31"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="1285,79,1388,105"/>
+<area shape="rect" id="Node000016" href="$parallelize_8hpp.html" title="Utilities for parallelization." alt="" coords="1285,79,1388,105"/>
 <area shape="poly" id="edge17_Node000001_Node000016" title=" " alt="" coords="665,22,933,41,1100,56,1270,76,1270,81,1099,62,933,46,665,27"/>
 <area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="911,107,856,146,853,141,908,103"/>
 <area shape="rect" id="Node000013" href="$SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="891,153,1011,178"/>
 <area shape="poly" id="edge13_Node000011_Node000013" title=" " alt="" coords="934,104,945,137,940,139,929,106"/>
 <area shape="poly" id="edge12_Node000012_Node000002" title=" " alt="" coords="782,177,444,233,443,228,781,171"/>
+<area shape="rect" id="Node000017" href="/github/workspace/docs/subpar.tag$subpar_8hpp.html" title=" " alt="" coords="1273,153,1400,178"/>
+<area shape="poly" id="edge18_Node000016_Node000017" title=" " alt="" coords="1339,105,1339,137,1334,137,1334,105"/>
 </map>

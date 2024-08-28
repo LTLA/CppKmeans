@@ -6,5 +6,7 @@ var searchData=
   ['simplematrix_2ehpp_3',['SimpleMatrix.hpp',['../SimpleMatrix_8hpp.html',1,'']]],
   ['size_5fadjustment_4',['size_adjustment',['../structkmeans_1_1InitializePcaPartitionOptions.html#a68075e7854df8e74f0a7eaaa1b95b1ae',1,'kmeans::InitializePcaPartitionOptions']]],
   ['sizes_5',['sizes',['../structkmeans_1_1Details.html#a4be54a935f902c228f0136875dad36be',1,'kmeans::Details']]],
-  ['status_6',['status',['../structkmeans_1_1Details.html#a89083fab78be038cd2acfdc8cd1decd3',1,'kmeans::Details']]]
+  ['status_6',['status',['../structkmeans_1_1Details.html#a89083fab78be038cd2acfdc8cd1decd3',1,'kmeans::Details']]],
+  ['subpar_7',['subpar',['https://ltla.github.io/subpar/namespacesubpar.html',1,'']]],
+  ['subpar_2ehpp_8',['subpar.hpp',['https://ltla.github.io/subpar/subpar_8hpp.html',1,'']]]
 ];

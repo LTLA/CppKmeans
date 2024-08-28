@@ -12,11 +12,13 @@
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="425,31,425,63,419,63,419,31"/>
 <area shape="rect" id="Node000007" href="$Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="509,79,602,105"/>
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="446,29,520,69,518,74,443,34"/>
-<area shape="rect" id="Node000008" href="$SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="537,153,657,178"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="525,25,575,43,598,58,616,78,623,93,623,109,614,140,609,139,618,109,618,94,612,80,594,62,573,48,524,30"/>
+<area shape="rect" id="Node000008" href="$SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="538,153,658,178"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="525,25,575,43,598,58,616,78,623,92,624,109,615,140,610,138,618,108,618,94,612,80,594,62,573,48,524,30"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="677,79,812,105"/>
 <area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="478,29,675,73,674,78,477,34"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="836,79,939,105"/>
+<area shape="rect" id="Node000010" href="$parallelize_8hpp.html" title="Utilities for parallelization." alt="" coords="836,79,939,105"/>
 <area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="511,29,821,76,820,81,510,34"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="564,104,584,138,580,141,560,106"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="565,104,585,138,581,141,560,106"/>
+<area shape="rect" id="Node000011" href="/github/workspace/docs/subpar.tag$subpar_8hpp.html" title=" " alt="" coords="824,153,951,178"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="890,105,890,137,885,137,885,105"/>
 </map>

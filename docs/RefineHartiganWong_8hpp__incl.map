@@ -14,14 +14,16 @@
 <area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="353,32,307,139,302,137,348,30"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="461,79,581,105"/>
 <area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="385,29,480,70,478,75,383,34"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="606,79,708,105"/>
+<area shape="rect" id="Node000010" href="$parallelize_8hpp.html" title="Utilities for parallelization." alt="" coords="606,79,708,105"/>
 <area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="408,29,592,72,591,78,407,34"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="733,79,888,105"/>
-<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="434,29,718,73,718,79,433,34"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="912,79,1037,105"/>
-<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="463,27,660,48,897,76,896,81,660,53,462,32"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="733,79,888,105"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="434,29,718,73,718,79,433,34"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="912,79,1037,105"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="463,27,660,48,897,76,896,81,660,53,462,32"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="380,107,324,146,321,141,377,103"/>
 <area shape="rect" id="Node000008" href="$SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="360,153,480,178"/>
 <area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="402,104,413,137,408,139,397,106"/>
 <area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="266,181,173,222,171,217,264,176"/>
+<area shape="rect" id="Node000011" href="/github/workspace/docs/subpar.tag$subpar_8hpp.html" title=" " alt="" coords="593,153,721,178"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="660,105,660,137,654,137,654,105"/>
 </map>

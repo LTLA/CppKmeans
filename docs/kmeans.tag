@@ -28,6 +28,7 @@
     <filename>InitializeKmeanspp_8hpp.html</filename>
     <includes id="Initialize_8hpp" name="Initialize.hpp" local="yes" import="no" module="no" objc="no">Initialize.hpp</includes>
     <includes id="SimpleMatrix_8hpp" name="SimpleMatrix.hpp" local="yes" import="no" module="no" objc="no">SimpleMatrix.hpp</includes>
+    <includes id="parallelize_8hpp" name="parallelize.hpp" local="yes" import="no" module="no" objc="no">parallelize.hpp</includes>
     <class kind="struct">kmeans::InitializeKmeansppOptions</class>
     <class kind="class">kmeans::InitializeKmeanspp</class>
     <namespace>kmeans</namespace>
@@ -88,6 +89,18 @@
     <namespace>kmeans</namespace>
   </compound>
   <compound kind="file">
+    <name>parallelize.hpp</name>
+    <path>kmeans/</path>
+    <filename>parallelize_8hpp.html</filename>
+    <member kind="define">
+      <type>#define</type>
+      <name>KMEANS_CUSTOM_PARALLEL</name>
+      <anchorfile>parallelize_8hpp.html</anchorfile>
+      <anchor>acf39ad971cff13f08277eeed4308ea13</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>Refine.hpp</name>
     <path>kmeans/</path>
     <filename>Refine_8hpp.html</filename>
@@ -102,6 +115,7 @@
     <filename>RefineHartiganWong_8hpp.html</filename>
     <includes id="Refine_8hpp" name="Refine.hpp" local="yes" import="no" module="no" objc="no">Refine.hpp</includes>
     <includes id="Details_8hpp" name="Details.hpp" local="yes" import="no" module="no" objc="no">Details.hpp</includes>
+    <includes id="parallelize_8hpp" name="parallelize.hpp" local="yes" import="no" module="no" objc="no">parallelize.hpp</includes>
     <class kind="struct">kmeans::RefineHartiganWongOptions</class>
     <class kind="class">kmeans::RefineHartiganWong</class>
     <namespace>kmeans</namespace>
@@ -112,6 +126,7 @@
     <filename>RefineLloyd_8hpp.html</filename>
     <includes id="Refine_8hpp" name="Refine.hpp" local="yes" import="no" module="no" objc="no">Refine.hpp</includes>
     <includes id="Details_8hpp" name="Details.hpp" local="yes" import="no" module="no" objc="no">Details.hpp</includes>
+    <includes id="parallelize_8hpp" name="parallelize.hpp" local="yes" import="no" module="no" objc="no">parallelize.hpp</includes>
     <class kind="struct">kmeans::RefineLloydOptions</class>
     <class kind="class">kmeans::RefineLloyd</class>
     <namespace>kmeans</namespace>
@@ -122,6 +137,7 @@
     <filename>RefineMiniBatch_8hpp.html</filename>
     <includes id="Refine_8hpp" name="Refine.hpp" local="yes" import="no" module="no" objc="no">Refine.hpp</includes>
     <includes id="Details_8hpp" name="Details.hpp" local="yes" import="no" module="no" objc="no">Details.hpp</includes>
+    <includes id="parallelize_8hpp" name="parallelize.hpp" local="yes" import="no" module="no" objc="no">parallelize.hpp</includes>
     <class kind="struct">kmeans::RefineMiniBatchOptions</class>
     <class kind="class">kmeans::RefineMiniBatch</class>
     <namespace>kmeans</namespace>
