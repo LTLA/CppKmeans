@@ -61,7 +61,7 @@ struct RefineMiniBatchOptions {
 
     /** 
      * Number of threads to use.
-     * The parallelization scheme is defined by the #KMEANS_CUSTOM_PARALLEL macro.
+     * The parallelization scheme is defined by `parallelize()`.
      */
     int num_threads = 1;
 };
@@ -149,7 +149,7 @@ public:
             }
 
             index.reset(ndim, ncenters, centers);
-            KMEANS_CUSTOM_PARALLEL(my_options.num_threads, actual_batch_size, [&](int, Index_ start, Index_ length) {
+            parallelize(my_options.num_threads, actual_batch_size, [&](int, Index_ start, Index_ length) {
                 auto work = data.create_workspace(chosen.data() + start, length);
                 for (Index_ s = start, end = start + length; s < end; ++s) {
                     auto ptr = data.get_observation(work);
@@ -210,7 +210,7 @@ public:
 
         // Run through all observations to make sure they have the latest cluster assignments.
         index.reset(ndim, ncenters, centers);
-        KMEANS_CUSTOM_PARALLEL(my_options.num_threads, nobs, [&](int, Index_ start, Index_ length) {
+        parallelize(my_options.num_threads, nobs, [&](int, Index_ start, Index_ length) {
             auto work = data.create_workspace(start, length);
             for (Index_ s = start, end = start + length; s < end; ++s) {
                 auto ptr = data.get_observation(work);

@@ -14,6 +14,31 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
+include(GoogleTest)
+
+option(CODE_COVERAGE "Enable coverage testing for tests" OFF)
+set(DO_CODE_COVERAGE OFF)
+if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    set(DO_CODE_COVERAGE ON)
+endif()
+
+macro(decorate_executable target)
+    target_link_libraries(
+        ${target}
+        gtest_main
+        kmeans
+    )
+
+    target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic -Werror)
+
+    if(DO_CODE_COVERAGE)
+        target_compile_options(${target} PRIVATE -O0 -g --coverage)
+        target_link_options(${target} PRIVATE --coverage)
+    endif()
+
+    gtest_discover_tests(${target})
+endmacro()
+
 add_executable(
     libtest 
     src/compute_centroids.cpp
@@ -30,20 +55,14 @@ add_executable(
     src/RefineMiniBatch.cpp
     src/kmeans.cpp
 )
+decorate_executable(libtest)
 
-target_link_libraries(
-    libtest
-    gtest_main
-    kmeans
+add_executable(
+    cuspartest
+    src/InitializeKmeanspp.cpp
+    src/RefineLloyd.cpp
+    src/RefineHartiganWong.cpp
+    src/RefineMiniBatch.cpp
 )
-
-target_compile_options(libtest PRIVATE -Wall -Wextra -Wpedantic -Werror)
-
-set(CODE_COVERAGE OFF CACHE BOOL "Enable coverage testing for tests")
-if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(libtest PRIVATE -O0 -g --coverage)
-    target_link_options(libtest PRIVATE --coverage)
-endif()
-
-include(GoogleTest)
-gtest_discover_tests(libtest)
+decorate_executable(cuspartest)
+target_compile_definitions(cuspartest PRIVATE TEST_CUSTOM_PARALLEL=1)

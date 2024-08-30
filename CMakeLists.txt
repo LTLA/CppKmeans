@@ -22,7 +22,7 @@ if(KMEANS_FETCH_EXTERN)
 else()
     find_package(ltla_aarand 1.0.0 CONFIG REQUIRED)
     find_package(ltla_powerit 2.0.0 CONFIG REQUIRED)
-    find_package(ltla_subpar 0.2.1 CONFIG REQUIRED)
+    find_package(ltla_subpar 0.3.0 CONFIG REQUIRED)
 endif()
 
 target_link_libraries(kmeans INTERFACE ltla::aarand ltla::powerit ltla::subpar)

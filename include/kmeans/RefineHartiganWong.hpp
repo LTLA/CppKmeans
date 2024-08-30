@@ -33,7 +33,7 @@ struct RefineHartiganWongOptions {
 
     /** 
      * Number of threads to use.
-     * The parallelization scheme is defined by the #KMEANS_CUSTOM_PARALLEL macro.
+     * The parallelization scheme is defined by `parallelize()`.
      */
     int num_threads = 1;
 };
@@ -246,7 +246,7 @@ void find_closest_two_centers(const Matrix_& data, Cluster_ ncenters, const Floa
 
     auto nobs = data.num_observations();
     typedef typename Matrix_::index_type Index_;
-    KMEANS_CUSTOM_PARALLEL(nthreads, nobs, [&](int, Index_ start, Index_ length) -> void {
+    parallelize(nthreads, nobs, [&](int, Index_ start, Index_ length) -> void {
         auto matwork = data.create_workspace(start, length);
         for (Index_ obs = start, end = start + length; obs < end; ++obs) {
             auto optr = data.get_observation(matwork);
