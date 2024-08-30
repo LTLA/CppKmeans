@@ -7,8 +7,7 @@ var indexSectionsWithContent =
   4: "cfginprs",
   5: "bcdimnpstv",
   6: "di",
-  7: "k",
-  8: "cfklm"
+  7: "cfklm"
 };
 
 var indexSectionNames =
@@ -20,8 +19,7 @@ var indexSectionNames =
   4: "functions",
   5: "variables",
   6: "typedefs",
-  7: "defines",
-  8: "pages"
+  7: "pages"
 };
 
 var indexSectionLabels =
@@ -33,7 +31,6 @@ var indexSectionLabels =
   4: "Functions",
   5: "Variables",
   6: "Typedefs",
-  7: "Macros",
-  8: "Pages"
+  7: "Pages"
 };
 

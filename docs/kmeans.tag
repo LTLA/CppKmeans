@@ -92,13 +92,7 @@
     <name>parallelize.hpp</name>
     <path>kmeans/</path>
     <filename>parallelize_8hpp.html</filename>
-    <member kind="define">
-      <type>#define</type>
-      <name>KMEANS_CUSTOM_PARALLEL</name>
-      <anchorfile>parallelize_8hpp.html</anchorfile>
-      <anchor>acf39ad971cff13f08277eeed4308ea13</anchor>
-      <arglist></arglist>
-    </member>
+    <namespace>kmeans</namespace>
   </compound>
   <compound kind="file">
     <name>Refine.hpp</name>
@@ -750,6 +744,13 @@
       <anchorfile>namespacekmeans.html</anchorfile>
       <anchor>acd57c124f55aba0505a09a5ad3462bc8</anchor>
       <arglist>(const Matrix_ &amp;data, const Initialize&lt; Matrix_, Cluster_, Float_ &gt; &amp;initialize, const Refine&lt; Matrix_, Cluster_, Float_ &gt; &amp;refine, Cluster_ num_centers)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>parallelize</name>
+      <anchorfile>namespacekmeans.html</anchorfile>
+      <anchor>aa2f9911d581cfdb4b266c88cc244b8aa</anchor>
+      <arglist>(int num_workers, Task_ num_tasks, Run_ run_task_range)</arglist>
     </member>
   </compound>
   <compound kind="page">
