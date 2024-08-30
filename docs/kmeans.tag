@@ -96,8 +96,8 @@
       <type>#define</type>
       <name>KMEANS_CUSTOM_PARALLEL</name>
       <anchorfile>parallelize_8hpp.html</anchorfile>
-      <anchor>a1da69d587e9abc6b99af3fd8765e5d42</anchor>
-      <arglist>(nthreads, ntasks, fun)</arglist>
+      <anchor>acf39ad971cff13f08277eeed4308ea13</anchor>
+      <arglist></arglist>
     </member>
   </compound>
   <compound kind="file">

@@ -89,11 +89,10 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#ifndef KMEANS_CUSTOM_PARALLEL</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="codeRef" href="https://ltla.github.io/subpar/subpar_8hpp.html">subpar/subpar.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="parallelize_8hpp.html#a1da69d587e9abc6b99af3fd8765e5d42">   17</a></span><span class="preprocessor">#define KMEANS_CUSTOM_PARALLEL(nthreads, ntasks, fun) ::subpar::parallelize_range(nthreads, ntasks, fun)</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="comment">// do NOT make no-throw as we don&#39;t know whether Matrix_::get_observation() might throw.</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="parallelize_8hpp.html#acf39ad971cff13f08277eeed4308ea13">   17</a></span><span class="preprocessor">#define KMEANS_CUSTOM_PARALLEL ::subpar::parallelize</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="asubpar_8hpp_html"><div class="ttname"><a href="https://ltla.github.io/subpar/subpar_8hpp.html">subpar.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->

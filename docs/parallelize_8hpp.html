@@ -120,44 +120,24 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a1da69d587e9abc6b99af3fd8765e5d42" id="r_a1da69d587e9abc6b99af3fd8765e5d42"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parallelize_8hpp.html#a1da69d587e9abc6b99af3fd8765e5d42">KMEANS_CUSTOM_PARALLEL</a>(nthreads,  ntasks,  fun)&#160;&#160;&#160;<a class="elRef" href="https://ltla.github.io/subpar/namespacesubpar.html#a9c64cc17f4f8d1fadbba6d25053a8dbe">::subpar::parallelize_range</a>(nthreads, ntasks, fun)</td></tr>
-<tr class="separator:a1da69d587e9abc6b99af3fd8765e5d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf39ad971cff13f08277eeed4308ea13" id="r_acf39ad971cff13f08277eeed4308ea13"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="parallelize_8hpp.html#acf39ad971cff13f08277eeed4308ea13">KMEANS_CUSTOM_PARALLEL</a>&#160;&#160;&#160;::subpar::parallelize</td></tr>
+<tr class="separator:acf39ad971cff13f08277eeed4308ea13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for parallelization. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a1da69d587e9abc6b99af3fd8765e5d42" name="a1da69d587e9abc6b99af3fd8765e5d42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1da69d587e9abc6b99af3fd8765e5d42">&#9670;&#160;</a></span>KMEANS_CUSTOM_PARALLEL</h2>
+<a id="acf39ad971cff13f08277eeed4308ea13" name="acf39ad971cff13f08277eeed4308ea13"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf39ad971cff13f08277eeed4308ea13">&#9670;&#160;</a></span>KMEANS_CUSTOM_PARALLEL</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define KMEANS_CUSTOM_PARALLEL</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">nthreads, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">ntasks, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">fun&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;<a class="elRef" href="https://ltla.github.io/subpar/namespacesubpar.html#a9c64cc17f4f8d1fadbba6d25053a8dbe">::subpar::parallelize_range</a>(nthreads, ntasks, fun)</td>
+          <td class="memname">#define KMEANS_CUSTOM_PARALLEL&#160;&#160;&#160;::subpar::parallelize</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Function-like macro implementing the parallelization scheme for the <b>kmeans</b> library. If undefined by the user, it defaults to <code><a class="elRef" href="https://ltla.github.io/subpar/namespacesubpar.html#a9c64cc17f4f8d1fadbba6d25053a8dbe">subpar::parallelize_range()</a></code>. Any user-defined macro should accept the same arguments as <code><a class="elRef" href="https://ltla.github.io/subpar/namespacesubpar.html#a9c64cc17f4f8d1fadbba6d25053a8dbe">subpar::parallelize_range()</a></code>. </p>
+<p>Function-like macro implementing the parallelization scheme for the <b>kmeans</b> library. If undefined by the user, it defaults to <code>subpar::parallelize()</code>. Any user-defined macro should accept the same arguments as <code>subpar::parallelize()</code>. </p>
 
 </div>
 </div>
