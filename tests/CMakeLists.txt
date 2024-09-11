@@ -47,7 +47,7 @@ add_executable(
     src/InitializeNone.cpp
     src/InitializeRandom.cpp
     src/InitializeKmeanspp.cpp
-    src/InitializePcaPartition.cpp
+    src/InitializeVariancePartition.cpp
     src/QuickSearch.cpp
     src/is_edge_case.cpp
     src/RefineLloyd.cpp

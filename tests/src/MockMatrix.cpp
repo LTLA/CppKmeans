@@ -33,7 +33,7 @@ TEST_F(MockMatrixTest, Basic) {
     // Checking that everything compiles.
     kmeans::InitializeRandom<decltype(mock)> ir;
     kmeans::InitializeKmeanspp<decltype(mock)> kpp;
-    kmeans::InitializePcaPartition<decltype(mock)> ipp;
+    kmeans::InitializeVariancePartition<decltype(mock)> ipp;
     kmeans::RefineLloyd<decltype(mock)> ll;
     kmeans::RefineHartiganWong<decltype(mock)> hw;
     kmeans::RefineMiniBatch<decltype(mock)> mb;

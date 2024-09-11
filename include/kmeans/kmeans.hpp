@@ -8,7 +8,7 @@
 
 #include "InitializeKmeanspp.hpp"
 #include "InitializeRandom.hpp"
-#include "InitializePcaPartition.hpp"
+#include "InitializeVariancePartition.hpp"
 #include "InitializeNone.hpp"
 
 #include "RefineHartiganWong.hpp"
