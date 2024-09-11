@@ -148,24 +148,25 @@ public:
             }
             highest.pop();
 
-            auto& cur_ss = dim_ss[chosen.second];
-            auto& next_ss = dim_ss[cluster];
-            next_ss.resize(ndim);
             auto* cur_center = centers + static_cast<size_t>(chosen.second) * long_ndim; // cast to size_t to avoid overflow issues.
-            auto* next_center = centers + static_cast<size_t>(cluster) * long_ndim;
-            std::fill_n(next_center, ndim, 0);
-
+            auto& cur_ss = dim_ss[chosen.second];
             auto& cur_assignments = assignments[chosen.second];
-            auto& next_assignments = assignments[cluster];
-            cur_assignments_copy.clear();
 
             size_t top_dim = std::max_element(cur_ss.begin(), cur_ss.end()) - cur_ss.begin();
             auto top_center = cur_center[top_dim];
             std::fill_n(cur_center, ndim, 0);
             std::fill(cur_ss.begin(), cur_ss.end(), 0);
 
+            auto* next_center = centers + static_cast<size_t>(cluster) * long_ndim; // again, size_t to avoid overflow.
+            std::fill_n(next_center, ndim, 0);
+            auto& next_ss = dim_ss[cluster];
+            next_ss.resize(ndim);
+            auto& next_assignments = assignments[cluster];
+
             size_t num_in_cluster = cur_assignments.size();
             auto work = data.create_workspace(cur_assignments.data(), num_in_cluster);
+            cur_assignments_copy.clear();
+
             for (auto i : cur_assignments) {
                 auto dptr = data.get_observation(work);
                 if (dptr[top_dim] < top_center) {
