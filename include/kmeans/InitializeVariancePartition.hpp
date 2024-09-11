@@ -197,6 +197,18 @@ public:
     }
 };
 
+/**
+ * @cond
+ */
+// Back-compatibility.
+template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
+using InitializePcaPartition = InitializeVariancePartition<Matrix_, Cluster_, Float_>;
+
+typedef InitializeVariancePartitionOptions InitializePcaPartitionOptions;
+/**
+ * @endcond
+ */
+
 }
 
 #endif
