@@ -5,13 +5,9 @@
 #include <algorithm>
 #include <numeric>
 #include <queue>
-#include <random>
 #include <cstdint>
 
-#include "aarand/aarand.hpp"
-
 #include "Initialize.hpp"
-#include "compute_centroids.hpp"
 
 /**
  * @file InitializeVariancePartition.hpp
@@ -133,10 +129,11 @@ public:
         auto add_to_queue = [&](Cluster_ i) {
             const auto& cur_ss = dim_ss[i];
             Float_ sum_ss = std::accumulate(cur_ss.begin(), cur_ss.end(), static_cast<Float_>(0));
+
             // Instead of dividing by N and then remultiplying by pow(N, adjustment), we just
             // divide by pow(N, 1 - adjustment) to save some time and precision.
             sum_ss /= std::pow(assignments[i].size(), 1.0 - my_options.size_adjustment);
-            std::cout << "   adding " << sum_ss << "\t" << i << std::endl;
+
             highest.emplace(sum_ss, i);  
         };
         add_to_queue(0);
@@ -147,7 +144,6 @@ public:
         for (Cluster_ cluster = 1; cluster < ncenters; ++cluster) {
             auto chosen = highest.top();
             if (chosen.first == 0) {
-                std::cout << "YAY" << std::endl;
                 return cluster; // no point continuing, we're at zero variance already.
             }
             highest.pop();

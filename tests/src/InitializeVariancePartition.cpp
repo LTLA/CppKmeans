@@ -11,6 +11,39 @@
 #include "kmeans/InitializeVariancePartition.hpp"
 #include "kmeans/compute_wcss.hpp"
 
+TEST(VariancePartitionInitialization, Welford) {
+    size_t nr = 7;
+    size_t nc = 121;
+
+    std::vector<double> data(nr * nc);
+    std::mt19937_64 rng(1000);
+    std::normal_distribution<> norm(0.0, 1.0);
+    for (auto& d : data) {
+        d = norm(rng);
+    }
+
+    std::vector<double> means(nr), ss(nr);
+    for (size_t c = 0; c < nc; ++c) {
+        kmeans::InitializeVariancePartition_internal::compute_welford(nr, data.data() + nr * c, means.data(), ss.data(), static_cast<double>(c + 1));
+    }
+
+    for (size_t r = 0; r < nr; ++r) {
+        double refmean = 0;
+        for (size_t c = 0; c < nc; ++c) {
+            refmean += data[r + c * nr];
+        }
+        refmean /= nc;
+        EXPECT_FLOAT_EQ(refmean, means[r]);
+
+        double ref_ss = 0;
+        for (size_t c = 0; c < nc; ++c) {
+            auto delta = data[r + c * nr] - refmean;
+            ref_ss += delta * delta;
+        }
+        EXPECT_FLOAT_EQ(ref_ss, ss[r]);
+    }
+}
+
 class VariancePartitionInitializationTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
 protected:
     void SetUp() {
