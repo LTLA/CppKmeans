@@ -9,7 +9,6 @@
 #include <cstdint>
 
 #include "aarand/aarand.hpp"
-#include "powerit/powerit.hpp"
 
 #include "Initialize.hpp"
 #include "compute_centroids.hpp"
@@ -17,7 +16,7 @@
 /**
  * @file InitializeVariancePartition.hpp
  *
- * @brief Class for k-means initialization with PCA partitioning.
+ * @brief k-means initialization with variance partitioning.
  */
 namespace kmeans {
 
@@ -30,17 +29,6 @@ struct InitializeVariancePartitionOptions {
      * This value should lie in `[0, 1]`.
      */
     double size_adjustment = 1;
-
-    /**
-     * @cond
-     */
-    // Only keeping these around for back-compatibility.
-    powerit::Options power_iteration_options;
-
-    uint64_t seed = 6523u;
-    /**
-     * @endcond
-     */
 };
 
 /**
@@ -66,27 +54,21 @@ void compute_welford(Dim_ ndim, const Value_* dptr, Float_* center, Float_* dim_
  */
 
 /**
- * @brief Implements the PCA partitioning method of Su and Dy (2007).
- *
- * This approach involves the selection of starting points via iterative partitioning based on principal components analysis.
- * The aim is to obtain well-separated starting points for refinement with algorithms like Hartigan-Wong or Lloyd.
- * This is achieved by selecting the most dispersed cluster for further partitioning.
+ * @brief Implements the variance partitioning method of Su and Dy (2007).
  *
  * We start from a single cluster containing all points.
  * At each iteration, we select the cluster with the largest within-cluster sum of squares (WCSS);
- * we identify the first principal component within that cluster;
+ * we identify the dimension with the largest variance within that cluster;
  * and we split the cluster at its center along that axis to obtain two new clusters.
- * This is repeated until the desired number of clusters is obtained, and the centers and cluster identifiers are then reported.
+ * This is repeated until the desired number of clusters is obtained.
+ * The idea is to deterministically partition the dataset so that the initial centers are evenly distributed along the axes of greatest variation.
  *
  * The original algorithm favors selection and partitioning of the largest cluster, which has the greatest chance of having the highest WCSS.
  * For more fine-grained control, we modify the procedure to adjust the effective number of observations contributing to the WCSS.
- * Specifically, we choose the cluster to partition based on the product of $N$ and the mean squared difference within each cluster,
- * where $N$ is the cluster size raised to some user-specified power (i.e., the "size adjustment") between 0 and 1.
+ * Specifically, we choose the cluster to partition based on the product of \f$N\f$ and the mean squared difference within each cluster,
+ * where \f$N\f$ is the cluster size raised to some user-specified power (i.e., the "size adjustment") between 0 and 1.
  * An adjustment of 1 recapitulates the original algorithm, while smaller values of the size adjustment will reduce the preference towards larger clusters.
  * A value of zero means that the cluster size is completely ignored, though this seems unwise as it causes excessive splitting of small clusters with unstable WCSS.
- *
- * This method is not completely deterministic as a randomization step is used in the PCA.
- * Nonetheless, the stochasticity is likely to have a much smaller effect than in the other initialization methods.
  *
  * @tparam Matrix_ Matrix type for the input data.
  * This should satisfy the `MockMatrix` contract.
@@ -102,7 +84,7 @@ template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, 
 class InitializeVariancePartition : public Initialize<Matrix_, Cluster_, Float_> {
 public:
     /**
-     * @param options Options for PCA partitioning.
+     * @param options Options for variance partitioning.
      */
     InitializeVariancePartition(InitializeVariancePartitionOptions options) : my_options(std::move(options)) {}
 
@@ -116,7 +98,7 @@ private:
 
 public:
     /**
-     * @return Options for PCA partitioning,
+     * @return Options for variance partitioning,
      * to be modified prior to calling `run()`.
      */
     InitializeVariancePartitionOptions& get_options() {
@@ -137,13 +119,13 @@ public:
 
         std::vector<std::vector<Float_> > dim_ss(ncenters);
         {
-            auto& cur_ss = dim_ss[0]
+            auto& cur_ss = dim_ss[0];
             cur_ss.resize(ndim);
-            std::fill_n(center, ndim, 0);
-            auto matwork = data.create_workspace();
+            std::fill_n(centers, ndim, 0);
+            auto matwork = data.create_workspace(0, nobs);
             for (decltype(nobs) i = 0; i < nobs; ++i) {
                 auto dptr = data.get_observation(matwork);
-                InitializeVariancePartition_internal::compute_welford(ndim, dptr, center, cur_ss, static_cast<Float_>(i + 1));
+                InitializeVariancePartition_internal::compute_welford(ndim, dptr, centers, cur_ss.data(), static_cast<Float_>(i + 1));
             }
         }
 
@@ -151,8 +133,11 @@ public:
         auto add_to_queue = [&](Cluster_ i) {
             const auto& cur_ss = dim_ss[i];
             Float_ sum_ss = std::accumulate(cur_ss.begin(), cur_ss.end(), static_cast<Float_>(0));
-            sum_ss /= std::pow(assignments[i].size(), 1.0 - options.size_adjustment);
-            highest.emplace_back(sum_ss, i);  
+            // Instead of dividing by N and then remultiplying by pow(N, adjustment), we just
+            // divide by pow(N, 1 - adjustment) to save some time and precision.
+            sum_ss /= std::pow(assignments[i].size(), 1.0 - my_options.size_adjustment);
+            std::cout << "   adding " << sum_ss << "\t" << i << std::endl;
+            highest.emplace(sum_ss, i);  
         };
         add_to_queue(0);
 
@@ -162,14 +147,17 @@ public:
         for (Cluster_ cluster = 1; cluster < ncenters; ++cluster) {
             auto chosen = highest.top();
             if (chosen.first == 0) {
+                std::cout << "YAY" << std::endl;
                 return cluster; // no point continuing, we're at zero variance already.
             }
             highest.pop();
 
             auto& cur_ss = dim_ss[chosen.second];
             auto& next_ss = dim_ss[cluster];
+            next_ss.resize(ndim);
             auto* cur_center = centers + static_cast<size_t>(chosen.second) * long_ndim; // cast to size_t to avoid overflow issues.
             auto* next_center = centers + static_cast<size_t>(cluster) * long_ndim;
+            std::fill_n(next_center, ndim, 0);
 
             auto& cur_assignments = assignments[chosen.second];
             auto& next_assignments = assignments[cluster];
@@ -186,10 +174,10 @@ public:
                 auto dptr = data.get_observation(work);
                 if (dptr[top_dim] < top_center) {
                     cur_assignments_copy.push_back(i);
-                    InitializeVariancePartition_internal::compute_welford(ndim, dptr, cur_center, cur_ss, static_cast<Float_>(cur_assignments_copy.size()));
+                    InitializeVariancePartition_internal::compute_welford(ndim, dptr, cur_center, cur_ss.data(), static_cast<Float_>(cur_assignments_copy.size()));
                 } else {
                     next_assignments.push_back(i);
-                    InitializeVariancePartition_internal::compute_welford(ndim, dptr, next_center, next_ss, static_cast<Float_>(next_assignments.size()));
+                    InitializeVariancePartition_internal::compute_welford(ndim, dptr, next_center, next_ss.data(), static_cast<Float_>(next_assignments.size()));
                 }
             }
 
@@ -199,7 +187,7 @@ public:
             // bigger picture, the quick exit out of the iterations is correct
             // as we should only fail to partition in this manner if all points
             // within each remaining cluster are identical.
-            if (new_assignments.empty() || cur_assignments_copy.empty()) {
+            if (next_assignments.empty() || cur_assignments_copy.empty()) {
                 return cluster;
             }
 
