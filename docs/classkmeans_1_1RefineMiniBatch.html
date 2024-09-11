@@ -109,21 +109,21 @@ Collaboration diagram for kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ 
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abb41cd2d2168b65dd63fc0bf386a38b4" id="r_abb41cd2d2168b65dd63fc0bf386a38b4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1RefineMiniBatch.html#abb41cd2d2168b65dd63fc0bf386a38b4">RefineMiniBatch</a> (<a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> options)</td></tr>
+<tr class="memitem:abb41cd2d2168b65dd63fc0bf386a38b4" id="r_abb41cd2d2168b65dd63fc0bf386a38b4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1RefineMiniBatch.html#abb41cd2d2168b65dd63fc0bf386a38b4">RefineMiniBatch</a> (<a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">options</a>)</td></tr>
 <tr class="separator:abb41cd2d2168b65dd63fc0bf386a38b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af986fb5542f856f6628adbddeeae3803" id="r_af986fb5542f856f6628adbddeeae3803"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1RefineMiniBatch.html#af986fb5542f856f6628adbddeeae3803">RefineMiniBatch</a> ()=default</td></tr>
+<tr class="memitem:af986fb5542f856f6628adbddeeae3803" id="r_af986fb5542f856f6628adbddeeae3803"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1RefineMiniBatch.html#af986fb5542f856f6628adbddeeae3803">RefineMiniBatch</a> ()=<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">default</a></td></tr>
 <tr class="separator:af986fb5542f856f6628adbddeeae3803"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dcc167f01735fd861addae939acf45b" id="r_a9dcc167f01735fd861addae939acf45b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1RefineMiniBatch.html#a9dcc167f01735fd861addae939acf45b">get_options</a> ()</td></tr>
 <tr class="separator:a9dcc167f01735fd861addae939acf45b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27b64fa05415d34baaca48009f059b23" id="r_a27b64fa05415d34baaca48009f059b23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; typename Matrix_::index_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23">run</a> (const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers, Cluster_ *clusters) const</td></tr>
+<tr class="memitem:a27b64fa05415d34baaca48009f059b23" id="r_a27b64fa05415d34baaca48009f059b23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> Matrix_::index_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23">run</a> (<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> &amp;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">data</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">ncenters</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> *centers, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> *clusters) <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a></td></tr>
 <tr class="separator:a27b64fa05415d34baaca48009f059b23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename Matrix_ = SimpleMatrix&lt;double, int&gt;, typename Cluster_ = int, typename Float_ = double&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> = SimpleMatrix&lt;double, int&gt;, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> = int, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> = double&gt;<br />
 class kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ &gt;</div><p>Implements the mini-batch algorithm for k-means clustering. </p>
 <p>The mini-batch approach is similar to Lloyd's algorithm in that it runs through a set of observations, assigns each to the closest centroid, updates the centroids and repeats. The key difference is that each iteration is performed with a random subset of observations (i.e., a "mini-batch"), instead of the full set of observations. This reduces computational time and memory usage at the cost of some solution quality.</p>
 <p>The update procedure for a cluster's centroid involves adjusting the coordinates by the assigned observations in the mini-batch. The resulting vector can be interpreted as the mean of all observations that have ever been sampled (possibly multiple times) to that cluster. Thus, the magnitude of the updates will decrease in later iterations as the relative effect of newly sampled points is reduced. This ensures that the centroids will stabilize at a sufficiently large number of iterations.</p>
-<p>We may stop the algorithm before the maximum number of iterations if only a few observations are reassigned at each iteration. Specifically, every <picture><source srcset="form_0_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$h$" src="form_0.png"/></picture> iterations, we compute the proportion of sampled observations for each cluster in the past <picture><source srcset="form_0_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$h$" src="form_0.png"/></picture> mini-batches that were reassigned to/from that cluster. If this proportion is less than some threshold <picture><source srcset="form_1_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$p$" src="form_1.png"/></picture> for all clusters, we consider that the algorithm has converged.</p>
+<p>We may stop the algorithm before the maximum number of iterations if only a few observations are reassigned at each iteration. Specifically, every <picture><source srcset="form_1_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$h$" src="form_1.png"/></picture> iterations, we compute the proportion of sampled observations for each cluster in the past <picture><source srcset="form_1_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$h$" src="form_1.png"/></picture> mini-batches that were reassigned to/from that cluster. If this proportion is less than some threshold <picture><source srcset="form_2_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$p$" src="form_2.png"/></picture> for all clusters, we consider that the algorithm has converged.</p>
 <p>In the <code><a class="el" href="structkmeans_1_1Details.html#a89083fab78be038cd2acfdc8cd1decd3">Details::status</a></code> returned by <code><a class="el" href="classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23">run()</a></code>, the status code is either 0 (success) or 2 (maximum iterations reached without convergence). Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -140,13 +140,13 @@ class kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ &gt;</div><p>Impleme
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluster_  = int, typename Float_  = double&gt; </div>
+template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>  = SimpleMatrix&lt;double, int&gt;, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>  = int, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a>  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; Matrix_, Cluster_, Float_ &gt;::RefineMiniBatch </td>
+          <td class="memname"><a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt;::RefineMiniBatch </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a>&#160;</td>
           <td class="paramname"><em>options</em></td><td>)</td>
@@ -174,13 +174,13 @@ template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluste
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluster_  = int, typename Float_  = double&gt; </div>
+template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>  = SimpleMatrix&lt;double, int&gt;, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>  = int, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a>  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; Matrix_, Cluster_, Float_ &gt;::RefineMiniBatch </td>
+          <td class="memname"><a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt;::RefineMiniBatch </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -203,13 +203,13 @@ template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluste
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluster_  = int, typename Float_  = double&gt; </div>
+template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>  = SimpleMatrix&lt;double, int&gt;, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>  = int, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a>  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> &amp; <a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; Matrix_, Cluster_, Float_ &gt;::get_options </td>
+          <td class="memname"><a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> &amp; <a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt;::get_options </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -231,33 +231,33 @@ template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluste
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluster_  = int, typename Float_  = double&gt; </div>
+template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>  = SimpleMatrix&lt;double, int&gt;, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>  = int, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a>  = double&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; typename Matrix_::index_type &gt; <a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; Matrix_, Cluster_, Float_ &gt;::run </td>
+          <td class="memname"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> Matrix_::index_type &gt; <a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt;::run </td>
           <td>(</td>
-          <td class="paramtype">const Matrix_ &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> &amp;&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Cluster_&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>&#160;</td>
           <td class="paramname"><em>num_centers</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Float_ *&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> *&#160;</td>
           <td class="paramname"><em>centers</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Cluster_ *&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> *&#160;</td>
           <td class="paramname"><em>clusters</em>&#160;</td>
         </tr>
         <tr>

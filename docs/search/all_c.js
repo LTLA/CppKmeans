@@ -1,20 +1,13 @@
 var searchData=
 [
-  ['randomaccessworkspace_0',['RandomAccessWorkspace',['../structkmeans_1_1MockMatrix_1_1RandomAccessWorkspace.html',1,'kmeans::MockMatrix']]],
-  ['range_2ehpp_1',['range.hpp',['https://ltla.github.io/subpar/range_8hpp.html',1,'']]],
-  ['refine_2',['Refine',['../classkmeans_1_1Refine.html',1,'kmeans']]],
-  ['refine_2ehpp_3',['Refine.hpp',['../Refine_8hpp.html',1,'']]],
-  ['refine_3c_20simplematrix_3c_20double_2c_20int_20_3e_2c_20int_2c_20double_20_3e_4',['Refine&lt; SimpleMatrix&lt; double, int &gt;, int, double &gt;',['../classkmeans_1_1Refine.html',1,'kmeans']]],
-  ['refinehartiganwong_5',['refinehartiganwong',['../classkmeans_1_1RefineHartiganWong.html',1,'kmeans::RefineHartiganWong&lt; Matrix_, Cluster_, Float_ &gt;'],['../classkmeans_1_1RefineHartiganWong.html#ac6c5197f3530b5c80d8d855e286e0e0f',1,'kmeans::RefineHartiganWong::RefineHartiganWong()=default'],['../classkmeans_1_1RefineHartiganWong.html#a59310ce1efac8541beec0d52b2a2e35b',1,'kmeans::RefineHartiganWong::RefineHartiganWong(RefineHartiganWongOptions options)']]],
-  ['refinehartiganwong_2ehpp_6',['RefineHartiganWong.hpp',['../RefineHartiganWong_8hpp.html',1,'']]],
-  ['refinehartiganwongoptions_7',['RefineHartiganWongOptions',['../structkmeans_1_1RefineHartiganWongOptions.html',1,'kmeans']]],
-  ['refinelloyd_8',['refinelloyd',['../classkmeans_1_1RefineLloyd.html',1,'kmeans::RefineLloyd&lt; Matrix_, Cluster_, Float_ &gt;'],['../classkmeans_1_1RefineLloyd.html#aa6515130246913e5d3db85e35d0b2cae',1,'kmeans::RefineLloyd::RefineLloyd(RefineLloydOptions options)'],['../classkmeans_1_1RefineLloyd.html#a93eef863a9bd950520f902572bbf4867',1,'kmeans::RefineLloyd::RefineLloyd()=default']]],
-  ['refinelloyd_2ehpp_9',['RefineLloyd.hpp',['../RefineLloyd_8hpp.html',1,'']]],
-  ['refinelloydoptions_10',['RefineLloydOptions',['../structkmeans_1_1RefineLloydOptions.html',1,'kmeans']]],
-  ['refineminibatch_11',['refineminibatch',['../classkmeans_1_1RefineMiniBatch.html#af986fb5542f856f6628adbddeeae3803',1,'kmeans::RefineMiniBatch::RefineMiniBatch()'],['../classkmeans_1_1RefineMiniBatch.html',1,'kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ &gt;'],['../classkmeans_1_1RefineMiniBatch.html#abb41cd2d2168b65dd63fc0bf386a38b4',1,'kmeans::RefineMiniBatch::RefineMiniBatch()']]],
-  ['refineminibatch_2ehpp_12',['RefineMiniBatch.hpp',['../RefineMiniBatch_8hpp.html',1,'']]],
-  ['refineminibatchoptions_13',['RefineMiniBatchOptions',['../structkmeans_1_1RefineMiniBatchOptions.html',1,'kmeans']]],
-  ['result_14',['Result',['https://ltla.github.io/powerit/structpowerit_1_1Result.html',1,'powerit']]],
-  ['results_15',['Results',['../structkmeans_1_1Results.html',1,'kmeans']]],
-  ['run_16',['run',['../classkmeans_1_1Initialize.html#a584a1bf702d9e72c53f1f430543b69e3',1,'kmeans::Initialize::run()'],['../classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1',1,'kmeans::InitializeKmeanspp::run()'],['../classkmeans_1_1InitializeNone.html#ac6e9963001e326bd6645576b545d60bb',1,'kmeans::InitializeNone::run()'],['../classkmeans_1_1InitializePcaPartition.html#a974f052d629831befd808a8d08503f48',1,'kmeans::InitializePcaPartition::run()'],['../classkmeans_1_1InitializeRandom.html#a643fd61c3cbf53a813b9c9d5c3b95387',1,'kmeans::InitializeRandom::run()'],['../classkmeans_1_1Refine.html#a4d39bd12be9887eba776575d9693e6e4',1,'kmeans::Refine::run()'],['../classkmeans_1_1RefineHartiganWong.html#aa62eae756acd3af6a4c7e9c62ef59d5d',1,'kmeans::RefineHartiganWong::run()'],['../classkmeans_1_1RefineLloyd.html#a457d13c9ea971733c47eea595ab058f6',1,'kmeans::RefineLloyd::run()'],['../classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23',1,'kmeans::RefineMiniBatch::run()']]]
+  ['sanitize_5fnum_5fworkers_0',['sanitize_num_workers',['https://ltla.github.io/subpar/namespacesubpar.html#a9a5cb3009789142bac13ce0e81f19082',1,'subpar']]],
+  ['seed_1',['seed',['../structkmeans_1_1InitializeKmeansppOptions.html#acf0d2057e8792438afe8bf8a82d03307',1,'kmeans::InitializeKmeansppOptions::seed'],['../structkmeans_1_1InitializeRandomOptions.html#a90f47cd2ef6c910423f90cc4f5678602',1,'kmeans::InitializeRandomOptions::seed'],['../structkmeans_1_1RefineMiniBatchOptions.html#aa7a1dda3a142c5f2b4221af7fc8f05b9',1,'kmeans::RefineMiniBatchOptions::seed']]],
+  ['simple_2ehpp_2',['simple.hpp',['https://ltla.github.io/subpar/simple_8hpp.html',1,'']]],
+  ['simplematrix_3',['simplematrix',['../classkmeans_1_1SimpleMatrix.html',1,'kmeans::SimpleMatrix&lt; Data_, Index_, Dim_ &gt;'],['../classkmeans_1_1SimpleMatrix.html#a821d29aaeb8a2efa3015cc83de8e4d40',1,'kmeans::SimpleMatrix::SimpleMatrix()']]],
+  ['simplematrix_2ehpp_4',['SimpleMatrix.hpp',['../SimpleMatrix_8hpp.html',1,'']]],
+  ['size_5fadjustment_5',['size_adjustment',['../structkmeans_1_1InitializeVariancePartitionOptions.html#a1fdbf82af2a33a26c4e58382797454c9',1,'kmeans::InitializeVariancePartitionOptions']]],
+  ['sizes_6',['sizes',['../structkmeans_1_1Details.html#a4be54a935f902c228f0136875dad36be',1,'kmeans::Details']]],
+  ['status_7',['status',['../structkmeans_1_1Details.html#a89083fab78be038cd2acfdc8cd1decd3',1,'kmeans::Details']]],
+  ['subpar_8',['subpar',['https://ltla.github.io/subpar/namespacesubpar.html',1,'']]],
+  ['subpar_2ehpp_9',['subpar.hpp',['https://ltla.github.io/subpar/subpar_8hpp.html',1,'']]]
 ];

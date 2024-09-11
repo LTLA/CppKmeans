@@ -126,10 +126,10 @@ $(function() {
 <div class="ttc" id="aclasskmeans_1_1InitializeRandom_html"><div class="ttname"><a href="classkmeans_1_1InitializeRandom.html">kmeans::InitializeRandom</a></div><div class="ttdoc">Initialize by sampling random observations without replacement.</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:40</div></div>
 <div class="ttc" id="aclasskmeans_1_1RefineHartiganWong_html"><div class="ttname"><a href="classkmeans_1_1RefineHartiganWong.html">kmeans::RefineHartiganWong</a></div><div class="ttdoc">Implements the Hartigan-Wong algorithm for k-means clustering.</div><div class="ttdef"><b>Definition</b> RefineHartiganWong.hpp:505</div></div>
 </div><!-- fragment --><p>We can tune the clustering by passing options into the constructors of the relevant classes:</p>
-<div class="fragment"><div class="line"><a class="code hl_struct" href="structkmeans_1_1InitializePcaPartitionOptions.html">kmeans::InitializePcaPartitionOptions</a> pp_opt;</div>
-<div class="line">pp_opt.<a class="code hl_variable" href="structkmeans_1_1InitializePcaPartitionOptions.html#aae54f365770bdc4cbb4398d7868536c3">power_iteration_options</a>.<a class="code hl_variableRef" href="https://ltla.github.io/powerit/structpowerit_1_1Options.html#a840c57cd50dc00391798227b1e1b76d5">iterations</a> = 200;</div>
-<div class="line">pp_opt.<a class="code hl_variable" href="structkmeans_1_1InitializePcaPartitionOptions.html#a966e01854b00ca80d8ffbc273888f096">seed</a> = 42;</div>
-<div class="line">kmeans::InitializePcaPartitions pp(pp_opt);</div>
+<div class="fragment"><div class="line"><a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">kmeans::InitializePcaPartitionOptions</a> pp_opt;</div>
+<div class="line">pp_opt.power_iteration_options.iterations = 200;</div>
+<div class="line">pp_opt.seed = 42;</div>
+<div class="line"><a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">kmeans::InitializePcaPartitions</a> pp(pp_opt);</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_struct" href="structkmeans_1_1RefineLloydOptions.html">kmeans::RefineLloydOptions</a> ll_opt;</div>
 <div class="line">ll_opt.<a class="code hl_variable" href="structkmeans_1_1RefineLloydOptions.html#ac927615927b93f499bbabb24cfc3fb9a">max_iterations</a> = 10;</div>
@@ -137,13 +137,10 @@ $(function() {
 <div class="line"><a class="code hl_class" href="classkmeans_1_1RefineLloyd.html">kmeans::RefineLloyd</a> ll(ll_opt);</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">auto</span> res2 = <a class="code hl_function" href="namespacekmeans.html#a64f6ccaa526e32d13525286022463d70">kmeans::compute</a>(kmat, pp, ll, ncenters);</div>
-<div class="ttc" id="astructkmeans_1_1InitializePcaPartitionOptions_html"><div class="ttname"><a href="structkmeans_1_1InitializePcaPartitionOptions.html">kmeans::InitializePcaPartitionOptions</a></div><div class="ttdoc">Options for InitializePcaPartition.</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:27</div></div>
-<div class="ttc" id="astructkmeans_1_1InitializePcaPartitionOptions_html_a966e01854b00ca80d8ffbc273888f096"><div class="ttname"><a href="structkmeans_1_1InitializePcaPartitionOptions.html#a966e01854b00ca80d8ffbc273888f096">kmeans::InitializePcaPartitionOptions::seed</a></div><div class="ttdeci">uint64_t seed</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:42</div></div>
-<div class="ttc" id="astructkmeans_1_1InitializePcaPartitionOptions_html_aae54f365770bdc4cbb4398d7868536c3"><div class="ttname"><a href="structkmeans_1_1InitializePcaPartitionOptions.html#aae54f365770bdc4cbb4398d7868536c3">kmeans::InitializePcaPartitionOptions::power_iteration_options</a></div><div class="ttdeci">powerit::Options power_iteration_options</div><div class="ttdef"><b>Definition</b> InitializePcaPartition.hpp:31</div></div>
+<div class="ttc" id="aclasskmeans_1_1InitializeVariancePartition_html"><div class="ttname"><a href="classkmeans_1_1InitializeVariancePartition.html">kmeans::InitializeVariancePartition</a></div><div class="ttdoc">Implements the variance partitioning method of Su and Dy (2007).</div><div class="ttdef"><b>Definition</b> InitializeVariancePartition.hpp:80</div></div>
 <div class="ttc" id="astructkmeans_1_1RefineLloydOptions_html"><div class="ttname"><a href="structkmeans_1_1RefineLloydOptions.html">kmeans::RefineLloydOptions</a></div><div class="ttdoc">Options for RefineLloyd construction.</div><div class="ttdef"><b>Definition</b> RefineLloyd.hpp:25</div></div>
 <div class="ttc" id="astructkmeans_1_1RefineLloydOptions_html_a016c4d237bde819fa8d5c5631c52360b"><div class="ttname"><a href="structkmeans_1_1RefineLloydOptions.html#a016c4d237bde819fa8d5c5631c52360b">kmeans::RefineLloydOptions::num_threads</a></div><div class="ttdeci">int num_threads</div><div class="ttdef"><b>Definition</b> RefineLloyd.hpp:36</div></div>
 <div class="ttc" id="astructkmeans_1_1RefineLloydOptions_html_ac927615927b93f499bbabb24cfc3fb9a"><div class="ttname"><a href="structkmeans_1_1RefineLloydOptions.html#ac927615927b93f499bbabb24cfc3fb9a">kmeans::RefineLloydOptions::max_iterations</a></div><div class="ttdeci">int max_iterations</div><div class="ttdef"><b>Definition</b> RefineLloyd.hpp:30</div></div>
-<div class="ttc" id="astructpowerit_1_1Options_html_a840c57cd50dc00391798227b1e1b76d5"><div class="ttname"><a href="https://ltla.github.io/powerit/structpowerit_1_1Options.html#a840c57cd50dc00391798227b1e1b76d5">powerit::Options::iterations</a></div><div class="ttdeci">int iterations</div></div>
 </div><!-- fragment --><p>See the <a href="https://ltla.github.io/CppKmeans">reference documentation</a> for more details.</p>
 <h1>Building projects</h1>
 <h2>CMake with <code>FetchContent</code></h2>

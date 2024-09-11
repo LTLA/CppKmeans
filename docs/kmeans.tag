@@ -42,21 +42,21 @@
     <namespace>kmeans</namespace>
   </compound>
   <compound kind="file">
-    <name>InitializePcaPartition.hpp</name>
-    <path>kmeans/</path>
-    <filename>InitializePcaPartition_8hpp.html</filename>
-    <includes id="Initialize_8hpp" name="Initialize.hpp" local="yes" import="no" module="no" objc="no">Initialize.hpp</includes>
-    <class kind="struct">kmeans::InitializePcaPartitionOptions</class>
-    <class kind="class">kmeans::InitializePcaPartition</class>
-    <namespace>kmeans</namespace>
-  </compound>
-  <compound kind="file">
     <name>InitializeRandom.hpp</name>
     <path>kmeans/</path>
     <filename>InitializeRandom_8hpp.html</filename>
     <includes id="Initialize_8hpp" name="Initialize.hpp" local="yes" import="no" module="no" objc="no">Initialize.hpp</includes>
     <class kind="struct">kmeans::InitializeRandomOptions</class>
     <class kind="class">kmeans::InitializeRandom</class>
+    <namespace>kmeans</namespace>
+  </compound>
+  <compound kind="file">
+    <name>InitializeVariancePartition.hpp</name>
+    <path>kmeans/</path>
+    <filename>InitializeVariancePartition_8hpp.html</filename>
+    <includes id="Initialize_8hpp" name="Initialize.hpp" local="yes" import="no" module="no" objc="no">Initialize.hpp</includes>
+    <class kind="struct">kmeans::InitializeVariancePartitionOptions</class>
+    <class kind="class">kmeans::InitializeVariancePartition</class>
     <namespace>kmeans</namespace>
   </compound>
   <compound kind="file">
@@ -69,7 +69,7 @@
     <includes id="MockMatrix_8hpp" name="MockMatrix.hpp" local="yes" import="no" module="no" objc="no">MockMatrix.hpp</includes>
     <includes id="InitializeKmeanspp_8hpp" name="InitializeKmeanspp.hpp" local="yes" import="no" module="no" objc="no">InitializeKmeanspp.hpp</includes>
     <includes id="InitializeRandom_8hpp" name="InitializeRandom.hpp" local="yes" import="no" module="no" objc="no">InitializeRandom.hpp</includes>
-    <includes id="InitializePcaPartition_8hpp" name="InitializePcaPartition.hpp" local="yes" import="no" module="no" objc="no">InitializePcaPartition.hpp</includes>
+    <includes id="InitializeVariancePartition_8hpp" name="InitializeVariancePartition.hpp" local="yes" import="no" module="no" objc="no">InitializeVariancePartition.hpp</includes>
     <includes id="InitializeNone_8hpp" name="InitializeNone.hpp" local="yes" import="no" module="no" objc="no">InitializeNone.hpp</includes>
     <includes id="RefineHartiganWong_8hpp" name="RefineHartiganWong.hpp" local="yes" import="no" module="no" objc="no">RefineHartiganWong.hpp</includes>
     <includes id="RefineLloyd_8hpp" name="RefineLloyd.hpp" local="yes" import="no" module="no" objc="no">RefineLloyd.hpp</includes>
@@ -261,67 +261,6 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>kmeans::InitializePcaPartition</name>
-    <filename>classkmeans_1_1InitializePcaPartition.html</filename>
-    <templarg>typename Matrix_</templarg>
-    <templarg>typename Cluster_</templarg>
-    <templarg>typename Float_</templarg>
-    <base>kmeans::Initialize</base>
-    <member kind="function">
-      <type></type>
-      <name>InitializePcaPartition</name>
-      <anchorfile>classkmeans_1_1InitializePcaPartition.html</anchorfile>
-      <anchor>a45eb829ec1229e30c5ad1d1a8b8fc3e9</anchor>
-      <arglist>(InitializePcaPartitionOptions options)</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>InitializePcaPartition</name>
-      <anchorfile>classkmeans_1_1InitializePcaPartition.html</anchorfile>
-      <anchor>af6d35eb9635f3c35b44294ba777513a8</anchor>
-      <arglist>()=default</arglist>
-    </member>
-    <member kind="function">
-      <type>InitializePcaPartitionOptions &amp;</type>
-      <name>get_options</name>
-      <anchorfile>classkmeans_1_1InitializePcaPartition.html</anchorfile>
-      <anchor>a139982fdabf9e7a7734895a0e1c8f09b</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>Cluster_</type>
-      <name>run</name>
-      <anchorfile>classkmeans_1_1InitializePcaPartition.html</anchorfile>
-      <anchor>a974f052d629831befd808a8d08503f48</anchor>
-      <arglist>(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers) const</arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
-    <name>kmeans::InitializePcaPartitionOptions</name>
-    <filename>structkmeans_1_1InitializePcaPartitionOptions.html</filename>
-    <member kind="variable">
-      <type>powerit::Options</type>
-      <name>power_iteration_options</name>
-      <anchorfile>structkmeans_1_1InitializePcaPartitionOptions.html</anchorfile>
-      <anchor>aae54f365770bdc4cbb4398d7868536c3</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>double</type>
-      <name>size_adjustment</name>
-      <anchorfile>structkmeans_1_1InitializePcaPartitionOptions.html</anchorfile>
-      <anchor>a68075e7854df8e74f0a7eaaa1b95b1ae</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>uint64_t</type>
-      <name>seed</name>
-      <anchorfile>structkmeans_1_1InitializePcaPartitionOptions.html</anchorfile>
-      <anchor>a966e01854b00ca80d8ffbc273888f096</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
     <name>kmeans::InitializeRandom</name>
     <filename>classkmeans_1_1InitializeRandom.html</filename>
     <templarg>class Matrix_</templarg>
@@ -365,6 +304,53 @@
       <name>seed</name>
       <anchorfile>structkmeans_1_1InitializeRandomOptions.html</anchorfile>
       <anchor>a90f47cd2ef6c910423f90cc4f5678602</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>kmeans::InitializeVariancePartition</name>
+    <filename>classkmeans_1_1InitializeVariancePartition.html</filename>
+    <templarg>typename Matrix_</templarg>
+    <templarg>typename Cluster_</templarg>
+    <templarg>typename Float_</templarg>
+    <base>kmeans::Initialize</base>
+    <member kind="function">
+      <type></type>
+      <name>InitializeVariancePartition</name>
+      <anchorfile>classkmeans_1_1InitializeVariancePartition.html</anchorfile>
+      <anchor>a1651c5fb4c462341f10cc766aa5a339d</anchor>
+      <arglist>(InitializeVariancePartitionOptions options)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>InitializeVariancePartition</name>
+      <anchorfile>classkmeans_1_1InitializeVariancePartition.html</anchorfile>
+      <anchor>a863b3001c14cc044f04a683c04a6b6c7</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>InitializeVariancePartitionOptions &amp;</type>
+      <name>get_options</name>
+      <anchorfile>classkmeans_1_1InitializeVariancePartition.html</anchorfile>
+      <anchor>ab9d7bbe801584b3517a62d568f84edd2</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Cluster_</type>
+      <name>run</name>
+      <anchorfile>classkmeans_1_1InitializeVariancePartition.html</anchorfile>
+      <anchor>a5ebd0e53c9148142a9e3735cbcf427a6</anchor>
+      <arglist>(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers) const</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>kmeans::InitializeVariancePartitionOptions</name>
+    <filename>structkmeans_1_1InitializeVariancePartitionOptions.html</filename>
+    <member kind="variable">
+      <type>double</type>
+      <name>size_adjustment</name>
+      <anchorfile>structkmeans_1_1InitializeVariancePartitionOptions.html</anchorfile>
+      <anchor>a1fdbf82af2a33a26c4e58382797454c9</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -710,10 +696,10 @@
     <class kind="class">kmeans::InitializeKmeanspp</class>
     <class kind="struct">kmeans::InitializeKmeansppOptions</class>
     <class kind="class">kmeans::InitializeNone</class>
-    <class kind="class">kmeans::InitializePcaPartition</class>
-    <class kind="struct">kmeans::InitializePcaPartitionOptions</class>
     <class kind="class">kmeans::InitializeRandom</class>
     <class kind="struct">kmeans::InitializeRandomOptions</class>
+    <class kind="class">kmeans::InitializeVariancePartition</class>
+    <class kind="struct">kmeans::InitializeVariancePartitionOptions</class>
     <class kind="class">kmeans::MockMatrix</class>
     <class kind="class">kmeans::Refine</class>
     <class kind="class">kmeans::RefineHartiganWong</class>

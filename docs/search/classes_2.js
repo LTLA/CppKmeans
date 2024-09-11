@@ -6,8 +6,8 @@ var searchData=
   ['initializekmeanspp_3',['InitializeKmeanspp',['../classkmeans_1_1InitializeKmeanspp.html',1,'kmeans']]],
   ['initializekmeansppoptions_4',['InitializeKmeansppOptions',['../structkmeans_1_1InitializeKmeansppOptions.html',1,'kmeans']]],
   ['initializenone_5',['InitializeNone',['../classkmeans_1_1InitializeNone.html',1,'kmeans']]],
-  ['initializepcapartition_6',['InitializePcaPartition',['../classkmeans_1_1InitializePcaPartition.html',1,'kmeans']]],
-  ['initializepcapartitionoptions_7',['InitializePcaPartitionOptions',['../structkmeans_1_1InitializePcaPartitionOptions.html',1,'kmeans']]],
-  ['initializerandom_8',['InitializeRandom',['../classkmeans_1_1InitializeRandom.html',1,'kmeans']]],
-  ['initializerandomoptions_9',['InitializeRandomOptions',['../structkmeans_1_1InitializeRandomOptions.html',1,'kmeans']]]
+  ['initializerandom_6',['InitializeRandom',['../classkmeans_1_1InitializeRandom.html',1,'kmeans']]],
+  ['initializerandomoptions_7',['InitializeRandomOptions',['../structkmeans_1_1InitializeRandomOptions.html',1,'kmeans']]],
+  ['initializevariancepartition_8',['InitializeVariancePartition',['../classkmeans_1_1InitializeVariancePartition.html',1,'kmeans']]],
+  ['initializevariancepartitionoptions_9',['InitializeVariancePartitionOptions',['../structkmeans_1_1InitializeVariancePartitionOptions.html',1,'kmeans']]]
 ];

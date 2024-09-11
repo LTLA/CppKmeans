@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['powerit_0',['powerit',['https://ltla.github.io/powerit/namespacepowerit.html',1,'']]]
+  ['subpar_0',['subpar',['https://ltla.github.io/subpar/namespacesubpar.html',1,'']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans/InitializePcaPartition.hpp File Reference</title>
+<title>kmeans: kmeans/InitializeVariancePartition.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -78,72 +78,60 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a>  </div>
-  <div class="headertitle"><div class="title">InitializePcaPartition.hpp File Reference</div></div>
+  <div class="headertitle"><div class="title">InitializeVariancePartition.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Class for k-means initialization with PCA partitioning.  
+<p>k-means initialization with variance partitioning.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;numeric&gt;</code><br />
 <code>#include &lt;queue&gt;</code><br />
-<code>#include &lt;random&gt;</code><br />
 <code>#include &lt;cstdint&gt;</code><br />
-<code>#include &quot;aarand/aarand.hpp&quot;</code><br />
-<code>#include &quot;<a class="elRef" href="https://ltla.github.io/powerit/powerit_8hpp.html">powerit/powerit.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Initialize_8hpp_source.html">Initialize.hpp</a>&quot;</code><br />
-<code>#include &quot;compute_centroids.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
-Include dependency graph for InitializePcaPartition.hpp:</div>
+Include dependency graph for InitializeVariancePartition.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="InitializePcaPartition_8hpp__incl.png" border="0" usemap="#akmeans_2InitializePcaPartition_8hpp" alt=""/></div>
-<map name="akmeans_2InitializePcaPartition_8hpp" id="akmeans_2InitializePcaPartition_8hpp">
-<area shape="rect" title="Class for k&#45;means initialization with PCA partitioning." alt="" coords="323,5,537,31"/>
-<area shape="rect" title=" " alt="" coords="5,79,63,105"/>
-<area shape="poly" title=" " alt="" coords="340,34,219,53,78,81,77,76,219,48,339,29"/>
-<area shape="rect" title=" " alt="" coords="86,79,161,105"/>
-<area shape="poly" title=" " alt="" coords="378,34,176,81,175,76,377,29"/>
-<area shape="rect" title=" " alt="" coords="184,79,252,105"/>
-<area shape="poly" title=" " alt="" coords="395,34,267,77,265,72,393,29"/>
-<area shape="rect" title=" " alt="" coords="275,79,332,105"/>
-<area shape="poly" title=" " alt="" coords="410,34,339,73,337,69,407,29"/>
-<area shape="rect" title=" " alt="" coords="355,79,420,105"/>
-<area shape="poly" title=" " alt="" coords="425,33,405,67,400,64,421,30"/>
-<area shape="rect" title=" " alt="" coords="444,79,504,105"/>
-<area shape="poly" title=" " alt="" coords="440,30,461,64,456,67,435,33"/>
-<area shape="rect" title=" " alt="" coords="528,79,655,105"/>
-<area shape="poly" title=" " alt="" coords="458,29,551,70,549,75,456,34"/>
-<area shape="rect" target="_parent" href="https://ltla.github.io/powerit/powerit_8hpp.html" title=" " alt="" coords="679,79,813,105"/>
-<area shape="poly" title=" " alt="" coords="485,29,678,72,677,78,483,34"/>
-<area shape="rect" href="Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="837,79,930,105"/>
-<area shape="poly" title=" " alt="" coords="518,29,822,76,821,81,518,34"/>
-<area shape="rect" title=" " alt="" coords="954,79,1109,105"/>
-<area shape="poly" title=" " alt="" coords="537,29,939,76,938,81,537,34"/>
-<area shape="rect" href="SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="823,153,944,178"/>
-<area shape="poly" title=" " alt="" coords="886,105,886,137,881,137,881,105"/>
+<div class="center"><img src="InitializeVariancePartition_8hpp__incl.png" border="0" usemap="#akmeans_2InitializeVariancePartition_8hpp" alt=""/></div>
+<map name="akmeans_2InitializeVariancePartition_8hpp" id="akmeans_2InitializeVariancePartition_8hpp">
+<area shape="rect" title="k&#45;means initialization with variance partitioning." alt="" coords="176,5,345,46"/>
+<area shape="rect" title=" " alt="" coords="5,94,63,120"/>
+<area shape="poly" title=" " alt="" coords="205,49,78,93,76,88,203,44"/>
+<area shape="rect" title=" " alt="" coords="86,94,161,120"/>
+<area shape="poly" title=" " alt="" coords="228,49,159,88,156,84,225,44"/>
+<area shape="rect" title=" " alt="" coords="184,94,252,120"/>
+<area shape="poly" title=" " alt="" coords="252,48,234,81,230,79,248,45"/>
+<area shape="rect" title=" " alt="" coords="275,94,332,120"/>
+<area shape="poly" title=" " alt="" coords="274,45,292,79,287,81,269,48"/>
+<area shape="rect" title=" " alt="" coords="356,94,416,120"/>
+<area shape="poly" title=" " alt="" coords="293,44,355,83,352,88,290,49"/>
+<area shape="rect" href="Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="440,94,532,120"/>
+<area shape="poly" title=" " alt="" coords="318,44,438,86,436,91,316,49"/>
+<area shape="rect" href="SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="426,168,546,193"/>
+<area shape="poly" title=" " alt="" coords="489,120,489,152,483,152,483,120"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="InitializePcaPartition_8hpp__dep__incl.png" border="0" usemap="#akmeans_2InitializePcaPartition_8hppdep" alt=""/></div>
-<map name="akmeans_2InitializePcaPartition_8hppdep" id="akmeans_2InitializePcaPartition_8hppdep">
-<area shape="rect" title="Class for k&#45;means initialization with PCA partitioning." alt="" coords="5,5,219,31"/>
-<area shape="rect" href="kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="41,79,183,105"/>
-<area shape="poly" title=" " alt="" coords="115,46,115,79,109,79,109,46"/>
+<div class="center"><img src="InitializeVariancePartition_8hpp__dep__incl.png" border="0" usemap="#akmeans_2InitializeVariancePartition_8hppdep" alt=""/></div>
+<map name="akmeans_2InitializeVariancePartition_8hppdep" id="akmeans_2InitializeVariancePartition_8hppdep">
+<area shape="rect" title="k&#45;means initialization with variance partitioning." alt="" coords="5,5,175,46"/>
+<area shape="rect" href="kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="19,94,161,120"/>
+<area shape="poly" title=" " alt="" coords="93,62,93,93,87,93,87,62"/>
 </map>
 </div>
 </div>
-<p><a href="InitializePcaPartition_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="InitializeVariancePartition_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1InitializePcaPartitionOptions.html">kmeans::InitializePcaPartitionOptions</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="classkmeans_1_1InitializePcaPartition.html" title="Implements the PCA partitioning method of Su and Dy (2007).">InitializePcaPartition</a></code>.  <a href="structkmeans_1_1InitializePcaPartitionOptions.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1InitializeVariancePartitionOptions.html">kmeans::InitializeVariancePartitionOptions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="classkmeans_1_1InitializeVariancePartition.html" title="Implements the variance partitioning method of Su and Dy (2007).">InitializeVariancePartition</a></code>.  <a href="structkmeans_1_1InitializeVariancePartitionOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializePcaPartition.html">kmeans::InitializePcaPartition&lt; Matrix_, Cluster_, Float_ &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the PCA partitioning method of Su and Dy (2007).  <a href="classkmeans_1_1InitializePcaPartition.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">kmeans::InitializeVariancePartition&lt; Matrix_, Cluster_, Float_ &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the variance partitioning method of Su and Dy (2007).  <a href="classkmeans_1_1InitializeVariancePartition.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -153,7 +141,7 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Class for k-means initialization with PCA partitioning. </p>
+<div class="textblock"><p>k-means initialization with variance partitioning. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

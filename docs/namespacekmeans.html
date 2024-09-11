@@ -98,17 +98,17 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializeNone.html">InitializeNone</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">No-op "initialization" with existing cluster centers.  <a href="classkmeans_1_1InitializeNone.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializePcaPartition.html">InitializePcaPartition</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the PCA partitioning method of Su and Dy (2007).  <a href="classkmeans_1_1InitializePcaPartition.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1InitializePcaPartitionOptions.html">InitializePcaPartitionOptions</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="classkmeans_1_1InitializePcaPartition.html" title="Implements the PCA partitioning method of Su and Dy (2007).">InitializePcaPartition</a></code>.  <a href="structkmeans_1_1InitializePcaPartitionOptions.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializeRandom.html">InitializeRandom</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classkmeans_1_1Initialize.html" title="Base class for initialization algorithms.">Initialize</a> by sampling random observations without replacement.  <a href="classkmeans_1_1InitializeRandom.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1InitializeRandomOptions.html">InitializeRandomOptions</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options to use for <code><a class="el" href="classkmeans_1_1InitializeRandom.html" title="Initialize by sampling random observations without replacement.">InitializeRandom</a></code>.  <a href="structkmeans_1_1InitializeRandomOptions.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">InitializeVariancePartition</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the variance partitioning method of Su and Dy (2007).  <a href="classkmeans_1_1InitializeVariancePartition.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1InitializeVariancePartitionOptions.html">InitializeVariancePartitionOptions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="classkmeans_1_1InitializeVariancePartition.html" title="Implements the variance partitioning method of Su and Dy (2007).">InitializeVariancePartition</a></code>.  <a href="structkmeans_1_1InitializeVariancePartitionOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1MockMatrix.html">MockMatrix</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile-time interface for matrix data.  <a href="classkmeans_1_1MockMatrix.html#details">More...</a><br /></td></tr>
@@ -143,17 +143,17 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea" id="r_abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplParams" colspan="2">template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#abaf3a7fbf7e5d39ff76d69ffce0e61ea">compute_wcss</a> (const Matrix_ &amp;data, Cluster_ ncenters, const Float_ *centers, const Cluster_ *clusters, Float_ *wcss)</td></tr>
+<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea" id="r_abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">class</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; </td></tr>
+<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#abaf3a7fbf7e5d39ff76d69ffce0e61ea">compute_wcss</a> (<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> &amp;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">data</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">ncenters</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> *centers, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> *clusters, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> *<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">wcss</a>)</td></tr>
 <tr class="separator:abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64f6ccaa526e32d13525286022463d70" id="r_a64f6ccaa526e32d13525286022463d70"><td class="memTemplParams" colspan="2">template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:a64f6ccaa526e32d13525286022463d70"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; typename Matrix_::index_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#a64f6ccaa526e32d13525286022463d70">compute</a> (const Matrix_ &amp;data, const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Matrix_, Cluster_, Float_ &gt; &amp;initialize, const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Matrix_, Cluster_, Float_ &gt; &amp;refine, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters)</td></tr>
+<tr class="memitem:a64f6ccaa526e32d13525286022463d70" id="r_a64f6ccaa526e32d13525286022463d70"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">class</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; </td></tr>
+<tr class="memitem:a64f6ccaa526e32d13525286022463d70"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> Matrix_::index_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#a64f6ccaa526e32d13525286022463d70">compute</a> (<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> &amp;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">data</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; &amp;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">initialize</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; &amp;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">refine</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">num_centers</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> *centers, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> *clusters)</td></tr>
 <tr class="separator:a64f6ccaa526e32d13525286022463d70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd57c124f55aba0505a09a5ad3462bc8" id="r_acd57c124f55aba0505a09a5ad3462bc8"><td class="memTemplParams" colspan="2">template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:acd57c124f55aba0505a09a5ad3462bc8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Results.html">Results</a>&lt; Cluster_, Float_, typename Matrix_::index_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#acd57c124f55aba0505a09a5ad3462bc8">compute</a> (const Matrix_ &amp;data, const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Matrix_, Cluster_, Float_ &gt; &amp;initialize, const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Matrix_, Cluster_, Float_ &gt; &amp;refine, Cluster_ num_centers)</td></tr>
+<tr class="memitem:acd57c124f55aba0505a09a5ad3462bc8" id="r_acd57c124f55aba0505a09a5ad3462bc8"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">class</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; </td></tr>
+<tr class="memitem:acd57c124f55aba0505a09a5ad3462bc8"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Results.html">Results</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> Matrix_::index_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#acd57c124f55aba0505a09a5ad3462bc8">compute</a> (<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> &amp;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">data</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; &amp;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">initialize</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; &amp;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">refine</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">num_centers</a>)</td></tr>
 <tr class="separator:acd57c124f55aba0505a09a5ad3462bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2f9911d581cfdb4b266c88cc244b8aa" id="r_aa2f9911d581cfdb4b266c88cc244b8aa"><td class="memTemplParams" colspan="2">template&lt;typename Task_ , class Run_ &gt; </td></tr>
-<tr class="memitem:aa2f9911d581cfdb4b266c88cc244b8aa"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#aa2f9911d581cfdb4b266c88cc244b8aa">parallelize</a> (int num_workers, Task_ num_tasks, Run_ run_task_range)</td></tr>
+<tr class="memitem:aa2f9911d581cfdb4b266c88cc244b8aa" id="r_aa2f9911d581cfdb4b266c88cc244b8aa"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Task_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">class</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Run_</a> &gt; </td></tr>
+<tr class="memitem:aa2f9911d581cfdb4b266c88cc244b8aa"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">void</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#aa2f9911d581cfdb4b266c88cc244b8aa">parallelize</a> (<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">int</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">num_workers</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Task_</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">num_tasks</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Run_</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">run_task_range</a>)</td></tr>
 <tr class="separator:aa2f9911d581cfdb4b266c88cc244b8aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -165,30 +165,30 @@ Functions</h2></td></tr>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </div>
+template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">class</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1Results.html">Results</a>&lt; Cluster_, Float_, typename Matrix_::index_type &gt; kmeans::compute </td>
+          <td class="memname"><a class="el" href="structkmeans_1_1Results.html">Results</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> Matrix_::index_type &gt; kmeans::compute </td>
           <td>(</td>
-          <td class="paramtype">const Matrix_ &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> &amp;&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Matrix_, Cluster_, Float_ &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>initialize</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Matrix_, Cluster_, Float_ &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>refine</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Cluster_&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>&#160;</td>
           <td class="paramname"><em>num_centers</em>&#160;</td>
         </tr>
         <tr>
@@ -226,42 +226,42 @@ template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </div>
+template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">class</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; typename Matrix_::index_type &gt; kmeans::compute </td>
+          <td class="memname"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> Matrix_::index_type &gt; kmeans::compute </td>
           <td>(</td>
-          <td class="paramtype">const Matrix_ &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> &amp;&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Matrix_, Cluster_, Float_ &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>initialize</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Matrix_, Cluster_, Float_ &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>, <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; &amp;&#160;</td>
           <td class="paramname"><em>refine</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Cluster_&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>&#160;</td>
           <td class="paramname"><em>num_centers</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Float_ *&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> *&#160;</td>
           <td class="paramname"><em>centers</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Cluster_ *&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> *&#160;</td>
           <td class="paramname"><em>clusters</em>&#160;</td>
         </tr>
         <tr>
@@ -299,36 +299,36 @@ template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </div>
+template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">class</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void kmeans::compute_wcss </td>
+          <td class="memname"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">void</a> kmeans::compute_wcss </td>
           <td>(</td>
-          <td class="paramtype">const Matrix_ &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Matrix_</a> &amp;&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Cluster_&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a>&#160;</td>
           <td class="paramname"><em>ncenters</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Float_ *&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> *&#160;</td>
           <td class="paramname"><em>centers</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Cluster_ *&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">const</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> *&#160;</td>
           <td class="paramname"><em>clusters</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Float_ *&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Float_</a> *&#160;</td>
           <td class="paramname"><em>wcss</em>&#160;</td>
         </tr>
         <tr>
@@ -365,24 +365,24 @@ template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Task_ , class Run_ &gt; </div>
+template&lt;<a class="el" href="classkmeans_1_1InitializeVariancePartition.html">typename</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Task_</a> , <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">class</a> <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Run_</a> &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">void kmeans::parallelize </td>
+          <td class="memname"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">void</a> kmeans::parallelize </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">int</a>&#160;</td>
           <td class="paramname"><em>num_workers</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Task_&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Task_</a>&#160;</td>
           <td class="paramname"><em>num_tasks</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Run_&#160;</td>
+          <td class="paramtype"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">Run_</a>&#160;</td>
           <td class="paramname"><em>run_task_range</em>&#160;</td>
         </tr>
         <tr>

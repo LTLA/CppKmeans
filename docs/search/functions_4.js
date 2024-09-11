@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['num_5fdimensions_0',['num_dimensions',['../classkmeans_1_1MockMatrix.html#aef6f372427a132641228fc96e225940f',1,'kmeans::MockMatrix']]],
-  ['num_5fobservations_1',['num_observations',['../classkmeans_1_1MockMatrix.html#a6501faeec3a6cb4b62084608b34ed35e',1,'kmeans::MockMatrix']]]
+  ['parallelize_0',['parallelize',['../namespacekmeans.html#aa2f9911d581cfdb4b266c88cc244b8aa',1,'kmeans']]],
+  ['parallelize_5frange_1',['parallelize_range',['https://ltla.github.io/subpar/namespacesubpar.html#a9c64cc17f4f8d1fadbba6d25053a8dbe',1,'subpar']]],
+  ['parallelize_5fsimple_2',['parallelize_simple',['https://ltla.github.io/subpar/namespacesubpar.html#abd9eeb2cbaaf14382b926674c47b9d73',1,'subpar']]]
 ];
