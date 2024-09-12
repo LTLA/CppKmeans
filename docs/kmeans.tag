@@ -353,6 +353,13 @@
       <anchor>a1fdbf82af2a33a26c4e58382797454c9</anchor>
       <arglist></arglist>
     </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>optimize_partition</name>
+      <anchorfile>structkmeans_1_1InitializeVariancePartitionOptions.html</anchorfile>
+      <anchor>a13e076c3b829ab3664a83a8f1d3b8bfc</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>kmeans::MockMatrix</name>

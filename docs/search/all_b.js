@@ -1,19 +1,7 @@
 var searchData=
 [
-  ['randomaccessworkspace_0',['RandomAccessWorkspace',['../structkmeans_1_1MockMatrix_1_1RandomAccessWorkspace.html',1,'kmeans::MockMatrix']]],
-  ['range_2ehpp_1',['range.hpp',['https://ltla.github.io/subpar/range_8hpp.html',1,'']]],
-  ['refine_2',['Refine',['../classkmeans_1_1Refine.html',1,'kmeans']]],
-  ['refine_2ehpp_3',['Refine.hpp',['../Refine_8hpp.html',1,'']]],
-  ['refine_3c_20simplematrix_3c_20double_2c_20int_20_3e_2c_20int_2c_20double_20_3e_4',['Refine&lt; SimpleMatrix&lt; double, int &gt;, int, double &gt;',['../classkmeans_1_1Refine.html',1,'kmeans']]],
-  ['refinehartiganwong_5',['refinehartiganwong',['../classkmeans_1_1RefineHartiganWong.html#a59310ce1efac8541beec0d52b2a2e35b',1,'kmeans::RefineHartiganWong::RefineHartiganWong(RefineHartiganWongOptions options)'],['../classkmeans_1_1RefineHartiganWong.html#ac6c5197f3530b5c80d8d855e286e0e0f',1,'kmeans::RefineHartiganWong::RefineHartiganWong()=default'],['../classkmeans_1_1RefineHartiganWong.html',1,'kmeans::RefineHartiganWong&lt; Matrix_, Cluster_, Float_ &gt;']]],
-  ['refinehartiganwong_2ehpp_6',['RefineHartiganWong.hpp',['../RefineHartiganWong_8hpp.html',1,'']]],
-  ['refinehartiganwongoptions_7',['RefineHartiganWongOptions',['../structkmeans_1_1RefineHartiganWongOptions.html',1,'kmeans']]],
-  ['refinelloyd_8',['refinelloyd',['../classkmeans_1_1RefineLloyd.html',1,'kmeans::RefineLloyd&lt; Matrix_, Cluster_, Float_ &gt;'],['../classkmeans_1_1RefineLloyd.html#aa6515130246913e5d3db85e35d0b2cae',1,'kmeans::RefineLloyd::RefineLloyd(RefineLloydOptions options)'],['../classkmeans_1_1RefineLloyd.html#a93eef863a9bd950520f902572bbf4867',1,'kmeans::RefineLloyd::RefineLloyd()=default']]],
-  ['refinelloyd_2ehpp_9',['RefineLloyd.hpp',['../RefineLloyd_8hpp.html',1,'']]],
-  ['refinelloydoptions_10',['RefineLloydOptions',['../structkmeans_1_1RefineLloydOptions.html',1,'kmeans']]],
-  ['refineminibatch_11',['refineminibatch',['../classkmeans_1_1RefineMiniBatch.html',1,'kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ &gt;'],['../classkmeans_1_1RefineMiniBatch.html#af986fb5542f856f6628adbddeeae3803',1,'kmeans::RefineMiniBatch::RefineMiniBatch()=default'],['../classkmeans_1_1RefineMiniBatch.html#abb41cd2d2168b65dd63fc0bf386a38b4',1,'kmeans::RefineMiniBatch::RefineMiniBatch(RefineMiniBatchOptions options)']]],
-  ['refineminibatch_2ehpp_12',['RefineMiniBatch.hpp',['../RefineMiniBatch_8hpp.html',1,'']]],
-  ['refineminibatchoptions_13',['RefineMiniBatchOptions',['../structkmeans_1_1RefineMiniBatchOptions.html',1,'kmeans']]],
-  ['results_14',['Results',['../structkmeans_1_1Results.html',1,'kmeans']]],
-  ['run_15',['run',['../classkmeans_1_1Initialize.html#a584a1bf702d9e72c53f1f430543b69e3',1,'kmeans::Initialize::run()'],['../classkmeans_1_1InitializeKmeanspp.html#ad604e3891c525d3ea6b7744579fde9b1',1,'kmeans::InitializeKmeanspp::run()'],['../classkmeans_1_1InitializeNone.html#ac6e9963001e326bd6645576b545d60bb',1,'kmeans::InitializeNone::run()'],['../classkmeans_1_1InitializeRandom.html#a643fd61c3cbf53a813b9c9d5c3b95387',1,'kmeans::InitializeRandom::run()'],['../classkmeans_1_1InitializeVariancePartition.html#a5ebd0e53c9148142a9e3735cbcf427a6',1,'kmeans::InitializeVariancePartition::run()'],['../classkmeans_1_1Refine.html#a4d39bd12be9887eba776575d9693e6e4',1,'kmeans::Refine::run()'],['../classkmeans_1_1RefineHartiganWong.html#aa62eae756acd3af6a4c7e9c62ef59d5d',1,'kmeans::RefineHartiganWong::run()'],['../classkmeans_1_1RefineLloyd.html#a457d13c9ea971733c47eea595ab058f6',1,'kmeans::RefineLloyd::run()'],['../classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23',1,'kmeans::RefineMiniBatch::run()']]]
+  ['parallelize_0',['parallelize',['../namespacekmeans.html#aa2f9911d581cfdb4b266c88cc244b8aa',1,'kmeans']]],
+  ['parallelize_2ehpp_1',['parallelize.hpp',['../parallelize_8hpp.html',1,'']]],
+  ['parallelize_5frange_2',['parallelize_range',['https://ltla.github.io/subpar/namespacesubpar.html#a9c64cc17f4f8d1fadbba6d25053a8dbe',1,'subpar']]],
+  ['parallelize_5fsimple_3',['parallelize_simple',['https://ltla.github.io/subpar/namespacesubpar.html#abd9eeb2cbaaf14382b926674c47b9d73',1,'subpar']]]
 ];
