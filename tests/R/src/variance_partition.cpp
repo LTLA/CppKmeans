@@ -6,6 +6,7 @@ Rcpp::List variance_partition(Rcpp::NumericMatrix x, int ncenters) {
     Rcpp::NumericMatrix output(x.nrow(), ncenters);
 
     kmeans::InitializeVariancePartition vp;
+    vp.get_options().optimize_partition = false; // make testing a bit easier.
     kmeans::SimpleMatrix<double, int> mat(x.nrow(), x.ncol(), x.begin());
     auto count = vp.run(mat, ncenters, output.begin());
 

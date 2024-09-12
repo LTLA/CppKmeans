@@ -25,6 +25,12 @@ struct InitializeVariancePartitionOptions {
      * This value should lie in `[0, 1]`.
      */
     double size_adjustment = 1;
+
+    /**
+     * Whether to optimize the partition boundary to minimize the sum of sum of squares within each of the two child partitions.
+     * If false, the partition boundary is simply defined as the mean.
+     */
+    bool optimize_partition = true;
 };
 
 /**
@@ -32,15 +38,88 @@ struct InitializeVariancePartitionOptions {
  */
 namespace InitializeVariancePartition_internal {
 
+template<typename Float_>
+void compute_welford(Float_ val, Float_& center, Float_& ss, Float_ count) {
+    auto cur_center = center;
+    Float_ delta = val - cur_center;
+    Float_ new_center = cur_center + delta / count;
+    center = new_center;
+    ss += (val - new_center) * delta;
+}
+
 template<class Dim_, typename Value_, typename Float_>
 void compute_welford(Dim_ ndim, const Value_* dptr, Float_* center, Float_* dim_ss, Float_ count) {
     for (Dim_ j = 0; j < ndim; ++j) {
-        Float_ val = dptr[j];
-        auto cur_center = center[j];
-        Float_ delta = val - cur_center;
-        Float_ new_center = cur_center + delta / count;
-        center[j] = new_center;
-        dim_ss[j] += (val - new_center) * delta;
+        compute_welford<Float_>(dptr[j], center[j], dim_ss[j], count);
+    }
+}
+
+template<typename Matrix_, typename Float_>
+Float_ optimize_partition(
+    const Matrix_& data,
+    const std::vector<typename Matrix_::index_type>& current,
+    size_t top_dim,
+    std::vector<Float_>& value_buffer,
+    std::vector<Float_>& stat_buffer)
+{
+    /**
+     * This function effectively implements a much more efficient
+     * version of the following prototype code in R:
+     *
+     * a <- sort(c(rnorm(100, -1), rnorm(1000, 5)))
+     * stuff <- numeric(length(a))
+     * for (i in seq_along(a)) {
+     *     mid <- a[i]
+     *     left <- a[a<mid]
+     *     right <- a[a>=mid]
+     *     stuff[i] <- sum((left - mean(left))^2) + sum((right - mean(right))^2)
+     * }
+     * plot(a, stuff)
+     */
+
+    size_t N = current.size();
+    auto work = data.create_workspace(current.data(), N);
+    value_buffer.clear();
+    for (size_t i = 0; i < N; ++i) {
+        auto dptr = data.get_observation(work);
+        value_buffer.push_back(dptr[top_dim]);
+    }
+
+    std::sort(value_buffer.begin(), value_buffer.end());
+
+    stat_buffer.clear();
+    stat_buffer.reserve(value_buffer.size() + 1);
+    stat_buffer.push_back(0); // first and last entries of stat_buffer are 'nonsense' partitions, i.e., all points in one partition or the other.
+
+    // Forward and backward iterations to get the sum of squares at every possible partition point.
+    Float_ mean = 0, ss = 0, count = 1;
+    for (auto val : value_buffer) {
+        compute_welford<Float_>(val, mean, ss, count);
+        stat_buffer.push_back(ss);
+        ++count;
+    }
+
+    mean = 0, ss = 0, count = 1;
+    auto sbIt = stat_buffer.rbegin() + 1; // skipping the last entry, as it's a nonsense partition.
+    for (auto vIt = value_buffer.rbegin(), vEnd = value_buffer.rend(); vIt != vEnd; ++vIt) {
+        compute_welford<Float_>(*vIt, mean, ss, count);
+        *sbIt += ss;
+        ++count;
+        ++sbIt;
+    }
+
+    auto sbBegin = stat_buffer.begin(), sbEnd = stat_buffer.end();
+    auto which_min = std::min_element(sbBegin, sbEnd) - sbBegin;
+    if (which_min == 0) {
+        // Should never get to this point as current.size() > 1,
+        // but we'll just add this in for safety's sake.
+        return value_buffer[0];
+    } else {
+        // stat_buffer[i] represents the SS when {0, 1, 2, ..., i-1} goes in
+        // the left partition and {i, ..., N-1} goes in the right partition.
+        // To avoid issues with ties, we use the average of the two edge
+        // points as the partition boundary.
+        return (value_buffer[which_min - 1] + value_buffer[which_min]) / 2;
     }
 }
 
@@ -65,6 +144,11 @@ void compute_welford(Dim_ ndim, const Value_* dptr, Float_* center, Float_* dim_
  * where \f$N\f$ is the cluster size raised to some user-specified power (i.e., the "size adjustment") between 0 and 1.
  * An adjustment of 1 recapitulates the original algorithm, while smaller values of the size adjustment will reduce the preference towards larger clusters.
  * A value of zero means that the cluster size is completely ignored, though this seems unwise as it causes excessive splitting of small clusters with unstable WCSS.
+ *
+ * The original algorithm splits the cluster at the center (i.e., mean) along its most variable dimension.
+ * We provide an improvement on this approach where the partition boundary is chosen to minimizes the sum of sum of squares of the two child partitions.
+ * This often provides more appropriate partitions by considering the distribution of observations within the cluster, at the cost of some extra computation.
+ * Users can switch back to the original approach by setting `InitializeVariancePartitionOptions::optimize_partition = false`.
  *
  * @tparam Matrix_ Matrix type for the input data.
  * This should satisfy the `MockMatrix` contract.
@@ -140,6 +224,7 @@ public:
 
         std::vector<typename Matrix_::index_type> cur_assignments_copy;
         size_t long_ndim = ndim;
+        std::vector<Float_> opt_partition_values, opt_partition_stats;
 
         for (Cluster_ cluster = 1; cluster < ncenters; ++cluster) {
             auto chosen = highest.top();
@@ -153,9 +238,12 @@ public:
             auto& cur_assignments = assignments[chosen.second];
 
             size_t top_dim = std::max_element(cur_ss.begin(), cur_ss.end()) - cur_ss.begin();
-            auto top_center = cur_center[top_dim];
-            std::fill_n(cur_center, ndim, 0);
-            std::fill(cur_ss.begin(), cur_ss.end(), 0);
+            Float_ partition_boundary;
+            if (my_options.optimize_partition) {
+                partition_boundary = InitializeVariancePartition_internal::optimize_partition(data, cur_assignments, top_dim, opt_partition_values, opt_partition_stats);
+            } else {
+                partition_boundary = cur_center[top_dim];
+            }
 
             auto* next_center = centers + static_cast<size_t>(cluster) * long_ndim; // again, size_t to avoid overflow.
             std::fill_n(next_center, ndim, 0);
@@ -163,13 +251,14 @@ public:
             next_ss.resize(ndim);
             auto& next_assignments = assignments[cluster];
 
-            size_t num_in_cluster = cur_assignments.size();
-            auto work = data.create_workspace(cur_assignments.data(), num_in_cluster);
+            auto work = data.create_workspace(cur_assignments.data(), cur_assignments.size());
             cur_assignments_copy.clear();
+            std::fill_n(cur_center, ndim, 0);
+            std::fill(cur_ss.begin(), cur_ss.end(), 0);
 
             for (auto i : cur_assignments) {
                 auto dptr = data.get_observation(work);
-                if (dptr[top_dim] < top_center) {
+                if (dptr[top_dim] < partition_boundary) {
                     cur_assignments_copy.push_back(i);
                     InitializeVariancePartition_internal::compute_welford(ndim, dptr, cur_center, cur_ss.data(), static_cast<Float_>(cur_assignments_copy.size()));
                 } else {
