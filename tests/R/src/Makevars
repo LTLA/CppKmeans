@@ -1,0 +1,3 @@
+PKG_CPPFLAGS = -I../../../include/ \
+    -I../../../build/_deps/subpar-src/include \
+    -I../../../build/_deps/aarand-src/include

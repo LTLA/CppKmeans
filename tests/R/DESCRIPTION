@@ -1,0 +1,18 @@
+Package: kmeans.tests
+Title: R-based Tests for the kmeans C++ code
+Version: 0.1.0
+Date: 2024-09-11
+Description: 
+    Some extra tests for the kmeans code.
+Authors@R: person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.with.keyboards@gmail.com")
+Imports:
+    Rcpp,
+    stats,
+    utils
+LinkingTo:
+    Rcpp
+Suggests:
+    testthat
+SystemRequirements: C++17
+Encoding: UTF-8
+RoxygenNote: 7.3.2
