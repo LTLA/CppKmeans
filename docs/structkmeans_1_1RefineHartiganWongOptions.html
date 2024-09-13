@@ -91,6 +91,10 @@ $(function() {
 Public Attributes</h2></td></tr>
 <tr class="memitem:a84e571b7448c1fc74dec8419feb0b0c9" id="r_a84e571b7448c1fc74dec8419feb0b0c9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1RefineHartiganWongOptions.html#a84e571b7448c1fc74dec8419feb0b0c9">max_iterations</a> = 10</td></tr>
 <tr class="separator:a84e571b7448c1fc74dec8419feb0b0c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcae86d661845e96ee5406638c9b1a83" id="r_adcae86d661845e96ee5406638c9b1a83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1RefineHartiganWongOptions.html#adcae86d661845e96ee5406638c9b1a83">max_quick_transfer_iterations</a> = 50</td></tr>
+<tr class="separator:adcae86d661845e96ee5406638c9b1a83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26aefe0bfb610fa693375fd59278b9b2" id="r_a26aefe0bfb610fa693375fd59278b9b2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1RefineHartiganWongOptions.html#a26aefe0bfb610fa693375fd59278b9b2">quit_on_quick_transfer_convergence_failure</a> = <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">false</a></td></tr>
+<tr class="separator:a26aefe0bfb610fa693375fd59278b9b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb9b7e433dd11a8f4e3fd76e0fc466a5" id="r_adb9b7e433dd11a8f4e3fd76e0fc466a5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1RefineHartiganWongOptions.html#adb9b7e433dd11a8f4e3fd76e0fc466a5">num_threads</a> = 1</td></tr>
 <tr class="separator:adb9b7e433dd11a8f4e3fd76e0fc466a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -108,7 +112,22 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Maximum number of iterations. More iterations increase the opportunity for convergence at the cost of more computational time. </p>
+<p>Maximum number of optimal transfer iterations. More iterations increase the opportunity for convergence at the cost of more computational time. </p>
+
+</div>
+</div>
+<a id="adcae86d661845e96ee5406638c9b1a83" name="adcae86d661845e96ee5406638c9b1a83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcae86d661845e96ee5406638c9b1a83">&#9670;&#160;</a></span>max_quick_transfer_iterations</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">int</a> kmeans::RefineHartiganWongOptions::max_quick_transfer_iterations = 50</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Maximum number of quick transfer iterations. More iterations increase the opportunity for convergence at the cost of more computational time. </p>
 
 </div>
 </div>
@@ -124,6 +143,21 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Number of threads to use. The parallelization scheme is defined by <code><a class="el" href="namespacekmeans.html#aa2f9911d581cfdb4b266c88cc244b8aa">parallelize()</a></code>. </p>
+
+</div>
+</div>
+<a id="a26aefe0bfb610fa693375fd59278b9b2" name="a26aefe0bfb610fa693375fd59278b9b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26aefe0bfb610fa693375fd59278b9b2">&#9670;&#160;</a></span>quit_on_quick_transfer_convergence_failure</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">bool</a> kmeans::RefineHartiganWongOptions::quit_on_quick_transfer_convergence_failure = <a class="el" href="classkmeans_1_1InitializeVariancePartition.html">false</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Whether to quit early when the number of quick transfer iterations exceeds <code>RefineHartiganWongOptions::max_quick_tranfer_iterations</code>. Setting this to true mimics the default behavior of R's <code>kmeans()</code> implementation. </p>
 
 </div>
 </div>

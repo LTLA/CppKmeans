@@ -511,6 +511,20 @@
     </member>
     <member kind="variable">
       <type>int</type>
+      <name>max_quick_transfer_iterations</name>
+      <anchorfile>structkmeans_1_1RefineHartiganWongOptions.html</anchorfile>
+      <anchor>adcae86d661845e96ee5406638c9b1a83</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>quit_on_quick_transfer_convergence_failure</name>
+      <anchorfile>structkmeans_1_1RefineHartiganWongOptions.html</anchorfile>
+      <anchor>a26aefe0bfb610fa693375fd59278b9b2</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>int</type>
       <name>num_threads</name>
       <anchorfile>structkmeans_1_1RefineHartiganWongOptions.html</anchorfile>
       <anchor>adb9b7e433dd11a8f4e3fd76e0fc466a5</anchor>
