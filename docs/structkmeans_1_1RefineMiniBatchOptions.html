@@ -12,6 +12,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -131,7 +138,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Number of iterations to remember when checking for convergence (i.e., <picture><source srcset="form_1_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$h$" src="form_1.png"/></picture> in the documentation for <code><a class="el" href="classkmeans_1_1RefineMiniBatch.html" title="Implements the mini-batch algorithm for k-means clustering.">RefineMiniBatch</a></code>). Larger values improve the quality of the result at the cost of computational time. </p>
+<p>Number of iterations to remember when checking for convergence (i.e., \(h\) in the documentation for <code><a class="el" href="classkmeans_1_1RefineMiniBatch.html" title="Implements the mini-batch algorithm for k-means clustering.">RefineMiniBatch</a></code>). Larger values improve the quality of the result at the cost of computational time. </p>
 
 </div>
 </div>
@@ -146,7 +153,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Maximum proportion of observations in each cluster that can be reassigned when checking for convergence (i.e., <picture><source srcset="form_2_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$p$" src="form_2.png"/></picture> in the documentation for <code><a class="el" href="classkmeans_1_1RefineMiniBatch.html" title="Implements the mini-batch algorithm for k-means clustering.">RefineMiniBatch</a></code>). Lower values improve the quality of the result at the cost of computational time. </p>
+<p>Maximum proportion of observations in each cluster that can be reassigned when checking for convergence (i.e., \(p\) in the documentation for <code><a class="el" href="classkmeans_1_1RefineMiniBatch.html" title="Implements the mini-batch algorithm for k-means clustering.">RefineMiniBatch</a></code>). Lower values improve the quality of the result at the cost of computational time. </p>
 
 </div>
 </div>

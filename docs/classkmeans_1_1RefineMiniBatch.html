@@ -12,6 +12,13 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX","output/HTML-CSS"],
+});
+</script>
+<script type="text/javascript" async="async" src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -123,7 +130,7 @@ Public Member Functions</h2></td></tr>
 class kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ &gt;</div><p>Implements the mini-batch algorithm for k-means clustering. </p>
 <p>The mini-batch approach is similar to Lloyd's algorithm in that it runs through a set of observations, assigns each to the closest centroid, updates the centroids and repeats. The key difference is that each iteration is performed with a random subset of observations (i.e., a "mini-batch"), instead of the full set of observations. This reduces computational time and memory usage at the cost of some solution quality.</p>
 <p>The update procedure for a cluster's centroid involves adjusting the coordinates by the assigned observations in the mini-batch. The resulting vector can be interpreted as the mean of all observations that have ever been sampled (possibly multiple times) to that cluster. Thus, the magnitude of the updates will decrease in later iterations as the relative effect of newly sampled points is reduced. This ensures that the centroids will stabilize at a sufficiently large number of iterations.</p>
-<p>We may stop the algorithm before the maximum number of iterations if only a few observations are reassigned at each iteration. Specifically, every <picture><source srcset="form_1_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$h$" src="form_1.png"/></picture> iterations, we compute the proportion of sampled observations for each cluster in the past <picture><source srcset="form_1_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$h$" src="form_1.png"/></picture> mini-batches that were reassigned to/from that cluster. If this proportion is less than some threshold <picture><source srcset="form_2_dark.png" media="(prefers-color-scheme: dark)"/><img class="formulaInl" alt="$p$" src="form_2.png"/></picture> for all clusters, we consider that the algorithm has converged.</p>
+<p>We may stop the algorithm before the maximum number of iterations if only a few observations are reassigned at each iteration. Specifically, every \(h\) iterations, we compute the proportion of sampled observations for each cluster in the past \(h\) mini-batches that were reassigned to/from that cluster. If this proportion is less than some threshold \(p\) for all clusters, we consider that the algorithm has converged.</p>
 <p>In the <code><a class="el" href="structkmeans_1_1Details.html#a89083fab78be038cd2acfdc8cd1decd3">Details::status</a></code> returned by <code><a class="el" href="classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23">run()</a></code>, the status code is either 0 (success) or 2 (maximum iterations reached without convergence). Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
