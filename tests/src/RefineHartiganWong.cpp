@@ -24,6 +24,7 @@ TEST_P(RefineHartiganWongBasicTest, Sweep) {
 
     kmeans::RefineHartiganWong hw;
     auto res = hw.run(mat, ncenters, centers.data(), clusters.data());
+    EXPECT_EQ(res.status, 0);
 
     // Checking that there's the specified number of clusters. 
     std::vector<int> counts(ncenters);
@@ -33,6 +34,39 @@ TEST_P(RefineHartiganWongBasicTest, Sweep) {
     }
     EXPECT_EQ(counts, res.sizes);
     EXPECT_TRUE(res.iterations > 0);
+
+    // Checking we don't get held up by quick transfer convergence failures.
+    {
+        kmeans::RefineHartiganWong hw2;
+        hw2.get_options().quit_on_quick_transfer_convergence_failure = true;
+
+        auto centers2 = original;
+        std::vector<int> clusters2(nc);
+        auto res2 = hw2.run(mat, ncenters, centers2.data(), clusters2.data());
+        EXPECT_EQ(res.status, 0);
+
+        EXPECT_EQ(centers2, centers);
+        EXPECT_EQ(clusters2, clusters);
+    }
+
+    // Checking we get sensible results if we don't do any quick transfers at all.
+    {
+        kmeans::RefineHartiganWong hw2;
+        hw2.get_options().max_quick_transfer_iterations = 0;
+
+        auto centers2 = original;
+        std::vector<int> clusters2(nc);
+        auto res2 = hw2.run(mat, ncenters, centers2.data(), clusters2.data());
+        EXPECT_EQ(res.status, 0);
+
+        std::vector<int> counts(ncenters);
+        for (auto c : clusters2) {
+            EXPECT_TRUE(c >= 0 && c < ncenters);
+            ++counts[c];
+        }
+        EXPECT_EQ(counts, res2.sizes);
+        EXPECT_TRUE(res2.iterations > 0);
+    }
 
     // Checking paralleization yields the same results.
     {
@@ -96,6 +130,31 @@ TEST_F(RefineHartiganWongConstantTest, Extremes) {
         auto res0 = hw.run(mat, 0, NULL, NULL);
         EXPECT_TRUE(res0.sizes.empty());
     }
+}
+
+TEST_F(RefineHartiganWongConstantTest, OptimalTransferFailure) {
+    kmeans::SimpleMatrix mat(nr, nc, data.data());
+    kmeans::RefineHartiganWong hw;
+    hw.get_options().max_iterations = 0;
+
+    int ncenters = 3;
+    auto centers = create_centers(ncenters);
+    std::vector<int> clusters(nc);
+    auto res = hw.run(mat, ncenters, centers.data(), clusters.data());
+    EXPECT_EQ(res.status, 2);
+}
+
+TEST_F(RefineHartiganWongConstantTest, QuickTransferFailure) {
+    kmeans::SimpleMatrix mat(nr, nc, data.data());
+    kmeans::RefineHartiganWong hw;
+    hw.get_options().quit_on_quick_transfer_convergence_failure = true;
+    hw.get_options().max_quick_transfer_iterations = 0;
+
+    int ncenters = 3;
+    auto centers = create_centers(ncenters);
+    std::vector<int> clusters(nc);
+    auto res = hw.run(mat, ncenters, centers.data(), clusters.data());
+    EXPECT_EQ(res.status, 4);
 }
 
 TEST(RefineHartiganWong, Options) {
