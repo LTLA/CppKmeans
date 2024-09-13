@@ -518,7 +518,7 @@ std::pair<bool, bool> quick_transfer(
  * 
  * In the `Details::status` returned by `run()`, the status code is either 0 (success),
  * 2 (maximum optimal transfer iterations reached without convergence)
- * or 4 (maximum quick transfer iterations reached without convergence, if `RefineHartiganWongOptions::quit_on_quick_transfer_convergence_failure = false`).
+ * or 4 (maximum quick transfer iterations reached without convergence, if `RefineHartiganWongOptions::quit_on_quick_transfer_convergence_failure = true`).
  * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
  * 
  * @tparam Matrix_ Matrix type for the input data.
@@ -608,7 +608,7 @@ public:
                 }
             }
 
-            if (quick_status.first) { // At least one transfer was performed.
+            if (quick_status.first) { // At least one quick transfer was performed.
                 work.optra_steps_since_last_transfer = 0;
             }
 
