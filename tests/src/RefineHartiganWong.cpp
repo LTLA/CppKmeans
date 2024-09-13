@@ -49,6 +49,25 @@ TEST_P(RefineHartiganWongBasicTest, Sweep) {
         EXPECT_EQ(clusters2, clusters);
     }
 
+    // Checking we get sensible results if we don't do any quick transfers at all.
+    {
+        kmeans::RefineHartiganWong hw2;
+        hw2.get_options().max_quick_transfer_iterations = 0;
+
+        auto centers2 = original;
+        std::vector<int> clusters2(nc);
+        auto res2 = hw2.run(mat, ncenters, centers2.data(), clusters2.data());
+        EXPECT_EQ(res.status, 0);
+
+        std::vector<int> counts(ncenters);
+        for (auto c : clusters2) {
+            EXPECT_TRUE(c >= 0 && c < ncenters);
+            ++counts[c];
+        }
+        EXPECT_EQ(counts, res2.sizes);
+        EXPECT_TRUE(res2.iterations > 0);
+    }
+
     // Checking paralleization yields the same results.
     {
         kmeans::RefineHartiganWongOptions popt;
