@@ -7,6 +7,7 @@ Rcpp::List hartigan_wong(Rcpp::NumericMatrix x, Rcpp::NumericMatrix init) {
     Rcpp::IntegerVector clusters(x.ncol());
 
     kmeans::RefineHartiganWong hw;
+    hw.get_options().quit_on_quick_transfer_convergence_failure = true;
     kmeans::SimpleMatrix<double, int> mat(x.nrow(), x.ncol(), x.begin());
     auto res = hw.run(mat, output.ncol(), output.begin(), clusters.begin());
 

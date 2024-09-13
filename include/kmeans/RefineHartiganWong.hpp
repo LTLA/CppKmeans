@@ -26,10 +26,22 @@ namespace kmeans {
  */
 struct RefineHartiganWongOptions {
     /**
-     * Maximum number of iterations.
+     * Maximum number of optimal transfer iterations.
      * More iterations increase the opportunity for convergence at the cost of more computational time.
      */
     int max_iterations = 10;
+
+    /**
+     * Maximum number of quick transfer iterations.
+     * More iterations increase the opportunity for convergence at the cost of more computational time.
+     */
+    int max_quick_transfer_iterations = 50;
+
+    /**
+     * Whether to quit early when the number of quick transfer iterations exceeds `RefineHartiganWongOptions::max_quick_tranfer_iterations`.
+     * Setting this to true mimics the default behavior of R's `kmeans()` implementation.
+     */
+    bool quit_on_quick_transfer_convergence_failure = false;
 
     /** 
      * Number of threads to use.
@@ -67,9 +79,6 @@ namespace RefineHartiganWong_internal {
  */
 template<typename Index_>
 class UpdateHistory {
-public:
-    static constexpr int8_t max_quick_iterations = 50;
-
 private:
     /* 
      * The problem with the original implementation is that the integers are
@@ -80,11 +89,10 @@ private:
      */
     Index_ my_last_observation = 0;
 
-    // We use 8-bit ints to save some space, with signing for the special values.
-    int8_t my_last_iteration = init; 
+    int my_last_iteration = init; 
 
-    static constexpr int8_t init = -3;
-    static constexpr int8_t unchanged = -2;
+    static constexpr int init = -3;
+    static constexpr int unchanged = -2;
 
 public:
     void set_unchanged() {
@@ -97,8 +105,8 @@ public:
         my_last_observation = obs;
     }
 
-    // Here, iter should be from '[0, max_quick_iterations)'.
-    void set_quick(int8_t iter, Index_ obs) {
+    // Here, iter should be from '[0, max_quick_transfer_iterations)'.
+    void set_quick(int iter, Index_ obs) {
         my_last_iteration = iter;
         my_last_observation = obs;
     }
@@ -109,7 +117,7 @@ public:
     }
 
 public:
-    bool changed_after(int8_t iter, Index_ obs) const {
+    bool changed_after(int iter, Index_ obs) const {
         if (my_last_iteration == iter) {
             return my_last_observation > obs;
         } else {
@@ -117,7 +125,7 @@ public:
         }
     }
 
-    bool changed_after_or_at(int8_t iter, Index_ obs) const {
+    bool changed_after_or_at(int iter, Index_ obs) const {
         if (my_last_iteration == iter) {
             return my_last_observation >= obs;
         } else {
@@ -392,7 +400,14 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
  * take place, or we hit an iteration limit, whichever is first.
  */
 template<class Matrix_, typename Cluster_, typename Float_>
-std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::index_type, Cluster_>& work, Float_* centers, Cluster_* best_cluster) {
+std::pair<bool, bool> quick_transfer(
+    const Matrix_& data,
+    Workspace<Float_, typename Matrix_::index_type, Cluster_>& work,
+    Float_* centers,
+    Cluster_* best_cluster,
+    int quick_iterations,
+    bool quit_on_limit)
+{
     bool had_transfer = false;
     std::fill(work.was_quick_transferred.begin(), work.was_quick_transferred.end(), 0);
 
@@ -404,8 +419,8 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Float_, type
     typedef decltype(nobs) Index_;
     Index_ steps_since_last_quick_transfer = 0;
 
-    for (int8_t it = 0; it < UpdateHistory<Index_>::max_quick_iterations; ++it) {
-        int8_t prev_it = it - 1;
+    for (int it = 0; it < quick_iterations; ++it) {
+        int prev_it = it - 1;
 
         for (decltype(nobs) obs = 0; obs < nobs; ++obs) { 
             ++steps_since_last_quick_transfer;
@@ -464,6 +479,21 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Float_, type
         }
     } 
 
+    if (!quit_on_limit) {
+        // Making sure that the WCSS losses are correctly calculated, as the
+        // last pass through the data may have done a transfer that would not
+        // have triggered updates for points <= the updated point.
+        int prev_it = quick_iterations - 1;
+        for (decltype(nobs) obs = 0; obs < nobs; ++obs) { 
+            auto l1 = best_cluster[obs];
+            if (work.cluster_sizes[l1] != 1 && work.update_history[l1].changed_after_or_at(prev_it, obs)) {
+                auto l1_ptr = centers + static_cast<size_t>(l1) * long_ndim; // cast to avoid overflow.
+                auto obs_ptr = data.get_observation(obs, matwork);
+                work.wcss_loss[obs] = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
+            }
+        }
+    }
+
     return std::make_pair(had_transfer, true);
 }
 
@@ -488,7 +518,7 @@ std::pair<bool, bool> quick_transfer(const Matrix_& data, Workspace<Float_, type
  * 
  * In the `Details::status` returned by `run()`, the status code is either 0 (success),
  * 2 (maximum optimal transfer iterations reached without convergence)
- * or 4 (maximum quick transfer iterations reached without convergence).
+ * or 4 (maximum quick transfer iterations reached without convergence, if `RefineHartiganWongOptions::quit_on_quick_transfer_convergence_failure = false`).
  * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
  * 
  * @tparam Matrix_ Matrix type for the input data.
@@ -556,24 +586,35 @@ public:
                 break;
             }
 
-            auto quick_status = RefineHartiganWong_internal::quick_transfer(data, work, centers, clusters);
+            auto quick_status = RefineHartiganWong_internal::quick_transfer(
+                data,
+                work,
+                centers,
+                clusters,
+                my_options.max_quick_transfer_iterations,
+                my_options.quit_on_quick_transfer_convergence_failure
+            );
+
             if (quick_status.second) { // Hit the quick transfer iteration limit.
-                ifault = 4;
-                break;
+                if (my_options.quit_on_quick_transfer_convergence_failure) {
+                    ifault = 4;
+                    break;
+                }
+            } else {
+                // If quick transfer converged and there are only two clusters,
+                // there is no need to re-enter the optimal transfer stage. 
+                if (ncenters == 2) {
+                    break;
+                }
             }
+
             if (quick_status.first) { // At least one transfer was performed.
                 work.optra_steps_since_last_transfer = 0;
             }
 
-            // If there are only two clusters, there is no need to re-enter the optimal transfer stage. 
-            if (ncenters == 2) {
-                break;
-            }
-
-            // If we get to this point, there must have been no transfers in
-            // the final quick_transfer iteration. This implies that all WCSS
-            // losses are up to date, as quick_transfer updated everything for
-            // us; so we can set the status to 'unchanged' for all clusters.
+            // If we get to this point, all WCSS losses are up to date, as
+            // quick_transfer() updated everything for us; so we can set the
+            // status to 'unchanged' for all clusters.
             for (auto& u : work.update_history) {
                 u.set_unchanged();
             }
