@@ -319,17 +319,19 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
         if (work.cluster_sizes[l1] != 1) {
             auto obs_ptr = data.get_observation(obs, matwork);
 
-            // Need to update the WCSS loss if this is (i) the first call to
-            // optimal_transfer, or (ii) if the cluster center was updated
-            // earlier in the current optimal_transfer call. No need to worry
-            // about quick_transfer as all WCSS losses are guaranteed to be
-            // accurate when we exit from that function.
+            // The original Fortran implementation only recomputed the WCSS
+            // loss of an observation if its cluster had experienced an optimal
+            // transfer for an earlier observation. In theory, this sounds
+            // great to avoid recomputation, but the existing WCSS loss was
+            // computed in a running fashion during the quick transfers. This
+            // makes them susceptible to accumulation of numerical errors in
+            // the centroids; even after the centroids are freshly recomputed
+            // (in the run() loop), we still have errors in the loss values.
+            // So, we simplify matters and improve accuracy by just recomputing
+            // the loss all the time, which doesn't take too much extra effort.
             auto& wcss_loss = work.wcss_loss[obs];
-            auto& history1 = work.update_history[l1];
-            if (!history1.is_unchanged()) {
-                auto l1_ptr = centers + long_ndim * static_cast<size_t>(l1); // cast to avoid overflow.
-                wcss_loss = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
-            }
+            auto l1_ptr = centers + long_ndim * static_cast<size_t>(l1); // cast to avoid overflow.
+            wcss_loss = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
 
             // Find the cluster with minimum WCSS gain.
             auto l2 = work.second_best_cluster[obs];
@@ -371,7 +373,7 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
 
                 live1.mark_current(obs);
                 work.live_set[l2].mark_current(obs);
-                history1.set_optimal(obs);
+                work.update_history[l1].set_optimal(obs);
                 work.update_history[l2].set_optimal(obs);
 
                 transfer_point(ndim, obs_ptr, obs, l1, l2, centers, best_cluster, work);
@@ -405,8 +407,7 @@ std::pair<bool, bool> quick_transfer(
     Workspace<Float_, typename Matrix_::index_type, Cluster_>& work,
     Float_* centers,
     Cluster_* best_cluster,
-    int quick_iterations,
-    bool quit_on_limit)
+    int quick_iterations)
 {
     bool had_transfer = false;
     std::fill(work.was_quick_transferred.begin(), work.was_quick_transferred.end(), 0);
@@ -478,21 +479,6 @@ std::pair<bool, bool> quick_transfer(
            }
         }
     } 
-
-    if (!quit_on_limit) {
-        // Making sure that the WCSS losses are correctly calculated, as the
-        // last pass through the data may have done a transfer that would not
-        // have triggered updates for points <= the updated point.
-        int prev_it = quick_iterations - 1;
-        for (decltype(nobs) obs = 0; obs < nobs; ++obs) { 
-            auto l1 = best_cluster[obs];
-            if (work.cluster_sizes[l1] != 1 && work.update_history[l1].changed_after_or_at(prev_it, obs)) {
-                auto l1_ptr = centers + static_cast<size_t>(l1) * long_ndim; // cast to avoid overflow.
-                auto obs_ptr = data.get_observation(obs, matwork);
-                work.wcss_loss[obs] = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
-            }
-        }
-    }
 
     return std::make_pair(had_transfer, true);
 }
@@ -591,9 +577,16 @@ public:
                 work,
                 centers,
                 clusters,
-                my_options.max_quick_transfer_iterations,
-                my_options.quit_on_quick_transfer_convergence_failure
+                my_options.max_quick_transfer_iterations
             );
+
+            // Recomputing the centroids to avoid accumulation of numerical
+            // errors after many transfers (e.g., adding a whole bunch of
+            // values and then subtracting them again leaves behind some
+            // cancellation error). Note that we don't have to do this if
+            // 'finished = true' as this means that there was no transfer of
+            // any kind in the final pass through the dataset.
+            internal::compute_centroids(data, ncenters, centers, clusters, work.cluster_sizes);
 
             if (quick_status.second) { // Hit the quick transfer iteration limit.
                 if (my_options.quit_on_quick_transfer_convergence_failure) {
@@ -612,9 +605,6 @@ public:
                 work.optra_steps_since_last_transfer = 0;
             }
 
-            // If we get to this point, all WCSS losses are up to date, as
-            // quick_transfer() updated everything for us; so we can set the
-            // status to 'unchanged' for all clusters.
             for (auto& u : work.update_history) {
                 u.set_unchanged();
             }
@@ -628,7 +618,6 @@ public:
             ifault = 2;
         }
 
-        internal::compute_centroids(data, ncenters, centers, clusters, work.cluster_sizes);
         return Details(std::move(work.cluster_sizes), iter, ifault);
     }
 };
