@@ -615,49 +615,53 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>                my_options.<a class="code hl_variable" href="structkmeans_1_1RefineHartiganWongOptions.html#a26aefe0bfb610fa693375fd59278b9b2">quit_on_quick_transfer_convergence_failure</a></div>
 <div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>            );</div>
 <div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span> </div>
-<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>            <span class="keywordflow">if</span> (<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">quick_status</a>.second) { <span class="comment">// Hit the quick transfer iteration limit.</span></div>
-<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>                <span class="keywordflow">if</span> (my_options.<a class="code hl_variable" href="structkmeans_1_1RefineHartiganWongOptions.html#a26aefe0bfb610fa693375fd59278b9b2">quit_on_quick_transfer_convergence_failure</a>) {</div>
-<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>                    <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ifault</a> = 4;</div>
-<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>                }</div>
-<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>                <span class="comment">// If quick transfer converged and there are only two clusters,</span></div>
-<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>                <span class="comment">// there is no need to re-enter the optimal transfer stage. </span></div>
-<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>                <span class="keywordflow">if</span> (<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ncenters</a> == 2) {</div>
-<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>                }</div>
-<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>            }</div>
-<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span> </div>
-<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>            <span class="keywordflow">if</span> (<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">quick_status</a>.first) { <span class="comment">// At least one quick transfer was performed.</span></div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>                <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.optra_steps_since_last_transfer = 0;</div>
-<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>            }</div>
-<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span> </div>
-<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>            <span class="comment">// If we get to this point, all WCSS losses are up to date, as</span></div>
-<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>            <span class="comment">// quick_transfer() updated everything for us; so we can set the</span></div>
-<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>            <span class="comment">// status to &#39;unchanged&#39; for all clusters.</span></div>
-<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">u</a> : <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.update_history) {</div>
-<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>                <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">u</a>.set_unchanged();</div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>            }</div>
-<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span> </div>
-<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>            <span class="keywordflow">for</span> (<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">c</a> = 0; <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">c</a> &lt; <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ncenters</a>; ++<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">c</a>) {</div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>                <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.live_set[<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">c</a>].reset(<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.was_quick_transferred[<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">c</a>]);</div>
-<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>            }</div>
-<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>        }</div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>            <span class="comment">// Recomputing the centroids to avoid accumulation of errors after many transfers.</span></div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>            <span class="comment">// Note that we don&#39;t have to do this if &#39;finished = true&#39; as this means that</span></div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>            <span class="comment">// there was no transfer of any kind in the last pass through the dataset.</span></div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>            internal::compute_centroids(<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">data</a>, <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ncenters</a>, centers, clusters, <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.cluster_sizes);</div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span> </div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>            <span class="keywordflow">if</span> (<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">quick_status</a>.second) { <span class="comment">// Hit the quick transfer iteration limit.</span></div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>                <span class="keywordflow">if</span> (my_options.<a class="code hl_variable" href="structkmeans_1_1RefineHartiganWongOptions.html#a26aefe0bfb610fa693375fd59278b9b2">quit_on_quick_transfer_convergence_failure</a>) {</div>
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>                    <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ifault</a> = 4;</div>
+<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>                }</div>
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>                <span class="comment">// If quick transfer converged and there are only two clusters,</span></div>
+<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>                <span class="comment">// there is no need to re-enter the optimal transfer stage. </span></div>
+<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>                <span class="keywordflow">if</span> (<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ncenters</a> == 2) {</div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>                }</div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>            }</div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span> </div>
+<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>            <span class="keywordflow">if</span> (<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">quick_status</a>.first) { <span class="comment">// At least one quick transfer was performed.</span></div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>                <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.optra_steps_since_last_transfer = 0;</div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>            }</div>
+<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span> </div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>            <span class="comment">// If we get to this point, all WCSS losses are up to date, as</span></div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>            <span class="comment">// quick_transfer() updated everything for us; so we can set the</span></div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span>            <span class="comment">// status to &#39;unchanged&#39; for all clusters.</span></div>
+<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">u</a> : <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.update_history) {</div>
+<div class="line"><a id="l00624" name="l00624"></a><span class="lineno">  624</span>                <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">u</a>.set_unchanged();</div>
+<div class="line"><a id="l00625" name="l00625"></a><span class="lineno">  625</span>            }</div>
 <div class="line"><a id="l00626" name="l00626"></a><span class="lineno">  626</span> </div>
-<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>        <span class="keywordflow">if</span> (<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">iter</a> == my_options.<a class="code hl_variable" href="structkmeans_1_1RefineHartiganWongOptions.html#a84e571b7448c1fc74dec8419feb0b0c9">max_iterations</a> + 1) {</div>
-<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>            <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ifault</a> = 2;</div>
-<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>        }</div>
-<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span> </div>
-<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span>        internal::compute_centroids(<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">data</a>, <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ncenters</a>, centers, clusters, <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.cluster_sizes);</div>
-<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>        <span class="keywordflow">return</span> <a class="code hl_struct" href="structkmeans_1_1Details.html">Details</a>(std::move(<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.cluster_sizes), <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">iter</a>, <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ifault</a>);</div>
-<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span>    }</div>
-</div>
-<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>};</div>
-</div>
+<div class="line"><a id="l00627" name="l00627"></a><span class="lineno">  627</span>            <span class="keywordflow">for</span> (<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">Cluster_</a> <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">c</a> = 0; <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">c</a> &lt; <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ncenters</a>; ++<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">c</a>) {</div>
+<div class="line"><a id="l00628" name="l00628"></a><span class="lineno">  628</span>                <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.live_set[<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">c</a>].reset(<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.was_quick_transferred[<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">c</a>]);</div>
+<div class="line"><a id="l00629" name="l00629"></a><span class="lineno">  629</span>            }</div>
+<div class="line"><a id="l00630" name="l00630"></a><span class="lineno">  630</span>        }</div>
+<div class="line"><a id="l00631" name="l00631"></a><span class="lineno">  631</span> </div>
+<div class="line"><a id="l00632" name="l00632"></a><span class="lineno">  632</span>        <span class="keywordflow">if</span> (<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">iter</a> == my_options.<a class="code hl_variable" href="structkmeans_1_1RefineHartiganWongOptions.html#a84e571b7448c1fc74dec8419feb0b0c9">max_iterations</a> + 1) {</div>
+<div class="line"><a id="l00633" name="l00633"></a><span class="lineno">  633</span>            <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ifault</a> = 2;</div>
+<div class="line"><a id="l00634" name="l00634"></a><span class="lineno">  634</span>        }</div>
 <div class="line"><a id="l00635" name="l00635"></a><span class="lineno">  635</span> </div>
-<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>}</div>
-<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span> </div>
-<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00636" name="l00636"></a><span class="lineno">  636</span>        <span class="keywordflow">return</span> <a class="code hl_struct" href="structkmeans_1_1Details.html">Details</a>(std::move(<a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">work</a>.cluster_sizes), <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">iter</a>, <a class="code hl_class" href="classkmeans_1_1InitializeVariancePartition.html">ifault</a>);</div>
+<div class="line"><a id="l00637" name="l00637"></a><span class="lineno">  637</span>    }</div>
+</div>
+<div class="line"><a id="l00638" name="l00638"></a><span class="lineno">  638</span>};</div>
+</div>
+<div class="line"><a id="l00639" name="l00639"></a><span class="lineno">  639</span> </div>
+<div class="line"><a id="l00640" name="l00640"></a><span class="lineno">  640</span>}</div>
+<div class="line"><a id="l00641" name="l00641"></a><span class="lineno">  641</span> </div>
+<div class="line"><a id="l00642" name="l00642"></a><span class="lineno">  642</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aDetails_8hpp_html"><div class="ttname"><a href="Details_8hpp.html">Details.hpp</a></div><div class="ttdoc">Report detailed clustering statistics.</div></div>
 <div class="ttc" id="aRefine_8hpp_html"><div class="ttname"><a href="Refine_8hpp.html">Refine.hpp</a></div><div class="ttdoc">Interface for k-means refinement.</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializeVariancePartition_html"><div class="ttname"><a href="classkmeans_1_1InitializeVariancePartition.html">kmeans::InitializeVariancePartition</a></div><div class="ttdoc">Implements the variance partitioning method of Su and Dy (2007).</div><div class="ttdef"><b>Definition</b> InitializeVariancePartition.hpp:164</div></div>
