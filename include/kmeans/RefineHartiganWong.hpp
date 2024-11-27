@@ -56,8 +56,8 @@ struct RefineHartiganWongOptions {
 namespace RefineHartiganWong_internal {
 
 /* 
- * The class below represents 'ncp', which has a dual interpretation in the
- * original Fortran implementation:
+ * The class below represents each element of the NCP array from the original
+ * Fortran implementation. Each element L in NCP has a dual interpretation:
  *
  * - In the optimal-transfer stage, NCP(L) stores the step at which cluster L
  *   was last updated. Each step is just the observation index as the optimal
@@ -65,13 +65,14 @@ namespace RefineHartiganWong_internal {
  * - In the quick-transfer stage, NCP(L) stores the step at which cluster L is
  *   last updated plus M (i.e., the number of observations). Here, the step
  *   corresponding to an observation will be 'M * X + obs' for some integer X
- *   >= 0, where X is the iteration of the quick transfer.
+ *   >= 0, where X is the iteration of the quick transfer. This means that the
+ *   stored value is defined as '(M + 1) * X + obs'.
  *
  * Note that these two definitions bleed into each other as the NCP(L) set by
- * optimal_transfer is still being used in the first few iterations of
- * quick_transfer before it eventually gets written. The easiest way to
- * interpret this is to consider the optimal transfer as "iteration -1" from
- * the perspective of the quick transfer iterations. 
+ * optimal_transfer is still referenced in the first few iterations of
+ * quick_transfer before it eventually gets overwritten. The easiest way to
+ * interpret this is to consider the optimal transfer as iteration 'M = -1'
+ * from the perspective of the quick transfer iterations. 
  *
  * In short, this data structure specifies whether a cluster was modified
  * within the last M steps. This counts steps in both optimal_transfer and
@@ -81,27 +82,24 @@ template<typename Index_>
 class UpdateHistory {
 private:
     /* 
-     * The problem with the original implementation is that the integers are
-     * expected to hold 'max_quick_iterations * M'. For a templated integer
-     * type, that might not be possible, so instead we split it into two
-     * vectors; one holds the last iteration at which the cluster was modified,
-     * the other holds the last observation used in the modification.
+     * The problem with the original implementation is that NCP(L) is expected
+     * to hold 'max_quick_iterations * M'. For a templated integer type, that
+     * might not be possible, so instead we split it into two integers. One
+     * holds the last iteration at which the cluster was modified, the other
+     * holds the last observation used in the modification.
      */
     Index_ my_last_observation = 0;
 
-    int my_last_iteration = init; 
-
-    static constexpr int init = -3;
-    static constexpr int unchanged = -2;
+    // As mentioned above, we treat the optimal_transfer as the quick_transfer's iteration -1.
+    int my_last_iteration = -1; 
 
 public:
-    void set_unchanged() {
-        my_last_observation = unchanged;
+    void reset() {
+        my_last_observation = 0;
+        my_last_iteration = -1;
     }
 
-    // We treat the optimal_transfer as "iteration -1" here.
     void set_optimal(Index_ obs) {
-        my_last_iteration = -1;
         my_last_observation = obs;
     }
 
@@ -109,11 +107,6 @@ public:
     void set_quick(int iter, Index_ obs) {
         my_last_iteration = iter;
         my_last_observation = obs;
-    }
-
-public:
-    bool is_unchanged() const {
-        return my_last_iteration == unchanged;
     }
 
 public:
@@ -137,12 +130,14 @@ public:
 /*
  * The class below represents 'live', which has a tricky interpretation.
  *
- * - Before each optimal transfer call, LIVE(L) stores the observation at which
- *   cluster L was updated in the _previous_ call.
- * - During the optimal transfer call, LIVE(L) is updated to the observation at
+ * - Before each optimal_transfer call, LIVE(L) stores the observation at which
+ *   cluster L was updated in the _previous_ optimal_transfer call.
+ * - During the optimal_transfer call, LIVE(L) is updated to the observation at
  *   which L was updated in this call, plus M (i.e., number of observations).
- * - After the optimal transfer call, LIVE(L) is updated by subtracting M, so
+ * - After the optimal_transfer call, LIVE(L) is updated by subtracting M, so
  *   that the interpretation is correct in the next call.
+ * - After the quick_transfer call, LIVE(L) is set to M + 1 if a quick transfer
+ *   took place for L, effectively mimicking a "very recent" update.
  *
  * It basically tells us whether there was a recent transfer (optimal or quick)
  * within the last M steps of optimal_transfer. If so, the cluster is "live".
@@ -154,7 +149,7 @@ private:
 
     /* The problem with the original implementation is that LIVE(L) needs to
      * store at least 2*M, which might cause overflows in Index_. To avoid
-     * this, we split this information into two vectors:
+     * this, we split this information into two values:
      * 
      * - 'my_had_recent_transfer' specifies specifies whether a transfer
      *   occurred in the current optimal_transfer call, or in the immediately
@@ -319,16 +314,16 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
         if (work.cluster_sizes[l1] != 1) {
             auto obs_ptr = data.get_observation(obs, matwork);
 
-            // The original Fortran implementation only recomputed the WCSS
-            // loss of an observation if its cluster had experienced an optimal
-            // transfer for an earlier observation. In theory, this sounds
-            // great to avoid recomputation, but the existing WCSS loss was
-            // computed in a running fashion during the quick transfers. This
-            // makes them susceptible to accumulation of numerical errors in
-            // the centroids; even after the centroids are freshly recomputed
-            // (in the run() loop), we still have errors in the loss values.
-            // So, we simplify matters and improve accuracy by just recomputing
-            // the loss all the time, which doesn't take too much extra effort.
+            // The original Fortran implementation re-used the WCSS loss for
+            // each observation, only recomputing it if its cluster had
+            // experienced an optimal transfer for an earlier observation. In
+            // theory, this sounds great to avoid recomputation, but the
+            // existing WCSS loss was computed in a running fashion during the
+            // quick transfers. This makes them susceptible to accumulation of
+            // numerical errors, even after the centroids are freshly
+            // recomputed in the run() loop. So, we simplify matters and
+            // improve accuracy by just recomputing the loss all the time,
+            // which doesn't take too much extra effort.
             auto& wcss_loss = work.wcss_loss[obs];
             auto l1_ptr = centers + long_ndim * static_cast<size_t>(l1); // cast to avoid overflow.
             wcss_loss = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
@@ -348,8 +343,11 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
                 }
             };
 
-            // If the best cluster is live, we need to consider all other clusters.
-            // Otherwise, we only need to consider other live clusters for transfer.
+            // If the best cluster is live, we need to check all other clusters
+            // as potential transfer destinations. Otherwise, we only need to
+            // consider other live clusters for transfer; the non-live clusters
+            // were already worse than the second-best, so there's no point
+            // checking them again if they didn't change in the meantime.
             auto& live1 = work.live_set[l1];
             if (live1.is_live(obs)) { 
                 for (Cluster_ cen = 0; cen < ncenters; ++cen) {
@@ -418,7 +416,7 @@ std::pair<bool, bool> quick_transfer(
     size_t long_ndim = data.num_dimensions();
 
     typedef decltype(nobs) Index_;
-    Index_ steps_since_last_quick_transfer = 0;
+    Index_ steps_since_last_quick_transfer = 0; // i.e., ICOUN in the original Fortran implementation.
 
     for (int it = 0; it < quick_iterations; ++it) {
         int prev_it = it - 1;
@@ -606,7 +604,7 @@ public:
             }
 
             for (auto& u : work.update_history) {
-                u.set_unchanged();
+                u.reset();
             }
 
             for (Cluster_ c = 0; c < ncenters; ++c) {
