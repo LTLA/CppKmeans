@@ -1,31 +1,29 @@
 <map id="kmeans/RefineHartiganWong.hpp" name="kmeans/RefineHartiganWong.hpp">
-<area shape="rect" id="Node000001" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="287,5,500,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="140,226,197,252"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="286,24,208,29,128,40,61,56,36,68,20,81,10,100,10,118,19,137,35,156,80,190,128,217,126,221,77,195,32,160,15,140,5,120,4,98,16,77,33,63,59,51,127,34,207,24,286,19"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="30,79,104,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="336,34,120,81,119,76,335,29"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="128,79,195,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="355,34,211,78,209,73,353,29"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="219,79,280,105"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="370,34,289,74,286,69,368,29"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="303,79,356,105"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="385,33,352,69,348,66,381,29"/>
-<area shape="rect" id="Node000007" href="$Refine_8hpp.html" title="Interface for k&#45;means refinement." alt="" coords="432,79,513,105"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="409,30,449,66,446,70,405,34"/>
-<area shape="rect" id="Node000008" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="327,153,412,178"/>
-<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="394,32,377,138,371,137,389,31"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="537,79,658,105"/>
-<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="429,29,550,71,548,76,427,34"/>
-<area shape="rect" id="Node000011" href="$parallelize_8hpp.html" title="Utilities for parallelization." alt="" coords="682,79,785,105"/>
-<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="452,29,668,74,666,79,451,34"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="809,79,965,105"/>
-<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="478,29,794,74,794,80,477,34"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="988,79,1114,105"/>
-<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="501,26,715,47,973,76,972,81,714,52,500,31"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="456,107,401,146,398,141,453,103"/>
-<area shape="rect" id="Node000009" href="$SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="436,153,556,178"/>
-<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="479,104,490,137,485,139,474,106"/>
-<area shape="poly" id="edge8_Node000008_Node000002" title=" " alt="" coords="336,181,213,225,211,220,335,176"/>
-<area shape="rect" id="Node000012" href="/github/workspace/docs/subpar.tag$subpar_8hpp.html" title=" " alt="" coords="670,153,797,178"/>
-<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="736,105,736,137,731,137,731,105"/>
+<area shape="rect" id="Node000001" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="249,5,462,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="102,226,159,252"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="249,26,180,33,111,43,54,59,33,69,19,81,10,98,9,116,15,134,27,153,62,187,99,215,96,220,58,191,23,156,10,137,4,117,5,97,15,77,30,65,52,54,110,38,179,27,248,21"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="29,79,104,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="307,34,119,80,118,75,306,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="127,79,195,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="324,34,209,76,208,71,322,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="219,79,279,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="339,34,281,72,278,68,336,29"/>
+<area shape="rect" id="Node000006" href="$Refine_8hpp.html" title="Interface for k&#45;means refinement." alt="" coords="355,79,436,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="365,30,384,64,379,67,360,33"/>
+<area shape="rect" id="Node000007" href="$Details_8hpp.html" title="Report detailed clustering statistics." alt="" coords="250,153,336,178"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="353,32,307,139,302,137,348,30"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="461,79,581,105"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="385,29,480,70,478,75,383,34"/>
+<area shape="rect" id="Node000010" href="$parallelize_8hpp.html" title="Utilities for parallelization." alt="" coords="606,79,708,105"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="408,29,592,72,591,78,407,34"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="733,79,888,105"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="434,29,718,73,718,79,433,34"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="912,79,1037,105"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="463,27,660,48,897,76,896,81,660,53,462,32"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="380,107,324,146,321,141,377,103"/>
+<area shape="rect" id="Node000008" href="$SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="360,153,480,178"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="402,104,413,137,408,139,397,106"/>
+<area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="266,181,173,222,171,217,264,176"/>
+<area shape="rect" id="Node000011" href="/github/workspace/docs/subpar.tag$subpar_8hpp.html" title=" " alt="" coords="593,153,721,178"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="660,105,660,137,654,137,654,105"/>
 </map>
