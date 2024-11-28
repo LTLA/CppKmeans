@@ -55,9 +55,12 @@ struct RefineHartiganWongOptions {
  */
 namespace RefineHartiganWong_internal {
 
-/* 
- * The class below represents each element of the NCP array from the original
- * Fortran implementation. Each element L in NCP has a dual interpretation:
+/*
+ * Alright, get ready for a data dump, because this is where it gets real.
+ * Here I attempt to untangle the code spaghetti from the original Fortran
+ * implementation, which is exemplified by the NCP and LIVE arrays.
+ *
+ * Okay, NCP first. Each element L in NCP has a dual interpretation:
  *
  * - In the optimal-transfer stage, NCP(L) stores the step at which cluster L
  *   was last updated. Each step is just the observation index as the optimal
@@ -74,33 +77,84 @@ namespace RefineHartiganWong_internal {
  * interpret this is to consider the optimal transfer as iteration 'M = -1'
  * from the perspective of the quick transfer iterations. 
  *
- * In short, this data structure specifies whether a cluster was modified
+ * In short, the NCP array is used to determine whether a cluster was modified
  * within the last M steps. This counts steps in both optimal_transfer and
  * quick_transfer, and considers modifications from both calls.
+ *
+ * Let's move onto LIVE, which has an even more painful interpretation:
+ *
+ * - Before each optimal_transfer call, LIVE(L) stores the observation at which
+ *   cluster L was updated in the _previous_ optimal_transfer call.
+ * - During the optimal_transfer call, LIVE(L) is updated to the observation at
+ *   which L was updated in this call, plus M (i.e., number of observations).
+ * - After the optimal_transfer call, LIVE(L) is updated by subtracting M, so
+ *   that the interpretation is correct in the next call.
+ * - After the quick_transfer call, LIVE(L) is set to M + 1 if a quick transfer
+ *   took place for L, effectively mimicking a "very recent" update.
+ *
+ * It basically tells us whether there was a recent transfer (optimal or quick)
+ * within the last M steps of optimal_transfer. If so, the cluster is "live".
+ * This differs very slightly from NCP as LIVE only counts optimal transfer
+ * steps while NCP counts both optimal and quick transfer steps.
+ *
+ * We simplify this mess by consolidating NCP and LIVE into a single update
+ * history that can serve both purposes. This is possible as LIVE is not used
+ * in quick_transfer, while any modifications made to NCP by quick_transfer are
+ * ignored and overwritten in the optimal_transfer. (The latter case was not
+ * true in the original implementation, but we now recompute the WCSS losses
+ * for all observations in the optimal_transfer to avoid build-up of numerical
+ * errors. As a result, we ignore any re-use of NCP(L) from quick_transfer
+ * in optimal_transfer, which grants us this simplification.) This avoids
+ * conflicts between the two meanings in a consolidated update history.
+ *
+ * The update history for cluster L now holds the iteration ('X') and the
+ * observation ('obs') at which the cluster was last modified. This has
+ * an obvious mapping to NCP(L), which was already defined in terms of 
+ * 'X' and 'obs' anyway. For LIVE(L), the mapping is more complex:
+ *
+ * - If no quick_transfer occurs for L, we set 'X = -2'. 'obs' is not
+ *   modified as it is the observation at which L was modified in the
+ *   previous optimal_transfer iteration, i.e., the definition of LIVE(L).
+ * - If a quick transfer does occur, we set 'X = -2' and 'obs = M + 1'.
+ *   Again, this is equivalent to the behavior of LIVE(L).
+ * - During the optimal_transfer, we consider a cluster to be live at a
+ *   particular observation if it is greater than 'obs'.
+ *
+ * Note that Fortran is 1-based so the actual code is a little different than
+ * described above for 'obs' - specifically, we just need to set it to 'M'
+ * when a quick transfer occurs. Meaning of 'X' is unchanged.
+ *
+ * Incidentally, we can easily detect if a quick transfer occurs based on
+ * whether 'X > -1'. This obviates the need for the ITRAN array.
  */
 template<typename Index_>
 class UpdateHistory {
 private:
-    /* 
-     * The problem with the original implementation is that NCP(L) is expected
-     * to hold 'max_quick_iterations * M'. For a templated integer type, that
-     * might not be possible, so instead we split it into two integers. One
-     * holds the last iteration at which the cluster was modified, the other
-     * holds the last observation used in the modification.
-     */
     Index_ my_last_observation = 0;
 
-    // As mentioned above, we treat the optimal_transfer as the quick_transfer's iteration -1.
-    int my_last_iteration = -1; 
+    static constexpr int current_optimal_transfer = -1;
+    static constexpr int previous_optimal_transfer = -2;
+    static constexpr int ancient_history = -3;
+
+    // Starting at -3 as we can't possibly have any updates if we haven't done
+    // any transfers, optimal or quick!
+    int my_last_iteration = ancient_history;
 
 public:
-    void reset() {
-        my_last_observation = 0;
-        my_last_iteration = -1;
+    void reset(Index_ total_obs) {
+        if (my_last_iteration > current_optimal_transfer) {
+            my_last_observation = total_obs;
+            my_last_iteration = previous_optimal_transfer;
+        } else if (my_last_iteration == current_optimal_transfer) {
+            my_last_iteration = previous_optimal_transfer;
+        } else {
+            my_last_iteration = ancient_history;
+        }
     }
 
     void set_optimal(Index_ obs) {
         my_last_observation = obs;
+        my_last_iteration = current_optimal_transfer;
     }
 
     // Here, iter should be from '[0, max_quick_transfer_iterations)'.
@@ -125,75 +179,9 @@ public:
             return my_last_iteration > iter;
         }
     }
-};
 
-/*
- * The class below represents 'live', which has a tricky interpretation.
- *
- * - Before each optimal_transfer call, LIVE(L) stores the observation at which
- *   cluster L was updated in the _previous_ optimal_transfer call.
- * - During the optimal_transfer call, LIVE(L) is updated to the observation at
- *   which L was updated in this call, plus M (i.e., number of observations).
- * - After the optimal_transfer call, LIVE(L) is updated by subtracting M, so
- *   that the interpretation is correct in the next call.
- * - After the quick_transfer call, LIVE(L) is set to M + 1 if a quick transfer
- *   took place for L, effectively mimicking a "very recent" update.
- *
- * It basically tells us whether there was a recent transfer (optimal or quick)
- * within the last M steps of optimal_transfer. If so, the cluster is "live".
- */
-template<typename Index_>
-class LiveStatus {
-private:
-    enum class Event : uint8_t { NONE, PAST_OPT, CURRENT_OPT, QUICK, INIT };
-
-    /* The problem with the original implementation is that LIVE(L) needs to
-     * store at least 2*M, which might cause overflows in Index_. To avoid
-     * this, we split this information into two values:
-     * 
-     * - 'my_had_recent_transfer' specifies specifies whether a transfer
-     *   occurred in the current optimal_transfer call, or in the immediately
-     *   preceding quick_transfer call. If this > PAST_OPT, the cluster is 
-     *   definitely live; if it is == PAST_OPT, it may or may not be live.
-     * - 'my_last_optimal_transfer' has two interpretations:
-     *   - If 'my_had_recent_transfer == PAST_OPT', it specifies the
-     *     observation at which the last transfer occurred in previous
-     *     optimal_transfer call. If this is greater than the current
-     *     observation, the cluster is live.
-     *   - If 'my_had_recent_transfer == CURRENT_OPT', it specifies the
-     *     observation at which the last transfer occurred in the current
-     *     optimal_transfer call.
-     *   - Otherwise it is undefined and should not be used.
-     *
-     * One might think that 'LiveStatus::my_last_optimal_transfer' is redundant
-     * with 'UpdateHistory::my_last_observation', but the former only tracks
-     * optimal transfers while the latter includes quick transfers. 
-     */
-    Event my_had_recent_transfer = Event::INIT; 
-    Index_ my_last_optimal_transfer = 0;
-
-public:    
     bool is_live(Index_ obs) const {
-        if (my_had_recent_transfer == Event::PAST_OPT) {
-            return my_last_optimal_transfer > obs;
-        } else {
-            return my_had_recent_transfer > Event::PAST_OPT;
-        }
-    }
-
-    void mark_current(Index_ obs) {
-        my_had_recent_transfer = Event::CURRENT_OPT;
-        my_last_optimal_transfer = obs;
-    }
-
-    void reset(bool was_quick_transferred) {
-        if (was_quick_transferred) {
-            my_had_recent_transfer = Event::QUICK;
-        } else if (my_had_recent_transfer == Event::CURRENT_OPT) {
-            my_had_recent_transfer = Event::PAST_OPT;
-        } else {
-            my_had_recent_transfer = Event::NONE;
-        }
+        return changed_after(previous_optimal_transfer, obs);
     }
 };
 
@@ -208,8 +196,6 @@ struct Workspace {
     std::vector<Float_> wcss_loss; // i.e., d
 
     std::vector<UpdateHistory<Index_> > update_history; // i.e., ncp
-    std::vector<uint8_t> was_quick_transferred; // i.e., itran
-    std::vector<LiveStatus<Index_> > live_set; // i.e., live
 
     Index_ optra_steps_since_last_transfer = 0; // i.e., indx
 
@@ -221,11 +207,7 @@ public:
         loss_multiplier(ncenters),
         gain_multiplier(ncenters),
         wcss_loss(nobs),
-
-        // All the other bits and pieces.
-        update_history(ncenters),
-        was_quick_transferred(ncenters),
-        live_set(ncenters)
+        update_history(ncenters)
     {}
 };
 
@@ -301,7 +283,7 @@ void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1,
  * there is only one pass through the data.
  */
 template<class Matrix_, typename Cluster_, typename Float_>
-bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::index_type, Cluster_>& work, Cluster_ ncenters, Float_* centers, Cluster_* best_cluster) {
+bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::index_type, Cluster_>& work, Cluster_ ncenters, Float_* centers, Cluster_* best_cluster, bool all_live) {
     auto nobs = data.num_observations();
     auto ndim = data.num_dimensions();
     auto matwork = data.create_workspace();
@@ -348,8 +330,13 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
             // consider other live clusters for transfer; the non-live clusters
             // were already worse than the second-best, so there's no point
             // checking them again if they didn't change in the meantime.
-            auto& live1 = work.live_set[l1];
-            if (live1.is_live(obs)) { 
+            //
+            // The exception is for the first call to optimal_transfer, where we
+            // consider all clusters as live (i.e., all_live = true). This is
+            // because no observation really knows its best transfer
+            // destination yet - the second-closest cluster is just a
+            // guesstimate - so we need to compute it exhaustively.
+            if (all_live || work.update_history[l1].is_live(obs)) { 
                 for (Cluster_ cen = 0; cen < ncenters; ++cen) {
                     if (cen != l1 && cen != original_l2) {
                         check_best_cluster(cen);
@@ -357,7 +344,7 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
                 }
             } else {
                 for (Cluster_ cen = 0; cen < ncenters; ++cen) {
-                    if (cen != l1 && cen != original_l2 && work.live_set[cen].is_live(obs)) {
+                    if (cen != l1 && cen != original_l2 && work.update_history[cen].is_live(obs)) {
                         check_best_cluster(cen);
                     }
                 }
@@ -368,12 +355,8 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
                 work.second_best_cluster[obs] = l2;
             } else {
                 work.optra_steps_since_last_transfer = 0;
-
-                live1.mark_current(obs);
-                work.live_set[l2].mark_current(obs);
                 work.update_history[l1].set_optimal(obs);
                 work.update_history[l2].set_optimal(obs);
-
                 transfer_point(ndim, obs_ptr, obs, l1, l2, centers, best_cluster, work);
             }
         }
@@ -408,7 +391,6 @@ std::pair<bool, bool> quick_transfer(
     int quick_iterations)
 {
     bool had_transfer = false;
-    std::fill(work.was_quick_transferred.begin(), work.was_quick_transferred.end(), 0);
 
     auto nobs = data.num_observations();
     auto matwork = data.create_workspace();
@@ -458,13 +440,8 @@ std::pair<bool, bool> quick_transfer(
                     if (wcss_gain < work.wcss_loss[obs]) {
                         had_transfer = true;
                         steps_since_last_quick_transfer = 0;
-
-                        work.was_quick_transferred[l1] = true;
-                        work.was_quick_transferred[l2] = true;
-
                         history1.set_quick(it, obs);
                         history2.set_quick(it, obs);
-
                         transfer_point(ndim, obs_ptr, obs, l1, l2, centers, best_cluster, work);
                     }
                }
@@ -565,7 +542,7 @@ public:
         int iter = 0;
         int ifault = 0;
         while ((++iter) <= my_options.max_iterations) {
-            bool finished = RefineHartiganWong_internal::optimal_transfer(data, work, ncenters, centers, clusters);
+            bool finished = RefineHartiganWong_internal::optimal_transfer(data, work, ncenters, centers, clusters, /* all_live = */ (iter == 1));
             if (finished) {
                 break;
             }
@@ -603,12 +580,8 @@ public:
                 work.optra_steps_since_last_transfer = 0;
             }
 
-            for (auto& u : work.update_history) {
-                u.reset();
-            }
-
             for (Cluster_ c = 0; c < ncenters; ++c) {
-                work.live_set[c].reset(work.was_quick_transferred[c]);
+                work.update_history[c].reset(nobs);
             }
         }
 
