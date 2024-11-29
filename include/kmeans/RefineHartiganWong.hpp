@@ -70,6 +70,8 @@ namespace RefineHartiganWong_internal {
  *   corresponding to an observation will be 'M * X + obs' for some integer X
  *   >= 0, where X is the iteration of the quick transfer. This means that the
  *   stored value is defined as '(M + 1) * X + obs'.
+ * - After each quick_transfer call, NCP(L) is set back to zero so any existing
+ *   values will not carry over into the next optimal_transfer call.
  *
  * Note that these two definitions bleed into each other as the NCP(L) set by
  * optimal_transfer is still referenced in the first few iterations of
@@ -78,8 +80,7 @@ namespace RefineHartiganWong_internal {
  * from the perspective of the quick transfer iterations. 
  *
  * In short, the NCP array is used to determine whether a cluster was modified
- * within the last M steps. This counts steps in both optimal_transfer and
- * quick_transfer, and considers modifications from both calls.
+ * within the last M steps of the optimal_transfer or quick_transfer.
  *
  * Let's move onto LIVE, which has an even more painful interpretation:
  *
@@ -100,11 +101,7 @@ namespace RefineHartiganWong_internal {
  * We simplify this mess by consolidating NCP and LIVE into a single update
  * history that can serve both purposes. This is possible as LIVE is not used
  * in quick_transfer, while any modifications made to NCP by quick_transfer are
- * ignored and overwritten in the optimal_transfer. (The latter case was not
- * true in the original implementation, but we now recompute the WCSS losses
- * for all observations in the optimal_transfer to avoid build-up of numerical
- * errors. As a result, we ignore any re-use of NCP(L) from quick_transfer
- * in optimal_transfer, which grants us this simplification.) This avoids
+ * ignored and overwritten in optimal_transfer. Thus, there won't be any
  * conflicts between the two meanings in a consolidated update history.
  *
  * The update history for cluster L now holds the iteration ('X') and the
@@ -112,11 +109,14 @@ namespace RefineHartiganWong_internal {
  * an obvious mapping to NCP(L), which was already defined in terms of 
  * 'X' and 'obs' anyway. For LIVE(L), the mapping is more complex:
  *
- * - If no quick_transfer occurs for L, we set 'X = -2'. 'obs' is not
- *   modified as it is the observation at which L was modified in the
- *   previous optimal_transfer iteration, i.e., the definition of LIVE(L).
+ * - If an optimal_transfer occurred but no quick_transfer occurs for L,
+ *   we set 'X = -2'. 'obs' is not modified as it is the observation at
+ *   which L was modified in the previous optimal_transfer iteration;
+ *   this is basically just the definition of LIVE(L).
  * - If a quick transfer does occur, we set 'X = -2' and 'obs = M + 1'.
  *   Again, this is equivalent to the behavior of LIVE(L).
+ * - If neither a quick_transfer nor optimal_transfer occurs for L,
+ *   we set 'X = -3' to indicate that L didn't change in any manner.
  * - During the optimal_transfer, we consider a cluster to be live at a
  *   particular observation if it is greater than 'obs'.
  *
@@ -142,10 +142,11 @@ private:
 
 public:
     void reset(Index_ total_obs) {
-        if (my_last_iteration > current_optimal_transfer) {
+        if (my_last_iteration > current_optimal_transfer) { // i.e., quick_transfer.
             my_last_observation = total_obs;
             my_last_iteration = previous_optimal_transfer;
         } else if (my_last_iteration == current_optimal_transfer) {
+            // Preserve the existing 'my_last_observation', just bump the iteration downwards.
             my_last_iteration = previous_optimal_transfer;
         } else {
             my_last_iteration = ancient_history;
@@ -188,21 +189,21 @@ public:
 template<typename Float_, typename Index_, typename Cluster_>
 struct Workspace {
     // Array arguments in the same order as supplied to R's kmns_ function.
-    std::vector<Cluster_> second_best_cluster; // i.e., ic2
-    std::vector<Index_> cluster_sizes; // i.e., nc
+    std::vector<Cluster_> best_destination_cluster; // i.e., IC2
+    std::vector<Index_> cluster_sizes; // i.e., NC
 
-    std::vector<Float_> loss_multiplier; // i.e., an1
-    std::vector<Float_> gain_multiplier; // i.e., an2
-    std::vector<Float_> wcss_loss; // i.e., d
+    std::vector<Float_> loss_multiplier; // i.e., AN1
+    std::vector<Float_> gain_multiplier; // i.e., AN2
+    std::vector<Float_> wcss_loss; // i.e., D
 
-    std::vector<UpdateHistory<Index_> > update_history; // i.e., ncp
+    std::vector<UpdateHistory<Index_> > update_history; // i.e., NCP, LIVE, and ITRAN. 
 
-    Index_ optra_steps_since_last_transfer = 0; // i.e., indx
+    Index_ optra_steps_since_last_transfer = 0; // i.e., INDX
 
 public:
     Workspace(Index_ nobs, Cluster_ ncenters) :
         // Sizes taken from the .Fortran() call in stats::kmeans(). 
-        second_best_cluster(nobs), 
+        best_destination_cluster(nobs), 
         cluster_sizes(ncenters),
         loss_multiplier(ncenters),
         gain_multiplier(ncenters),
@@ -222,7 +223,7 @@ Float_ squared_distance_from_cluster(const Data_* data, const Float_* center, Di
 }
 
 template<class Matrix_, typename Cluster_, typename Float_>
-void find_closest_two_centers(const Matrix_& data, Cluster_ ncenters, const Float_* centers, Cluster_* best_cluster, std::vector<Cluster_>& second_best_cluster, int nthreads) {
+void find_closest_two_centers(const Matrix_& data, Cluster_ ncenters, const Float_* centers, Cluster_* best_cluster, std::vector<Cluster_>& best_destination_cluster, int nthreads) {
     auto ndim = data.num_dimensions();
 
     // We assume that there are at least two centers here, otherwise we should
@@ -237,7 +238,7 @@ void find_closest_two_centers(const Matrix_& data, Cluster_ ncenters, const Floa
             auto optr = data.get_observation(matwork);
             auto res2 = index.find2(optr);
             best_cluster[obs] = res2.first;
-            second_best_cluster[obs] = res2.second;
+            best_destination_cluster[obs] = res2.second;
         }
     });
 }
@@ -272,7 +273,7 @@ void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1,
     work.gain_multiplier[l2] = alt / (alt + 1);
 
     best_cluster[obs_id] = l2;
-    work.second_best_cluster[obs_id] = l1;
+    work.best_destination_cluster[obs_id] = l1;
 }
 
 /* ALGORITHM AS 136.1  APPL. STATIST. (1979) VOL.28, NO.1
@@ -311,12 +312,12 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
             wcss_loss = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
 
             // Find the cluster with minimum WCSS gain.
-            auto l2 = work.second_best_cluster[obs];
+            auto l2 = work.best_destination_cluster[obs];
             auto original_l2 = l2;
             auto l2_ptr = centers + long_ndim * static_cast<size_t>(l2); // cast to avoid overflow.
             auto wcss_gain = squared_distance_from_cluster(obs_ptr, l2_ptr, ndim) * work.gain_multiplier[l2];
 
-            auto check_best_cluster = [&](Cluster_ cen) {
+            auto update_destination_cluster = [&](Cluster_ cen) {
                 auto cen_ptr = centers + long_ndim * static_cast<size_t>(cen); // cast to avoid overflow.
                 auto candidate = squared_distance_from_cluster(obs_ptr, cen_ptr, ndim) * work.gain_multiplier[cen];
                 if (candidate < wcss_gain) {
@@ -325,11 +326,13 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
                 }
             };
 
-            // If the best cluster is live, we need to check all other clusters
-            // as potential transfer destinations. Otherwise, we only need to
-            // consider other live clusters for transfer; the non-live clusters
-            // were already worse than the second-best, so there's no point
-            // checking them again if they didn't change in the meantime.
+            // If the current assigned cluster is live, we need to check all
+            // other clusters as potential transfer destinations, because the
+            // gain/loss comparison has changed. Otherwise, we only need to
+            // consider other live clusters as transfer destinations; the
+            // non-live clusters were already rejected as transfer destinations
+            // when compared to the current assigned cluster, so there's no
+            // point checking them again if they didn't change in the meantime.
             //
             // The exception is for the first call to optimal_transfer, where we
             // consider all clusters as live (i.e., all_live = true). This is
@@ -339,20 +342,20 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
             if (all_live || work.update_history[l1].is_live(obs)) { 
                 for (Cluster_ cen = 0; cen < ncenters; ++cen) {
                     if (cen != l1 && cen != original_l2) {
-                        check_best_cluster(cen);
+                        update_destination_cluster(cen);
                     }
                 }
             } else {
                 for (Cluster_ cen = 0; cen < ncenters; ++cen) {
                     if (cen != l1 && cen != original_l2 && work.update_history[cen].is_live(obs)) {
-                        check_best_cluster(cen);
+                        update_destination_cluster(cen);
                     }
                 }
             }
 
             // Deciding whether to make the transfer based on the change to the WCSS.
             if (wcss_gain >= wcss_loss) {
-                work.second_best_cluster[obs] = l2;
+                work.best_destination_cluster[obs] = l2;
             } else {
                 work.optra_steps_since_last_transfer = 0;
                 work.update_history[l1].set_optimal(obs);
@@ -428,7 +431,7 @@ std::pair<bool, bool> quick_transfer(
                 // after the previous iteration that we visited this
                 // observation, then there's no point reevaluating the
                 // transfer, because nothing's going to be different anyway.
-                auto l2 = work.second_best_cluster[obs];
+                auto l2 = work.best_destination_cluster[obs];
                 auto& history2 = work.update_history[l2];
                 if (history1.changed_after(prev_it, obs) || history2.changed_after(prev_it, obs)) {
                     if (obs_ptr == NULL) {
@@ -527,7 +530,7 @@ public:
 
         RefineHartiganWong_internal::Workspace<Float_, Index_, Cluster_> work(nobs, ncenters);
 
-        RefineHartiganWong_internal::find_closest_two_centers(data, ncenters, centers, clusters, work.second_best_cluster, my_options.num_threads);
+        RefineHartiganWong_internal::find_closest_two_centers(data, ncenters, centers, clusters, work.best_destination_cluster, my_options.num_threads);
         for (Index_ obs = 0; obs < nobs; ++obs) {
             ++work.cluster_sizes[clusters[obs]];
         }
