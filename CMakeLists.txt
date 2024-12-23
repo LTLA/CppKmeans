@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(kmeans
-    VERSION 3.1.1
+    VERSION 3.1.2
     DESCRIPTION "A C++ port of the Hartigan-Wong k-means algorithm"
     LANGUAGES CXX)
 
