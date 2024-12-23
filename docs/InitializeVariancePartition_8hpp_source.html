@@ -220,7 +220,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            <span class="keyword">auto</span>&amp; cur_ss = dim_ss[0];</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            cur_ss.resize(ndim);</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            std::fill_n(centers, ndim, 0);</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            <span class="keyword">auto</span> matwork = data.create_workspace(0, nobs);</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            <span class="keyword">auto</span> matwork = data.create_workspace(<span class="keyword">static_cast&lt;</span>typename Matrix_::index_type<span class="keyword">&gt;</span>(0), nobs);</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>            <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(nobs) i = 0; i &lt; nobs; ++i) {</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                <span class="keyword">auto</span> dptr = data.get_observation(matwork);</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                InitializeVariancePartition_internal::compute_welford(ndim, dptr, centers, cur_ss.data(), <span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(i + 1));</div>
