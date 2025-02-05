@@ -99,7 +99,7 @@ public:
 
         for (iter = 1; iter <= my_options.max_iterations; ++iter) {
             index.reset(ndim, ncenters, centers);
-            parallelize(my_options.num_threads, nobs, [&](int, Index_ start, Index_ length) {
+            parallelize(my_options.num_threads, nobs, [&](int, Index_ start, Index_ length) -> void {
                 auto work = data.create_workspace(start, length);
                 for (Index_ obs = start, end = start + length; obs < end; ++obs) {
                     auto dptr = data.get_observation(work);

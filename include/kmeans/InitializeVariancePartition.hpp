@@ -210,7 +210,7 @@ public:
         }
 
         std::priority_queue<std::pair<Float_, Cluster_> > highest;
-        auto add_to_queue = [&](Cluster_ i) {
+        auto add_to_queue = [&](Cluster_ i) -> void {
             const auto& cur_ss = dim_ss[i];
             Float_ sum_ss = std::accumulate(cur_ss.begin(), cur_ss.end(), static_cast<Float_>(0));
 
