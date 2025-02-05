@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
-<tagfile doxygen_version="1.9.8">
+<tagfile doxygen_version="1.12.0">
   <compound kind="file">
     <name>compute_wcss.hpp</name>
     <path>kmeans/</path>
@@ -197,7 +197,7 @@
     <templarg>typename Matrix_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Initialize</base>
+    <base>kmeans::Initialize&lt; Matrix_, Cluster_, Float_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>InitializeKmeanspp</name>
@@ -251,7 +251,7 @@
     <templarg>class Matrix_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Initialize</base>
+    <base>kmeans::Initialize&lt; Matrix_, Cluster_, Float_ &gt;</base>
     <member kind="function">
       <type>Cluster_</type>
       <name>run</name>
@@ -266,7 +266,7 @@
     <templarg>class Matrix_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Initialize</base>
+    <base>kmeans::Initialize&lt; Matrix_, Cluster_, Float_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>InitializeRandom</name>
@@ -313,7 +313,7 @@
     <templarg>typename Matrix_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Initialize</base>
+    <base>kmeans::Initialize&lt; Matrix_, Cluster_, Float_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>InitializeVariancePartition</name>
@@ -371,21 +371,21 @@
       <type>double</type>
       <name>data_type</name>
       <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>a2756254ac2fadd78cc76b9b2156143de</anchor>
+      <anchor>a62a8e51202b58a8136b9815d1316dfc2</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>int</type>
       <name>index_type</name>
       <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>a286b214cb1d705686dd1de276307f670</anchor>
+      <anchor>a0777fb08a869fbfcc4254f8ec4eb0da6</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
       <type>int</type>
       <name>dimension_type</name>
       <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>aaf9dca05f33c4c6961ba4f6323098806</anchor>
+      <anchor>ae8c8ab38b08e8de633e0bbfffcbfcb28</anchor>
       <arglist></arglist>
     </member>
     <member kind="function">
@@ -469,7 +469,7 @@
     <templarg>typename Matrix_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Refine</base>
+    <base>kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>RefineHartiganWong</name>
@@ -537,7 +537,7 @@
     <templarg>typename Matrix_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Refine</base>
+    <base>kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>RefineLloyd</name>
@@ -591,7 +591,7 @@
     <templarg>typename Matrix_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Refine</base>
+    <base>kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>RefineMiniBatch</name>

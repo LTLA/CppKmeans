@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title="k&#45;means initialization with variance partitioning." alt="" coords="176,5,345,46"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,94,63,120"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,49,78,93,76,88,203,44"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="86,94,161,120"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="86,94,160,120"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="228,49,159,88,156,84,225,44"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="184,94,252,120"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="252,48,234,81,230,79,248,45"/>

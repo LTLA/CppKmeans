@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title="Interface for all k&#45;means refinement algorithms." alt="" coords="5,77,161,118"/>
 <area shape="rect" id="Node000002" href="$classkmeans_1_1RefineHartiganWong.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="209,5,400,46"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,70,239,44,240,49,163,75"/>
-<area shape="rect" id="Node000003" href="$classkmeans_1_1RefineLloyd.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="234,70,375,126"/>
+<area shape="rect" id="Node000003" href="$classkmeans_1_1RefineLloyd.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="234,70,374,126"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="176,95,234,95,234,100,176,100"/>
 <area shape="rect" id="Node000004" href="$classkmeans_1_1RefineMiniBatch.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="213,149,396,190"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="163,121,240,146,239,151,161,126"/>
