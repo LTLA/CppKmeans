@@ -63,34 +63,30 @@ Index_ weighted_sample(const std::vector<Float_>& cumulative, const std::vector<
     return chosen_id;
 }
 
-template<typename Float_, class Matrix_, typename Cluster_>
-std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, uint64_t seed, int nthreads) {
-    typedef typename Matrix_::index_type Index_;
-    typedef typename Matrix_::dimension_type Dim_;
-
-    auto nobs = data.num_observations();
-    auto ndim = data.num_dimensions();
+template<typename Index_, typename Float_, class Matrix_, typename Cluster_>
+std::vector<Index_> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, uint64_t seed, int nthreads) {
+    Index_ nobs = data.num_observations();
+    size_t ndim = data.num_dimensions();
     std::vector<Float_> mindist(nobs, 1);
     std::vector<Float_> cumulative(nobs);
     std::vector<Index_> sofar;
     sofar.reserve(ncenters);
     std::mt19937_64 eng(seed);
 
-    auto last_work = data.create_workspace();
+    auto last_work = data.new_extractor();
     for (Cluster_ cen = 0; cen < ncenters; ++cen) {
         if (!sofar.empty()) {
-            auto last_ptr = data.get_observation(sofar.back(), last_work);
+            auto last_ptr = last_work->get_observation(sofar.back());
 
             parallelize(nthreads, nobs, [&](int, Index_ start, Index_ length) {
-                auto curwork = data.create_workspace();
+                auto curwork = data.new_extractor(start, length);
                 for (Index_ obs = start, end = start + length; obs < end; ++obs) {
-                    if (mindist[obs]) {
-                        auto acopy = data.get_observation(obs, curwork);
-                        auto scopy = last_ptr;
+                    auto current = curwork->get_observation(); // make sure this is outside the if(), as we MUST call this in every loop iteration to fulfill consecutive access.
 
+                    if (mindist[obs]) {
                         Float_ r2 = 0;
-                        for (Dim_ dim = 0; dim < ndim; ++dim, ++acopy, ++scopy) {
-                            Float_ delta = static_cast<Float_>(*acopy) - static_cast<Float_>(*scopy); // cast to ensure consistent precision regardless of Data_.
+                        for (size_t d = 0; d < ndim; ++d) {
+                            Float_ delta = static_cast<Float_>(current[d]) - static_cast<Float_>(last_ptr[d]); // cast to ensure consistent precision regardless of Data_.
                             r2 += delta * delta;
                         }
 
@@ -132,18 +128,20 @@ std::vector<typename Matrix_::index_type> run_kmeanspp(const Matrix_& data, Clus
  * where the sampling probability for each point is proportional to the squared distance to the closest starting point that was chosen in any of the previous iterations.
  * The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.
  *
- * @tparam Matrix_ Matrix type for the input data.
- * This should satisfy the `MockMatrix` contract.
+ * @tparam Index_ Integer type for the observation indices in the input dataset.
+ * @tparam Data_ Numeric type for the input dataset.
  * @tparam Cluster_ Integer type for the cluster assignments.
  * @tparam Float_ Floating-point type for the centroids.
+ * @tparam Matrix_ Class of the input data matrix.
+ * This should satisfy the `Matrix` interface.
  *
  * @see
  * Arthur, D. and Vassilvitskii, S. (2007).
  * k-means++: the advantages of careful seeding.
  * _Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms_, 1027-1035.
  */
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
-class InitializeKmeanspp : public Initialize<Matrix_, Cluster_, Float_> {
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
+class InitializeKmeanspp final : public Initialize<Index_, Data_, Cluster_, Float_, Matrix_> {
 private:
     InitializeKmeansppOptions my_options;
 
@@ -160,8 +158,7 @@ public:
 
 public:
     /**
-     * @return Options for **kmeans++** partitioning,
-     * to be modified prior to calling `run()`.
+     * @return Options for **kmeans++** partitioning, to be modified prior to calling `run()`.
      */
     InitializeKmeansppOptions& get_options() {
         return my_options;
@@ -169,12 +166,12 @@ public:
 
 public:
     Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Float_* centers) const {
-        size_t nobs = matrix.num_observations();
+        Index_ nobs = matrix.num_observations();
         if (!nobs) {
             return 0;
         }
 
-        auto sofar = InitializeKmeanspp_internal::run_kmeanspp<Float_>(matrix, ncenters, my_options.seed, my_options.num_threads);
+        auto sofar = InitializeKmeanspp_internal::run_kmeanspp<Index_, Float_>(matrix, ncenters, my_options.seed, my_options.num_threads);
         internal::copy_into_array(matrix, sofar, centers);
         return sofar.size();
     }

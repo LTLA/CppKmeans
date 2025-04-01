@@ -2,7 +2,7 @@
 #define KMEANS_COMPUTE_WCSS_HPP
 
 #include <algorithm>
-#include "SimpleMatrix.hpp"
+#include "Matrix.hpp"
 
 /**
  * @file compute_wcss.hpp
@@ -29,19 +29,18 @@ namespace kmeans {
 template<class Matrix_, typename Cluster_, typename Float_>
 void compute_wcss(const Matrix_& data, Cluster_ ncenters, const Float_* centers, const Cluster_* clusters, Float_* wcss) {
     auto nobs = data.num_observations();
-    auto ndim = data.num_dimensions();
-    size_t long_ndim = ndim;
+    size_t ndim = data.num_dimensions();
     std::fill_n(wcss, ncenters, 0);
 
-    auto work = data.create_workspace(static_cast<decltype(nobs)>(0), nobs);
-    for (decltype(nobs) obs = 0; obs < nobs; ++obs) {
+    auto work = data.create_workspace(0, nobs);
+    for (Index<Matrix_> obs = 0; obs < nobs; ++obs) {
         auto cen = clusters[obs];
-        auto curcenter = centers + static_cast<size_t>(cen) * long_ndim;
+        auto curcenter = centers + static_cast<size_t>(cen) * ndim; // cast to size_t to avoid overflow.
         auto& curwcss = wcss[cen];
 
-        auto curdata = data.get_observation(work);
-        for (decltype(ndim) dim = 0; dim < ndim; ++dim, ++curcenter, ++curdata) {
-            Float_ delta = static_cast<Float_>(*curdata) - *curcenter; // cast for consistent precision regardless of Data_.
+        auto curdata = work->get_observation();
+        for (size_t d = 0; d < ndim; ++d) {
+            Float_ delta = static_cast<Float_>(curdata[d]) - curcenter[d]; // cast for consistent precision regardless of Data_.
             curwcss += delta * delta;
         }
     }

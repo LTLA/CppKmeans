@@ -212,11 +212,11 @@ public:
     {}
 };
 
-template<typename Data_, typename Float_, typename Dim_>
-Float_ squared_distance_from_cluster(const Data_* data, const Float_* center, Dim_ ndim) {
+template<typename Data_, typename Float_>
+Float_ squared_distance_from_cluster(const Data_* data, const Float_* center, size_t ndim) {
     Float_ output = 0;
-    for (decltype(ndim) dim = 0; dim < ndim; ++dim, ++data, ++center) {
-        Float_ delta = static_cast<Float_>(*data) - *center; // cast to float for consistent precision regardless of Data_.
+    for (size_t d = 0; d < ndim; ++d) {
+        Float_ delta = static_cast<Float_>(data[d]) - center[d]; // cast to float for consistent precision regardless of Data_.
         output += delta * delta;
     }
     return output;
@@ -248,16 +248,15 @@ constexpr Float_ big_number() {
     return 1e30; // Some very big number.
 }
 
-template<typename Dim_, typename Data_, typename Index_, typename Cluster_, typename Float_>
-void transfer_point(Dim_ ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1, Cluster_ l2, Float_* centers, Cluster_* best_cluster, Workspace<Float_, Index_, Cluster_>& work) {
+template<typename Data_, typename Index_, typename Cluster_, typename Float_>
+void transfer_point(size_t ndim, const Data_* obs_ptr, Index_ obs_id, Cluster_ l1, Cluster_ l2, Float_* centers, Cluster_* best_cluster, Workspace<Float_, Index_, Cluster_>& work) {
     // Yes, casts to float are deliberate here, so that the
     // multipliers can be computed correctly.
     Float_ al1 = work.cluster_sizes[l1], alw = al1 - 1;
     Float_ al2 = work.cluster_sizes[l2], alt = al2 + 1;
 
-    size_t long_ndim = ndim;
-    auto copy1 = centers + static_cast<size_t>(l1) * long_ndim; // cast to avoid overflow.
-    auto copy2 = centers + static_cast<size_t>(l2) * long_ndim;
+    auto copy1 = centers + static_cast<size_t>(l1) * ndim; // cast to avoid overflow.
+    auto copy2 = centers + static_cast<size_t>(l2) * ndim;
     for (decltype(ndim) dim = 0; dim < ndim; ++dim, ++copy1, ++copy2, ++obs_ptr) {
         Float_ oval = *obs_ptr; // cast to float for consistent precision regardless of Data_.
         *copy1 = (*copy1 * al1 - oval) / alw;
@@ -288,7 +287,6 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
     auto nobs = data.num_observations();
     auto ndim = data.num_dimensions();
     auto matwork = data.create_workspace();
-    size_t long_ndim = ndim;
 
     for (decltype(nobs) obs = 0; obs < nobs; ++obs) { 
         ++work.optra_steps_since_last_transfer;
@@ -308,17 +306,17 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, typename Matrix_::i
             // improve accuracy by just recomputing the loss all the time,
             // which doesn't take too much extra effort.
             auto& wcss_loss = work.wcss_loss[obs];
-            auto l1_ptr = centers + long_ndim * static_cast<size_t>(l1); // cast to avoid overflow.
+            auto l1_ptr = centers + ndim * static_cast<size_t>(l1); // cast to avoid overflow.
             wcss_loss = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
 
             // Find the cluster with minimum WCSS gain.
             auto l2 = work.best_destination_cluster[obs];
             auto original_l2 = l2;
-            auto l2_ptr = centers + long_ndim * static_cast<size_t>(l2); // cast to avoid overflow.
+            auto l2_ptr = centers + ndim * static_cast<size_t>(l2); // cast to avoid overflow.
             auto wcss_gain = squared_distance_from_cluster(obs_ptr, l2_ptr, ndim) * work.gain_multiplier[l2];
 
             auto update_destination_cluster = [&](Cluster_ cen) {
-                auto cen_ptr = centers + long_ndim * static_cast<size_t>(cen); // cast to avoid overflow.
+                auto cen_ptr = centers + ndim * static_cast<size_t>(cen); // cast to avoid overflow.
                 auto candidate = squared_distance_from_cluster(obs_ptr, cen_ptr, ndim) * work.gain_multiplier[cen];
                 if (candidate < wcss_gain) {
                     wcss_gain = candidate;
@@ -398,7 +396,7 @@ std::pair<bool, bool> quick_transfer(
     auto nobs = data.num_observations();
     auto matwork = data.create_workspace();
     auto ndim = data.num_dimensions();
-    size_t long_ndim = data.num_dimensions();
+    size_t ndim = data.num_dimensions();
 
     typedef decltype(nobs) Index_;
     Index_ steps_since_last_quick_transfer = 0; // i.e., ICOUN in the original Fortran implementation.
@@ -422,7 +420,7 @@ std::pair<bool, bool> quick_transfer(
                 // outermost loop, its WCSS loss won't have been updated yet.
                 auto& history1 = work.update_history[l1];
                 if (history1.changed_after_or_at(prev_it, obs)) {
-                    auto l1_ptr = centers + static_cast<size_t>(l1) * long_ndim; // cast to avoid overflow.
+                    auto l1_ptr = centers + static_cast<size_t>(l1) * ndim; // cast to avoid overflow.
                     obs_ptr = data.get_observation(obs, matwork);
                     work.wcss_loss[obs] = squared_distance_from_cluster(obs_ptr, l1_ptr, ndim) * work.loss_multiplier[l1];
                 }
@@ -437,7 +435,7 @@ std::pair<bool, bool> quick_transfer(
                     if (obs_ptr == NULL) {
                         obs_ptr = data.get_observation(obs, matwork);
                     }
-                    auto l2_ptr = centers + static_cast<size_t>(l2) * long_ndim; // cast to avoid overflow.
+                    auto l2_ptr = centers + static_cast<size_t>(l2) * ndim; // cast to avoid overflow.
                     auto wcss_gain = squared_distance_from_cluster(obs_ptr, l2_ptr, ndim) * work.gain_multiplier[l2];
 
                     if (wcss_gain < work.wcss_loss[obs]) {
@@ -485,18 +483,21 @@ std::pair<bool, bool> quick_transfer(
  * or 4 (maximum quick transfer iterations reached without convergence, if `RefineHartiganWongOptions::quit_on_quick_transfer_convergence_failure = true`).
  * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
  * 
- * @tparam Matrix_ Matrix type for the input data.
- * This should satisfy the `MockMatrix` contract.
+ * @tparam Index_ Integer type for the observation indices in the input dataset.
+ * @tparam Data_ Numeric type for the input dataset.
  * @tparam Cluster_ Integer type for the cluster assignments.
  * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ * @tparam Matrix_ Class of the input data matrix.
+ * This should satisfy the `Matrix` interface.
  *
  * @see
  * Hartigan, J. A. and Wong, M. A. (1979).
  * Algorithm AS 136: A K-means clustering algorithm.
  * _Applied Statistics_, 28, 100-108.
  */
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
-class RefineHartiganWong : public Refine<Matrix_, Cluster_, Float_> {
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Data_, Index_> >
+class RefineHartiganWong final : public Refine<Index_, Data_, Cluster_, Float_, Matrix_> {
 public:
     /**
      * @param options Further options for the Hartigan-Wong algorithm.
@@ -510,7 +511,6 @@ public:
 
 private:
     RefineHartiganWongOptions my_options;
-    typedef typename Matrix_::index_type Index_;
 
 public:
     /**
