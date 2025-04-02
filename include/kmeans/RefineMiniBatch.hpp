@@ -85,13 +85,16 @@ struct RefineMiniBatchOptions {
  * In the `Details::status` returned by `run()`, the status code is either 0 (success) or 2 (maximum iterations reached without convergence).
  * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
  *
- * @tparam Matrix_ Matrix type for the input data.
- * This should satisfy the `MockMatrix` contract.
+ * @tparam Index_ Integer type for the observation indices.
+ * @tparam Data_ Numeric type for the data.
  * @tparam Cluster_ Integer type for the cluster assignments.
  * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ * @tparam Matrix_ Type for the input data matrix.
+ * This should satisfy the `Matrix` interface.
  */
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
-class RefineMiniBatch : public Refine<Matrix_, Cluster_, Float_> {
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, typename Matrix_ = Matrix<Index_, Data_> >
+class RefineMiniBatch : public Refine<Index_, Data_, Cluster_, Float_, Matrix_> {
 public:
     /**
      * @param options Further options for the mini-batch algorithm.
@@ -117,7 +120,7 @@ private:
 
 public:
     Details<typename Matrix_::index_type> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
-        auto nobs = data.num_observations();
+        Index_ nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
             return internal::process_edge_case(data, ncenters, centers, clusters);
         }
@@ -125,7 +128,6 @@ public:
         int iter = 0, status = 0;
         std::vector<uint64_t> total_sampled(ncenters); // holds the number of sampled observations across iterations, so we need a large integer.
         std::vector<Cluster_> previous(nobs);
-        typedef decltype(nobs) Index_;
         std::vector<uint64_t> last_changed(ncenters), last_sampled(ncenters); // holds the number of sampled/changed observation for the last few iterations.
 
         Index_ actual_batch_size = nobs;
@@ -136,9 +138,8 @@ public:
         std::vector<Index_> chosen(actual_batch_size);
         std::mt19937_64 eng(my_options.seed);
 
-        auto ndim = data.num_dimensions();
-        size_t long_ndim = ndim;
-        internal::QuickSearch<Float_, Cluster_, decltype(ndim)> index;
+        size_t ndim = data.num_dimensions();
+        internal::QuickSearch<Float_, Cluster_> index;
 
         for (iter = 1; iter <= my_options.max_iterations; ++iter) {
             aarand::sample(nobs, actual_batch_size, chosen.data(), eng);
@@ -165,11 +166,11 @@ public:
                 ++n;
 
                 Float_ mult = static_cast<Float_>(1)/static_cast<Float_>(n);
-                auto ccopy = centers + static_cast<size_t>(c) * long_ndim;
+                auto ccopy = centers + static_cast<size_t>(c) * ndim; // cast to size_t to avoid overflow.
                 auto ocopy = data.get_observation(work);
 
-                for (decltype(ndim) d = 0; d < ndim; ++d, ++ocopy, ++ccopy) {
-                    (*ccopy) += (static_cast<Float_>(*ocopy) - *ccopy) * mult; // cast to ensure consistent precision regardless of Matrix_::data_type.
+                for (size_t d = 0; d < ndim; ++d) {
+                    ccopy[d] += (static_cast<Float_>(ocopy[d]) - ccopy[d]) * mult; // cast to ensure consistent precision regardless of Matrix_::data_type.
                 }
             }
 
