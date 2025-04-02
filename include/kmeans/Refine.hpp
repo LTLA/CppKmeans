@@ -2,7 +2,7 @@
 #define KMEANS_REFINE_HPP
 
 #include "Details.hpp"
-#include "SimpleMatrix.hpp"
+#include "Matrix.hpp"
 
 /**
  * @file Refine.hpp

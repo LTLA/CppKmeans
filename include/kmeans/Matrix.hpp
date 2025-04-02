@@ -1,6 +1,9 @@
 #ifndef KMEANS_MATRIX_HPP
 #define KMEANS_MATRIX_HPP
 
+#include <memory>
+#include <utility>
+
 /**
  * @file Matrix.hpp
  * @brief Interface for matrix inputs.
