@@ -1,6 +1,8 @@
 #ifndef KMEANS_SIMPLE_MATRIX_HPP
 #define KMEANS_SIMPLE_MATRIX_HPP
 
+#include "Matrix.hpp"
+
 /**
  * @file SimpleMatrix.hpp
  * @brief Wrapper for a simple dense matrix.
@@ -55,7 +57,7 @@ private:
 
 public:
     const Data_* get_observation() {
-        return my_parent.my_data + static-cast<size_t>(my_sequence[my_position++]) * my_parent.my_num_dim; // cast to size_t to avoid overflow during multiplication.
+        return my_parent.my_data + static_cast<size_t>(my_sequence[my_position++]) * my_parent.my_num_dim; // cast to size_t to avoid overflow during multiplication.
     }
 };
 /**
@@ -86,6 +88,9 @@ private:
     size_t my_num_dim;
     Index_ my_num_obs;
     const Data_* my_data;
+    friend class SimpleMatrixRandomAccessExtractor<Index_, Data_>;
+    friend class SimpleMatrixConsecutiveAccessExtractor<Index_, Data_>;
+    friend class SimpleMatrixIndexedAccessExtractor<Index_, Data_>;
 
 public:
     /**

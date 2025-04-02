@@ -4,7 +4,8 @@
 #include "Details.hpp"
 #include "Refine.hpp"
 #include "Initialize.hpp"
-#include "MockMatrix.hpp"
+#include "Matrix.hpp"
+#include "SimpleMatrix.hpp"
 
 #include "InitializeKmeanspp.hpp"
 #include "InitializeRandom.hpp"
@@ -48,7 +49,7 @@ namespace kmeans {
  * @param[in] clusters Pointer to an array of length equal to the number of observations (from `data.num_observations()`).
  * On output, this will contain the 0-based cluster assignment for each observation.
  */
-template<typename Index, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
 Details<Index_> compute(
     const Matrix_& data, 
     const Initialize<Index_, Data_, Cluster_, Float_, Matrix_>& initialize, 
@@ -115,7 +116,7 @@ struct Results {
  *
  * @return Results of the clustering, including the centroid locations and cluster assignments.
  */
-template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Data_, Index_> >
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
 Results<Index_, Cluster_, Float_> compute(
     const Matrix_& data, 
     const Initialize<Index_, Data_, Cluster_, Float_, Matrix_>& initialize, 
@@ -127,6 +128,16 @@ Results<Index_, Cluster_, Float_> compute(
     output.centers.resize(static_cast<size_t>(num_centers) * static_cast<size_t>(data.num_dimensions()));
     output.details = compute(data, initialize, refine, num_centers, output.centers.data(), output.clusters.data());
     return output;
+}
+
+template<typename Index_, typename Data_, typename Cluster_, typename Float_>
+Results<Index_, Cluster_, Float_> compute(
+    const Matrix<Index_, Data_>& data,
+    const Initialize<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& initialize, 
+    const Refine<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& refine,
+    Cluster_ num_centers)
+{
+    return compute<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >(data, initialize, refine, num_centers);
 }
 
 }

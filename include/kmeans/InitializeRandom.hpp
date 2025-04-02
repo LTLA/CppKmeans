@@ -39,7 +39,7 @@ struct InitializeRandomOptions {
  * @tparam Matrix_ Class of the input data matrix.
  * This should satisfy the `Matrix` interface.
  */
-template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Data_, Index_> >
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
 class InitializeRandom final : public Initialize<Index_, Data_, Cluster_, Float_, Matrix_> { 
 private:
     InitializeRandomOptions my_options;

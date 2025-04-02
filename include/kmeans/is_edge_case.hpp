@@ -35,10 +35,10 @@ Details<Index<Matrix_> > process_edge_case(const Matrix_& data, Cluster_ ncenter
         std::fill_n(sizes.begin(), nobs, 1);
 
         auto ndim = data.num_dimensions();
-        auto work = data.create_workspace(0, nobs);
+        auto work = data.new_extractor(0, nobs);
         auto cptr = centers;
         for (decltype(nobs) o = 0; o < nobs; ++o, cptr += ndim) {
-            auto ptr = data.get_observation(work);
+            auto ptr = work->get_observation();
             std::copy_n(ptr, ndim, cptr);
         }
 

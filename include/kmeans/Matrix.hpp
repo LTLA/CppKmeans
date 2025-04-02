@@ -39,7 +39,7 @@ public:
      *
      * This will only be called within a single thread and may modify internal data members of a `RandomAccessExtractor` subclass. 
      */
-    const Data_* get_observation(Index_ i) = 0;
+    virtual const Data_* get_observation(Index_ i) = 0;
 };
 
 /**
@@ -75,7 +75,7 @@ public:
      *
      * This method will only be called within a single thread and may modify internal data members of a `ConsecutiveAccessExtractor` subclass. 
      */
-    const Data_* get_observation() = 0;
+    virtual const Data_* get_observation() = 0;
 };
 
 /**
@@ -89,6 +89,7 @@ public:
  */
 template<typename Index_, typename Data_>
 class IndexedAccessExtractor {
+public:
     /**
      * @cond
      */
@@ -110,7 +111,7 @@ class IndexedAccessExtractor {
      *
      * This method will only be called within a single thread and may modify internal data members of a `ConsecutiveAccessExtractor` subclass. 
      */
-    const Data_* get_observation() = 0;
+    virtual const Data_* get_observation() = 0;
 };
 
 /**
@@ -153,14 +154,14 @@ public:
     /**
      * @return A new random-access extractor.
      */
-    std::unique_ptr<RandomAccessExtractor<Index_, Data_> > new_extractor() const = 0;
+    virtual std::unique_ptr<RandomAccessExtractor<Index_, Data_> > new_extractor() const = 0;
 
     /**
      * @param start Start of the contiguous block of observations to be accessed consecutively.
      * @param length Length of the contiguous block of observations to be accessed consecutively.
      * @return A new consecutive-access extractor.
      */
-    std::unique_ptr<RandomAccessExtractor<Index_, Data_> > new_extractor(Index_ start, Index_ length) const = 0;
+    virtual std::unique_ptr<ConsecutiveAccessExtractor<Index_, Data_> > new_extractor(Index_ start, Index_ length) const = 0;
 
     /**
      * @param[in] sequence Pointer to an array of sorted and unique indices of observations, to be accessed in the provided order.
@@ -168,13 +169,13 @@ public:
      * @param length Number of observations in `sequence`.
      * @return A new indexed-access extractor.
      */
-    std::unique_ptr<IndexedAccessExtractor<Index_, Data_> > new_extractor(const Index_* sequence, size_t length) const = 0;
-
+    virtual std::unique_ptr<IndexedAccessExtractor<Index_, Data_> > new_extractor(const Index_* sequence, size_t length) const = 0;
 };
 
 /**
  * @cond
  */
+// A simple alias to help determine the Index_ inside a Matrix_ instance.
 template<class Matrix_>
 using Index = decltype(std::declval<Matrix_>().num_observations());
 /**

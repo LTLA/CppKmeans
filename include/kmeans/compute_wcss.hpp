@@ -32,13 +32,13 @@ void compute_wcss(const Matrix_& data, Cluster_ ncenters, const Float_* centers,
     size_t ndim = data.num_dimensions();
     std::fill_n(wcss, ncenters, 0);
 
-    auto work = data.create_workspace(0, nobs);
+    auto work = data.new_extractor(0, nobs);
     for (Index<Matrix_> obs = 0; obs < nobs; ++obs) {
+        auto curdata = work->get_observation();
         auto cen = clusters[obs];
         auto curcenter = centers + static_cast<size_t>(cen) * ndim; // cast to size_t to avoid overflow.
-        auto& curwcss = wcss[cen];
 
-        auto curdata = work->get_observation();
+        Float_& curwcss = wcss[cen];
         for (size_t d = 0; d < ndim; ++d) {
             Float_ delta = static_cast<Float_>(curdata[d]) - curcenter[d]; // cast for consistent precision regardless of Data_.
             curwcss += delta * delta;

@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "Initialize.hpp"
+#include "Matrix.hpp"
 
 /**
  * @file InitializeVariancePartition.hpp
@@ -163,7 +164,7 @@ Float_ optimize_partition(
  * In Search of Deterministic Methods for Initializing K-Means and Gaussian Mixture Clustering,
  * _Intelligent Data Analysis_ 11, 319-338.
  */
-template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Data_, Index_> >
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
 class InitializeVariancePartition final : public Initialize<Index_, Data_, Cluster_, Float_, Matrix_> {
 public:
     /**
@@ -205,9 +206,9 @@ public:
             auto& cur_ss = dim_ss[0];
             cur_ss.resize(ndim);
             std::fill_n(centers, ndim, 0);
-            auto matwork = data.create_workspace(0, nobs);
+            auto matwork = data.new_extractor(0, nobs);
             for (decltype(nobs) i = 0; i < nobs; ++i) {
-                auto dptr = data.get_observation(matwork);
+                auto dptr = matwork->get_observation();
                 InitializeVariancePartition_internal::compute_welford(ndim, dptr, centers, cur_ss.data(), static_cast<Float_>(i + 1));
             }
         }
@@ -253,13 +254,13 @@ public:
             next_ss.resize(ndim);
             auto& next_assignments = assignments[cluster];
 
-            auto work = data.create_workspace(cur_assignments.data(), cur_assignments.size());
             cur_assignments_copy.clear();
             std::fill_n(cur_center, ndim, 0);
             std::fill(cur_ss.begin(), cur_ss.end(), 0);
+            auto work = data.new_extractor(cur_assignments.data(), cur_assignments.size());
 
             for (auto i : cur_assignments) {
-                auto dptr = data.get_observation(work);
+                auto dptr = work->get_observation(); // make sure this is outside the if(), as it must always be called in each loop iteration to match 'cur_assignments' properly.
                 if (dptr[top_dim] < partition_boundary) {
                     cur_assignments_copy.push_back(i);
                     InitializeVariancePartition_internal::compute_welford(ndim, dptr, cur_center, cur_ss.data(), static_cast<Float_>(cur_assignments_copy.size()));

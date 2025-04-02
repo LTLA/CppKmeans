@@ -119,7 +119,7 @@ private:
     RefineMiniBatchOptions my_options;
 
 public:
-    Details<typename Matrix_::index_type> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
+    Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
         Index_ nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
             return internal::process_edge_case(data, ncenters, centers, clusters);
@@ -151,15 +151,15 @@ public:
 
             index.reset(ndim, ncenters, centers);
             parallelize(my_options.num_threads, actual_batch_size, [&](int, Index_ start, Index_ length) {
-                auto work = data.create_workspace(chosen.data() + start, length);
+                auto work = data.new_extractor(chosen.data() + start, length);
                 for (Index_ s = start, end = start + length; s < end; ++s) {
-                    auto ptr = data.get_observation(work);
+                    auto ptr = work->get_observation();
                     clusters[chosen[s]] = index.find(ptr);
                 }
             });
 
             // Updating the means for each cluster.
-            auto work = data.create_workspace(chosen.data(), actual_batch_size);
+            auto work = data.new_extractor(chosen.data(), actual_batch_size);
             for (auto o : chosen) {
                 const auto c = clusters[o];
                 auto& n = total_sampled[c];
@@ -167,7 +167,7 @@ public:
 
                 Float_ mult = static_cast<Float_>(1)/static_cast<Float_>(n);
                 auto ccopy = centers + static_cast<size_t>(c) * ndim; // cast to size_t to avoid overflow.
-                auto ocopy = data.get_observation(work);
+                auto ocopy = work->get_observation();
 
                 for (size_t d = 0; d < ndim; ++d) {
                     ccopy[d] += (static_cast<Float_>(ocopy[d]) - ccopy[d]) * mult; // cast to ensure consistent precision regardless of Matrix_::data_type.
@@ -212,9 +212,9 @@ public:
         // Run through all observations to make sure they have the latest cluster assignments.
         index.reset(ndim, ncenters, centers);
         parallelize(my_options.num_threads, nobs, [&](int, Index_ start, Index_ length) {
-            auto work = data.create_workspace(start, length);
+            auto work = data.new_extractor(start, length);
             for (Index_ s = start, end = start + length; s < end; ++s) {
-                auto ptr = data.get_observation(work);
+                auto ptr = work->get_observation();
                 clusters[s] = index.find(ptr);
             }
         });

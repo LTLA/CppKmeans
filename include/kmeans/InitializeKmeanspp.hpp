@@ -9,7 +9,7 @@
 #include "aarand/aarand.hpp"
 
 #include "Initialize.hpp"
-#include "SimpleMatrix.hpp"
+#include "Matrix.hpp"
 #include "copy_into_array.hpp"
 #include "parallelize.hpp"
 

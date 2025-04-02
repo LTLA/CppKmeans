@@ -9,6 +9,7 @@
 #endif
 
 #include "kmeans/InitializeRandom.hpp"
+#include "kmeans/SimpleMatrix.hpp"
 
 TEST(RandomInitialization, Sampling) {
     int nc = 50;
@@ -57,10 +58,10 @@ TEST_P(RandomInitializationTest, Basic) {
     // Checks that the class does the right thing.
     kmeans::InitializeRandomOptions opt;
     opt.seed = ncenters * 10;
-    kmeans::InitializeRandom init(opt);
+    kmeans::InitializeRandom<int, double, int, double> init(opt);
 
     std::vector<double> centers(nr * ncenters);
-    auto nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), ncenters, centers.data());
+    auto nfilled = init.run(kmeans::SimpleMatrix<int, double>(nr, nc, data.data()), ncenters, centers.data());
     EXPECT_EQ(nfilled, ncenters);
 
     auto matched = match_to_data(ncenters, centers);
@@ -95,15 +96,15 @@ protected:
 };
 
 TEST_F(RandomInitializationEdgeTest, TooManyClusters) {
-    kmeans::InitializeRandom init;
+    kmeans::InitializeRandom<int, double, int, double> init;
 
     std::vector<double> centers(nc * nr);
-    auto nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc, centers.data());
+    auto nfilled = init.run(kmeans::SimpleMatrix<int, double>(nr, nc, data.data()), nc, centers.data());
     EXPECT_EQ(nfilled, nc);
     EXPECT_EQ(centers, data);
 
     std::fill(centers.begin(), centers.end(), 0);
-    nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc + 10, centers.data());
+    nfilled = init.run(kmeans::SimpleMatrix<int, double>(nr, nc, data.data()), nc + 10, centers.data());
     EXPECT_EQ(nfilled, nc);
     EXPECT_EQ(centers, data);
 }
@@ -111,7 +112,7 @@ TEST_F(RandomInitializationEdgeTest, TooManyClusters) {
 TEST(RandomInitialization, Options) {
     kmeans::InitializeRandomOptions opt;
     opt.seed = 12345;
-    kmeans::InitializeRandom init(opt);
+    kmeans::InitializeRandom<int, double, int, double> init(opt);
     EXPECT_EQ(init.get_options().seed, 12345);
 
     init.get_options().seed = 99999;

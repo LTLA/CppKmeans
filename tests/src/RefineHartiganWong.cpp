@@ -6,6 +6,7 @@
 #endif
 
 #include "kmeans/RefineHartiganWong.hpp"
+#include "kmeans/SimpleMatrix.hpp"
 
 class RefineHartiganWongBasicTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
 protected:
@@ -17,12 +18,12 @@ protected:
 TEST_P(RefineHartiganWongBasicTest, Sweep) {
     auto ncenters = std::get<1>(GetParam());
 
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
     auto centers = create_centers(ncenters);
     auto original = centers;
     std::vector<int> clusters(nc);
 
-    kmeans::RefineHartiganWong hw;
+    kmeans::RefineHartiganWong<int, double, int, double> hw;
     auto res = hw.run(mat, ncenters, centers.data(), clusters.data());
     EXPECT_EQ(res.status, 0);
 
@@ -37,7 +38,7 @@ TEST_P(RefineHartiganWongBasicTest, Sweep) {
 
     // Checking we don't get held up by quick transfer convergence failures.
     {
-        kmeans::RefineHartiganWong hw2;
+        kmeans::RefineHartiganWong<int, double, int, double> hw2;
         hw2.get_options().quit_on_quick_transfer_convergence_failure = true;
 
         auto centers2 = original;
@@ -51,7 +52,7 @@ TEST_P(RefineHartiganWongBasicTest, Sweep) {
 
     // Checking we get sensible results if we don't do any quick transfers at all.
     {
-        kmeans::RefineHartiganWong hw2;
+        kmeans::RefineHartiganWong<int, double, int, double> hw2;
         hw2.get_options().max_quick_transfer_iterations = 0;
 
         auto centers2 = original;
@@ -72,7 +73,7 @@ TEST_P(RefineHartiganWongBasicTest, Sweep) {
     {
         kmeans::RefineHartiganWongOptions popt;
         popt.num_threads = 3;
-        kmeans::RefineHartiganWong phw(popt);
+        kmeans::RefineHartiganWong<int, double, int, double> phw(popt);
 
         auto pcenters = original;
         std::vector<int> pclusters(nc);
@@ -86,11 +87,11 @@ TEST_P(RefineHartiganWongBasicTest, Sweep) {
 TEST_P(RefineHartiganWongBasicTest, Sanity) {
     auto ncenters = std::get<1>(GetParam());
     auto dups = create_jittered_matrix(ncenters);
-    kmeans::SimpleMatrix mat(nr, nc, dups.data.data());
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, dups.data.data());
 
     // HartiganWong should give us back the perfect clusters.
     std::vector<int> clusters(nc);
-    kmeans::RefineHartiganWong hw;
+    kmeans::RefineHartiganWong<int, double, int, double> hw;
     auto res = hw.run(mat, ncenters, dups.centers.data(), clusters.data());
 
     EXPECT_EQ(clusters, dups.clusters);
@@ -116,8 +117,8 @@ protected:
 };
 
 TEST_F(RefineHartiganWongConstantTest, Extremes) {
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineHartiganWong hw;
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
+    kmeans::RefineHartiganWong<int, double, int, double> hw;
 
     {
         std::vector<double> centers(nr * nc);
@@ -133,8 +134,8 @@ TEST_F(RefineHartiganWongConstantTest, Extremes) {
 }
 
 TEST_F(RefineHartiganWongConstantTest, OptimalTransferFailure) {
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineHartiganWong hw;
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
+    kmeans::RefineHartiganWong<int, double, int, double> hw;
     hw.get_options().max_iterations = 0;
 
     int ncenters = 3;
@@ -145,8 +146,8 @@ TEST_F(RefineHartiganWongConstantTest, OptimalTransferFailure) {
 }
 
 TEST_F(RefineHartiganWongConstantTest, QuickTransferFailure) {
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineHartiganWong hw;
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
+    kmeans::RefineHartiganWong<int, double, int, double> hw;
     hw.get_options().quit_on_quick_transfer_convergence_failure = true;
     hw.get_options().max_quick_transfer_iterations = 0;
 
@@ -160,7 +161,7 @@ TEST_F(RefineHartiganWongConstantTest, QuickTransferFailure) {
 TEST(RefineHartiganWong, Options) {
     kmeans::RefineHartiganWongOptions opt;
     opt.num_threads = 10;
-    kmeans::RefineHartiganWong ref(opt);
+    kmeans::RefineHartiganWong<int, double, int, double> ref(opt);
     EXPECT_EQ(ref.get_options().num_threads, 10);
 
     ref.get_options().num_threads = 9;
