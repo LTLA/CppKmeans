@@ -6,8 +6,8 @@ Rcpp::List lloyd(Rcpp::NumericMatrix x, Rcpp::NumericMatrix init) {
     Rcpp::NumericMatrix output = Rcpp::clone(init);
     Rcpp::IntegerVector clusters(x.ncol());
 
-    kmeans::RefineLloyd ll;
-    kmeans::SimpleMatrix<double, int> mat(x.nrow(), x.ncol(), x.begin());
+    kmeans::RefineLloyd<int, double, int, double> ll;
+    kmeans::SimpleMatrix<int, double> mat(x.nrow(), x.ncol(), x.begin());
     auto res = ll.run(mat, output.ncol(), output.begin(), clusters.begin());
 
     return Rcpp::List::create(
