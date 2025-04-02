@@ -65,6 +65,9 @@ public:
     }
 
 public:
+    /**
+     * @cond
+     */
     Cluster_ run(const Matrix_& data, Cluster_ ncenters, Float_* centers) const {
         std::mt19937_64 eng(my_options.seed);
         auto nobs = data.num_observations();
@@ -73,6 +76,9 @@ public:
         internal::copy_into_array(data, chosen, centers);
         return chosen.size();
     }
+    /**
+     * @endcond
+     */
 };
 
 }

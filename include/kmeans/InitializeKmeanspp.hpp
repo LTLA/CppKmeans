@@ -16,7 +16,7 @@
 /**
  * @file InitializeKmeanspp.hpp
  *
- * @brief Class for **kmeans++** initialization.
+ * @brief Class for kmeans++ initialization.
  */
 
 namespace kmeans {
@@ -147,7 +147,7 @@ private:
 
 public:
     /**
-     * @param options Options for **kmeans++** initialization.
+     * @param options Options for kmeans++ initialization.
      */
     InitializeKmeanspp(InitializeKmeansppOptions options) : my_options(std::move(options)) {}
 
@@ -158,13 +158,16 @@ public:
 
 public:
     /**
-     * @return Options for **kmeans++** partitioning, to be modified prior to calling `run()`.
+     * @return Options for kmeans++ partitioning, to be modified prior to calling `run()`.
      */
     InitializeKmeansppOptions& get_options() {
         return my_options;
     }
 
 public:
+    /**
+     * @cond
+     */
     Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Float_* centers) const {
         Index_ nobs = matrix.num_observations();
         if (!nobs) {
@@ -175,6 +178,9 @@ public:
         internal::copy_into_array(matrix, sofar, centers);
         return sofar.size();
     }
+    /**
+     * @endcond
+     */
 };
 
 }

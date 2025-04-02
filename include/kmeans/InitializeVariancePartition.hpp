@@ -190,6 +190,9 @@ public:
     }
 
 public:
+    /**
+     * @cond
+     */
     Cluster_ run(const Matrix_& data, Cluster_ ncenters, Float_* centers) const {
         auto nobs = data.num_observations();
         size_t ndim = data.num_dimensions();
@@ -287,6 +290,9 @@ public:
 
         return ncenters;
     }
+    /**
+     * @endcond
+     */
 };
 
 }

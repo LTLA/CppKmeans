@@ -72,7 +72,8 @@ kmeans::RefineLloyd<int, double, int, double> ll(ll_opt);
 auto res2 = kmeans::compute(kmat, pp, ll, ncenters);
 ```
 
-The initialization and refinement classes can themselves be swapped at run-time:
+The initialization and refinement classes can themselves be swapped at run-time via pointers to their respective interfaces.
+This design also allows the **kmeans** library to be easily extended to additional methods from third-party developers.
 
 ```cpp
 std::unique_ptr<kmeans::Initialize<int, double, int, double> > init_ptr;

@@ -86,6 +86,9 @@ public:
     }
 
 public:
+    /**
+     * @cond
+     */
     Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
         Index_ nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
@@ -134,6 +137,9 @@ public:
 
         return Details<Index_>(std::move(sizes), iter, status);
     }
+    /**
+     * @endcond
+     */
 };
 
 }

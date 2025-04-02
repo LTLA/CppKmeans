@@ -119,6 +119,9 @@ private:
     RefineMiniBatchOptions my_options;
 
 public:
+    /**
+     * @cond
+     */
     Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
         Index_ nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
@@ -227,6 +230,9 @@ public:
         internal::compute_centroids(data, ncenters, centers, clusters, cluster_sizes);
         return Details<Index_>(std::move(cluster_sizes), iter, status);
     }
+    /**
+     * @endcond
+     */
 };
 
 }

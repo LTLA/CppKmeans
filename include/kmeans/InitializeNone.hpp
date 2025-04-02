@@ -28,9 +28,15 @@ namespace kmeans {
 template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
 class InitializeNone final : public Initialize<Index_, Data_, Cluster_, Float_, Matrix_> { 
 public:
+    /**
+     * @cond
+     */
     Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Float_*) const {
         return std::min(matrix.num_observations(), static_cast<Index_>(ncenters));
     }
+    /**
+     * @endcond
+     */
 };
 
 }
