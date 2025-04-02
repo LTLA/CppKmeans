@@ -31,6 +31,13 @@ TEST_P(KmeansBasicTest, Sweep) {
     }
     EXPECT_EQ(counts, res.details.sizes);
     EXPECT_TRUE(res.details.iterations > 0);
+
+    // Get some coverage on the other overload.
+    std::vector<int> clusters(nc);
+    std::vector<double> centroids(nr * ncenters);
+    auto deets = kmeans::compute(mat, kmeans::InitializeRandom<int, double, int,  double>(), kmeans::RefineHartiganWong<int, double, int, double>(), ncenters, centroids.data(), clusters.data());
+    EXPECT_EQ(clusters, res.clusters);
+    EXPECT_EQ(centroids, res.centers);
 }
 
 INSTANTIATE_TEST_SUITE_P(

@@ -65,6 +65,37 @@ Details<Index_> compute(
 }
 
 /**
+ * Overload of `compute()` to assist template deduction for the default `Matrix`.
+ *
+ * @tparam Index_ Integer type for the observation indices in the input dataset.
+ * @tparam Data_ Numeric type for the input dataset.
+ * @tparam Cluster_ Integer type for the cluster assignments.
+ * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ *
+ * @param data A matrix-like object containing per-observation data.
+ * @param initialize Initialization method to use.
+ * @param refine Refinement method to use.
+ * @param num_centers Number of cluster centers.
+ * @param[out] centers Pointer to an array of length equal to the product of `num_centers` and `data.num_dimensions()`.
+ * This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers.
+ * On output, each column should contain the initial centroid location for its cluster.
+ * @param[in] clusters Pointer to an array of length equal to the number of observations (from `data.num_observations()`).
+ * On output, this will contain the 0-based cluster assignment for each observation.
+ */
+template<typename Index_, typename Data_, typename Cluster_, typename Float_>
+Details<Index_> compute(
+    const Matrix<Index_, Data_>& data,
+    const Initialize<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& initialize, 
+    const Refine<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& refine,
+    Cluster_ num_centers,
+    Float_* centers,
+    Cluster_* clusters)
+{
+    return compute<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >(data, initialize, refine, num_centers, centers, clusters);
+}
+
+/**
  * @brief Full statistics from k-means clustering.
  */
 template<typename Index_, typename Cluster_, typename Float_>
@@ -99,7 +130,7 @@ struct Results {
 };
 
 /**
- * Overload that allocates the output vectors.
+ * Overload of `compute()` that allocates and returns the vectors for the centroids and cluster assignments.
  *
  * @tparam Index_ Integer type for the observation indices in the input dataset.
  * @tparam Data_ Numeric type for the input dataset.
@@ -130,6 +161,23 @@ Results<Index_, Cluster_, Float_> compute(
     return output;
 }
 
+/**
+ * Overload of `compute()` to assist template deduction for the default `Matrix`.
+ * This allocates and returns the vectors for the centroids and cluster assignments.
+ *
+ * @tparam Index_ Integer type for the observation indices in the input dataset.
+ * @tparam Data_ Numeric type for the input dataset.
+ * @tparam Cluster_ Integer type for the cluster assignments.
+ * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ *
+ * @param data A matrix-like object containing per-observation data.
+ * @param initialize Initialization method to use.
+ * @param refine Refinement method to use.
+ * @param num_centers Number of cluster centers.
+ *
+ * @return Results of the clustering, including the centroid locations and cluster assignments.
+ */
 template<typename Index_, typename Data_, typename Cluster_, typename Float_>
 Results<Index_, Cluster_, Float_> compute(
     const Matrix<Index_, Data_>& data,

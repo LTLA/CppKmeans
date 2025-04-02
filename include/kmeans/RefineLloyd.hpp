@@ -61,7 +61,7 @@ struct RefineLloydOptions {
  * _IEEE Transactions on Information Theory_ 28, 128-137.
  */
 template<typename Index_, typename Data_, typename Cluster_, typename Float_, typename Matrix_ = Matrix<Index_, Data_> >
-class RefineLloyd : public Refine<Index_, Data_, Cluster_, Float_, Matrix_> {
+class RefineLloyd final : public Refine<Index_, Data_, Cluster_, Float_, Matrix_> {
 private:
     RefineLloydOptions my_options;
 

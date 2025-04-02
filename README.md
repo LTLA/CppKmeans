@@ -14,28 +14,127 @@ The Hartigan-Wong implementation is derived from the Fortran code in the R **sta
 
 ## Quick start
 
-**kmeans** is a header-only library, so it can be easily used by just `#include`ing the relevant source files:
+**kmeans** is a header-only library, so it can be easily used by just `#include`ing the relevant source files and running `compute()`:
 
 ```cpp
 #include "kmeans/Kmeans.hpp"
 
-// assorted boilerplate here...
+int ndim = 5;
+int nobs = 1000;
+std::vector<double> matrix(ndim * nobs); // column-major ndim x nobs matrix of coordinates
 
 // Wrap your matrix in a SimpleMatrix.
-kmeans::SimpleMatrix kmat(ndim, nobs, matrix.data());
+kmeans::SimpleMatrix<
+    int, /* type for the column index */
+    double /* type of the data */
+> kmat(ndim, nobs, matrix.data());
 
 auto res = kmeans::compute(
     kmat,
-    kmeans::InitializeKmeanspp(), // initialize with kmeans++
-    kmeans::RefineLloyd(), // refine with Lloyd's algorithm
+    // initialize with kmeans++
+    kmeans::InitializeKmeanspp<
+        /* column index type */ int,
+        /* input matrix data type */ double, 
+        /* cluster ID type */ int, 
+        /* centroid type */ double
+    >(),
+    // refine with Lloyd's algorithm
+    kmeans::RefineLloyd<
+        /* column index type */ int,
+        /* input matrix data type */ double, 
+        /* cluster ID type */ int, 
+        /* centroid type */ double
+    >(),
     ncenters 
 );
 
 res.centers; // Matrix of centroid coordinates, stored in column-major format
 res.clusters; // Vector of cluster assignments
 res.details; // Details from the clustering algorithm
+```
 
-// Compute the WCSS if we want it:
+See the [reference documentation](https://ltla.github.io/CppKmeans) for more details.
+
+## Changing parameters 
+
+We can tune the clustering by passing options into the constructors of the relevant classes:
+
+```cpp
+kmeans::InitializeVariancePartitionOptions vp_opt;
+vp_opt.optimize_partition = false;
+kmeans::InitializeVariancePartition<int, double, int, double> vp(vp_opt);
+
+kmeans::RefineLloydOptions ll_opt;
+ll_opt.max_iterations = 10;
+ll_opt.num_threads = 3;
+kmeans::RefineLloyd<int, double, int, double> ll(ll_opt);
+
+auto res2 = kmeans::compute(kmat, pp, ll, ncenters);
+```
+
+The initialization and refinement classes can themselves be swapped at run-time:
+
+```cpp
+std::unique_ptr<kmeans::Initialize<int, double, int, double> > init_ptr;
+if (init_method == "random") {
+    init_ptr.reset(new kmeans::InitializeRandom<int, double, int, double>);
+} else if (init_method == "kmeans++") {
+    kmeans::InitializeKmeansppOptions opt;
+    opt.seed = 42;
+    init_ptr.reset(new kmeans::InitializeKmeanspp<int, double, int, double>(opt));
+} else {
+    // do something else
+}
+
+std::unique_ptr<kmeans::Refine<int, double, int, double> > ref_ptr;
+if (ref_method == "random") {
+    kmeans::RefineLloydOptions opt;
+    opt.max_iterations = 10;
+    ref_ptr.reset(new kmeans::RefineLloyd<int, double, int, double>(opt));
+} else {
+    kmeans::RefineHartiganWongOptions opt;
+    opt.max_iterations = 100;
+    opt.max_quick_transfer_iterations = 1000;
+    ref_ptr.reset(new kmeans::RefineHartiganWong<int, double, int, double>(opt));
+}
+
+auto res3 = kmeans::compute(kmat, *init_ptr, *ref_ptr, ncenters);
+```
+
+Template parameters can also be altered to control the input and output data types.
+As shown above, these should be set consistently for all classes used in `compute()`. 
+While `int` and `double` are suitable for most cases, advanced users may wish to use other types.
+For example, we might consider the following parametrization for various reasons:
+
+```cpp
+kmeans::InitializeKmeanspp<
+    /* If our input data has too many observations to fit into an 'int', we
+     * might need to use a 'size_t' instead.
+     */
+    size_t,
+
+    /* Perhaps our input data is in single-precision floating point to save
+     * space and to speed up processing.
+     */
+    float, 
+
+    /* If we know that we will never ask for more than 255 clusters, we can use
+     * a smaller integer for the cluster IDs to save space.
+     */
+    uint8_t, 
+
+    /* We still want our centroids and distances to be computed in high
+     * precision, even though the input data is only single precision.
+     */
+    double 
+> initpp();
+```
+
+## Other bits and pieces
+
+If we want the within-cluster sum of squares, this can be easily computed from the output of `compute()`:
+
+```cpp
 std::vector<double> wcss(ncenters);
 kmeans::compute_wcss(
     kmat, 
@@ -46,7 +145,8 @@ kmeans::compute_wcss(
 );
 ```
 
-If we already allocated arrays for the centroids and clusters, we can fill the arrays directly:
+If we already allocated arrays for the centroids and clusters, we can fill the arrays directly.
+This allows us to skip a copy when interfacing with other languages that manage their own memory (e.g., R, Python).
 
 ```cpp
 std::vector<double> centers(ndim * ncenters);
@@ -61,23 +161,6 @@ auto deets = kmeans::compute(
     clusters.data()
 );
 ```
-
-We can tune the clustering by passing options into the constructors of the relevant classes:
-
-```cpp
-kmeans::InitializeVariancePartitionOptions vp_opt;
-vp_opt.optimize_partition = false;
-kmeans::InitializeVariancePartition vp(vp_opt);
-
-kmeans::RefineLloydOptions ll_opt;
-ll_opt.max_iterations = 10;
-ll_opt.num_threads = 3;
-kmeans::RefineLloyd ll(ll_opt);
-
-auto res2 = kmeans::compute(kmat, pp, ll, ncenters);
-```
-
-See the [reference documentation](https://ltla.github.io/CppKmeans) for more details.
 
 ## Building projects 
 
