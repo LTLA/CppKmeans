@@ -314,7 +314,7 @@ bool optimal_transfer(const Matrix_& data, Workspace<Float_, Index<Matrix_>, Clu
             auto l2_ptr = centers + ndim * static_cast<size_t>(l2); // cast to avoid overflow.
             auto wcss_gain = squared_distance_from_cluster(obs_ptr, l2_ptr, ndim) * work.gain_multiplier[l2];
 
-            auto update_destination_cluster = [&](Cluster_ cen) {
+            auto update_destination_cluster = [&](Cluster_ cen) -> void {
                 auto cen_ptr = centers + ndim * static_cast<size_t>(cen); // cast to avoid overflow.
                 auto candidate = squared_distance_from_cluster(obs_ptr, cen_ptr, ndim) * work.gain_multiplier[cen];
                 if (candidate < wcss_gain) {

@@ -78,7 +78,7 @@ std::vector<Index_> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, uint64_
         if (!sofar.empty()) {
             auto last_ptr = last_work->get_observation(sofar.back());
 
-            parallelize(nthreads, nobs, [&](int, Index_ start, Index_ length) {
+            parallelize(nthreads, nobs, [&](int, Index_ start, Index_ length) -> void {
                 auto curwork = data.new_extractor(start, length);
                 for (Index_ obs = start, end = start + length; obs < end; ++obs) {
                     auto current = curwork->get_observation(); // make sure this is outside the if(), as we MUST call this in every loop iteration to fulfill consecutive access.

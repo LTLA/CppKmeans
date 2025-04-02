@@ -153,7 +153,7 @@ public:
             }
 
             index.reset(ndim, ncenters, centers);
-            parallelize(my_options.num_threads, actual_batch_size, [&](int, Index_ start, Index_ length) {
+            parallelize(my_options.num_threads, actual_batch_size, [&](int, Index_ start, Index_ length) -> void {
                 auto work = data.new_extractor(chosen.data() + start, length);
                 for (Index_ s = start, end = start + length; s < end; ++s) {
                     auto ptr = work->get_observation();
@@ -214,7 +214,7 @@ public:
 
         // Run through all observations to make sure they have the latest cluster assignments.
         index.reset(ndim, ncenters, centers);
-        parallelize(my_options.num_threads, nobs, [&](int, Index_ start, Index_ length) {
+        parallelize(my_options.num_threads, nobs, [&](int, Index_ start, Index_ length) -> void {
             auto work = data.new_extractor(start, length);
             for (Index_ s = start, end = start + length; s < end; ++s) {
                 auto ptr = work->get_observation();

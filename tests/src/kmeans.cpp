@@ -17,9 +17,12 @@ protected:
 };
 
 TEST_P(KmeansBasicTest, Sweep) {
-    auto ncenters = std::get<1>(GetParam());
     kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
-    auto res = kmeans::compute(mat, kmeans::InitializeRandom<int, double, int,  double>(), kmeans::RefineHartiganWong<int, double, int, double>(), ncenters);
+    kmeans::InitializeRandom<int, double, int, double> init_rand;
+    kmeans::RefineHartiganWong<int, double, int, double> ref_hw;
+
+    auto ncenters = std::get<1>(GetParam());
+    auto res = kmeans::compute(mat, init_rand, ref_hw, ncenters);
     EXPECT_EQ(res.clusters.size(), nc);
     EXPECT_EQ(res.centers.size(), ncenters * nr);
 
@@ -35,7 +38,7 @@ TEST_P(KmeansBasicTest, Sweep) {
     // Get some coverage on the other overload.
     std::vector<int> clusters(nc);
     std::vector<double> centroids(nr * ncenters);
-    auto deets = kmeans::compute(mat, kmeans::InitializeRandom<int, double, int,  double>(), kmeans::RefineHartiganWong<int, double, int, double>(), ncenters, centroids.data(), clusters.data());
+    auto deets = kmeans::compute(mat, init_rand, ref_hw, ncenters, centroids.data(), clusters.data());
     EXPECT_EQ(clusters, res.clusters);
     EXPECT_EQ(centroids, res.centers);
 }
