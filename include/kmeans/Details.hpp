@@ -16,7 +16,7 @@ namespace kmeans {
  *
  * @tparam Index_ Integer type for the observation index.
  */
-template<typename Index_ = int>
+template<typename Index_>
 struct Details {
     /**
      * @cond

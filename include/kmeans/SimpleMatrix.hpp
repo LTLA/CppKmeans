@@ -1,6 +1,8 @@
 #ifndef KMEANS_SIMPLE_MATRIX_HPP
 #define KMEANS_SIMPLE_MATRIX_HPP
 
+#include "Matrix.hpp"
+
 /**
  * @file SimpleMatrix.hpp
  * @brief Wrapper for a simple dense matrix.
@@ -9,17 +11,69 @@
 namespace kmeans {
 
 /**
+ * @cond
+ */
+template<typename Index_, typename Data_>
+class SimpleMatrix;
+
+template<typename Index_, typename Data_>
+class SimpleMatrixRandomAccessExtractor final : public RandomAccessExtractor<Index_, Data_> {
+public:
+    SimpleMatrixRandomAccessExtractor(const SimpleMatrix<Index_, Data_>& parent) : my_parent(parent) {}
+
+private:
+    const SimpleMatrix<Index_, Data_>& my_parent;
+
+public:
+    const Data_* get_observation(Index_ i) {
+        return my_parent.my_data + static_cast<size_t>(i) * my_parent.my_num_dim; // cast to size_t to avoid overflow during multiplication.
+    }
+};
+
+template<typename Index_, typename Data_>
+class SimpleMatrixConsecutiveAccessExtractor final : public ConsecutiveAccessExtractor<Index_, Data_> {
+public:
+    SimpleMatrixConsecutiveAccessExtractor(const SimpleMatrix<Index_, Data_>& parent, size_t start) : my_parent(parent), my_position(start) {}
+
+private:
+    const SimpleMatrix<Index_, Data_>& my_parent;
+    size_t my_position;
+
+public:
+    const Data_* get_observation() {
+        return my_parent.my_data + (my_position++) * my_parent.my_num_dim; // already size_t's, no casting required.
+    }
+};
+
+template<typename Index_, typename Data_>
+class SimpleMatrixIndexedAccessExtractor final : public IndexedAccessExtractor<Index_, Data_> {
+public:
+    SimpleMatrixIndexedAccessExtractor(const SimpleMatrix<Index_, Data_>& parent, const Index_* sequence) : my_parent(parent), my_sequence(sequence) {}
+
+private:
+    const SimpleMatrix<Index_, Data_>& my_parent;
+    const Index_* my_sequence;
+    size_t my_position = 0;
+
+public:
+    const Data_* get_observation() {
+        return my_parent.my_data + static_cast<size_t>(my_sequence[my_position++]) * my_parent.my_num_dim; // cast to size_t to avoid overflow during multiplication.
+    }
+};
+/**
+ * @endcond
+ */
+
+/**
  * @brief A simple matrix of observations.
  *
  * This defines a simple column-major matrix of observations where the columns are observations and the rows are dimensions.
- * It is compatible with the compile-time interface described in `MockMatrix`.
  *
- * @tparam Data_ Floating-point type for the data.
+ * @tparam Data_ Numeric type for the data.
  * @tparam Index_ Integer type for the observation indices.
- * @tparam Dim_ Integer type for the dimensions.
  */
-template<typename Data_, typename Index_, typename Dim_ = int>
-class SimpleMatrix {
+template<typename Index_, typename Data_>
+class SimpleMatrix final : public Matrix<Index_, Data_> {
 public:
     /**
      * @param num_dimensions Number of dimensions.
@@ -27,70 +81,41 @@ public:
      * @param[in] data Pointer to an array of length `num_dim * num_obs`, containing a column-major matrix of observation data.
      * It is expected that the array will not be deallocated during the lifetime of this `SimpleMatrix` instance.
      */
-    SimpleMatrix(Dim_ num_dimensions, Index_ num_observations, const Data_* data) : 
-        my_num_dim(num_dimensions), my_num_obs(num_observations), my_data(data), my_long_num_dim(num_dimensions) {}
+    SimpleMatrix(size_t num_dimensions, Index_ num_observations, const Data_* data) : 
+        my_num_dim(num_dimensions), my_num_obs(num_observations), my_data(data) {}
 
 private:
-    Dim_ my_num_dim;
+    size_t my_num_dim;
     Index_ my_num_obs;
     const Data_* my_data;
-    size_t my_long_num_dim;
+    friend class SimpleMatrixRandomAccessExtractor<Index_, Data_>;
+    friend class SimpleMatrixConsecutiveAccessExtractor<Index_, Data_>;
+    friend class SimpleMatrixIndexedAccessExtractor<Index_, Data_>;
 
 public:
     /**
      * @cond
      */
-    typedef Data_ data_type;
-
-    typedef Index_ index_type;
-
-    typedef Dim_ dimension_type;
-
-    struct RandomAccessWorkspace{};
-
-    struct ConsecutiveAccessWorkspace {
-        ConsecutiveAccessWorkspace(index_type start) : at(start) {}
-        size_t at;
-    };
-
-    struct IndexedAccessWorkspace {
-        IndexedAccessWorkspace(const index_type* sequence) : sequence(sequence) {}
-        const index_type* sequence;
-        size_t at = 0;
-    };
-
-public:
     Index_ num_observations() const {
         return my_num_obs;
     }
 
-    dimension_type num_dimensions() const {
+    size_t num_dimensions() const {
         return my_num_dim;
     }
 
-    RandomAccessWorkspace create_workspace() const {
-        return RandomAccessWorkspace();
+public:
+    std::unique_ptr<RandomAccessExtractor<Index_, Data_> > new_extractor() const {
+        return std::make_unique<SimpleMatrixRandomAccessExtractor<Index_, Data_> >(*this);
     }
 
-    ConsecutiveAccessWorkspace create_workspace(index_type start, index_type) const {
-        return ConsecutiveAccessWorkspace(start);
+    std::unique_ptr<ConsecutiveAccessExtractor<Index_, Data_> > new_extractor(Index_ start, Index_) const {
+        return std::make_unique<SimpleMatrixConsecutiveAccessExtractor<Index_, Data_> >(*this, start);
     }
 
-    IndexedAccessWorkspace create_workspace(const index_type* sequence, index_type) const {
-        return IndexedAccessWorkspace(sequence);
+    std::unique_ptr<IndexedAccessExtractor<Index_, Data_> > new_extractor(const Index_* sequence, size_t) const {
+        return std::make_unique<SimpleMatrixIndexedAccessExtractor<Index_, Data_> >(*this, sequence);
     }
-
-    const data_type* get_observation(Index_ i, [[maybe_unused]] RandomAccessWorkspace& workspace) const {
-        return my_data + static_cast<size_t>(i) * my_long_num_dim; // avoid overflow during multiplication.
-    } 
-
-    const data_type* get_observation(ConsecutiveAccessWorkspace& workspace) const {
-        return my_data + (workspace.at++) * my_long_num_dim; // everything is already a size_t.
-    } 
-
-    const data_type* get_observation(IndexedAccessWorkspace& workspace) const {
-        return my_data + static_cast<size_t>(workspace.sequence[workspace.at++]) * my_long_num_dim; // avoid overflow during multiplication.
-    } 
     /**
      * @endcond
      */

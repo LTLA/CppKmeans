@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "Initialize.hpp"
+#include "Matrix.hpp"
 
 /**
  * @file InitializeVariancePartition.hpp
@@ -47,17 +48,17 @@ void compute_welford(Float_ val, Float_& center, Float_& ss, Float_ count) {
     ss += (val - new_center) * delta;
 }
 
-template<class Dim_, typename Value_, typename Float_>
-void compute_welford(Dim_ ndim, const Value_* dptr, Float_* center, Float_* dim_ss, Float_ count) {
-    for (Dim_ j = 0; j < ndim; ++j) {
-        compute_welford<Float_>(dptr[j], center[j], dim_ss[j], count);
+template<typename Data_, typename Float_>
+void compute_welford(size_t ndim, const Data_* dptr, Float_* center, Float_* dim_ss, Float_ count) {
+    for (size_t d = 0; d < ndim; ++d) {
+        compute_welford<Float_>(dptr[d], center[d], dim_ss[d], count);
     }
 }
 
-template<typename Matrix_, typename Float_>
+template<typename Matrix_, typename Index_, typename Float_>
 Float_ optimize_partition(
     const Matrix_& data,
-    const std::vector<typename Matrix_::index_type>& current,
+    const std::vector<Index_>& current,
     size_t top_dim,
     std::vector<Float_>& value_buffer,
     std::vector<Float_>& stat_buffer)
@@ -78,10 +79,10 @@ Float_ optimize_partition(
      */
 
     size_t N = current.size();
-    auto work = data.create_workspace(current.data(), N);
+    auto work = data.new_extractor(current.data(), N);
     value_buffer.clear();
     for (size_t i = 0; i < N; ++i) {
-        auto dptr = data.get_observation(work);
+        auto dptr = work->get_observation();
         value_buffer.push_back(dptr[top_dim]);
     }
 
@@ -150,18 +151,21 @@ Float_ optimize_partition(
  * This often provides more appropriate partitions by considering the distribution of observations within the cluster, at the cost of some extra computation.
  * Users can switch back to the original approach by setting `InitializeVariancePartitionOptions::optimize_partition = false`.
  *
- * @tparam Matrix_ Matrix type for the input data.
- * This should satisfy the `MockMatrix` contract.
+ * @tparam Index_ Integer type for the observation indices in the input dataset.
+ * @tparam Data_ Numeric type for the input dataset.
  * @tparam Cluster_ Integer type for the cluster assignments.
  * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ * @tparam Matrix_ Class of the input data matrix.
+ * This should satisfy the `Matrix` interface.
  *
  * @see
  * Su, T. and Dy, J. G. (2007).
  * In Search of Deterministic Methods for Initializing K-Means and Gaussian Mixture Clustering,
  * _Intelligent Data Analysis_ 11, 319-338.
  */
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
-class InitializeVariancePartition : public Initialize<Matrix_, Cluster_, Float_> {
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
+class InitializeVariancePartition final : public Initialize<Index_, Data_, Cluster_, Float_, Matrix_> {
 public:
     /**
      * @param options Options for variance partitioning.
@@ -186,14 +190,17 @@ public:
     }
 
 public:
+    /**
+     * @cond
+     */
     Cluster_ run(const Matrix_& data, Cluster_ ncenters, Float_* centers) const {
         auto nobs = data.num_observations();
-        auto ndim = data.num_dimensions();
+        size_t ndim = data.num_dimensions();
         if (nobs == 0 || ndim == 0) {
             return 0;
         }
 
-        std::vector<std::vector<typename Matrix_::index_type> > assignments(ncenters);
+        std::vector<std::vector<Index_> > assignments(ncenters);
         assignments[0].resize(nobs);
         std::iota(assignments.front().begin(), assignments.front().end(), 0);
 
@@ -202,9 +209,9 @@ public:
             auto& cur_ss = dim_ss[0];
             cur_ss.resize(ndim);
             std::fill_n(centers, ndim, 0);
-            auto matwork = data.create_workspace(static_cast<typename Matrix_::index_type>(0), nobs);
+            auto matwork = data.new_extractor(0, nobs);
             for (decltype(nobs) i = 0; i < nobs; ++i) {
-                auto dptr = data.get_observation(matwork);
+                auto dptr = matwork->get_observation();
                 InitializeVariancePartition_internal::compute_welford(ndim, dptr, centers, cur_ss.data(), static_cast<Float_>(i + 1));
             }
         }
@@ -222,8 +229,7 @@ public:
         };
         add_to_queue(0);
 
-        std::vector<typename Matrix_::index_type> cur_assignments_copy;
-        size_t long_ndim = ndim;
+        std::vector<Index_> cur_assignments_copy;
         std::vector<Float_> opt_partition_values, opt_partition_stats;
 
         for (Cluster_ cluster = 1; cluster < ncenters; ++cluster) {
@@ -233,7 +239,7 @@ public:
             }
             highest.pop();
 
-            auto* cur_center = centers + static_cast<size_t>(chosen.second) * long_ndim; // cast to size_t to avoid overflow issues.
+            auto* cur_center = centers + static_cast<size_t>(chosen.second) * ndim; // cast to size_t to avoid overflow issues.
             auto& cur_ss = dim_ss[chosen.second];
             auto& cur_assignments = assignments[chosen.second];
 
@@ -245,19 +251,19 @@ public:
                 partition_boundary = cur_center[top_dim];
             }
 
-            auto* next_center = centers + static_cast<size_t>(cluster) * long_ndim; // again, size_t to avoid overflow.
+            auto* next_center = centers + static_cast<size_t>(cluster) * ndim; // again, size_t to avoid overflow.
             std::fill_n(next_center, ndim, 0);
             auto& next_ss = dim_ss[cluster];
             next_ss.resize(ndim);
             auto& next_assignments = assignments[cluster];
 
-            auto work = data.create_workspace(cur_assignments.data(), cur_assignments.size());
             cur_assignments_copy.clear();
             std::fill_n(cur_center, ndim, 0);
             std::fill(cur_ss.begin(), cur_ss.end(), 0);
+            auto work = data.new_extractor(cur_assignments.data(), cur_assignments.size());
 
             for (auto i : cur_assignments) {
-                auto dptr = data.get_observation(work);
+                auto dptr = work->get_observation(); // make sure this is outside the if(), as it must always be called in each loop iteration to match 'cur_assignments' properly.
                 if (dptr[top_dim] < partition_boundary) {
                     cur_assignments_copy.push_back(i);
                     InitializeVariancePartition_internal::compute_welford(ndim, dptr, cur_center, cur_ss.data(), static_cast<Float_>(cur_assignments_copy.size()));
@@ -284,19 +290,10 @@ public:
 
         return ncenters;
     }
+    /**
+     * @endcond
+     */
 };
-
-/**
- * @cond
- */
-// Back-compatibility.
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
-using InitializePcaPartition = InitializeVariancePartition<Matrix_, Cluster_, Float_>;
-
-typedef InitializeVariancePartitionOptions InitializePcaPartitionOptions;
-/**
- * @endcond
- */
 
 }
 

@@ -4,7 +4,8 @@
 #include "Details.hpp"
 #include "Refine.hpp"
 #include "Initialize.hpp"
-#include "MockMatrix.hpp"
+#include "Matrix.hpp"
+#include "SimpleMatrix.hpp"
 
 #include "InitializeKmeanspp.hpp"
 #include "InitializeRandom.hpp"
@@ -30,12 +31,15 @@
 namespace kmeans {
 
 /**
- * @tparam Matrix_ Matrix type for the input data.
- * This should satisfy the `MockMatrix` contract.
+ * @tparam Index_ Integer type for the observation indices in the input dataset.
+ * @tparam Data_ Numeric type for the input dataset.
  * @tparam Cluster_ Integer type for the cluster assignments.
  * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ * @tparam Matrix_ Class of the input data matrix.
+ * This should satisfy the `Matrix` interface.
  *
- * @param data A matrix-like object (see `MockMatrix`) containing per-observation data.
+ * @param data A matrix-like object containing per-observation data.
  * @param initialize Initialization method to use.
  * @param refine Refinement method to use.
  * @param num_centers Number of cluster centers.
@@ -45,11 +49,11 @@ namespace kmeans {
  * @param[in] clusters Pointer to an array of length equal to the number of observations (from `data.num_observations()`).
  * On output, this will contain the 0-based cluster assignment for each observation.
  */
-template<class Matrix_, typename Cluster_, typename Float_>
-Details<typename Matrix_::index_type> compute(
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
+Details<Index_> compute(
     const Matrix_& data, 
-    const Initialize<Matrix_, Cluster_, Float_>& initialize, 
-    const Refine<Matrix_, Cluster_, Float_>& refine,
+    const Initialize<Index_, Data_, Cluster_, Float_, Matrix_>& initialize, 
+    const Refine<Index_, Data_, Cluster_, Float_, Matrix_>& refine,
     Cluster_ num_centers,
     Float_* centers,
     Cluster_* clusters)
@@ -61,9 +65,40 @@ Details<typename Matrix_::index_type> compute(
 }
 
 /**
+ * Overload of `compute()` to assist template deduction for the default `Matrix`.
+ *
+ * @tparam Index_ Integer type for the observation indices in the input dataset.
+ * @tparam Data_ Numeric type for the input dataset.
+ * @tparam Cluster_ Integer type for the cluster assignments.
+ * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ *
+ * @param data A matrix-like object containing per-observation data.
+ * @param initialize Initialization method to use.
+ * @param refine Refinement method to use.
+ * @param num_centers Number of cluster centers.
+ * @param[out] centers Pointer to an array of length equal to the product of `num_centers` and `data.num_dimensions()`.
+ * This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers.
+ * On output, each column should contain the initial centroid location for its cluster.
+ * @param[in] clusters Pointer to an array of length equal to the number of observations (from `data.num_observations()`).
+ * On output, this will contain the 0-based cluster assignment for each observation.
+ */
+template<typename Index_, typename Data_, typename Cluster_, typename Float_>
+Details<Index_> compute(
+    const Matrix<Index_, Data_>& data,
+    const Initialize<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& initialize, 
+    const Refine<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& refine,
+    Cluster_ num_centers,
+    Float_* centers,
+    Cluster_* clusters)
+{
+    return compute<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >(data, initialize, refine, num_centers, centers, clusters);
+}
+
+/**
  * @brief Full statistics from k-means clustering.
  */
-template<typename Cluster_, typename Float_, typename Index_>
+template<typename Index_, typename Cluster_, typename Float_>
 struct Results {
     /**
      * @cond
@@ -95,32 +130,62 @@ struct Results {
 };
 
 /**
- * Overload that allocates the output vectors.
+ * Overload of `compute()` that allocates and returns the vectors for the centroids and cluster assignments.
  *
- * @tparam Matrix_ Matrix type for the input data.
- * This should satisfy the `MockMatrix` contract.
+ * @tparam Index_ Integer type for the observation indices in the input dataset.
+ * @tparam Data_ Numeric type for the input dataset.
  * @tparam Cluster_ Integer type for the cluster assignments.
  * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ * @tparam Matrix_ Class of the input data matrix.
+ * This should satisfy the `Matrix` interface.
  *
- * @param data A matrix-like object (see `MockMatrix`) containing per-observation data.
+ * @param data A matrix-like object containing per-observation data.
  * @param initialize Initialization method to use.
  * @param refine Refinement method to use.
  * @param num_centers Number of cluster centers.
  *
  * @return Results of the clustering, including the centroid locations and cluster assignments.
  */
-template<class Matrix_, typename Cluster_, typename Float_>
-Results<Cluster_, Float_, typename Matrix_::index_type> compute(
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
+Results<Index_, Cluster_, Float_> compute(
     const Matrix_& data, 
-    const Initialize<Matrix_, Cluster_, Float_>& initialize, 
-    const Refine<Matrix_, Cluster_, Float_>& refine,
+    const Initialize<Index_, Data_, Cluster_, Float_, Matrix_>& initialize, 
+    const Refine<Index_, Data_, Cluster_, Float_, Matrix_>& refine,
     Cluster_ num_centers)
 {
-    Results<Cluster_, Float_, typename Matrix_::index_type> output;
+    Results<Index_, Cluster_, Float_> output;
     output.clusters.resize(data.num_observations());
     output.centers.resize(static_cast<size_t>(num_centers) * static_cast<size_t>(data.num_dimensions()));
     output.details = compute(data, initialize, refine, num_centers, output.centers.data(), output.clusters.data());
     return output;
+}
+
+/**
+ * Overload of `compute()` to assist template deduction for the default `Matrix`.
+ * This allocates and returns the vectors for the centroids and cluster assignments.
+ *
+ * @tparam Index_ Integer type for the observation indices in the input dataset.
+ * @tparam Data_ Numeric type for the input dataset.
+ * @tparam Cluster_ Integer type for the cluster assignments.
+ * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ *
+ * @param data A matrix-like object containing per-observation data.
+ * @param initialize Initialization method to use.
+ * @param refine Refinement method to use.
+ * @param num_centers Number of cluster centers.
+ *
+ * @return Results of the clustering, including the centroid locations and cluster assignments.
+ */
+template<typename Index_, typename Data_, typename Cluster_, typename Float_>
+Results<Index_, Cluster_, Float_> compute(
+    const Matrix<Index_, Data_>& data,
+    const Initialize<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& initialize, 
+    const Refine<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& refine,
+    Cluster_ num_centers)
+{
+    return compute<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >(data, initialize, refine, num_centers);
 }
 
 }

@@ -9,6 +9,7 @@
 #endif
 
 #include "kmeans/InitializeVariancePartition.hpp"
+#include "kmeans/SimpleMatrix.hpp"
 #include "kmeans/compute_wcss.hpp"
 
 TEST(VariancePartitionInitialization, Welford) {
@@ -55,7 +56,7 @@ TEST(VariancePartitionInitialization, OptimizePartition) {
         d = norm(rng);
     }
 
-    kmeans::SimpleMatrix<double, int, int> mat(nr, nc, data.data());
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
     std::vector<double> value_buffer, stat_buffer;
 
     for (size_t r = 0; r < nr; ++r) {
@@ -116,7 +117,7 @@ TEST_P(VariancePartitionInitializationTest, Basic) {
     auto ncenters = std::get<1>(GetParam());
     kmeans::SimpleMatrix mat(nr, nc, data.data());
 
-    kmeans::InitializeVariancePartition init;
+    kmeans::InitializeVariancePartition<int, double, int, double> init;
 
     for (size_t i = 0; i < 2; ++i) {
         if (i == 0) {
@@ -134,7 +135,7 @@ TEST_P(VariancePartitionInitializationTest, Sanity) {
     auto dups = create_duplicate_matrix(ncenters); // Duplicating the first 'ncenters' elements over and over again.
     kmeans::SimpleMatrix mat(nr, nc, dups.data.data());
 
-    kmeans::InitializeVariancePartition init;
+    kmeans::InitializeVariancePartition<int, double, int, double> init;
 
     for (size_t i = 0; i < 2; ++i) {
         if (i == 0) {
@@ -178,7 +179,7 @@ protected:
 };
 
 TEST_F(VariancePartitionInitializationEdgeTest, TooManyClusters) {
-    kmeans::InitializeVariancePartition init;
+    kmeans::InitializeVariancePartition<int, double, int, double> init;
 
     for (size_t i = 0; i < 2; ++i) {
         if (i == 0) {
@@ -186,7 +187,7 @@ TEST_F(VariancePartitionInitializationEdgeTest, TooManyClusters) {
         }
 
         std::vector<double> centers(nc * nr);
-        auto nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc, centers.data());
+        auto nfilled = init.run(kmeans::SimpleMatrix<int, double>(nr, nc, data.data()), nc, centers.data());
         EXPECT_EQ(nfilled, nc);
 
         // Check that there's one representative from each cluster.
@@ -197,7 +198,7 @@ TEST_F(VariancePartitionInitializationEdgeTest, TooManyClusters) {
         EXPECT_EQ(matched, expected);
 
         std::vector<double> centers2(nc * nr);
-        auto nfilled2 = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc + 10, centers2.data());
+        auto nfilled2 = init.run(kmeans::SimpleMatrix<int, double>(nr, nc, data.data()), nc + 10, centers2.data());
         EXPECT_EQ(nfilled2, nc);
         EXPECT_EQ(centers2, centers);
     }
@@ -206,7 +207,7 @@ TEST_F(VariancePartitionInitializationEdgeTest, TooManyClusters) {
 TEST(VariancePartitionInitialization, Options) {
     kmeans::InitializeVariancePartitionOptions opt;
     opt.size_adjustment = 0;
-    kmeans::InitializeVariancePartition init(opt);
+    kmeans::InitializeVariancePartition<int, double, int, double> init(opt);
     EXPECT_EQ(init.get_options().size_adjustment, 0);
 
     init.get_options().size_adjustment = 0.9;

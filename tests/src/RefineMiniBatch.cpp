@@ -6,6 +6,7 @@
 #endif
 
 #include "kmeans/RefineMiniBatch.hpp"
+#include "kmeans/SimpleMatrix.hpp"
 
 class RefineMiniBatchBasicTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
 protected:
@@ -17,14 +18,14 @@ protected:
 TEST_P(RefineMiniBatchBasicTest, Sweep) {
     auto ncenters = std::get<1>(GetParam());
 
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
     auto centers = create_centers(ncenters);
     auto original = centers;
     std::vector<int> clusters(nc);
 
     kmeans::RefineMiniBatchOptions opt;
     opt.batch_size = 100; // reducing the batch size so that the sampling actually does something.
-    kmeans::RefineMiniBatch mb(opt);
+    kmeans::RefineMiniBatch<int, double, int, double> mb(opt);
     auto res = mb.run(mat, ncenters, centers.data(), clusters.data());
 
     // Checking that there's the specified number of clusters. 
@@ -43,7 +44,7 @@ TEST_P(RefineMiniBatchBasicTest, Sweep) {
 
         auto popt = opt;
         popt.num_threads = 3;
-        kmeans::RefineMiniBatch pmb(popt);
+        kmeans::RefineMiniBatch<int, double, int, double> pmb(popt);
         pmb.run(mat, ncenters, pcenters.data(), pclusters.data());
 
         EXPECT_EQ(pcenters, centers);
@@ -54,11 +55,11 @@ TEST_P(RefineMiniBatchBasicTest, Sweep) {
 TEST_P(RefineMiniBatchBasicTest, Sanity) {
     auto ncenters = std::get<1>(GetParam());
     auto dups = create_jittered_matrix(ncenters);
-    kmeans::SimpleMatrix mat(nr, nc, dups.data.data());
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, dups.data.data());
 
     // Should give us back the perfect clusters.
     std::vector<int> clusters(nc);
-    kmeans::RefineMiniBatch mb;
+    kmeans::RefineMiniBatch<int, double, int, double> mb;
     auto res = mb.run(mat, ncenters, dups.centers.data(), clusters.data());
 
     EXPECT_EQ(clusters, dups.clusters);
@@ -84,8 +85,8 @@ protected:
 };
 
 TEST_F(RefineMiniBatchConstantTest, Extremes) {
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineMiniBatch mb;
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
+    kmeans::RefineMiniBatch<int, double, int, double> mb;
 
     {
         std::vector<double> centers(nr * nc);
@@ -103,7 +104,7 @@ TEST_F(RefineMiniBatchConstantTest, Extremes) {
 TEST(RefineMiniBatch, Options) {
     kmeans::RefineMiniBatchOptions opt;
     opt.num_threads = 10;
-    kmeans::RefineMiniBatch ref(opt);
+    kmeans::RefineMiniBatch<int, double, int, double> ref(opt);
     EXPECT_EQ(ref.get_options().num_threads, 10);
 
     ref.get_options().num_threads = 9;

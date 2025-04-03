@@ -47,22 +47,23 @@ struct RefineLloydOptions {
  * In the `Details::status` returned by `run()`, the status code is either 0 (success) or 2 (maximum iterations reached without convergence).
  * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
  *
- * @tparam Matrix_ Matrix type for the input data.
- * This should satisfy the `MockMatrix` contract.
+ * @tparam Index_ Integer type for the observation indices.
+ * @tparam Data_ Numeric type for the data.
  * @tparam Cluster_ Integer type for the cluster assignments.
  * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ * @tparam Matrix_ Type for the input data matrix.
+ * This should satisfy the `Matrix` interface.
  *
  * @see
  * Lloyd, S. P. (1982).  
  * Least squares quantization in PCM.
  * _IEEE Transactions on Information Theory_ 28, 128-137.
  */
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
-class RefineLloyd : public Refine<Matrix_, Cluster_, Float_> {
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, typename Matrix_ = Matrix<Index_, Data_> >
+class RefineLloyd final : public Refine<Index_, Data_, Cluster_, Float_, Matrix_> {
 private:
     RefineLloydOptions my_options;
-
-    typedef typename Matrix_::index_type Index_;
 
 public:
     /**
@@ -85,8 +86,11 @@ public:
     }
 
 public:
+    /**
+     * @cond
+     */
     Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
-        auto nobs = data.num_observations();
+        Index_ nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
             return internal::process_edge_case(data, ncenters, centers, clusters);
         }
@@ -94,15 +98,15 @@ public:
         int iter = 0, status = 0;
         std::vector<Index_> sizes(ncenters);
         std::vector<Cluster_> copy(nobs);
-        auto ndim = data.num_dimensions();
-        internal::QuickSearch<Float_, Cluster_, decltype(ndim)> index;
+        size_t ndim = data.num_dimensions();
+        internal::QuickSearch<Float_, Cluster_> index;
 
         for (iter = 1; iter <= my_options.max_iterations; ++iter) {
             index.reset(ndim, ncenters, centers);
             parallelize(my_options.num_threads, nobs, [&](int, Index_ start, Index_ length) -> void {
-                auto work = data.create_workspace(start, length);
+                auto work = data.new_extractor(start, length);
                 for (Index_ obs = start, end = start + length; obs < end; ++obs) {
-                    auto dptr = data.get_observation(work);
+                    auto dptr = work->get_observation();
                     copy[obs] = index.find(dptr); 
                 }
             });
@@ -133,6 +137,9 @@ public:
 
         return Details<Index_>(std::move(sizes), iter, status);
     }
+    /**
+     * @endcond
+     */
 };
 
 }

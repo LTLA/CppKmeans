@@ -85,13 +85,16 @@ struct RefineMiniBatchOptions {
  * In the `Details::status` returned by `run()`, the status code is either 0 (success) or 2 (maximum iterations reached without convergence).
  * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
  *
- * @tparam Matrix_ Matrix type for the input data.
- * This should satisfy the `MockMatrix` contract.
+ * @tparam Index_ Integer type for the observation indices.
+ * @tparam Data_ Numeric type for the data.
  * @tparam Cluster_ Integer type for the cluster assignments.
  * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ * @tparam Matrix_ Type for the input data matrix.
+ * This should satisfy the `Matrix` interface.
  */
-template<typename Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
-class RefineMiniBatch : public Refine<Matrix_, Cluster_, Float_> {
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, typename Matrix_ = Matrix<Index_, Data_> >
+class RefineMiniBatch : public Refine<Index_, Data_, Cluster_, Float_, Matrix_> {
 public:
     /**
      * @param options Further options for the mini-batch algorithm.
@@ -116,8 +119,11 @@ private:
     RefineMiniBatchOptions my_options;
 
 public:
-    Details<typename Matrix_::index_type> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
-        auto nobs = data.num_observations();
+    /**
+     * @cond
+     */
+    Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
+        Index_ nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
             return internal::process_edge_case(data, ncenters, centers, clusters);
         }
@@ -125,7 +131,6 @@ public:
         int iter = 0, status = 0;
         std::vector<uint64_t> total_sampled(ncenters); // holds the number of sampled observations across iterations, so we need a large integer.
         std::vector<Cluster_> previous(nobs);
-        typedef decltype(nobs) Index_;
         std::vector<uint64_t> last_changed(ncenters), last_sampled(ncenters); // holds the number of sampled/changed observation for the last few iterations.
 
         Index_ actual_batch_size = nobs;
@@ -136,9 +141,8 @@ public:
         std::vector<Index_> chosen(actual_batch_size);
         std::mt19937_64 eng(my_options.seed);
 
-        auto ndim = data.num_dimensions();
-        size_t long_ndim = ndim;
-        internal::QuickSearch<Float_, Cluster_, decltype(ndim)> index;
+        size_t ndim = data.num_dimensions();
+        internal::QuickSearch<Float_, Cluster_> index;
 
         for (iter = 1; iter <= my_options.max_iterations; ++iter) {
             aarand::sample(nobs, actual_batch_size, chosen.data(), eng);
@@ -150,26 +154,26 @@ public:
 
             index.reset(ndim, ncenters, centers);
             parallelize(my_options.num_threads, actual_batch_size, [&](int, Index_ start, Index_ length) -> void {
-                auto work = data.create_workspace(chosen.data() + start, length);
+                auto work = data.new_extractor(chosen.data() + start, length);
                 for (Index_ s = start, end = start + length; s < end; ++s) {
-                    auto ptr = data.get_observation(work);
+                    auto ptr = work->get_observation();
                     clusters[chosen[s]] = index.find(ptr);
                 }
             });
 
             // Updating the means for each cluster.
-            auto work = data.create_workspace(chosen.data(), actual_batch_size);
+            auto work = data.new_extractor(chosen.data(), actual_batch_size);
             for (auto o : chosen) {
                 const auto c = clusters[o];
                 auto& n = total_sampled[c];
                 ++n;
 
                 Float_ mult = static_cast<Float_>(1)/static_cast<Float_>(n);
-                auto ccopy = centers + static_cast<size_t>(c) * long_ndim;
-                auto ocopy = data.get_observation(work);
+                auto ccopy = centers + static_cast<size_t>(c) * ndim; // cast to size_t to avoid overflow.
+                auto ocopy = work->get_observation();
 
-                for (decltype(ndim) d = 0; d < ndim; ++d, ++ocopy, ++ccopy) {
-                    (*ccopy) += (static_cast<Float_>(*ocopy) - *ccopy) * mult; // cast to ensure consistent precision regardless of Matrix_::data_type.
+                for (size_t d = 0; d < ndim; ++d) {
+                    ccopy[d] += (static_cast<Float_>(ocopy[d]) - ccopy[d]) * mult; // cast to ensure consistent precision regardless of Matrix_::data_type.
                 }
             }
 
@@ -211,9 +215,9 @@ public:
         // Run through all observations to make sure they have the latest cluster assignments.
         index.reset(ndim, ncenters, centers);
         parallelize(my_options.num_threads, nobs, [&](int, Index_ start, Index_ length) -> void {
-            auto work = data.create_workspace(start, length);
+            auto work = data.new_extractor(start, length);
             for (Index_ s = start, end = start + length; s < end; ++s) {
-                auto ptr = data.get_observation(work);
+                auto ptr = work->get_observation();
                 clusters[s] = index.find(ptr);
             }
         });
@@ -226,6 +230,9 @@ public:
         internal::compute_centroids(data, ncenters, centers, clusters, cluster_sizes);
         return Details<Index_>(std::move(cluster_sizes), iter, status);
     }
+    /**
+     * @endcond
+     */
 };
 
 }

@@ -17,9 +17,12 @@ protected:
 };
 
 TEST_P(KmeansBasicTest, Sweep) {
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
+    kmeans::InitializeRandom<int, double, int, double> init_rand;
+    kmeans::RefineHartiganWong<int, double, int, double> ref_hw;
+
     auto ncenters = std::get<1>(GetParam());
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
-    auto res = kmeans::compute(mat, kmeans::InitializeRandom(), kmeans::RefineHartiganWong(), ncenters);
+    auto res = kmeans::compute(mat, init_rand, ref_hw, ncenters);
     EXPECT_EQ(res.clusters.size(), nc);
     EXPECT_EQ(res.centers.size(), ncenters * nr);
 
@@ -31,6 +34,13 @@ TEST_P(KmeansBasicTest, Sweep) {
     }
     EXPECT_EQ(counts, res.details.sizes);
     EXPECT_TRUE(res.details.iterations > 0);
+
+    // Get some coverage on the other overload.
+    std::vector<int> clusters(nc);
+    std::vector<double> centroids(nr * ncenters);
+    auto deets = kmeans::compute(mat, init_rand, ref_hw, ncenters, centroids.data(), clusters.data());
+    EXPECT_EQ(clusters, res.clusters);
+    EXPECT_EQ(centroids, res.centers);
 }
 
 INSTANTIATE_TEST_SUITE_P(
@@ -54,7 +64,7 @@ protected:
 
 TEST_F(KmeansExpandedTest, Basic) {
     kmeans::SimpleMatrix mat(nr, nc, data.data());
-    auto res = kmeans::compute(mat, kmeans::InitializeRandom(), kmeans::RefineHartiganWong(), nc + 10);
+    auto res = kmeans::compute(mat, kmeans::InitializeRandom<int, double, int, double>(), kmeans::RefineHartiganWong<int, double, int, double>(), nc + 10);
     EXPECT_EQ(res.centers.size(), nr * (nc + 10));
     EXPECT_EQ(res.clusters.size(), nc);
 
@@ -86,20 +96,20 @@ TEST_P(KmeansSanityTest, SanityCheck) {
     }
 
     // Switching between algorithms.
-    std::unique_ptr<kmeans::Refine<> > ptr;
+    std::unique_ptr<kmeans::Refine<int, double, int, double> > ptr;
     auto algo = std::get<2>(param);
     if (algo == 1) {
-        auto xptr = new kmeans::RefineHartiganWong<>();
+        auto xptr = new kmeans::RefineHartiganWong<int, double, int, double>();
         ptr.reset(xptr);
     } else if (algo == 2) {
-        auto xptr = new kmeans::RefineLloyd<>();
+        auto xptr = new kmeans::RefineLloyd<int, double, int, double>();
         ptr.reset(xptr);
     } else if (algo == 3) {
-        auto xptr = new kmeans::RefineMiniBatch<>();
+        auto xptr = new kmeans::RefineMiniBatch<int, double, int, double>();
         ptr.reset(xptr);
     }
 
-    auto res = kmeans::compute(kmeans::SimpleMatrix(nr, nc, data.data()), kmeans::InitializeKmeanspp(), *ptr, ncenters);
+    auto res = kmeans::compute(kmeans::SimpleMatrix<int, double>(nr, nc, data.data()), kmeans::InitializeKmeanspp<int, double, int, double>(), *ptr, ncenters);
 
     // Checking that every 'ncenters'-th element is the same.
     std::vector<int> last_known(ncenters, -1);

@@ -9,6 +9,7 @@
 #endif
 
 #include "kmeans/InitializeKmeanspp.hpp"
+#include "kmeans/SimpleMatrix.hpp"
 
 class KmeansppInitializationTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
 protected:
@@ -22,7 +23,7 @@ TEST_P(KmeansppInitializationTest, Internals) {
 
     kmeans::SimpleMatrix mat(nr, nc, data.data());
     int seed = ncenters * 10 + nr + nc;
-    auto output = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters, seed, 1);
+    auto output = kmeans::InitializeKmeanspp_internal::run_kmeanspp<int, double>(mat, ncenters, seed, 1);
     EXPECT_EQ(output.size(), ncenters);
 
     // Check that a reasonable selection is made.
@@ -39,27 +40,27 @@ TEST_P(KmeansppInitializationTest, Internals) {
 
     // Consistent results with the same initialization.
     {
-        auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters, seed, 1);
+        auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<int, double>(mat, ncenters, seed, 1);
         EXPECT_EQ(output, output2);
         
         // Different results with a different seed (note that this only works
         // if num obs is reasonably larger than num centers).
-        auto output3 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters, seed + 1, 1);
+        auto output3 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<int, double>(mat, ncenters, seed + 1, 1);
         EXPECT_NE(output, output3);
     }
 
     // Check that parallelization gives the same result.
     {
-        auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters, seed, 3);
+        auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<int, double>(mat, ncenters, seed, 3);
         EXPECT_EQ(output, output2);
     }
 }
 
 TEST_P(KmeansppInitializationTest, Basic) {
     auto ncenters = std::get<1>(GetParam());
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
 
-    kmeans::InitializeKmeanspp init;
+    kmeans::InitializeKmeanspp<int, double, int, double> init;
     std::vector<double> centers(nr * ncenters);
     auto nfilled = init.run(mat, ncenters, centers.data());
     EXPECT_EQ(nfilled, ncenters);
@@ -79,7 +80,7 @@ TEST_P(KmeansppInitializationTest, Basic) {
     {
         kmeans::InitializeKmeansppOptions popt;
         popt.num_threads = 3;
-        kmeans::InitializeKmeanspp pinit(popt);
+        kmeans::InitializeKmeanspp<int, double, int, double> pinit(popt);
         std::vector<double> pcenters(nr * ncenters);
         init.run(mat, ncenters, pcenters.data());
         EXPECT_EQ(pcenters, centers);
@@ -92,9 +93,9 @@ TEST_P(KmeansppInitializationTest, Sanity) {
 
     // Expect one entry from each of the first 'ncenters' elements;
     // all others are duplicates and should have sampling probabilities of zero.
-    kmeans::SimpleMatrix mat(nr, nc, dups.data.data());
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, dups.data.data());
     auto seed = ncenters * 100;
-    auto output = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters, seed, 1);
+    auto output = kmeans::InitializeKmeanspp_internal::run_kmeanspp<int, double>(mat, ncenters, seed, 1);
 
     EXPECT_EQ(output.size(), ncenters);
     for (auto& o : output) {
@@ -107,7 +108,7 @@ TEST_P(KmeansppInitializationTest, Sanity) {
     EXPECT_EQ(expected, output);
 
     // If more clusters are requested, we detect that only duplicates are available and we bail early.
-    auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<double>(mat, ncenters + 1, seed, 1);
+    auto output2 = kmeans::InitializeKmeanspp_internal::run_kmeanspp<int, double>(mat, ncenters + 1, seed, 1);
     EXPECT_EQ(output2.size(), ncenters);
     for (auto& o : output2) {
         o = dups.clusters[o];
@@ -136,10 +137,10 @@ protected:
 };
 
 TEST_F(KmeansppInitializationEdgeTest, TooManyClusters) {
-    kmeans::InitializeKmeanspp init;
+    kmeans::InitializeKmeanspp<int, double, int, double> init;
 
     std::vector<double> centers(nc * nr);
-    auto nfilled = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc, centers.data());
+    auto nfilled = init.run(kmeans::SimpleMatrix<int, double>(nr, nc, data.data()), nc, centers.data());
     EXPECT_EQ(nfilled, nc);
 
     // Check that there's one representative from each cluster.
@@ -151,7 +152,7 @@ TEST_F(KmeansppInitializationEdgeTest, TooManyClusters) {
 
     // Same as if we have more clusters.
     std::vector<double> centers2(nc * nr);
-    auto nfilled2 = init.run(kmeans::SimpleMatrix(nr, nc, data.data()), nc + 10, centers2.data());
+    auto nfilled2 = init.run(kmeans::SimpleMatrix<int, double>(nr, nc, data.data()), nc + 10, centers2.data());
     EXPECT_EQ(nfilled2, nc);
     EXPECT_EQ(centers2, centers);
 }
@@ -159,7 +160,7 @@ TEST_F(KmeansppInitializationEdgeTest, TooManyClusters) {
 TEST(KmeansppInitialization, Options) {
     kmeans::InitializeKmeansppOptions opt;
     opt.seed = 12345;
-    kmeans::InitializeKmeanspp init(opt);
+    kmeans::InitializeKmeanspp<int, double, int, double> init(opt);
     EXPECT_EQ(init.get_options().seed, 12345);
 
     init.get_options().seed = 99999;

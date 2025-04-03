@@ -15,19 +15,28 @@ namespace kmeans {
 /**
  * @brief No-op "initialization" with existing cluster centers.
  *
- * @tparam Matrix_ Matrix type for the input data.
- * This should satisfy the `MockMatrix` contract.
+ * @tparam Index_ Integer type for the observation indices in the input dataset.
+ * @tparam Data_ Numeric type for the input dataset.
  * @tparam Cluster_ Integer type for the cluster assignments.
  * @tparam Float_ Floating-point type for the centroids.
+ * This will also be used for any internal distance calculations.
+ * @tparam Matrix_ Class of the input data matrix.
+ * This should satisfy the `Matrix` interface.
  * 
  * This class assumes that that cluster centers are already present in the `centers` array, and returns them without modification.
  */
-template<class Matrix_ = SimpleMatrix<double, int>, typename Cluster_ = int, typename Float_ = double>
-class InitializeNone : public Initialize<Matrix_, Cluster_, Float_> { 
+template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
+class InitializeNone final : public Initialize<Index_, Data_, Cluster_, Float_, Matrix_> { 
 public:
+    /**
+     * @cond
+     */
     Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Float_*) const {
-        return std::min(matrix.num_observations(), static_cast<typename Matrix_::index_type>(ncenters));
+        return std::min(matrix.num_observations(), static_cast<Index_>(ncenters));
     }
+    /**
+     * @endcond
+     */
 };
 
 }

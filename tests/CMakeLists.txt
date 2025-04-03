@@ -43,7 +43,7 @@ add_executable(
     libtest 
     src/compute_centroids.cpp
     src/compute_wcss.cpp
-    src/MockMatrix.cpp
+    src/SimpleMatrix.cpp
     src/InitializeNone.cpp
     src/InitializeRandom.cpp
     src/InitializeKmeanspp.cpp

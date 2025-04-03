@@ -6,6 +6,7 @@
 #endif
 
 #include "kmeans/RefineLloyd.hpp"
+#include "kmeans/SimpleMatrix.hpp"
 
 class RefineLloydBasicTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
 protected:
@@ -17,12 +18,12 @@ protected:
 TEST_P(RefineLloydBasicTest, Sweep) {
     auto ncenters = std::get<1>(GetParam());
 
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
     auto centers = create_centers(ncenters);
     auto original = centers;
 
     std::vector<int> clusters(nc);
-    kmeans::RefineLloyd ll;
+    kmeans::RefineLloyd<int, double, int, double> ll;
     auto res = ll.run(mat, ncenters, centers.data(), clusters.data());
 
     // Checking that there's the specified number of clusters, and that they're all non-empty.
@@ -38,7 +39,7 @@ TEST_P(RefineLloydBasicTest, Sweep) {
     {
         kmeans::RefineLloydOptions popt;
         popt.num_threads = 3;
-        kmeans::RefineLloyd pll(popt);
+        kmeans::RefineLloyd<int, double, int, double> pll(popt);
 
         auto pcenters = original;
         std::vector<int> pclusters(nc);
@@ -52,11 +53,11 @@ TEST_P(RefineLloydBasicTest, Sweep) {
 TEST_P(RefineLloydBasicTest, Sanity) {
     auto ncenters = std::get<1>(GetParam());
     auto dups = create_jittered_matrix(ncenters);
-    kmeans::SimpleMatrix mat(nr, nc, dups.data.data());
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, dups.data.data());
 
     // Lloyd should give us back the perfect clusters.
     std::vector<int> clusters(nc);
-    kmeans::RefineLloyd ll;
+    kmeans::RefineLloyd<int, double, int, double> ll;
     auto res = ll.run(mat, ncenters, dups.centers.data(), clusters.data());
 
     EXPECT_EQ(clusters, dups.clusters);
@@ -82,8 +83,8 @@ protected:
 };
 
 TEST_F(RefineLloydConstantTest, Extremes) {
-    kmeans::SimpleMatrix mat(nr, nc, data.data());
-    kmeans::RefineLloyd ll;
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
+    kmeans::RefineLloyd<int, double, int, double> ll;
 
     {
         std::vector<double> centers(nr * nc);
@@ -101,7 +102,7 @@ TEST_F(RefineLloydConstantTest, Extremes) {
 TEST(RefineLloyd, Options) {
     kmeans::RefineLloydOptions opt;
     opt.num_threads = 10;
-    kmeans::RefineLloyd ref(opt);
+    kmeans::RefineLloyd<int, double, int, double> ref(opt);
     EXPECT_EQ(ref.get_options().num_threads, 10);
 
     ref.get_options().num_threads = 9;

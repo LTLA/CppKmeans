@@ -13,17 +13,16 @@ namespace kmeans {
 namespace internal {
 
 /* Adapted from http://stevehanov.ca/blog/index.php?id=130 */
-template<typename Float_, typename Index_, typename Dim_>
+template<typename Float_, typename Index_>
 class QuickSearch {
 private:
-    Dim_ num_dim;
-    size_t long_num_dim;
+    size_t num_dim;
 
     template<typename Query_>
-    static Float_ raw_distance(const Float_* x, const Query_* y, Dim_ ndim) {
+    static Float_ raw_distance(const Float_* x, const Query_* y, size_t ndim) {
         Float_ output = 0;
-        for (Dim_ i = 0; i < ndim; ++i, ++x, ++y) {
-            Float_ delta = *x - static_cast<Float_>(*y); // cast to ensure consistent precision regardless of Query_.
+        for (size_t d = 0; d < ndim; ++d) {
+            Float_ delta = x[d] - static_cast<Float_>(y[d]); // cast to ensure consistent precision regardless of Query_.
             output += delta * delta;
         }
         return output;
@@ -83,12 +82,12 @@ private:
             std::swap(items[lower], items[i]);
             const auto& vantage = items[lower];
             node.index = vantage.second;
-            const Float_* vantage_ptr = coords + static_cast<size_t>(vantage.second) * long_num_dim; // cast to avoid overflow.
+            const Float_* vantage_ptr = coords + static_cast<size_t>(vantage.second) * num_dim; // cast to avoid overflow.
             node.center = vantage_ptr;
 
             // Compute distances to the new vantage point.
             for (Index_ i = lower + 1; i < upper; ++i) {
-                const Float_* loc = coords + static_cast<size_t>(items[i].second) * long_num_dim; // cast to avoid overflow.
+                const Float_* loc = coords + static_cast<size_t>(items[i].second) * num_dim; // cast to avoid overflow.
                 items[i].first = raw_distance(vantage_ptr, loc, num_dim);
             }
 
@@ -111,7 +110,7 @@ private:
         } else {
             const auto& leaf = items[lower];
             node.index = leaf.second;
-            node.center = coords + static_cast<size_t>(leaf.second) * long_num_dim; // cast to avoid overflow.
+            node.center = coords + static_cast<size_t>(leaf.second) * num_dim; // cast to avoid overflow.
         }
 
         return pos;
@@ -120,13 +119,12 @@ private:
 public:
     QuickSearch() = default;
 
-    QuickSearch(Dim_ ndim, Index_ nobs, const Float_* vals) {
+    QuickSearch(size_t ndim, Index_ nobs, const Float_* vals) {
         reset(ndim, nobs, vals);
     }
 
-    void reset(Dim_ ndim, Index_ nobs, const Float_* vals) {
+    void reset(size_t ndim, Index_ nobs, const Float_* vals) {
         num_dim = ndim;
-        long_num_dim = ndim;
         items.clear();
         nodes.clear();
 
