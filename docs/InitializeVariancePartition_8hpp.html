@@ -112,26 +112,34 @@ $(function(){ initResizable(false); });
 <code>#include &lt;queue&gt;</code><br />
 <code>#include &lt;cstdint&gt;</code><br />
 <code>#include &quot;<a class="el" href="Initialize_8hpp_source.html">Initialize.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Matrix_8hpp_source.html">Matrix.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for InitializeVariancePartition.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="InitializeVariancePartition_8hpp__incl.png" border="0" usemap="#akmeans_2InitializeVariancePartition_8hpp" alt=""/></div>
 <map name="akmeans_2InitializeVariancePartition_8hpp" id="akmeans_2InitializeVariancePartition_8hpp">
-<area shape="rect" title="k&#45;means initialization with variance partitioning." alt="" coords="176,5,345,46"/>
+<area shape="rect" title="k&#45;means initialization with variance partitioning." alt="" coords="219,5,388,46"/>
 <area shape="rect" title=" " alt="" coords="5,94,63,120"/>
-<area shape="poly" title=" " alt="" coords="205,49,78,93,76,88,203,44"/>
+<area shape="poly" title=" " alt="" coords="237,49,78,95,77,90,235,44"/>
 <area shape="rect" title=" " alt="" coords="86,94,160,120"/>
-<area shape="poly" title=" " alt="" coords="228,49,159,88,156,84,225,44"/>
+<area shape="poly" title=" " alt="" coords="259,49,166,90,164,85,257,44"/>
 <area shape="rect" title=" " alt="" coords="184,94,252,120"/>
-<area shape="poly" title=" " alt="" coords="252,48,234,81,230,79,248,45"/>
+<area shape="poly" title=" " alt="" coords="284,48,244,85,240,81,280,44"/>
 <area shape="rect" title=" " alt="" coords="275,94,332,120"/>
-<area shape="poly" title=" " alt="" coords="274,45,292,79,287,81,269,48"/>
+<area shape="poly" title=" " alt="" coords="306,46,306,78,301,78,301,46"/>
 <area shape="rect" title=" " alt="" coords="356,94,416,120"/>
-<area shape="poly" title=" " alt="" coords="293,44,355,83,352,88,290,49"/>
-<area shape="rect" href="Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="440,94,532,120"/>
-<area shape="poly" title=" " alt="" coords="318,44,438,86,436,91,316,49"/>
-<area shape="rect" href="SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="426,168,546,193"/>
-<area shape="poly" title=" " alt="" coords="489,120,489,152,483,152,483,120"/>
+<area shape="poly" title=" " alt="" coords="326,44,364,81,360,85,322,48"/>
+<area shape="rect" href="Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="492,94,584,120"/>
+<area shape="poly" title=" " alt="" coords="363,44,488,86,486,91,361,49"/>
+<area shape="rect" href="Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="414,168,494,193"/>
+<area shape="poly" title=" " alt="" coords="362,44,399,64,431,92,447,122,454,152,449,153,442,124,427,96,396,68,360,49"/>
+<area shape="poly" title=" " alt="" coords="525,122,481,159,478,155,522,118"/>
+<area shape="rect" title=" " alt="" coords="519,168,600,193"/>
+<area shape="poly" title=" " alt="" coords="544,119,554,152,549,153,539,121"/>
+<area shape="rect" title=" " alt="" coords="379,241,446,267"/>
+<area shape="poly" title=" " alt="" coords="449,195,430,229,425,226,445,192"/>
+<area shape="rect" title=" " alt="" coords="471,241,522,267"/>
+<area shape="poly" title=" " alt="" coords="463,192,484,226,479,229,459,195"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -152,7 +160,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1InitializeVariancePartitionOptions.html">kmeans::InitializeVariancePartitionOptions</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <code><a class="el" href="classkmeans_1_1InitializeVariancePartition.html" title="Implements the variance partitioning method of Su and Dy (2007).">InitializeVariancePartition</a></code>.  <a href="structkmeans_1_1InitializeVariancePartitionOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">kmeans::InitializeVariancePartition&lt; Matrix_, Cluster_, Float_ &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializeVariancePartition.html">kmeans::InitializeVariancePartition&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implements the variance partitioning method of Su and Dy (2007).  <a href="classkmeans_1_1InitializeVariancePartition.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">

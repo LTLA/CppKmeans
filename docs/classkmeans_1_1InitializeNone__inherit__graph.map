@@ -1,5 +1,5 @@
-<map id="kmeans::InitializeNone&lt; Matrix_, Cluster_, Float_ &gt;" name="kmeans::InitializeNone&lt; Matrix_, Cluster_, Float_ &gt;">
-<area shape="rect" id="Node000001" title="No&#45;op &quot;initialization&quot; with existing cluster centers." alt="" coords="5,109,189,150"/>
-<area shape="rect" id="Node000002" href="$classkmeans_1_1Initialize.html" title="Base class for initialization algorithms." alt="" coords="30,5,164,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,77,100,109,94,109,94,77"/>
+<map id="kmeans::InitializeNone&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;" name="kmeans::InitializeNone&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;">
+<area shape="rect" id="Node000001" title="No&#45;op &quot;initialization&quot; with existing cluster centers." alt="" coords="5,109,165,165"/>
+<area shape="rect" id="Node000002" href="$classkmeans_1_1Initialize.html" title="Interface for k&#45;means initialization algorithms." alt="" coords="5,5,165,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,77,88,108,82,108,82,77"/>
 </map>

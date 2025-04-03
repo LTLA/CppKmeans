@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ &gt; Class Template Reference</title>
+<title>kmeans: kmeans::RefineMiniBatch&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -100,7 +100,7 @@ $(function(){ initResizable(false); });
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classkmeans_1_1RefineMiniBatch-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">kmeans::RefineMiniBatch&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -109,67 +109,69 @@ $(function(){ initResizable(false); });
 
 <p><code>#include &lt;<a class="el" href="RefineMiniBatch_8hpp_source.html">RefineMiniBatch.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ &gt;:</div>
+Inheritance diagram for kmeans::RefineMiniBatch&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classkmeans_1_1RefineMiniBatch__inherit__graph.png" border="0" usemap="#akmeans_1_1RefineMiniBatch_3_01Matrix___00_01Cluster___00_01Float___01_4_inherit__map" alt="Inheritance graph"/></div>
-<map name="akmeans_1_1RefineMiniBatch_3_01Matrix___00_01Cluster___00_01Float___01_4_inherit__map" id="akmeans_1_1RefineMiniBatch_3_01Matrix___00_01Cluster___00_01Float___01_4_inherit__map">
-<area shape="rect" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="5,94,189,135"/>
-<area shape="rect" href="classkmeans_1_1Refine.html" title="Interface for all k&#45;means refinement algorithms." alt="" coords="19,5,175,46"/>
-<area shape="poly" title=" " alt="" coords="100,62,100,94,94,94,94,62"/>
+<div class="center"><img src="classkmeans_1_1RefineMiniBatch__inherit__graph.png" border="0" usemap="#akmeans_1_1RefineMiniBatch_3_01Index___00_01Data___00_01Cluster___00_01Float___00_01Matrix___01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="akmeans_1_1RefineMiniBatch_3_01Index___00_01Data___00_01Cluster___00_01Float___00_01Matrix___01_4_inherit__map" id="akmeans_1_1RefineMiniBatch_3_01Index___00_01Data___00_01Cluster___00_01Float___00_01Matrix___01_4_inherit__map">
+<area shape="rect" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="5,109,173,165"/>
+<area shape="rect" href="classkmeans_1_1Refine.html" title="Interface for k&#45;means refinement algorithms." alt="" coords="9,5,169,61"/>
+<area shape="poly" title=" " alt="" coords="92,77,92,108,86,108,86,77"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
-Collaboration diagram for kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ &gt;:</div>
+Collaboration diagram for kmeans::RefineMiniBatch&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classkmeans_1_1RefineMiniBatch__coll__graph.png" border="0" usemap="#akmeans_1_1RefineMiniBatch_3_01Matrix___00_01Cluster___00_01Float___01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="akmeans_1_1RefineMiniBatch_3_01Matrix___00_01Cluster___00_01Float___01_4_coll__map" id="akmeans_1_1RefineMiniBatch_3_01Matrix___00_01Cluster___00_01Float___01_4_coll__map">
-<area shape="rect" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="5,94,189,135"/>
-<area shape="rect" href="classkmeans_1_1Refine.html" title="Interface for all k&#45;means refinement algorithms." alt="" coords="19,5,175,46"/>
-<area shape="poly" title=" " alt="" coords="100,62,100,94,94,94,94,62"/>
+<div class="center"><img src="classkmeans_1_1RefineMiniBatch__coll__graph.png" border="0" usemap="#akmeans_1_1RefineMiniBatch_3_01Index___00_01Data___00_01Cluster___00_01Float___00_01Matrix___01_4_coll__map" alt="Collaboration graph"/></div>
+<map name="akmeans_1_1RefineMiniBatch_3_01Index___00_01Data___00_01Cluster___00_01Float___00_01Matrix___01_4_coll__map" id="akmeans_1_1RefineMiniBatch_3_01Index___00_01Data___00_01Cluster___00_01Float___00_01Matrix___01_4_coll__map">
+<area shape="rect" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="5,109,173,165"/>
+<area shape="rect" href="classkmeans_1_1Refine.html" title="Interface for k&#45;means refinement algorithms." alt="" coords="9,5,169,61"/>
+<area shape="poly" title=" " alt="" coords="92,77,92,108,86,108,86,77"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abb41cd2d2168b65dd63fc0bf386a38b4" id="r_abb41cd2d2168b65dd63fc0bf386a38b4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb41cd2d2168b65dd63fc0bf386a38b4">RefineMiniBatch</a> (<a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> options)</td></tr>
-<tr class="separator:abb41cd2d2168b65dd63fc0bf386a38b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af986fb5542f856f6628adbddeeae3803" id="r_af986fb5542f856f6628adbddeeae3803"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af986fb5542f856f6628adbddeeae3803">RefineMiniBatch</a> ()=default</td></tr>
-<tr class="separator:af986fb5542f856f6628adbddeeae3803"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9dcc167f01735fd861addae939acf45b" id="r_a9dcc167f01735fd861addae939acf45b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9dcc167f01735fd861addae939acf45b">get_options</a> ()</td></tr>
-<tr class="separator:a9dcc167f01735fd861addae939acf45b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27b64fa05415d34baaca48009f059b23" id="r_a27b64fa05415d34baaca48009f059b23"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; typename Matrix_::index_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27b64fa05415d34baaca48009f059b23">run</a> (const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers, Cluster_ *clusters) const</td></tr>
-<tr class="separator:a27b64fa05415d34baaca48009f059b23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classkmeans_1_1Refine"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classkmeans_1_1Refine')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classkmeans_1_1Refine.html">kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt;</a></td></tr>
+<tr class="memitem:ad79317d1cf26679274abc39202d5bf6e" id="r_ad79317d1cf26679274abc39202d5bf6e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad79317d1cf26679274abc39202d5bf6e">RefineMiniBatch</a> (<a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> options)</td></tr>
+<tr class="separator:ad79317d1cf26679274abc39202d5bf6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d0f07141e386418440aaadf8162b629" id="r_a2d0f07141e386418440aaadf8162b629"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d0f07141e386418440aaadf8162b629">RefineMiniBatch</a> ()=default</td></tr>
+<tr class="separator:a2d0f07141e386418440aaadf8162b629"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d58eb129684e159719564204045d6d7" id="r_a6d58eb129684e159719564204045d6d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d58eb129684e159719564204045d6d7">get_options</a> ()</td></tr>
+<tr class="separator:a6d58eb129684e159719564204045d6d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classkmeans_1_1Refine"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classkmeans_1_1Refine')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classkmeans_1_1Refine.html">kmeans::Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</a></td></tr>
+<tr class="memitem:a0ff0875ef8cd5b726098ecb1038258b0 inherit pub_methods_classkmeans_1_1Refine" id="r_a0ff0875ef8cd5b726098ecb1038258b0"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; Index_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0">run</a> (const Matrix_ &amp;data, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters) const =0</td></tr>
+<tr class="separator:a0ff0875ef8cd5b726098ecb1038258b0 inherit pub_methods_classkmeans_1_1Refine"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename Matrix_ = SimpleMatrix&lt;double, int&gt;, typename Cluster_ = int, typename Float_ = double&gt;<br />
-class kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ &gt;</div><p>Implements the mini-batch algorithm for k-means clustering. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename Index_, typename Data_, typename Cluster_, typename Float_, typename Matrix_ = Matrix&lt;Index_, Data_&gt;&gt;<br />
+class kmeans::RefineMiniBatch&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</div><p>Implements the mini-batch algorithm for k-means clustering. </p>
 <p>The mini-batch approach is similar to Lloyd's algorithm in that it runs through a set of observations, assigns each to the closest centroid, updates the centroids and repeats. The key difference is that each iteration is performed with a random subset of observations (i.e., a "mini-batch"), instead of the full set of observations. This reduces computational time and memory usage at the cost of some solution quality.</p>
 <p>The update procedure for a cluster's centroid involves adjusting the coordinates by the assigned observations in the mini-batch. The resulting vector can be interpreted as the mean of all observations that have ever been sampled (possibly multiple times) to that cluster. Thus, the magnitude of the updates will decrease in later iterations as the relative effect of newly sampled points is reduced. This ensures that the centroids will stabilize at a sufficiently large number of iterations.</p>
 <p>We may stop the algorithm before the maximum number of iterations if only a few observations are reassigned at each iteration. Specifically, every \(h\) iterations, we compute the proportion of sampled observations for each cluster in the past \(h\) mini-batches that were reassigned to/from that cluster. If this proportion is less than some threshold \(p\) for all clusters, we consider that the algorithm has converged.</p>
-<p>In the <code><a class="el" href="structkmeans_1_1Details.html#a89083fab78be038cd2acfdc8cd1decd3">Details::status</a></code> returned by <code><a class="el" href="#a27b64fa05415d34baaca48009f059b23">run()</a></code>, the status code is either 0 (success) or 2 (maximum iterations reached without convergence). Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.</p>
+<p>In the <code><a class="el" href="structkmeans_1_1Details.html#a89083fab78be038cd2acfdc8cd1decd3">Details::status</a></code> returned by <code><a class="el" href="classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0">run()</a></code>, the status code is either 0 (success) or 2 (maximum iterations reached without convergence). Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Matrix_</td><td>Matrix type for the input data. This should satisfy the <code><a class="el" href="classkmeans_1_1MockMatrix.html" title="Compile-time interface for matrix data.">MockMatrix</a></code> contract. </td></tr>
+    <tr><td class="paramname">Index_</td><td>Integer type for the observation indices. </td></tr>
+    <tr><td class="paramname">Data_</td><td>Numeric type for the data. </td></tr>
     <tr><td class="paramname">Cluster_</td><td>Integer type for the cluster assignments. </td></tr>
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the centroids. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type for the centroids. This will also be used for any internal distance calculations. </td></tr>
+    <tr><td class="paramname">Matrix_</td><td>Type for the input data matrix. This should satisfy the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface. </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="abb41cd2d2168b65dd63fc0bf386a38b4" name="abb41cd2d2168b65dd63fc0bf386a38b4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb41cd2d2168b65dd63fc0bf386a38b4">&#9670;&#160;</a></span>RefineMiniBatch() <span class="overload">[1/2]</span></h2>
+<a id="ad79317d1cf26679274abc39202d5bf6e" name="ad79317d1cf26679274abc39202d5bf6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad79317d1cf26679274abc39202d5bf6e">&#9670;&#160;</a></span>RefineMiniBatch() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluster_  = int, typename Float_  = double&gt; </div>
+template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ , typename Matrix_  = Matrix&lt;Index_, Data_&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; Matrix_, Cluster_, Float_ &gt;::RefineMiniBatch </td>
+          <td class="memname"><a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;::RefineMiniBatch </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a></td>          <td class="paramname"><span class="paramname"><em>options</em></span></td><td>)</td>
           <td></td>
@@ -190,19 +192,19 @@ template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluste
 
 </div>
 </div>
-<a id="af986fb5542f856f6628adbddeeae3803" name="af986fb5542f856f6628adbddeeae3803"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af986fb5542f856f6628adbddeeae3803">&#9670;&#160;</a></span>RefineMiniBatch() <span class="overload">[2/2]</span></h2>
+<a id="a2d0f07141e386418440aaadf8162b629" name="a2d0f07141e386418440aaadf8162b629"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d0f07141e386418440aaadf8162b629">&#9670;&#160;</a></span>RefineMiniBatch() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluster_  = int, typename Float_  = double&gt; </div>
+template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ , typename Matrix_  = Matrix&lt;Index_, Data_&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; Matrix_, Cluster_, Float_ &gt;::RefineMiniBatch </td>
+          <td class="memname"><a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;::RefineMiniBatch </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -219,19 +221,19 @@ template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluste
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a9dcc167f01735fd861addae939acf45b" name="a9dcc167f01735fd861addae939acf45b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9dcc167f01735fd861addae939acf45b">&#9670;&#160;</a></span>get_options()</h2>
+<a id="a6d58eb129684e159719564204045d6d7" name="a6d58eb129684e159719564204045d6d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d58eb129684e159719564204045d6d7">&#9670;&#160;</a></span>get_options()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluster_  = int, typename Float_  = double&gt; </div>
+template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ , typename Matrix_  = Matrix&lt;Index_, Data_&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> &amp; <a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; Matrix_, Cluster_, Float_ &gt;::get_options </td>
+          <td class="memname"><a class="el" href="structkmeans_1_1RefineMiniBatchOptions.html">RefineMiniBatchOptions</a> &amp; <a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;::get_options </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -243,60 +245,7 @@ template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluste
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>Options for mini-batch partitioning, to be modified prior to calling <code><a class="el" href="#a27b64fa05415d34baaca48009f059b23">run()</a></code>. </dd></dl>
-
-</div>
-</div>
-<a id="a27b64fa05415d34baaca48009f059b23" name="a27b64fa05415d34baaca48009f059b23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27b64fa05415d34baaca48009f059b23">&#9670;&#160;</a></span>run()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluster_  = int, typename Float_  = double&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; typename Matrix_::index_type &gt; <a class="el" href="classkmeans_1_1RefineMiniBatch.html">kmeans::RefineMiniBatch</a>&lt; Matrix_, Cluster_, Float_ &gt;::run </td>
-          <td>(</td>
-          <td class="paramtype">const Matrix_ &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Cluster_</td>          <td class="paramname"><span class="paramname"><em>num_centers</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Float_ *</td>          <td class="paramname"><span class="paramname"><em>centers</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Cluster_ *</td>          <td class="paramname"><span class="paramname"><em>clusters</em></span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">data</td><td>A matrix-like object (see <code><a class="el" href="classkmeans_1_1MockMatrix.html" title="Compile-time interface for matrix data.">MockMatrix</a></code>) containing per-observation data. </td></tr>
-    <tr><td class="paramdir"></td><td class="paramname">num_centers</td><td>Number of cluster centers. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. On input, each column should contain the initial centroid location for its cluster. On output, each column will contain the final centroid locations for each cluster. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length equal to the number of observations (from <code>data.num_observations()</code>). On output, this will contain the cluster assignment for each observation.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Details.html" title="Additional statistics from the k-means algorithm.">Details</a></code> object is returned containing clustering statistics. If <code>num_centers</code> is greater than <code>data.num_observations()</code>, only the first <code>data.num_observations()</code> columns of the <code>centers</code> array will be filled. </dd></dl>
-
-<p>Implements <a class="el" href="classkmeans_1_1Refine.html#a4d39bd12be9887eba776575d9693e6e4">kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt;</a>.</p>
+<dl class="section return"><dt>Returns</dt><dd>Options for mini-batch partitioning, to be modified prior to calling <code><a class="el" href="classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0">run()</a></code>. </dd></dl>
 
 </div>
 </div>

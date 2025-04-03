@@ -1,0 +1,40 @@
+<map id="kmeans/Matrix.hpp" name="kmeans/Matrix.hpp">
+<area shape="rect" id="Node000001" title="Interface for matrix inputs." alt="" coords="838,5,969,31"/>
+<area shape="rect" id="Node000002" href="$Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="415,79,557,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="823,36,558,81,557,76,823,31"/>
+<area shape="rect" id="Node000003" href="$InitializeKmeanspp_8hpp.html" title="Class for kmeans++ initialization." alt="" coords="5,160,210,186"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="823,27,631,45,517,61,404,82,329,100,256,122,140,162,139,157,254,117,328,95,403,76,516,56,630,40,823,22"/>
+<area shape="rect" id="Node000004" href="$kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="858,241,1000,267"/>
+<area shape="poly" id="edge25_Node000001_Node000004" title=" " alt="" coords="909,46,930,240,925,241,904,46"/>
+<area shape="rect" id="Node000007" href="$InitializeVariancePartition_8hpp.html" title="k&#45;means initialization with variance partitioning." alt="" coords="696,153,866,193"/>
+<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="886,45,799,154,794,151,882,42"/>
+<area shape="rect" id="Node000008" href="$Refine_8hpp.html" title="Interface for k&#45;means refinement." alt="" coords="1032,79,1164,105"/>
+<area shape="poly" id="edge13_Node000001_Node000008" title=" " alt="" coords="952,34,1066,76,1064,81,950,39"/>
+<area shape="rect" id="Node000012" href="$SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="1297,79,1467,105"/>
+<area shape="poly" id="edge21_Node000001_Node000012" title=" " alt="" coords="984,29,1301,76,1300,81,983,34"/>
+<area shape="rect" id="Node000013" href="$compute__wcss_8hpp.html" title="Compute within&#45;cluster sum of squares." alt="" coords="1546,79,1730,105"/>
+<area shape="poly" id="edge23_Node000001_Node000013" title=" " alt="" coords="984,25,1546,79,1546,84,984,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="414,111,166,162,165,157,413,106"/>
+<area shape="poly" id="edge10_Node000002_Node000004" title=" " alt="" coords="400,107,342,120,292,138,275,150,266,162,265,176,275,191,303,205,358,217,519,235,704,244,858,249,858,254,703,250,519,240,357,223,302,210,271,195,260,177,261,160,271,146,290,134,340,115,399,102"/>
+<area shape="rect" id="Node000005" href="$InitializeNone_8hpp.html" title="Class for no initialization." alt="" coords="285,160,458,186"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="458,116,391,162,388,157,455,111"/>
+<area shape="rect" id="Node000006" href="$InitializeRandom_8hpp.html" title="Class for random initialization." alt="" coords="482,160,672,186"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="513,113,565,158,561,162,509,117"/>
+<area shape="poly" id="edge8_Node000002_Node000007" title=" " alt="" coords="547,107,708,149,707,155,545,112"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="195,186,229,191,582,226,858,246,857,251,581,231,229,196,194,191"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="446,187,471,191,682,221,858,242,857,248,681,226,470,196,446,192"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="646,187,875,238,874,243,645,192"/>
+<area shape="poly" id="edge9_Node000007_Node000004" title=" " alt="" coords="832,199,907,238,905,243,830,203"/>
+<area shape="poly" id="edge20_Node000008_Node000004" title=" " alt="" coords="1048,113,1013,131,981,155,964,176,951,200,935,242,930,240,946,198,960,173,978,151,1010,126,1045,108"/>
+<area shape="rect" id="Node000009" href="$RefineHartiganWong_8hpp.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="992,160,1205,186"/>
+<area shape="poly" id="edge14_Node000008_Node000009" title=" " alt="" coords="1101,120,1101,160,1096,160,1096,120"/>
+<area shape="rect" id="Node000010" href="$RefineLloyd_8hpp.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="1229,160,1391,186"/>
+<area shape="poly" id="edge16_Node000008_Node000010" title=" " alt="" coords="1146,108,1278,157,1277,162,1144,113"/>
+<area shape="rect" id="Node000011" href="$RefineMiniBatch_8hpp.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="1416,160,1605,186"/>
+<area shape="poly" id="edge18_Node000008_Node000011" title=" " alt="" coords="1177,105,1447,157,1446,162,1176,111"/>
+<area shape="poly" id="edge15_Node000009_Node000004" title=" " alt="" coords="1059,195,956,243,954,238,1057,190"/>
+<area shape="poly" id="edge17_Node000010_Node000004" title=" " alt="" coords="1237,192,988,243,987,238,1236,187"/>
+<area shape="poly" id="edge19_Node000011_Node000004" title=" " alt="" coords="1431,192,1404,196,1184,226,1000,248,1000,242,1183,221,1403,191,1430,186"/>
+<area shape="poly" id="edge22_Node000012_Node000004" title=" " alt="" coords="1483,101,1546,113,1600,132,1619,144,1630,159,1630,176,1619,195,1606,204,1586,211,1527,224,1356,241,1161,251,1000,255,1000,249,1161,245,1355,236,1526,218,1585,206,1604,199,1615,191,1625,175,1625,160,1615,148,1597,137,1545,118,1482,106"/>
+<area shape="poly" id="edge24_Node000013_Node000004" title=" " alt="" coords="1651,119,1657,157,1654,178,1644,195,1631,204,1610,212,1548,225,1466,235,1370,242,1167,251,1000,255,1000,250,1167,246,1369,237,1465,229,1547,219,1609,207,1629,199,1640,192,1649,176,1652,157,1646,120"/>
+</map>

@@ -4,7 +4,7 @@
     <name>compute_wcss.hpp</name>
     <path>kmeans/</path>
     <filename>compute__wcss_8hpp.html</filename>
-    <includes id="SimpleMatrix_8hpp" name="SimpleMatrix.hpp" local="yes" import="no" module="no" objc="no">SimpleMatrix.hpp</includes>
+    <includes id="Matrix_8hpp" name="Matrix.hpp" local="yes" import="no" module="no" objc="no">Matrix.hpp</includes>
     <namespace>kmeans</namespace>
   </compound>
   <compound kind="file">
@@ -18,7 +18,7 @@
     <name>Initialize.hpp</name>
     <path>kmeans/</path>
     <filename>Initialize_8hpp.html</filename>
-    <includes id="SimpleMatrix_8hpp" name="SimpleMatrix.hpp" local="yes" import="no" module="no" objc="no">SimpleMatrix.hpp</includes>
+    <includes id="Matrix_8hpp" name="Matrix.hpp" local="yes" import="no" module="no" objc="no">Matrix.hpp</includes>
     <class kind="class">kmeans::Initialize</class>
     <namespace>kmeans</namespace>
   </compound>
@@ -27,7 +27,7 @@
     <path>kmeans/</path>
     <filename>InitializeKmeanspp_8hpp.html</filename>
     <includes id="Initialize_8hpp" name="Initialize.hpp" local="yes" import="no" module="no" objc="no">Initialize.hpp</includes>
-    <includes id="SimpleMatrix_8hpp" name="SimpleMatrix.hpp" local="yes" import="no" module="no" objc="no">SimpleMatrix.hpp</includes>
+    <includes id="Matrix_8hpp" name="Matrix.hpp" local="yes" import="no" module="no" objc="no">Matrix.hpp</includes>
     <includes id="parallelize_8hpp" name="parallelize.hpp" local="yes" import="no" module="no" objc="no">parallelize.hpp</includes>
     <class kind="struct">kmeans::InitializeKmeansppOptions</class>
     <class kind="class">kmeans::InitializeKmeanspp</class>
@@ -55,6 +55,7 @@
     <path>kmeans/</path>
     <filename>InitializeVariancePartition_8hpp.html</filename>
     <includes id="Initialize_8hpp" name="Initialize.hpp" local="yes" import="no" module="no" objc="no">Initialize.hpp</includes>
+    <includes id="Matrix_8hpp" name="Matrix.hpp" local="yes" import="no" module="no" objc="no">Matrix.hpp</includes>
     <class kind="struct">kmeans::InitializeVariancePartitionOptions</class>
     <class kind="class">kmeans::InitializeVariancePartition</class>
     <namespace>kmeans</namespace>
@@ -66,7 +67,8 @@
     <includes id="Details_8hpp" name="Details.hpp" local="yes" import="no" module="no" objc="no">Details.hpp</includes>
     <includes id="Refine_8hpp" name="Refine.hpp" local="yes" import="no" module="no" objc="no">Refine.hpp</includes>
     <includes id="Initialize_8hpp" name="Initialize.hpp" local="yes" import="no" module="no" objc="no">Initialize.hpp</includes>
-    <includes id="MockMatrix_8hpp" name="MockMatrix.hpp" local="yes" import="no" module="no" objc="no">MockMatrix.hpp</includes>
+    <includes id="Matrix_8hpp" name="Matrix.hpp" local="yes" import="no" module="no" objc="no">Matrix.hpp</includes>
+    <includes id="SimpleMatrix_8hpp" name="SimpleMatrix.hpp" local="yes" import="no" module="no" objc="no">SimpleMatrix.hpp</includes>
     <includes id="InitializeKmeanspp_8hpp" name="InitializeKmeanspp.hpp" local="yes" import="no" module="no" objc="no">InitializeKmeanspp.hpp</includes>
     <includes id="InitializeRandom_8hpp" name="InitializeRandom.hpp" local="yes" import="no" module="no" objc="no">InitializeRandom.hpp</includes>
     <includes id="InitializeVariancePartition_8hpp" name="InitializeVariancePartition.hpp" local="yes" import="no" module="no" objc="no">InitializeVariancePartition.hpp</includes>
@@ -79,13 +81,13 @@
     <namespace>kmeans</namespace>
   </compound>
   <compound kind="file">
-    <name>MockMatrix.hpp</name>
+    <name>Matrix.hpp</name>
     <path>kmeans/</path>
-    <filename>MockMatrix_8hpp.html</filename>
-    <class kind="class">kmeans::MockMatrix</class>
-    <class kind="struct">kmeans::MockMatrix::RandomAccessWorkspace</class>
-    <class kind="struct">kmeans::MockMatrix::ConsecutiveAccessWorkspace</class>
-    <class kind="struct">kmeans::MockMatrix::IndexedAccessWorkspace</class>
+    <filename>Matrix_8hpp.html</filename>
+    <class kind="class">kmeans::RandomAccessExtractor</class>
+    <class kind="class">kmeans::ConsecutiveAccessExtractor</class>
+    <class kind="class">kmeans::IndexedAccessExtractor</class>
+    <class kind="class">kmeans::Matrix</class>
     <namespace>kmeans</namespace>
   </compound>
   <compound kind="file">
@@ -99,7 +101,7 @@
     <path>kmeans/</path>
     <filename>Refine_8hpp.html</filename>
     <includes id="Details_8hpp" name="Details.hpp" local="yes" import="no" module="no" objc="no">Details.hpp</includes>
-    <includes id="SimpleMatrix_8hpp" name="SimpleMatrix.hpp" local="yes" import="no" module="no" objc="no">SimpleMatrix.hpp</includes>
+    <includes id="Matrix_8hpp" name="Matrix.hpp" local="yes" import="no" module="no" objc="no">Matrix.hpp</includes>
     <class kind="class">kmeans::Refine</class>
     <namespace>kmeans</namespace>
   </compound>
@@ -140,12 +142,22 @@
     <name>SimpleMatrix.hpp</name>
     <path>kmeans/</path>
     <filename>SimpleMatrix_8hpp.html</filename>
+    <includes id="Matrix_8hpp" name="Matrix.hpp" local="yes" import="no" module="no" objc="no">Matrix.hpp</includes>
     <class kind="class">kmeans::SimpleMatrix</class>
     <namespace>kmeans</namespace>
   </compound>
-  <compound kind="struct">
-    <name>kmeans::MockMatrix::ConsecutiveAccessWorkspace</name>
-    <filename>structkmeans_1_1MockMatrix_1_1ConsecutiveAccessWorkspace.html</filename>
+  <compound kind="class">
+    <name>kmeans::ConsecutiveAccessExtractor</name>
+    <filename>classkmeans_1_1ConsecutiveAccessExtractor.html</filename>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
+    <member kind="function" virtualness="pure">
+      <type>virtual const Data_ *</type>
+      <name>get_observation</name>
+      <anchorfile>classkmeans_1_1ConsecutiveAccessExtractor.html</anchorfile>
+      <anchor>a8e3be3ef568812836829aaa7333e94e1</anchor>
+      <arglist>()=0</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>kmeans::Details</name>
@@ -173,58 +185,64 @@
       <arglist></arglist>
     </member>
   </compound>
-  <compound kind="struct">
-    <name>kmeans::MockMatrix::IndexedAccessWorkspace</name>
-    <filename>structkmeans_1_1MockMatrix_1_1IndexedAccessWorkspace.html</filename>
+  <compound kind="class">
+    <name>kmeans::IndexedAccessExtractor</name>
+    <filename>classkmeans_1_1IndexedAccessExtractor.html</filename>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
+    <member kind="function" virtualness="pure">
+      <type>virtual const Data_ *</type>
+      <name>get_observation</name>
+      <anchorfile>classkmeans_1_1IndexedAccessExtractor.html</anchorfile>
+      <anchor>a715a080b7ee48ed3e93a8b323d55e498</anchor>
+      <arglist>()=0</arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>kmeans::Initialize</name>
     <filename>classkmeans_1_1Initialize.html</filename>
-    <templarg>class Matrix_</templarg>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
+    <templarg>class Matrix_</templarg>
     <member kind="function" virtualness="pure">
       <type>virtual Cluster_</type>
       <name>run</name>
       <anchorfile>classkmeans_1_1Initialize.html</anchorfile>
-      <anchor>a584a1bf702d9e72c53f1f430543b69e3</anchor>
+      <anchor>a6a91bd58a95b69a775b70b7c526d3158</anchor>
       <arglist>(const Matrix_ &amp;data, Cluster_ num_centers, Float_ *centers) const =0</arglist>
     </member>
   </compound>
   <compound kind="class">
     <name>kmeans::InitializeKmeanspp</name>
     <filename>classkmeans_1_1InitializeKmeanspp.html</filename>
-    <templarg>typename Matrix_</templarg>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Initialize&lt; Matrix_, Cluster_, Float_ &gt;</base>
+    <templarg>class Matrix_</templarg>
+    <base>kmeans::Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>InitializeKmeanspp</name>
       <anchorfile>classkmeans_1_1InitializeKmeanspp.html</anchorfile>
-      <anchor>a1c22523b6848531771c3056e6db44f31</anchor>
+      <anchor>a613f78aadf817193e48046f394b94d75</anchor>
       <arglist>(InitializeKmeansppOptions options)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>InitializeKmeanspp</name>
       <anchorfile>classkmeans_1_1InitializeKmeanspp.html</anchorfile>
-      <anchor>a16ee2db4571dce8fa1639fbf003b997c</anchor>
+      <anchor>a4032c01d2166907996f271f04ec4c114</anchor>
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type>InitializeKmeansppOptions &amp;</type>
       <name>get_options</name>
       <anchorfile>classkmeans_1_1InitializeKmeanspp.html</anchorfile>
-      <anchor>adbefce29c846d0dcc3a5040e751877e1</anchor>
+      <anchor>ab0117e0c84e5719ff337943cef17ade7</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>Cluster_</type>
-      <name>run</name>
-      <anchorfile>classkmeans_1_1InitializeKmeanspp.html</anchorfile>
-      <anchor>ad604e3891c525d3ea6b7744579fde9b1</anchor>
-      <arglist>(const Matrix_ &amp;matrix, Cluster_ ncenters, Float_ *centers) const</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -248,52 +266,42 @@
   <compound kind="class">
     <name>kmeans::InitializeNone</name>
     <filename>classkmeans_1_1InitializeNone.html</filename>
-    <templarg>class Matrix_</templarg>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Initialize&lt; Matrix_, Cluster_, Float_ &gt;</base>
-    <member kind="function">
-      <type>Cluster_</type>
-      <name>run</name>
-      <anchorfile>classkmeans_1_1InitializeNone.html</anchorfile>
-      <anchor>ac6e9963001e326bd6645576b545d60bb</anchor>
-      <arglist>(const Matrix_ &amp;matrix, Cluster_ ncenters, Float_ *) const</arglist>
-    </member>
+    <templarg>class Matrix_</templarg>
+    <base>kmeans::Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</base>
   </compound>
   <compound kind="class">
     <name>kmeans::InitializeRandom</name>
     <filename>classkmeans_1_1InitializeRandom.html</filename>
-    <templarg>class Matrix_</templarg>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Initialize&lt; Matrix_, Cluster_, Float_ &gt;</base>
+    <templarg>class Matrix_</templarg>
+    <base>kmeans::Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>InitializeRandom</name>
       <anchorfile>classkmeans_1_1InitializeRandom.html</anchorfile>
-      <anchor>a666141f5963775f2a5a3b9db248ad347</anchor>
+      <anchor>a9de8f1f5d81331dbc5073fcf4291fd06</anchor>
       <arglist>(InitializeRandomOptions options)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>InitializeRandom</name>
       <anchorfile>classkmeans_1_1InitializeRandom.html</anchorfile>
-      <anchor>aeb65e9b5002be1a5d2772ca03a713d85</anchor>
+      <anchor>a10a99b3c8e6264b3004f2db9949c7c4a</anchor>
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type>InitializeRandomOptions &amp;</type>
       <name>get_options</name>
       <anchorfile>classkmeans_1_1InitializeRandom.html</anchorfile>
-      <anchor>abd3fa787272780fefff3e5c155205d60</anchor>
+      <anchor>accd0b2af56a2f14edee46c9aa1e99b16</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>Cluster_</type>
-      <name>run</name>
-      <anchorfile>classkmeans_1_1InitializeRandom.html</anchorfile>
-      <anchor>a643fd61c3cbf53a813b9c9d5c3b95387</anchor>
-      <arglist>(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers) const</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -310,37 +318,32 @@
   <compound kind="class">
     <name>kmeans::InitializeVariancePartition</name>
     <filename>classkmeans_1_1InitializeVariancePartition.html</filename>
-    <templarg>typename Matrix_</templarg>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Initialize&lt; Matrix_, Cluster_, Float_ &gt;</base>
+    <templarg>class Matrix_</templarg>
+    <base>kmeans::Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>InitializeVariancePartition</name>
       <anchorfile>classkmeans_1_1InitializeVariancePartition.html</anchorfile>
-      <anchor>a1651c5fb4c462341f10cc766aa5a339d</anchor>
+      <anchor>af60562e2ec698603fc5d9bb8a803a2e5</anchor>
       <arglist>(InitializeVariancePartitionOptions options)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>InitializeVariancePartition</name>
       <anchorfile>classkmeans_1_1InitializeVariancePartition.html</anchorfile>
-      <anchor>a863b3001c14cc044f04a683c04a6b6c7</anchor>
+      <anchor>a4606392ddcbcaa445808a3a522f0f214</anchor>
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type>InitializeVariancePartitionOptions &amp;</type>
       <name>get_options</name>
       <anchorfile>classkmeans_1_1InitializeVariancePartition.html</anchorfile>
-      <anchor>ab9d7bbe801584b3517a62d568f84edd2</anchor>
+      <anchor>ae3512f5a3e3569a772eae2c0af255ca1</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>Cluster_</type>
-      <name>run</name>
-      <anchorfile>classkmeans_1_1InitializeVariancePartition.html</anchorfile>
-      <anchor>a5ebd0e53c9148142a9e3735cbcf427a6</anchor>
-      <arglist>(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers) const</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -362,141 +365,104 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>kmeans::MockMatrix</name>
-    <filename>classkmeans_1_1MockMatrix.html</filename>
-    <class kind="struct">kmeans::MockMatrix::ConsecutiveAccessWorkspace</class>
-    <class kind="struct">kmeans::MockMatrix::IndexedAccessWorkspace</class>
-    <class kind="struct">kmeans::MockMatrix::RandomAccessWorkspace</class>
-    <member kind="typedef">
-      <type>double</type>
-      <name>data_type</name>
-      <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>a62a8e51202b58a8136b9815d1316dfc2</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="typedef">
-      <type>int</type>
-      <name>index_type</name>
-      <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>a0777fb08a869fbfcc4254f8ec4eb0da6</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="typedef">
-      <type>int</type>
-      <name>dimension_type</name>
-      <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>ae8c8ab38b08e8de633e0bbfffcbfcb28</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="function">
-      <type>index_type</type>
+    <name>kmeans::Matrix</name>
+    <filename>classkmeans_1_1Matrix.html</filename>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
+    <member kind="function" virtualness="pure">
+      <type>virtual Index_</type>
       <name>num_observations</name>
-      <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>a6501faeec3a6cb4b62084608b34ed35e</anchor>
-      <arglist>() const</arglist>
+      <anchorfile>classkmeans_1_1Matrix.html</anchorfile>
+      <anchor>a906e03e63b05bdca9c98770330db3404</anchor>
+      <arglist>() const =0</arglist>
     </member>
-    <member kind="function">
-      <type>dimension_type</type>
+    <member kind="function" virtualness="pure">
+      <type>virtual size_t</type>
       <name>num_dimensions</name>
-      <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>aef6f372427a132641228fc96e225940f</anchor>
-      <arglist>() const</arglist>
+      <anchorfile>classkmeans_1_1Matrix.html</anchorfile>
+      <anchor>a86449a09b20a3dd2e3409710f6474693</anchor>
+      <arglist>() const =0</arglist>
     </member>
-    <member kind="function">
-      <type>RandomAccessWorkspace</type>
-      <name>create_workspace</name>
-      <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>ae7985ee1fdfcb269cd762a9b6f692bbb</anchor>
-      <arglist>() const</arglist>
+    <member kind="function" virtualness="pure">
+      <type>virtual std::unique_ptr&lt; RandomAccessExtractor&lt; Index_, Data_ &gt; &gt;</type>
+      <name>new_extractor</name>
+      <anchorfile>classkmeans_1_1Matrix.html</anchorfile>
+      <anchor>a7f1e254ff70bf9f7aa7f2c2be4380636</anchor>
+      <arglist>() const =0</arglist>
     </member>
-    <member kind="function">
-      <type>ConsecutiveAccessWorkspace</type>
-      <name>create_workspace</name>
-      <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>a55acf83b92282bbc87704f82263daac5</anchor>
-      <arglist>(index_type start, index_type length) const</arglist>
+    <member kind="function" virtualness="pure">
+      <type>virtual std::unique_ptr&lt; ConsecutiveAccessExtractor&lt; Index_, Data_ &gt; &gt;</type>
+      <name>new_extractor</name>
+      <anchorfile>classkmeans_1_1Matrix.html</anchorfile>
+      <anchor>a7266f580a6b772dd23c42f9d62a077ad</anchor>
+      <arglist>(Index_ start, Index_ length) const =0</arglist>
     </member>
-    <member kind="function">
-      <type>IndexedAccessWorkspace</type>
-      <name>create_workspace</name>
-      <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>a4b122e54456ac00df511eed4b1405e0e</anchor>
-      <arglist>(const index_type *sequence, index_type length) const</arglist>
-    </member>
-    <member kind="function">
-      <type>const data_type *</type>
-      <name>get_observation</name>
-      <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>a681c0a64821a24cc3e266b661738354e</anchor>
-      <arglist>(int i, RandomAccessWorkspace &amp;workspace) const</arglist>
-    </member>
-    <member kind="function">
-      <type>const data_type *</type>
-      <name>get_observation</name>
-      <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>a51080775497cb638404a8096892ca8c8</anchor>
-      <arglist>(ConsecutiveAccessWorkspace &amp;workspace) const</arglist>
-    </member>
-    <member kind="function">
-      <type>const data_type *</type>
-      <name>get_observation</name>
-      <anchorfile>classkmeans_1_1MockMatrix.html</anchorfile>
-      <anchor>a84992362e42288efaf8ef7723f94311a</anchor>
-      <arglist>(IndexedAccessWorkspace &amp;workspace) const</arglist>
+    <member kind="function" virtualness="pure">
+      <type>virtual std::unique_ptr&lt; IndexedAccessExtractor&lt; Index_, Data_ &gt; &gt;</type>
+      <name>new_extractor</name>
+      <anchorfile>classkmeans_1_1Matrix.html</anchorfile>
+      <anchor>a5ff150cff1acd264aa7d801be0403d00</anchor>
+      <arglist>(const Index_ *sequence, size_t length) const =0</arglist>
     </member>
   </compound>
-  <compound kind="struct">
-    <name>kmeans::MockMatrix::RandomAccessWorkspace</name>
-    <filename>structkmeans_1_1MockMatrix_1_1RandomAccessWorkspace.html</filename>
+  <compound kind="class">
+    <name>kmeans::RandomAccessExtractor</name>
+    <filename>classkmeans_1_1RandomAccessExtractor.html</filename>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
+    <member kind="function" virtualness="pure">
+      <type>virtual const Data_ *</type>
+      <name>get_observation</name>
+      <anchorfile>classkmeans_1_1RandomAccessExtractor.html</anchorfile>
+      <anchor>adebd74aefe85dac67839fe4d32debd4f</anchor>
+      <arglist>(Index_ i)=0</arglist>
+    </member>
   </compound>
   <compound kind="class">
     <name>kmeans::Refine</name>
     <filename>classkmeans_1_1Refine.html</filename>
-    <templarg>typename Matrix_</templarg>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
+    <templarg>typename Matrix_</templarg>
     <member kind="function" virtualness="pure">
-      <type>virtual Details&lt; typename Matrix_::index_type &gt;</type>
+      <type>virtual Details&lt; Index_ &gt;</type>
       <name>run</name>
       <anchorfile>classkmeans_1_1Refine.html</anchorfile>
-      <anchor>a4d39bd12be9887eba776575d9693e6e4</anchor>
+      <anchor>a0ff0875ef8cd5b726098ecb1038258b0</anchor>
       <arglist>(const Matrix_ &amp;data, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters) const =0</arglist>
     </member>
   </compound>
   <compound kind="class">
     <name>kmeans::RefineHartiganWong</name>
     <filename>classkmeans_1_1RefineHartiganWong.html</filename>
-    <templarg>typename Matrix_</templarg>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt;</base>
+    <templarg>class Matrix_</templarg>
+    <base>kmeans::Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>RefineHartiganWong</name>
       <anchorfile>classkmeans_1_1RefineHartiganWong.html</anchorfile>
-      <anchor>a59310ce1efac8541beec0d52b2a2e35b</anchor>
+      <anchor>ac05dc4ea692cb3a01913e31301c79850</anchor>
       <arglist>(RefineHartiganWongOptions options)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>RefineHartiganWong</name>
       <anchorfile>classkmeans_1_1RefineHartiganWong.html</anchorfile>
-      <anchor>ac6c5197f3530b5c80d8d855e286e0e0f</anchor>
+      <anchor>ac47dd46f658fce6d5f5e15c43fb117ef</anchor>
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type>RefineHartiganWongOptions &amp;</type>
       <name>get_options</name>
       <anchorfile>classkmeans_1_1RefineHartiganWong.html</anchorfile>
-      <anchor>a80055363a9a1fc59d0410e519e3aed65</anchor>
+      <anchor>a02609bc6d3886728e8f9a4601003314f</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>Details&lt; Index_ &gt;</type>
-      <name>run</name>
-      <anchorfile>classkmeans_1_1RefineHartiganWong.html</anchorfile>
-      <anchor>aa62eae756acd3af6a4c7e9c62ef59d5d</anchor>
-      <arglist>(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers, Cluster_ *clusters) const</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -534,37 +500,32 @@
   <compound kind="class">
     <name>kmeans::RefineLloyd</name>
     <filename>classkmeans_1_1RefineLloyd.html</filename>
-    <templarg>typename Matrix_</templarg>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt;</base>
+    <templarg>typename Matrix_</templarg>
+    <base>kmeans::Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>RefineLloyd</name>
       <anchorfile>classkmeans_1_1RefineLloyd.html</anchorfile>
-      <anchor>aa6515130246913e5d3db85e35d0b2cae</anchor>
+      <anchor>a2821c9ea3e553a1d7a8cca88e857a21a</anchor>
       <arglist>(RefineLloydOptions options)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>RefineLloyd</name>
       <anchorfile>classkmeans_1_1RefineLloyd.html</anchorfile>
-      <anchor>a93eef863a9bd950520f902572bbf4867</anchor>
+      <anchor>a00e60ab08be293977f1c2fb0c3b0ea36</anchor>
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type>RefineLloydOptions &amp;</type>
       <name>get_options</name>
       <anchorfile>classkmeans_1_1RefineLloyd.html</anchorfile>
-      <anchor>aef58a16f494e80d04162902ffbf44779</anchor>
+      <anchor>ae881be31c7114332388a199c9f932c60</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>Details&lt; Index_ &gt;</type>
-      <name>run</name>
-      <anchorfile>classkmeans_1_1RefineLloyd.html</anchorfile>
-      <anchor>a457d13c9ea971733c47eea595ab058f6</anchor>
-      <arglist>(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers, Cluster_ *clusters) const</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -588,37 +549,32 @@
   <compound kind="class">
     <name>kmeans::RefineMiniBatch</name>
     <filename>classkmeans_1_1RefineMiniBatch.html</filename>
-    <templarg>typename Matrix_</templarg>
+    <templarg>typename Index_</templarg>
+    <templarg>typename Data_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <base>kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt;</base>
+    <templarg>typename Matrix_</templarg>
+    <base>kmeans::Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>RefineMiniBatch</name>
       <anchorfile>classkmeans_1_1RefineMiniBatch.html</anchorfile>
-      <anchor>abb41cd2d2168b65dd63fc0bf386a38b4</anchor>
+      <anchor>ad79317d1cf26679274abc39202d5bf6e</anchor>
       <arglist>(RefineMiniBatchOptions options)</arglist>
     </member>
     <member kind="function">
       <type></type>
       <name>RefineMiniBatch</name>
       <anchorfile>classkmeans_1_1RefineMiniBatch.html</anchorfile>
-      <anchor>af986fb5542f856f6628adbddeeae3803</anchor>
+      <anchor>a2d0f07141e386418440aaadf8162b629</anchor>
       <arglist>()=default</arglist>
     </member>
     <member kind="function">
       <type>RefineMiniBatchOptions &amp;</type>
       <name>get_options</name>
       <anchorfile>classkmeans_1_1RefineMiniBatch.html</anchorfile>
-      <anchor>a9dcc167f01735fd861addae939acf45b</anchor>
+      <anchor>a6d58eb129684e159719564204045d6d7</anchor>
       <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>Details&lt; typename Matrix_::index_type &gt;</type>
-      <name>run</name>
-      <anchorfile>classkmeans_1_1RefineMiniBatch.html</anchorfile>
-      <anchor>a27b64fa05415d34baaca48009f059b23</anchor>
-      <arglist>(const Matrix_ &amp;data, Cluster_ ncenters, Float_ *centers, Cluster_ *clusters) const</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -670,49 +626,51 @@
   <compound kind="struct">
     <name>kmeans::Results</name>
     <filename>structkmeans_1_1Results.html</filename>
+    <templarg>typename Index_</templarg>
     <templarg>typename Cluster_</templarg>
     <templarg>typename Float_</templarg>
-    <templarg>typename Index_</templarg>
     <member kind="variable">
       <type>std::vector&lt; Cluster_ &gt;</type>
       <name>clusters</name>
       <anchorfile>structkmeans_1_1Results.html</anchorfile>
-      <anchor>a8890398736c8a854eab8834ca6f8b62a</anchor>
+      <anchor>ae0ca92b9a25d0a4a309b3f6be7e79669</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>std::vector&lt; Float_ &gt;</type>
       <name>centers</name>
       <anchorfile>structkmeans_1_1Results.html</anchorfile>
-      <anchor>a7e604079d5168e1d29cfd9f47281b414</anchor>
+      <anchor>a7815cde9ab5edb8479264c36091bdeca</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
       <type>Details&lt; Index_ &gt;</type>
       <name>details</name>
       <anchorfile>structkmeans_1_1Results.html</anchorfile>
-      <anchor>a9519a521433ace440901847b56a2bf80</anchor>
+      <anchor>a81b75a81085f382347de2d1c719bcf40</anchor>
       <arglist></arglist>
     </member>
   </compound>
   <compound kind="class">
     <name>kmeans::SimpleMatrix</name>
     <filename>classkmeans_1_1SimpleMatrix.html</filename>
-    <templarg>typename Data_</templarg>
     <templarg>typename Index_</templarg>
-    <templarg>typename Dim_</templarg>
+    <templarg>typename Data_</templarg>
+    <base>kmeans::Matrix&lt; Index_, Data_ &gt;</base>
     <member kind="function">
       <type></type>
       <name>SimpleMatrix</name>
       <anchorfile>classkmeans_1_1SimpleMatrix.html</anchorfile>
-      <anchor>a821d29aaeb8a2efa3015cc83de8e4d40</anchor>
-      <arglist>(Dim_ num_dimensions, Index_ num_observations, const Data_ *data)</arglist>
+      <anchor>af0e742cfab965e8cb0a887bc0a27abe9</anchor>
+      <arglist>(size_t num_dimensions, Index_ num_observations, const Data_ *data)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
     <name>kmeans</name>
     <filename>namespacekmeans.html</filename>
+    <class kind="class">kmeans::ConsecutiveAccessExtractor</class>
     <class kind="struct">kmeans::Details</class>
+    <class kind="class">kmeans::IndexedAccessExtractor</class>
     <class kind="class">kmeans::Initialize</class>
     <class kind="class">kmeans::InitializeKmeanspp</class>
     <class kind="struct">kmeans::InitializeKmeansppOptions</class>
@@ -721,7 +679,8 @@
     <class kind="struct">kmeans::InitializeRandomOptions</class>
     <class kind="class">kmeans::InitializeVariancePartition</class>
     <class kind="struct">kmeans::InitializeVariancePartitionOptions</class>
-    <class kind="class">kmeans::MockMatrix</class>
+    <class kind="class">kmeans::Matrix</class>
+    <class kind="class">kmeans::RandomAccessExtractor</class>
     <class kind="class">kmeans::Refine</class>
     <class kind="class">kmeans::RefineHartiganWong</class>
     <class kind="struct">kmeans::RefineHartiganWongOptions</class>
@@ -739,18 +698,32 @@
       <arglist>(const Matrix_ &amp;data, Cluster_ ncenters, const Float_ *centers, const Cluster_ *clusters, Float_ *wcss)</arglist>
     </member>
     <member kind="function">
-      <type>Details&lt; typename Matrix_::index_type &gt;</type>
+      <type>Details&lt; Index_ &gt;</type>
       <name>compute</name>
       <anchorfile>namespacekmeans.html</anchorfile>
-      <anchor>a64f6ccaa526e32d13525286022463d70</anchor>
-      <arglist>(const Matrix_ &amp;data, const Initialize&lt; Matrix_, Cluster_, Float_ &gt; &amp;initialize, const Refine&lt; Matrix_, Cluster_, Float_ &gt; &amp;refine, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters)</arglist>
+      <anchor>a46d49b7746f7d2e0b6f50ec799e0010d</anchor>
+      <arglist>(const Matrix_ &amp;data, const Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;initialize, const Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;refine, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters)</arglist>
     </member>
     <member kind="function">
-      <type>Results&lt; Cluster_, Float_, typename Matrix_::index_type &gt;</type>
+      <type>Details&lt; Index_ &gt;</type>
       <name>compute</name>
       <anchorfile>namespacekmeans.html</anchorfile>
-      <anchor>acd57c124f55aba0505a09a5ad3462bc8</anchor>
-      <arglist>(const Matrix_ &amp;data, const Initialize&lt; Matrix_, Cluster_, Float_ &gt; &amp;initialize, const Refine&lt; Matrix_, Cluster_, Float_ &gt; &amp;refine, Cluster_ num_centers)</arglist>
+      <anchor>a1ae0f9cf3cc7dc58032e401f575d2ff7</anchor>
+      <arglist>(const Matrix&lt; Index_, Data_ &gt; &amp;data, const Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;initialize, const Refine&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;refine, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters)</arglist>
+    </member>
+    <member kind="function">
+      <type>Results&lt; Index_, Cluster_, Float_ &gt;</type>
+      <name>compute</name>
+      <anchorfile>namespacekmeans.html</anchorfile>
+      <anchor>a11ea41f1455a38a52ebe2f6ed6b9f869</anchor>
+      <arglist>(const Matrix_ &amp;data, const Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;initialize, const Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;refine, Cluster_ num_centers)</arglist>
+    </member>
+    <member kind="function">
+      <type>Results&lt; Index_, Cluster_, Float_ &gt;</type>
+      <name>compute</name>
+      <anchorfile>namespacekmeans.html</anchorfile>
+      <anchor>a046aad88e5c6252e16b94ca420f81527</anchor>
+      <arglist>(const Matrix&lt; Index_, Data_ &gt; &amp;data, const Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;initialize, const Refine&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;refine, Cluster_ num_centers)</arglist>
     </member>
     <member kind="function">
       <type>void</type>

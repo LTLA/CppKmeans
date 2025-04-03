@@ -8,10 +8,16 @@
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="266,33,241,68,236,65,261,30"/>
 <area shape="rect" id="Node000005" href="$Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="278,79,370,105"/>
 <area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="283,30,308,65,304,68,278,33"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="394,79,529,105"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="305,29,416,71,414,76,303,34"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="554,79,681,105"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="331,29,544,73,543,78,330,34"/>
-<area shape="rect" id="Node000006" href="$SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="264,153,384,178"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="326,105,326,137,321,137,321,105"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="394,79,529,105"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="305,29,416,71,414,76,303,34"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="554,79,681,105"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="331,29,544,73,543,78,330,34"/>
+<area shape="rect" id="Node000006" href="$Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="230,153,311,178"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="317,106,291,142,287,138,313,103"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="335,153,416,178"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="335,103,360,138,356,142,330,106"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="196,226,263,252"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="266,180,246,214,241,211,261,177"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="288,226,339,252"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="280,177,300,211,296,214,275,180"/>
 </map>

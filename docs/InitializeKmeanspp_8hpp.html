@@ -104,7 +104,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Class for <b>kmeans++</b> initialization.  
+<p>Class for kmeans++ initialization.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;random&gt;</code><br />
@@ -112,7 +112,7 @@ $(function(){ initResizable(false); });
 <code>#include &lt;cstdint&gt;</code><br />
 <code>#include &quot;aarand/aarand.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="Initialize_8hpp_source.html">Initialize.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="SimpleMatrix_8hpp_source.html">SimpleMatrix.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="Matrix_8hpp_source.html">Matrix.hpp</a>&quot;</code><br />
 <code>#include &quot;copy_into_array.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="parallelize_8hpp_source.html">parallelize.hpp</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -131,15 +131,21 @@ Include dependency graph for InitializeKmeanspp.hpp:</div>
 <area shape="poly" title=" " alt="" coords="403,34,339,73,336,68,401,29"/>
 <area shape="rect" title=" " alt="" coords="358,79,486,105"/>
 <area shape="poly" title=" " alt="" coords="425,31,425,63,419,63,419,31"/>
-<area shape="rect" href="Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="509,79,602,105"/>
-<area shape="poly" title=" " alt="" coords="446,29,520,69,518,74,443,34"/>
-<area shape="rect" href="SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="538,153,658,178"/>
-<area shape="poly" title=" " alt="" coords="525,25,575,43,598,58,616,78,623,92,624,109,615,140,610,138,618,108,618,94,612,80,594,62,573,48,524,30"/>
+<area shape="rect" href="Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="561,79,654,105"/>
+<area shape="poly" title=" " alt="" coords="454,29,563,71,561,75,452,34"/>
+<area shape="rect" href="Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="483,153,564,178"/>
+<area shape="poly" title=" " alt="" coords="446,29,474,50,500,77,514,107,522,136,517,138,509,109,496,81,470,54,443,34"/>
 <area shape="rect" title=" " alt="" coords="677,79,812,105"/>
 <area shape="poly" title=" " alt="" coords="478,29,675,73,674,78,477,34"/>
 <area shape="rect" href="parallelize_8hpp.html" title="Utilities for parallelization." alt="" coords="836,79,938,105"/>
 <area shape="poly" title=" " alt="" coords="511,29,821,76,820,81,510,34"/>
-<area shape="poly" title=" " alt="" coords="565,104,585,138,581,141,560,106"/>
+<area shape="poly" title=" " alt="" coords="595,107,551,144,547,140,591,103"/>
+<area shape="rect" title=" " alt="" coords="588,153,669,178"/>
+<area shape="poly" title=" " alt="" coords="613,104,623,137,618,138,608,106"/>
+<area shape="rect" title=" " alt="" coords="448,226,516,252"/>
+<area shape="poly" title=" " alt="" coords="519,180,499,214,494,211,514,177"/>
+<area shape="rect" title=" " alt="" coords="540,226,592,252"/>
+<area shape="poly" title=" " alt="" coords="533,177,553,211,549,214,528,180"/>
 <area shape="rect" target="_parent" href="https://ltla.github.io/subpar/subpar_8hpp.html" title=" " alt="" coords="824,153,951,178"/>
 <area shape="poly" title=" " alt="" coords="890,105,890,137,885,137,885,105"/>
 </map>
@@ -162,7 +168,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structkmeans_1_1InitializeKmeansppOptions.html">kmeans::InitializeKmeansppOptions</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Options for <b>k-means++</b> initialization.  <a href="structkmeans_1_1InitializeKmeansppOptions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializeKmeanspp.html">kmeans::InitializeKmeanspp&lt; Matrix_, Cluster_, Float_ &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1InitializeKmeanspp.html">kmeans::InitializeKmeanspp&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><b>k-means++</b> initialization of Arthur and Vassilvitskii (2007).  <a href="classkmeans_1_1InitializeKmeanspp.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -173,7 +179,7 @@ Namespaces</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Class for <b>kmeans++</b> initialization. </p>
+<div class="textblock"><p>Class for kmeans++ initialization. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

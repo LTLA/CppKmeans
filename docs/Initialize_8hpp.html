@@ -106,15 +106,22 @@ $(function(){ initResizable(false); });
 
 <p>Interface for k-means initialization.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="SimpleMatrix_8hpp_source.html">SimpleMatrix.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="Matrix_8hpp_source.html">Matrix.hpp</a>&quot;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Initialize.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="Initialize_8hpp__incl.png" border="0" usemap="#akmeans_2Initialize_8hpp" alt=""/></div>
 <map name="akmeans_2Initialize_8hpp" id="akmeans_2Initialize_8hpp">
-<area shape="rect" title="Interface for k&#45;means initialization." alt="" coords="5,5,148,31"/>
-<area shape="rect" href="SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="16,79,137,105"/>
-<area shape="poly" title=" " alt="" coords="79,31,79,63,74,63,74,31"/>
+<area shape="rect" title="Interface for k&#45;means initialization." alt="" coords="61,5,204,31"/>
+<area shape="rect" href="Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="40,79,120,105"/>
+<area shape="poly" title=" " alt="" coords="126,33,100,68,96,65,122,30"/>
+<area shape="rect" title=" " alt="" coords="145,79,226,105"/>
+<area shape="poly" title=" " alt="" coords="143,30,170,65,165,68,139,33"/>
+<area shape="rect" title=" " alt="" coords="5,153,73,178"/>
+<area shape="poly" title=" " alt="" coords="76,106,56,141,51,138,71,104"/>
+<area shape="rect" title=" " alt="" coords="97,153,149,178"/>
+<area shape="poly" title=" " alt="" coords="90,104,110,138,106,141,85,106"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -144,8 +151,8 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Initialize.html">kmeans::Initialize&lt; Matrix_, Cluster_, Float_ &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for initialization algorithms.  <a href="classkmeans_1_1Initialize.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classkmeans_1_1Initialize.html">kmeans::Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface for k-means initialization algorithms.  <a href="classkmeans_1_1Initialize.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>

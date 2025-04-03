@@ -1,7 +1,11 @@
 <map id="kmeans/compute_wcss.hpp" name="kmeans/compute_wcss.hpp">
-<area shape="rect" id="Node000001" title="Compute within&#45;cluster sum of squares." alt="" coords="11,5,194,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,80,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,33,64,69,60,65,91,30"/>
-<area shape="rect" id="Node000003" href="$SimpleMatrix_8hpp.html" title="Wrapper for a simple dense matrix." alt="" coords="104,79,224,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="115,29,146,65,142,69,111,33"/>
+<area shape="rect" id="Node000001" title="Compute within&#45;cluster sum of squares." alt="" coords="5,5,189,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="9,79,84,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,33,66,68,61,65,86,30"/>
+<area shape="rect" id="Node000003" href="$Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="108,79,188,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,30,133,65,128,68,103,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="71,153,139,178"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="143,106,122,141,118,138,138,104"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="163,153,215,178"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="157,104,177,138,172,141,152,106"/>
 </map>

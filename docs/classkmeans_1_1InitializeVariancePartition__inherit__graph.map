@@ -1,5 +1,5 @@
-<map id="kmeans::InitializeVariancePartition&lt; Matrix_, Cluster_, Float_ &gt;" name="kmeans::InitializeVariancePartition&lt; Matrix_, Cluster_, Float_ &gt;">
-<area shape="rect" id="Node000001" title="Implements the variance partitioning method of Su and Dy (2007)." alt="" coords="5,109,177,165"/>
-<area shape="rect" id="Node000002" href="$classkmeans_1_1Initialize.html" title="Base class for initialization algorithms." alt="" coords="24,5,158,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,77,94,108,88,108,88,77"/>
+<map id="kmeans::InitializeVariancePartition&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;" name="kmeans::InitializeVariancePartition&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;">
+<area shape="rect" id="Node000001" title="Implements the variance partitioning method of Su and Dy (2007)." alt="" coords="5,109,192,165"/>
+<area shape="rect" id="Node000002" href="$classkmeans_1_1Initialize.html" title="Interface for k&#45;means initialization algorithms." alt="" coords="19,5,178,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,77,101,108,96,108,96,77"/>
 </map>

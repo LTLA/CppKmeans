@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans::Results&lt; Cluster_, Float_, Index_ &gt; Struct Template Reference</title>
+<title>kmeans: kmeans::Results&lt; Index_, Cluster_, Float_ &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -100,7 +100,7 @@ $(function(){ initResizable(false); });
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structkmeans_1_1Results-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">kmeans::Results&lt; Cluster_, Float_, Index_ &gt; Struct Template Reference</div></div>
+  <div class="headertitle"><div class="title">kmeans::Results&lt; Index_, Cluster_, Float_ &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -108,40 +108,30 @@ $(function(){ initResizable(false); });
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="kmeans_8hpp_source.html">kmeans.hpp</a>&gt;</code></p>
-<div class="dynheader">
-Collaboration diagram for kmeans::Results&lt; Cluster_, Float_, Index_ &gt;:</div>
-<div class="dyncontent">
-<div class="center"><img src="structkmeans_1_1Results__coll__graph.png" border="0" usemap="#akmeans_1_1Results_3_01Cluster___00_01Float___00_01Index___01_4_coll__map" alt="Collaboration graph"/></div>
-<map name="akmeans_1_1Results_3_01Cluster___00_01Float___00_01Index___01_4_coll__map" id="akmeans_1_1Results_3_01Cluster___00_01Float___00_01Index___01_4_coll__map">
-<area shape="rect" title="Full statistics from k&#45;means clustering." alt="" coords="7,94,177,135"/>
-<area shape="rect" href="structkmeans_1_1Details.html" title=" " alt="" coords="5,5,179,31"/>
-<area shape="poly" title=" " alt="" coords="95,46,95,93,89,93,89,46"/>
-</map>
-<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a8890398736c8a854eab8834ca6f8b62a" id="r_a8890398736c8a854eab8834ca6f8b62a"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Cluster_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8890398736c8a854eab8834ca6f8b62a">clusters</a></td></tr>
-<tr class="separator:a8890398736c8a854eab8834ca6f8b62a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e604079d5168e1d29cfd9f47281b414" id="r_a7e604079d5168e1d29cfd9f47281b414"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Float_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e604079d5168e1d29cfd9f47281b414">centers</a></td></tr>
-<tr class="separator:a7e604079d5168e1d29cfd9f47281b414"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9519a521433ace440901847b56a2bf80" id="r_a9519a521433ace440901847b56a2bf80"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; Index_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9519a521433ace440901847b56a2bf80">details</a></td></tr>
-<tr class="separator:a9519a521433ace440901847b56a2bf80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae0ca92b9a25d0a4a309b3f6be7e79669" id="r_ae0ca92b9a25d0a4a309b3f6be7e79669"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Cluster_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae0ca92b9a25d0a4a309b3f6be7e79669">clusters</a></td></tr>
+<tr class="separator:ae0ca92b9a25d0a4a309b3f6be7e79669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7815cde9ab5edb8479264c36091bdeca" id="r_a7815cde9ab5edb8479264c36091bdeca"><td class="memItemLeft" align="right" valign="top">std::vector&lt; Float_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7815cde9ab5edb8479264c36091bdeca">centers</a></td></tr>
+<tr class="separator:a7815cde9ab5edb8479264c36091bdeca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81b75a81085f382347de2d1c719bcf40" id="r_a81b75a81085f382347de2d1c719bcf40"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; Index_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a81b75a81085f382347de2d1c719bcf40">details</a></td></tr>
+<tr class="separator:a81b75a81085f382347de2d1c719bcf40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename Cluster_, typename Float_, typename Index_&gt;<br />
-struct kmeans::Results&lt; Cluster_, Float_, Index_ &gt;</div><p>Full statistics from k-means clustering. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename Index_, typename Cluster_, typename Float_&gt;<br />
+struct kmeans::Results&lt; Index_, Cluster_, Float_ &gt;</div><p>Full statistics from k-means clustering. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a7e604079d5168e1d29cfd9f47281b414" name="a7e604079d5168e1d29cfd9f47281b414"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e604079d5168e1d29cfd9f47281b414">&#9670;&#160;</a></span>centers</h2>
+<a id="a7815cde9ab5edb8479264c36091bdeca" name="a7815cde9ab5edb8479264c36091bdeca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7815cde9ab5edb8479264c36091bdeca">&#9670;&#160;</a></span>centers</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Cluster_ , typename Float_ , typename Index_ &gt; </div>
+template&lt;typename Index_ , typename Cluster_ , typename Float_ &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;Float_&gt; <a class="el" href="structkmeans_1_1Results.html">kmeans::Results</a>&lt; Cluster_, Float_, Index_ &gt;::centers</td>
+          <td class="memname">std::vector&lt;Float_&gt; <a class="el" href="structkmeans_1_1Results.html">kmeans::Results</a>&lt; Index_, Cluster_, Float_ &gt;::centers</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -149,16 +139,16 @@ template&lt;typename Cluster_ , typename Float_ , typename Index_ &gt; </div>
 
 </div>
 </div>
-<a id="a8890398736c8a854eab8834ca6f8b62a" name="a8890398736c8a854eab8834ca6f8b62a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8890398736c8a854eab8834ca6f8b62a">&#9670;&#160;</a></span>clusters</h2>
+<a id="ae0ca92b9a25d0a4a309b3f6be7e79669" name="ae0ca92b9a25d0a4a309b3f6be7e79669"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0ca92b9a25d0a4a309b3f6be7e79669">&#9670;&#160;</a></span>clusters</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Cluster_ , typename Float_ , typename Index_ &gt; </div>
+template&lt;typename Index_ , typename Cluster_ , typename Float_ &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;Cluster_&gt; <a class="el" href="structkmeans_1_1Results.html">kmeans::Results</a>&lt; Cluster_, Float_, Index_ &gt;::clusters</td>
+          <td class="memname">std::vector&lt;Cluster_&gt; <a class="el" href="structkmeans_1_1Results.html">kmeans::Results</a>&lt; Index_, Cluster_, Float_ &gt;::clusters</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -166,16 +156,16 @@ template&lt;typename Cluster_ , typename Float_ , typename Index_ &gt; </div>
 
 </div>
 </div>
-<a id="a9519a521433ace440901847b56a2bf80" name="a9519a521433ace440901847b56a2bf80"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9519a521433ace440901847b56a2bf80">&#9670;&#160;</a></span>details</h2>
+<a id="a81b75a81085f382347de2d1c719bcf40" name="a81b75a81085f382347de2d1c719bcf40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81b75a81085f382347de2d1c719bcf40">&#9670;&#160;</a></span>details</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Cluster_ , typename Float_ , typename Index_ &gt; </div>
+template&lt;typename Index_ , typename Cluster_ , typename Float_ &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt;Index_&gt; <a class="el" href="structkmeans_1_1Results.html">kmeans::Results</a>&lt; Cluster_, Float_, Index_ &gt;::details</td>
+          <td class="memname"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt;Index_&gt; <a class="el" href="structkmeans_1_1Results.html">kmeans::Results</a>&lt; Index_, Cluster_, Float_ &gt;::details</td>
         </tr>
       </table>
 </div><div class="memdoc">

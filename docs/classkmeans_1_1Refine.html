@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.12.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>kmeans: kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt; Class Template Reference</title>
+<title>kmeans: kmeans::Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -100,59 +100,61 @@ $(function(){ initResizable(false); });
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classkmeans_1_1Refine-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
+  <div class="headertitle"><div class="title">kmeans::Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; Class Template Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Interface for all k-means refinement algorithms.  
+<p>Interface for k-means refinement algorithms.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="Refine_8hpp_source.html">Refine.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt;:</div>
+Inheritance diagram for kmeans::Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;:</div>
 <div class="dyncontent">
-<div class="center"><img src="classkmeans_1_1Refine__inherit__graph.png" border="0" usemap="#akmeans_1_1Refine_3_01Matrix___00_01Cluster___00_01Float___01_4_inherit__map" alt="Inheritance graph"/></div>
-<map name="akmeans_1_1Refine_3_01Matrix___00_01Cluster___00_01Float___01_4_inherit__map" id="akmeans_1_1Refine_3_01Matrix___00_01Cluster___00_01Float___01_4_inherit__map">
-<area shape="rect" title="Interface for all k&#45;means refinement algorithms." alt="" coords="5,77,161,118"/>
-<area shape="rect" href="classkmeans_1_1RefineHartiganWong.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="209,5,400,46"/>
-<area shape="poly" title=" " alt="" coords="161,70,239,44,240,49,163,75"/>
-<area shape="rect" href="classkmeans_1_1RefineLloyd.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="234,70,374,126"/>
-<area shape="poly" title=" " alt="" coords="176,95,234,95,234,100,176,100"/>
-<area shape="rect" href="classkmeans_1_1RefineMiniBatch.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="213,149,396,190"/>
-<area shape="poly" title=" " alt="" coords="163,121,240,146,239,151,161,126"/>
+<div class="center"><img src="classkmeans_1_1Refine__inherit__graph.png" border="0" usemap="#akmeans_1_1Refine_3_01Index___00_01Data___00_01Cluster___00_01Float___00_01Matrix___01_4_inherit__map" alt="Inheritance graph"/></div>
+<map name="akmeans_1_1Refine_3_01Index___00_01Data___00_01Cluster___00_01Float___00_01Matrix___01_4_inherit__map" id="akmeans_1_1Refine_3_01Index___00_01Data___00_01Cluster___00_01Float___00_01Matrix___01_4_inherit__map">
+<area shape="rect" title="Interface for k&#45;means refinement algorithms." alt="" coords="5,85,166,141"/>
+<area shape="rect" href="classkmeans_1_1RefineHartiganWong.html" title="Implements the Hartigan&#45;Wong algorithm for k&#45;means clustering." alt="" coords="214,5,405,61"/>
+<area shape="poly" title=" " alt="" coords="179,77,228,59,230,64,181,82"/>
+<area shape="rect" href="classkmeans_1_1RefineLloyd.html" title="Implements the Lloyd algorithm for k&#45;means clustering." alt="" coords="230,85,389,141"/>
+<area shape="poly" title=" " alt="" coords="181,110,229,110,229,116,181,116"/>
+<area shape="rect" href="classkmeans_1_1RefineMiniBatch.html" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="226,165,393,221"/>
+<area shape="poly" title=" " alt="" coords="181,144,230,162,228,167,179,149"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4d39bd12be9887eba776575d9693e6e4" id="r_a4d39bd12be9887eba776575d9693e6e4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; typename Matrix_::index_type &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d39bd12be9887eba776575d9693e6e4">run</a> (const Matrix_ &amp;data, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters) const =0</td></tr>
-<tr class="separator:a4d39bd12be9887eba776575d9693e6e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ff0875ef8cd5b726098ecb1038258b0" id="r_a0ff0875ef8cd5b726098ecb1038258b0"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; Index_ &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ff0875ef8cd5b726098ecb1038258b0">run</a> (const Matrix_ &amp;data, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters) const =0</td></tr>
+<tr class="separator:a0ff0875ef8cd5b726098ecb1038258b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename Matrix_ = SimpleMatrix&lt;double, int&gt;, typename Cluster_ = int, typename Float_ = double&gt;<br />
-class kmeans::Refine&lt; Matrix_, Cluster_, Float_ &gt;</div><p>Interface for all k-means refinement algorithms. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename Index_, typename Data_, typename Cluster_, typename Float_, typename Matrix_ = Matrix&lt;Index_, Data_&gt;&gt;<br />
+class kmeans::Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</div><p>Interface for k-means refinement algorithms. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Matrix_</td><td>Matrix type for the input data. This should satisfy the <code><a class="el" href="classkmeans_1_1MockMatrix.html" title="Compile-time interface for matrix data.">MockMatrix</a></code> contract. </td></tr>
+    <tr><td class="paramname">Index_</td><td>Integer type for the observation indices. </td></tr>
+    <tr><td class="paramname">Data_</td><td>Numeric type for the data. </td></tr>
     <tr><td class="paramname">Cluster_</td><td>Integer type for the cluster assignments. </td></tr>
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the centroids. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type for the centroids. This will also be used for any internal distance calculations. </td></tr>
+    <tr><td class="paramname">Matrix_</td><td>Type for the input data matrix. This should satisfy the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface. </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a4d39bd12be9887eba776575d9693e6e4" name="a4d39bd12be9887eba776575d9693e6e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d39bd12be9887eba776575d9693e6e4">&#9670;&#160;</a></span>run()</h2>
+<a id="a0ff0875ef8cd5b726098ecb1038258b0" name="a0ff0875ef8cd5b726098ecb1038258b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ff0875ef8cd5b726098ecb1038258b0">&#9670;&#160;</a></span>run()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluster_  = int, typename Float_  = double&gt; </div>
+template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ , typename Matrix_  = Matrix&lt;Index_, Data_&gt;&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; typename Matrix_::index_type &gt; <a class="el" href="classkmeans_1_1Refine.html">kmeans::Refine</a>&lt; Matrix_, Cluster_, Float_ &gt;::run </td>
+          <td class="memname">virtual <a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; Index_ &gt; <a class="el" href="classkmeans_1_1Refine.html">kmeans::Refine</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;::run </td>
           <td>(</td>
           <td class="paramtype">const Matrix_ &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
         </tr>
@@ -180,7 +182,7 @@ template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluste
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">data</td><td>A matrix-like object (see <code><a class="el" href="classkmeans_1_1MockMatrix.html" title="Compile-time interface for matrix data.">MockMatrix</a></code>) containing per-observation data. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">data</td><td>A matrix-like object containing per-observation data. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">num_centers</td><td>Number of cluster centers. </td></tr>
     <tr><td class="paramdir">[in,out]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. On input, each column should contain the initial centroid location for its cluster. On output, each column will contain the final centroid locations for each cluster. </td></tr>
     <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length equal to the number of observations (from <code>data.num_observations()</code>). On output, this will contain the cluster assignment for each observation.</td></tr>
@@ -188,8 +190,6 @@ template&lt;typename Matrix_  = SimpleMatrix&lt;double, int&gt;, typename Cluste
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Details.html" title="Additional statistics from the k-means algorithm.">Details</a></code> object is returned containing clustering statistics. If <code>num_centers</code> is greater than <code>data.num_observations()</code>, only the first <code>data.num_observations()</code> columns of the <code>centers</code> array will be filled. </dd></dl>
-
-<p>Implemented in <a class="el" href="classkmeans_1_1RefineHartiganWong.html#aa62eae756acd3af6a4c7e9c62ef59d5d">kmeans::RefineHartiganWong&lt; Matrix_, Cluster_, Float_ &gt;</a>, <a class="el" href="classkmeans_1_1RefineLloyd.html#a457d13c9ea971733c47eea595ab058f6">kmeans::RefineLloyd&lt; Matrix_, Cluster_, Float_ &gt;</a>, and <a class="el" href="classkmeans_1_1RefineMiniBatch.html#a27b64fa05415d34baaca48009f059b23">kmeans::RefineMiniBatch&lt; Matrix_, Cluster_, Float_ &gt;</a>.</p>
 
 </div>
 </div>

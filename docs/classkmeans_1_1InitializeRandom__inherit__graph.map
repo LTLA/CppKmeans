@@ -1,5 +1,5 @@
-<map id="kmeans::InitializeRandom&lt; Matrix_, Cluster_, Float_ &gt;" name="kmeans::InitializeRandom&lt; Matrix_, Cluster_, Float_ &gt;">
-<area shape="rect" id="Node000001" title="Initialize by sampling random observations without replacement." alt="" coords="5,109,189,150"/>
-<area shape="rect" id="Node000002" href="$classkmeans_1_1Initialize.html" title="Base class for initialization algorithms." alt="" coords="30,5,164,61"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,77,100,109,94,109,94,77"/>
+<map id="kmeans::InitializeRandom&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;" name="kmeans::InitializeRandom&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;">
+<area shape="rect" id="Node000001" title="Initialize by sampling random observations without replacement." alt="" coords="5,109,174,165"/>
+<area shape="rect" id="Node000002" href="$classkmeans_1_1Initialize.html" title="Interface for k&#45;means initialization algorithms." alt="" coords="10,5,169,61"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,77,92,108,87,108,87,77"/>
 </map>

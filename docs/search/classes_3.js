@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mockmatrix_0',['MockMatrix',['../classkmeans_1_1MockMatrix.html',1,'kmeans']]]
+  ['matrix_0',['Matrix',['../classkmeans_1_1Matrix.html',1,'kmeans']]]
 ];

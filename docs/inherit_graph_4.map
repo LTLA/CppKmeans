@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structkmeans_1_1InitializeKmeansppOptions.html" title="Options for k&#45;means++ initialization." alt="" coords="5,5,188,46"/>
+<area shape="rect" id="Node000000" href="$classkmeans_1_1Initialize.html" title="Interface for k&#45;means initialization algorithms." alt="" coords="5,125,165,181"/>
+<area shape="rect" id="Node000001" href="$classkmeans_1_1InitializeKmeanspp.html" title="k&#45;means++ initialization of Arthur and Vassilvitskii (2007)." alt="" coords="215,5,397,61"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="139,114,211,71,235,59,237,64,214,76,141,119"/>
+<area shape="rect" id="Node000002" href="$classkmeans_1_1InitializeNone.html" title="No&#45;op &quot;initialization&quot; with existing cluster centers." alt="" coords="226,85,386,141"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="180,133,225,125,226,130,181,139"/>
+<area shape="rect" id="Node000003" href="$classkmeans_1_1InitializeRandom.html" title="Initialize by sampling random observations without replacement." alt="" coords="222,165,390,221"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="180,168,222,175,221,180,179,173"/>
+<area shape="rect" id="Node000004" href="$classkmeans_1_1InitializeVariancePartition.html" title="Implements the variance partitioning method of Su and Dy (2007)." alt="" coords="213,245,399,301"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="141,187,214,231,237,242,235,247,211,236,139,192"/>
 </map>

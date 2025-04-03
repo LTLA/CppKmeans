@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['consecutiveaccessworkspace_0',['ConsecutiveAccessWorkspace',['../structkmeans_1_1MockMatrix_1_1ConsecutiveAccessWorkspace.html',1,'kmeans::MockMatrix']]]
+  ['consecutiveaccessextractor_0',['ConsecutiveAccessExtractor',['../classkmeans_1_1ConsecutiveAccessExtractor.html',1,'kmeans']]]
 ];
