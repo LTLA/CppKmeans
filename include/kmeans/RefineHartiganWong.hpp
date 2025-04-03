@@ -118,7 +118,7 @@ namespace RefineHartiganWong_internal {
  * - If neither a quick_transfer nor optimal_transfer occurs for L,
  *   we set 'X = -3' to indicate that L didn't change in any manner.
  * - During the optimal_transfer, we consider a cluster to be live at a
- *   particular observation if it is greater than 'obs'.
+ *   particular observation if its index is greater than 'obs' and its 'X' is -2.
  *
  * Note that Fortran is 1-based so the actual code is a little different than
  * described above for 'obs' - specifically, we just need to set it to 'M'

@@ -6,6 +6,7 @@
 #endif
 
 #include "kmeans/RefineLloyd.hpp"
+#include "kmeans/SimpleMatrix.hpp"
 
 class RefineLloydBasicTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
 protected:

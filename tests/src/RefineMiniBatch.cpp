@@ -6,6 +6,7 @@
 #endif
 
 #include "kmeans/RefineMiniBatch.hpp"
+#include "kmeans/SimpleMatrix.hpp"
 
 class RefineMiniBatchBasicTest : public TestCore, public ::testing::TestWithParam<std::tuple<std::tuple<int, int>, int> > {
 protected:
