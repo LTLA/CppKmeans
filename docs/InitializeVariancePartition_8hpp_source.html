@@ -230,7 +230,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>            <span class="keyword">auto</span>&amp; cur_ss = dim_ss[0];</div>
 <div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>            cur_ss.resize(ndim);</div>
 <div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            std::fill_n(centers, ndim, 0);</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            <span class="keyword">auto</span> matwork = data.new_extractor(0, nobs);</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            <span class="keyword">auto</span> matwork = data.new_extractor(<span class="keyword">static_cast&lt;</span>Index_<span class="keyword">&gt;</span>(0), nobs);</div>
 <div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>            <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(nobs) i = 0; i &lt; nobs; ++i) {</div>
 <div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                <span class="keyword">auto</span> dptr = matwork-&gt;get_observation();</div>
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                InitializeVariancePartition_internal::compute_welford(ndim, dptr, centers, cur_ss.data(), <span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(i + 1));</div>
