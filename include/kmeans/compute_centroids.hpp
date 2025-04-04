@@ -14,7 +14,7 @@ void compute_centroid(const Matrix_& data, Float_* center) {
     std::fill_n(center, ndim, 0);
     auto nobs = data.num_observations();
 
-    auto work = data.new_extractor(0, nobs);
+    auto work = data.new_extractor(static_cast<Index<Matrix_> >(0), nobs);
     for (Index<Matrix_> i = 0; i < nobs; ++i) {
         auto dptr = work->get_observation();
         for (size_t d = 0; d < ndim; ++d) {
@@ -33,7 +33,7 @@ void compute_centroids(const Matrix_& data, Cluster_ ncenters, Float_* centers, 
     size_t ndim = data.num_dimensions();
     std::fill(centers, centers + ndim * static_cast<size_t>(ncenters), 0); // cast to size_t to avoid overflow.
 
-    auto work = data.new_extractor(0, nobs);
+    auto work = data.new_extractor(static_cast<Index<Matrix_> >(0), nobs);
     for (Index<Matrix_> obs = 0; obs < nobs; ++obs) {
         auto copy = centers + static_cast<size_t>(clusters[obs]) * ndim;
         auto mine = work->get_observation();

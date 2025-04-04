@@ -28,14 +28,14 @@ Details<Index<Matrix_> > process_edge_case(const Matrix_& data, Cluster_ ncenter
         compute_centroid(data, centers);
         return Details(std::move(sizes), 0, 0);
 
-    } else if (ncenters >= nobs) {
+    } else if (static_cast<Index<Matrix_> >(ncenters) >= nobs) {
         // Special case, each observation is a center.
         std::iota(clusters, clusters + nobs, 0);
         std::vector<Index<Matrix_> > sizes(ncenters);
         std::fill_n(sizes.begin(), nobs, 1);
 
         auto ndim = data.num_dimensions();
-        auto work = data.new_extractor(0, nobs);
+        auto work = data.new_extractor(static_cast<Index<Matrix_> >(0), nobs);
         auto cptr = centers;
         for (decltype(nobs) o = 0; o < nobs; ++o, cptr += ndim) {
             auto ptr = work->get_observation();

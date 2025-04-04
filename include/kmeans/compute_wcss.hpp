@@ -32,7 +32,7 @@ void compute_wcss(const Matrix_& data, Cluster_ ncenters, const Float_* centers,
     size_t ndim = data.num_dimensions();
     std::fill_n(wcss, ncenters, 0);
 
-    auto work = data.new_extractor(0, nobs);
+    auto work = data.new_extractor(static_cast<Index<Matrix_> >(0), nobs);
     for (Index<Matrix_> obs = 0; obs < nobs; ++obs) {
         auto curdata = work->get_observation();
         auto cen = clusters[obs];

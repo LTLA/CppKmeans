@@ -209,7 +209,7 @@ public:
             auto& cur_ss = dim_ss[0];
             cur_ss.resize(ndim);
             std::fill_n(centers, ndim, 0);
-            auto matwork = data.new_extractor(0, nobs);
+            auto matwork = data.new_extractor(static_cast<Index_>(0), nobs);
             for (decltype(nobs) i = 0; i < nobs; ++i) {
                 auto dptr = matwork->get_observation();
                 InitializeVariancePartition_internal::compute_welford(ndim, dptr, centers, cur_ss.data(), static_cast<Float_>(i + 1));

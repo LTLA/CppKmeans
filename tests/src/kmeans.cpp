@@ -144,3 +144,45 @@ INSTANTIATE_TEST_SUITE_P(
     )
 );
 
+class KmeansTypeTest : public TestCore, public ::testing::Test {
+protected:
+    void SetUp() {
+        assemble({5, 100});
+    }
+};
+
+TEST_F(KmeansTypeTest, DataDistanceMismatch) {
+    // Make sure we don't have any implicit assumptions of Data_ == Distance_.
+    kmeans::SimpleMatrix<int, double> mat(nr, nc, data.data());
+    kmeans::InitializeRandom<int, double, int, float> init_rand;
+    kmeans::RefineHartiganWong<int, double, int, float> ref_hw;
+
+    int ncenters = 5;
+    auto res = kmeans::compute(mat, init_rand, ref_hw, ncenters);
+
+    kmeans::InitializeRandom<int, double, int, double> init_rand2;
+    kmeans::RefineHartiganWong<int, double, int, double> ref_hw2;
+    auto res2 = kmeans::compute(mat, init_rand2, ref_hw2, ncenters);
+
+    // Some loss of precision shouldn't affect the final result
+    // in these simulations.
+    EXPECT_EQ(res2.clusters, res.clusters);
+}
+
+TEST_F(KmeansTypeTest, SizeT) {
+    // This tests for resolution of 'new_extractor(0, nobs)' overload ambiguity when 'nobs' is a size_t.
+    kmeans::SimpleMatrix<size_t, double> mat(nr, nc, data.data());
+    kmeans::InitializeRandom<size_t, double, int, double> init_rand;
+    kmeans::RefineHartiganWong<size_t, double, int, double> ref_hw;
+
+    int ncenters = 10;
+    auto res = kmeans::compute(mat, init_rand, ref_hw, ncenters);
+
+    kmeans::SimpleMatrix<int, double> mat2(nr, nc, data.data());
+    kmeans::InitializeRandom<int, double, int, double> init_rand2;
+    kmeans::RefineHartiganWong<int, double, int, double> ref_hw2;
+    auto res2 = kmeans::compute(mat2, init_rand2, ref_hw2, ncenters);
+
+    EXPECT_EQ(res2.clusters, res.clusters);
+    EXPECT_EQ(res2.centers, res.centers);
+}
