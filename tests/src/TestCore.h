@@ -88,7 +88,7 @@ protected:
         auto dIt = data.begin();
         for (int c = 0; c < nc; ++c) {
             auto clust = output.clusters[c];
-            for (int r = 0; r < nr; ++r) {
+            for (int r = 0; r < nr; ++r, ++dIt) {
                 double shift = (r == 0 ? clust * 100 : 0); // shifting the first dimension to ensure that we have separate clusters.
                 output.data.push_back(*dIt + shift);
             }
