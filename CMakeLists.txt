@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(kmeans
-    VERSION 3.1.2
+    VERSION 4.0.0
     DESCRIPTION "A C++ port of the Hartigan-Wong k-means algorithm"
     LANGUAGES CXX)
 
@@ -21,7 +21,7 @@ if(KMEANS_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
     find_package(ltla_aarand 1.0.0 CONFIG REQUIRED)
-    find_package(ltla_subpar 0.3.0 CONFIG REQUIRED)
+    find_package(ltla_subpar 0.4.0 CONFIG REQUIRED)
 endif()
 
 target_link_libraries(kmeans INTERFACE ltla::aarand ltla::subpar)
