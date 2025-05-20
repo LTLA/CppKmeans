@@ -254,7 +254,8 @@ $(function(){ initResizable(false); });
 <div class="line"> </div>
 <div class="line"># For libaries</div>
 <div class="line">target_link_libraries(mylib INTERFACE ltla::kmeans)</div>
-</div><!-- fragment --><h2>CMake with <code>find_package()</code></h2>
+</div><!-- fragment --><p>By default, this will use <code>FetchContent</code> to fetch all external dependencies. Applications are advised to pin the versions of each dependency for stability - see <a href="extern/CMakeLists.txt"><code>extern/CMakeLists.txt</code></a> for suggested versions. If you want to install them manually, use <code>-DKMEANS_FETCH_EXTERN=OFF</code>.</p>
+<h2>CMake with <code>find_package()</code></h2>
 <p>To install the library, clone an appropriate version of this repository and run:</p>
 <div class="fragment"><div class="line">mkdir build &amp;&amp; cd build</div>
 <div class="line">cmake .. -DKMEANS_TESTS=OFF</div>
@@ -262,9 +263,9 @@ $(function(){ initResizable(false); });
 </div><!-- fragment --><p>Then we can use <code>find_package()</code> as usual:</p>
 <div class="fragment"><div class="line">find_package(ltla_kmeans CONFIG REQUIRED)</div>
 <div class="line">target_link_libraries(mylib INTERFACE ltla::kmeans)</div>
-</div><!-- fragment --><p>By default, this will use <code>FetchContent</code> to fetch all external dependencies (see <a href="extern/CMakeLists.txt"><code>extern/CMakeLists.txt</code></a> for a list). If you want to install them manually, use <code>-DKMEANS_FETCH_EXTERN=OFF</code>.</p>
+</div><!-- fragment --><p>Again, this will automatically acquire all its dependencies, see recommendations above.</p>
 <h2>Manual</h2>
-<p>If you're not using CMake, the simple approach is to just copy the files in <code>include/</code> - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's <code>-I</code>. This requires the external dependencies listed in <a href="extern/CMakeLists.txt"><code>extern/CMakeLists.txt</code></a>, which also need to be made available during compilation.</p>
+<p>If you're not using CMake, the simple approach is to just copy the files in <code>include/</code> - either directly or with Git submodules - and include their path during compilation with, e.g., GCC's <code>-I</code>. This requires the external dependencies listed in <a href="extern/CMakeLists.txt"><code>extern/CMakeLists.txt</code></a>.</p>
 <h1>References</h1>
 <p>Hartigan, J. A. and Wong, M. A. (1979). Algorithm AS 136: A K-means clustering algorithm. <em>Applied Statistics</em> 28, 100-108.</p>
 <p>Arthur, D. and Vassilvitskii, S. (2007). k-means++: the advantages of careful seeding. <em>Proceedings of the eighteenth annual ACM-SIAM symposium on Discrete algorithms</em>, 1027-1035.</p>
