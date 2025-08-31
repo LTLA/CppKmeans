@@ -31,7 +31,7 @@ public:
     /**
      * @cond
      */
-    Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Float_*) const {
+    Cluster_ run(const Matrix_& matrix, const Cluster_ ncenters, Float_* const) const {
         return std::min(matrix.num_observations(), static_cast<Index_>(ncenters));
     }
     /**

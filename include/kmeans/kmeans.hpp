@@ -1,6 +1,10 @@
 #ifndef KMEANS_KMEANS_HPP
 #define KMEANS_KMEANS_HPP
 
+#include <vector>
+
+#include "sanisizer/sanisizer.hpp"
+
 #include "Details.hpp"
 #include "Refine.hpp"
 #include "Initialize.hpp"
@@ -60,7 +64,7 @@ Details<Index_> compute(
 {
     auto actual_centers = initialize.run(data, num_centers, centers);
     auto output = refine.run(data, actual_centers, centers, clusters);
-    output.sizes.resize(num_centers); // restoring the full size.
+    sanisizer::resize(output.sizes, num_centers); // restoring the full size.
     return output;
 }
 
@@ -88,9 +92,9 @@ Details<Index_> compute(
     const Matrix<Index_, Data_>& data,
     const Initialize<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& initialize, 
     const Refine<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& refine,
-    Cluster_ num_centers,
-    Float_* centers,
-    Cluster_* clusters)
+    const Cluster_ num_centers,
+    Float_* const centers,
+    Cluster_* const clusters)
 {
     return compute<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >(data, initialize, refine, num_centers, centers, clusters);
 }
@@ -104,7 +108,7 @@ struct Results {
      * @cond
      */
     template<typename Dim_>
-    Results(Dim_ num_dimensions, Index_ num_observations, Cluster_ num_centers) : 
+    Results(const Dim_ num_dimensions, const Index_ num_observations, const Cluster_ num_centers) : 
         centers(num_dimensions * num_centers), clusters(num_observations) {}
 
     Results() = default;
@@ -152,11 +156,11 @@ Results<Index_, Cluster_, Float_> compute(
     const Matrix_& data, 
     const Initialize<Index_, Data_, Cluster_, Float_, Matrix_>& initialize, 
     const Refine<Index_, Data_, Cluster_, Float_, Matrix_>& refine,
-    Cluster_ num_centers)
+    const Cluster_ num_centers)
 {
     Results<Index_, Cluster_, Float_> output;
-    output.clusters.resize(data.num_observations());
-    output.centers.resize(static_cast<size_t>(num_centers) * static_cast<size_t>(data.num_dimensions()));
+    sanisizer::resize(output.clusters, data.num_observations());
+    output.centers.resize(sanisizer::product<decltype(I(output.centers.size()))>(num_centers, data.num_dimensions()));
     output.details = compute(data, initialize, refine, num_centers, output.centers.data(), output.clusters.data());
     return output;
 }
@@ -183,7 +187,7 @@ Results<Index_, Cluster_, Float_> compute(
     const Matrix<Index_, Data_>& data,
     const Initialize<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& initialize, 
     const Refine<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >& refine,
-    Cluster_ num_centers)
+    const Cluster_ num_centers)
 {
     return compute<Index_, Data_, Cluster_, Float_, Matrix<Index_, Data_> >(data, initialize, refine, num_centers);
 }

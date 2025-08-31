@@ -1,8 +1,12 @@
 #ifndef KMEANS_REFINE_HPP
 #define KMEANS_REFINE_HPP
 
+#include <utility>
+#include <type_traits>
+
 #include "Details.hpp"
 #include "Matrix.hpp"
+#include "utils.hpp"
 
 /**
  * @file Refine.hpp
@@ -35,8 +39,8 @@ public:
     Refine& operator=(const Refine&) = default;
     virtual ~Refine() = default;
 
-    static_assert(std::is_same<decltype(std::declval<Matrix_>().num_observations()), Index_>::value);
-    static_assert(std::is_same<typename std::remove_pointer<decltype(std::declval<Matrix_>().new_extractor()->get_observation(0))>::type, const Data_>::value);
+    static_assert(std::is_same<decltype(I(std::declval<Matrix_>().num_observations())), Index_>::value);
+    static_assert(std::is_same<decltype(I(*(std::declval<Matrix_>().new_extractor()->get_observation(0)))), Data_>::value);
     /**
      * @endcond
      */

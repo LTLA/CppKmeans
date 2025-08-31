@@ -3,6 +3,9 @@
 
 #include <memory>
 #include <utility>
+#include <cstddef>
+
+#include "utils.hpp"
 
 /**
  * @file Matrix.hpp
@@ -151,7 +154,7 @@ public:
     /**
      * @return Number of dimensions.
      */
-    virtual size_t num_dimensions() const = 0;
+    virtual std::size_t num_dimensions() const = 0;
 
 public:
     /**
@@ -172,7 +175,7 @@ public:
      * @param length Number of observations in `sequence`.
      * @return A new indexed-access extractor.
      */
-    virtual std::unique_ptr<IndexedAccessExtractor<Index_, Data_> > new_extractor(const Index_* sequence, size_t length) const = 0;
+    virtual std::unique_ptr<IndexedAccessExtractor<Index_, Data_> > new_extractor(const Index_* sequence, std::size_t length) const = 0;
 };
 
 /**
@@ -180,7 +183,10 @@ public:
  */
 // A simple alias to help determine the Index_ inside a Matrix_ instance.
 template<class Matrix_>
-using Index = decltype(std::declval<Matrix_>().num_observations());
+using Index = decltype(I(std::declval<Matrix_>().num_observations()));
+
+template<class Matrix_>
+using Dim = decltype(I(std::declval<Matrix_>().num_dimensions()));
 /**
  * @endcond
  */

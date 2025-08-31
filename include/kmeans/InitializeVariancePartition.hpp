@@ -5,7 +5,9 @@
 #include <algorithm>
 #include <numeric>
 #include <queue>
-#include <cstdint>
+#include <cstddef>
+
+#include "sanisizer/sanisizer.hpp"
 
 #include "Initialize.hpp"
 #include "Matrix.hpp"
@@ -40,17 +42,17 @@ struct InitializeVariancePartitionOptions {
 namespace InitializeVariancePartition_internal {
 
 template<typename Float_>
-void compute_welford(Float_ val, Float_& center, Float_& ss, Float_ count) {
-    auto cur_center = center;
-    Float_ delta = val - cur_center;
-    Float_ new_center = cur_center + delta / count;
+void compute_welford(const Float_ val, Float_& center, Float_& ss, const Float_ count) {
+    const auto cur_center = center;
+    const Float_ delta = val - cur_center;
+    const Float_ new_center = cur_center + delta / count;
     center = new_center;
     ss += (val - new_center) * delta;
 }
 
-template<typename Data_, typename Float_>
-void compute_welford(size_t ndim, const Data_* dptr, Float_* center, Float_* dim_ss, Float_ count) {
-    for (size_t d = 0; d < ndim; ++d) {
+template<typename Dim_, typename Data_, typename Float_>
+void compute_welford(const Dim_ ndim, const Data_* const dptr, Float_* const center, Float_* const dim_ss, const Float_ count) {
+    for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
         compute_welford<Float_>(dptr[d], center[d], dim_ss[d], count);
     }
 }
@@ -59,7 +61,7 @@ template<typename Matrix_, typename Index_, typename Float_>
 Float_ optimize_partition(
     const Matrix_& data,
     const std::vector<Index_>& current,
-    size_t top_dim,
+    const Dim<Matrix_> top_dim,
     std::vector<Float_>& value_buffer,
     std::vector<Float_>& stat_buffer)
 {
@@ -78,23 +80,23 @@ Float_ optimize_partition(
      * plot(a, stuff)
      */
 
-    size_t N = current.size();
-    auto work = data.new_extractor(current.data(), N);
+    const auto N = current.size();
+    auto work = data.new_extractor(current.data(), sanisizer::cast<std::size_t>(N));
     value_buffer.clear();
-    for (size_t i = 0; i < N; ++i) {
-        auto dptr = work->get_observation();
+    for (decltype(I(N)) i = 0; i < N; ++i) {
+        const auto dptr = work->get_observation();
         value_buffer.push_back(dptr[top_dim]);
     }
 
     std::sort(value_buffer.begin(), value_buffer.end());
 
     stat_buffer.clear();
-    stat_buffer.reserve(value_buffer.size() + 1);
+    stat_buffer.reserve(sanisizer::sum_unsafe<decltype(I(stat_buffer.size()))>(value_buffer.size(), 1)); // overflow is fine as it's just a reserve(), hence the unsafe.
     stat_buffer.push_back(0); // first and last entries of stat_buffer are 'nonsense' partitions, i.e., all points in one partition or the other.
 
     // Forward and backward iterations to get the sum of squares at every possible partition point.
     Float_ mean = 0, ss = 0, count = 1;
-    for (auto val : value_buffer) {
+    for (const auto val : value_buffer) {
         compute_welford<Float_>(val, mean, ss, count);
         stat_buffer.push_back(ss);
         ++count;
@@ -109,8 +111,8 @@ Float_ optimize_partition(
         ++sbIt;
     }
 
-    auto sbBegin = stat_buffer.begin(), sbEnd = stat_buffer.end();
-    auto which_min = std::min_element(sbBegin, sbEnd) - sbBegin;
+    const auto sbBegin = stat_buffer.begin(); 
+    const auto which_min = std::min_element(sbBegin, stat_buffer.end()) - sbBegin; // iterator arithmetic is safe as we checked can_ptrdiff() in InitializeVariancePartition::run().
     if (which_min == 0) {
         // Should never get to this point as current.size() > 1,
         // but we'll just add this in for safety's sake.
@@ -120,7 +122,9 @@ Float_ optimize_partition(
         // the left partition and {i, ..., N-1} goes in the right partition.
         // To avoid issues with ties, we use the average of the two edge
         // points as the partition boundary.
-        return (value_buffer[which_min - 1] + value_buffer[which_min]) / 2;
+        const auto left = value_buffer[which_min - 1];
+        const auto right = value_buffer[which_min];
+        return left + (right - left) / 2; // avoid FP overflow.
     }
 }
 
@@ -193,31 +197,31 @@ public:
     /**
      * @cond
      */
-    Cluster_ run(const Matrix_& data, Cluster_ ncenters, Float_* centers) const {
-        auto nobs = data.num_observations();
-        size_t ndim = data.num_dimensions();
+    Cluster_ run(const Matrix_& data, const Cluster_ ncenters, Float_* const centers) const {
+        const auto nobs = data.num_observations();
+        const auto ndim = data.num_dimensions();
         if (nobs == 0 || ndim == 0) {
             return 0;
         }
 
-        std::vector<std::vector<Index_> > assignments(ncenters);
-        assignments[0].resize(nobs);
-        std::iota(assignments.front().begin(), assignments.front().end(), 0);
+        auto assignments = sanisizer::create<std::vector<std::vector<Index_> > >(ncenters);
+        sanisizer::resize(assignments[0], nobs);
+        std::iota(assignments.front().begin(), assignments.front().end(), static_cast<Index_>(0));
 
-        std::vector<std::vector<Float_> > dim_ss(ncenters);
+        auto dim_ss = sanisizer::create<std::vector<std::vector<Float_> > >(ncenters);
         {
             auto& cur_ss = dim_ss[0];
-            cur_ss.resize(ndim);
+            sanisizer::resize(cur_ss, ndim);
             std::fill_n(centers, ndim, 0);
-            auto matwork = data.new_extractor(static_cast<Index_>(0), nobs);
-            for (decltype(nobs) i = 0; i < nobs; ++i) {
-                auto dptr = matwork->get_observation();
+            auto matwork = data.new_extractor(0, nobs);
+            for (decltype(I(nobs)) i = 0; i < nobs; ++i) {
+                const auto dptr = matwork->get_observation();
                 InitializeVariancePartition_internal::compute_welford(ndim, dptr, centers, cur_ss.data(), static_cast<Float_>(i + 1));
             }
         }
 
         std::priority_queue<std::pair<Float_, Cluster_> > highest;
-        auto add_to_queue = [&](Cluster_ i) -> void {
+        auto add_to_queue = [&](const Cluster_ i) -> void {
             const auto& cur_ss = dim_ss[i];
             Float_ sum_ss = std::accumulate(cur_ss.begin(), cur_ss.end(), static_cast<Float_>(0));
 
@@ -232,18 +236,22 @@ public:
         std::vector<Index_> cur_assignments_copy;
         std::vector<Float_> opt_partition_values, opt_partition_stats;
 
+        // Checking that the iterator arithmetic won't overflow the ptrdiff type.
+        sanisizer::can_ptrdiff<decltype(I(opt_partition_values.begin()))>(nobs);
+        sanisizer::can_ptrdiff<decltype(I(dim_ss.front().begin()))>(ndim);
+
         for (Cluster_ cluster = 1; cluster < ncenters; ++cluster) {
-            auto chosen = highest.top();
+            const auto chosen = highest.top();
             if (chosen.first == 0) {
                 return cluster; // no point continuing, we're at zero variance already.
             }
             highest.pop();
 
-            auto* cur_center = centers + static_cast<size_t>(chosen.second) * ndim; // cast to size_t to avoid overflow issues.
+            const auto cur_center = centers + sanisizer::product_unsafe<std::size_t>(chosen.second, ndim);
             auto& cur_ss = dim_ss[chosen.second];
             auto& cur_assignments = assignments[chosen.second];
 
-            size_t top_dim = std::max_element(cur_ss.begin(), cur_ss.end()) - cur_ss.begin();
+            const auto top_dim = std::max_element(cur_ss.begin(), cur_ss.end()) - cur_ss.begin(); // iterator arithmetic is safe as we checked can_ptrdiff outside the loop.
             Float_ partition_boundary;
             if (my_options.optimize_partition) {
                 partition_boundary = InitializeVariancePartition_internal::optimize_partition(data, cur_assignments, top_dim, opt_partition_values, opt_partition_stats);
@@ -251,10 +259,10 @@ public:
                 partition_boundary = cur_center[top_dim];
             }
 
-            auto* next_center = centers + static_cast<size_t>(cluster) * ndim; // again, size_t to avoid overflow.
+            const auto next_center = centers + sanisizer::product_unsafe<std::size_t>(cluster, ndim);
             std::fill_n(next_center, ndim, 0);
             auto& next_ss = dim_ss[cluster];
-            next_ss.resize(ndim);
+            next_ss.resize(ndim); // resize() is safe from overflow, as we already tested it with dim_ss[0].
             auto& next_assignments = assignments[cluster];
 
             cur_assignments_copy.clear();
@@ -262,8 +270,8 @@ public:
             std::fill(cur_ss.begin(), cur_ss.end(), 0);
             auto work = data.new_extractor(cur_assignments.data(), cur_assignments.size());
 
-            for (auto i : cur_assignments) {
-                auto dptr = work->get_observation(); // make sure this is outside the if(), as it must always be called in each loop iteration to match 'cur_assignments' properly.
+            for (const auto i : cur_assignments) {
+                const auto dptr = work->get_observation(); // make sure this is outside the if(), as it must always be called in each loop iteration to match 'cur_assignments' properly.
                 if (dptr[top_dim] < partition_boundary) {
                     cur_assignments_copy.push_back(i);
                     InitializeVariancePartition_internal::compute_welford(ndim, dptr, cur_center, cur_ss.data(), static_cast<Float_>(cur_assignments_copy.size()));

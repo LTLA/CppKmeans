@@ -1,9 +1,11 @@
 #ifndef KMEANS_INITIALIZE_HPP
 #define KMEANS_INITIALIZE_HPP
 
-#include "Matrix.hpp"
-
+#include <utility>
 #include <type_traits>
+
+#include "Matrix.hpp"
+#include "utils.hpp"
 
 /**
  * @file Initialize.hpp
@@ -36,8 +38,8 @@ public:
     Initialize& operator=(const Initialize&) = default;
     virtual ~Initialize() = default;
 
-    static_assert(std::is_same<decltype(std::declval<Matrix_>().num_observations()), Index_>::value);
-    static_assert(std::is_same<typename std::remove_pointer<decltype(std::declval<Matrix_>().new_extractor()->get_observation(0))>::type, const Data_>::value);
+    static_assert(std::is_same<decltype(I(std::declval<Matrix_>().num_observations())), Index_>::value);
+    static_assert(std::is_same<decltype(I(*(std::declval<Matrix_>().new_extractor()->get_observation(0)))), Data_>::value);
     /**
      * @endcond
      */

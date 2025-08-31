@@ -23,9 +23,9 @@ struct Details {
      */
     Details() = default;
 
-    Details(int iterations, int status) : sizes(0), iterations(iterations), status(status) {}
+    Details(const int iterations, const int status) : sizes(0), iterations(iterations), status(status) {}
 
-    Details(std::vector<Index_> sizes, int iterations, int status) : sizes(std::move(sizes)), iterations(iterations), status(status) {} 
+    Details(std::vector<Index_> sizes, const int iterations, const int status) : sizes(std::move(sizes)), iterations(iterations), status(status) {} 
     /**
      * @endcond
      */

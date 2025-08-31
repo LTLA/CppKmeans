@@ -2,7 +2,12 @@
 #define KMEANS_COMPUTE_WCSS_HPP
 
 #include <algorithm>
+#include <cstddef>
+
+#include "sanisizer/sanisizer.hpp"
+
 #include "Matrix.hpp"
+#include "utils.hpp"
 
 /**
  * @file compute_wcss.hpp
@@ -27,20 +32,20 @@ namespace kmeans {
  * On output, this will contain the within-cluster sum of squares.
  */
 template<class Matrix_, typename Cluster_, typename Float_>
-void compute_wcss(const Matrix_& data, Cluster_ ncenters, const Float_* centers, const Cluster_* clusters, Float_* wcss) {
-    auto nobs = data.num_observations();
-    size_t ndim = data.num_dimensions();
+void compute_wcss(const Matrix_& data, const Cluster_ ncenters, const Float_* const centers, const Cluster_* const clusters, Float_* const wcss) {
+    const auto nobs = data.num_observations();
+    const auto ndim = data.num_dimensions();
     std::fill_n(wcss, ncenters, 0);
 
     auto work = data.new_extractor(static_cast<Index<Matrix_> >(0), nobs);
-    for (Index<Matrix_> obs = 0; obs < nobs; ++obs) {
-        auto curdata = work->get_observation();
-        auto cen = clusters[obs];
-        auto curcenter = centers + static_cast<size_t>(cen) * ndim; // cast to size_t to avoid overflow.
+    for (decltype(I(nobs)) obs = 0; obs < nobs; ++obs) {
+        const auto curdata = work->get_observation();
+        const auto cen = clusters[obs];
 
         Float_& curwcss = wcss[cen];
-        for (size_t d = 0; d < ndim; ++d) {
-            Float_ delta = static_cast<Float_>(curdata[d]) - curcenter[d]; // cast for consistent precision regardless of Data_.
+        for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
+            const auto curcenter = centers[sanisizer::nd_offset<std::size_t>(d, ndim, cen)];
+            const Float_ delta = static_cast<Float_>(curdata[d]) - curcenter; // cast for consistent precision regardless of the input data type.
             curwcss += delta * delta;
         }
     }

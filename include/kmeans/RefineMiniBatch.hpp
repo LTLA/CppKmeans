@@ -3,13 +3,10 @@
 
 #include <vector>
 #include <algorithm>
-#include <numeric>
-#include <cstdint>
-#include <stdexcept>
-#include <limits>
+#include <cstddef>
 #include <random>
-#include <type_traits>
 
+#include "sanisizer/sanisizer.hpp"
 #include "aarand/aarand.hpp"
 
 #include "Refine.hpp"
@@ -25,6 +22,11 @@
  */
 
 namespace kmeans {
+
+/**
+ * Type of the pseudo-random number generator for `RefineMiniBatch`.
+ */
+typedef std::mt19937_64 RefineMiniBatchRng;
 
 /** 
  * @brief Options for `RefineMiniBatch` construction.
@@ -57,7 +59,7 @@ struct RefineMiniBatchOptions {
     /** 
      * Seed to use for the PRNG when sampling observations to use in each mini-batch.
      */
-    uint64_t seed = 1234567890u;
+    typename RefineMiniBatchRng::result_type seed = sanisizer::cap<typename RefineMiniBatchRng::result_type>(1234567890);
 
     /** 
      * Number of threads to use.
@@ -122,67 +124,62 @@ public:
     /**
      * @cond
      */
-    Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
-        Index_ nobs = data.num_observations();
+    Details<Index_> run(const Matrix_& data, const Cluster_ ncenters, Float_* const centers, Cluster_* const clusters) const {
+        const auto nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
             return internal::process_edge_case(data, ncenters, centers, clusters);
         }
 
-        int iter = 0, status = 0;
-        std::vector<uint64_t> total_sampled(ncenters); // holds the number of sampled observations across iterations, so we need a large integer.
-        std::vector<Cluster_> previous(nobs);
-        std::vector<uint64_t> last_changed(ncenters), last_sampled(ncenters); // holds the number of sampled/changed observation for the last few iterations.
+        auto total_sampled = sanisizer::create<std::vector<unsigned long long> >(ncenters); // holds the number of sampled observations across iterations, so we need a large integer.
+        auto last_changed = sanisizer::create<std::vector<unsigned long long> >(ncenters); // holds the number of sampled/changed observation for the last few iterations.
+        auto last_sampled = sanisizer::create<std::vector<unsigned long long> >(ncenters);
+        auto previous = sanisizer::create<std::vector<Cluster_> >(nobs);
 
-        Index_ actual_batch_size = nobs;
-        typedef typename std::conditional<std::is_signed<Index_>::value, int, unsigned int>::type SafeCompInt; // waiting for C++20's comparison functions...
-        if (static_cast<SafeCompInt>(actual_batch_size) > my_options.batch_size) {
-            actual_batch_size = my_options.batch_size;
-        }
-        std::vector<Index_> chosen(actual_batch_size);
+        Index_ actual_batch_size = sanisizer::max(nobs, my_options.batch_size);
+        auto chosen = sanisizer::create<std::vector<Index_> >(actual_batch_size);
         std::mt19937_64 eng(my_options.seed);
 
-        size_t ndim = data.num_dimensions();
+        const auto ndim = data.num_dimensions();
         internal::QuickSearch<Float_, Cluster_> index;
 
-        for (iter = 1; iter <= my_options.max_iterations; ++iter) {
+        decltype(I(my_options.max_iterations)) iter = 1;
+        for (; iter <= my_options.max_iterations; ++iter) {
             aarand::sample(nobs, actual_batch_size, chosen.data(), eng);
             if (iter > 1) {
-                for (auto o : chosen) {
+                for (const auto o : chosen) {
                     previous[o] = clusters[o];
                 }
             }
 
             index.reset(ndim, ncenters, centers);
-            parallelize(my_options.num_threads, actual_batch_size, [&](int, Index_ start, Index_ length) -> void {
+            parallelize(my_options.num_threads, actual_batch_size, [&](const int, const Index_ start, const Index_ length) -> void {
                 auto work = data.new_extractor(chosen.data() + start, length);
                 for (Index_ s = start, end = start + length; s < end; ++s) {
-                    auto ptr = work->get_observation();
+                    const auto ptr = work->get_observation();
                     clusters[chosen[s]] = index.find(ptr);
                 }
             });
 
             // Updating the means for each cluster.
-            auto work = data.new_extractor(chosen.data(), actual_batch_size);
-            for (auto o : chosen) {
+            auto work = data.new_extractor(chosen.data(), sanisizer::cast<std::size_t>(chosen.size()));
+            for (const auto o : chosen) {
                 const auto c = clusters[o];
                 auto& n = total_sampled[c];
                 ++n;
 
-                Float_ mult = static_cast<Float_>(1)/static_cast<Float_>(n);
-                auto ccopy = centers + static_cast<size_t>(c) * ndim; // cast to size_t to avoid overflow.
-                auto ocopy = work->get_observation();
-
-                for (size_t d = 0; d < ndim; ++d) {
-                    ccopy[d] += (static_cast<Float_>(ocopy[d]) - ccopy[d]) * mult; // cast to ensure consistent precision regardless of Matrix_::data_type.
+                const auto ocopy = work->get_observation();
+                for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
+                    auto& curcenter = centers[sanisizer::nd_offset<std::size_t>(d, ndim, c)];
+                    curcenter += (static_cast<Float_>(ocopy[d]) - curcenter) / n; // cast to ensure consistent precision regardless of Matrix_::data_type.
                 }
             }
 
             // Checking for updates.
             if (iter != 1) {
-                for (auto o : chosen) {
-                    auto p = previous[o];
+                for (const auto o : chosen) {
+                    const auto p = previous[o];
                     ++(last_sampled[p]);
-                    auto c = clusters[o];
+                    const auto c = clusters[o];
                     if (p != c) {
                         ++(last_sampled[c]);
                         ++(last_changed[p]);
@@ -208,26 +205,26 @@ public:
             }
         }
 
-        if (iter == my_options.max_iterations + 1) {
-            status = 2;
-        }
-
         // Run through all observations to make sure they have the latest cluster assignments.
         index.reset(ndim, ncenters, centers);
-        parallelize(my_options.num_threads, nobs, [&](int, Index_ start, Index_ length) -> void {
+        parallelize(my_options.num_threads, nobs, [&](const int, const Index_ start, const Index_ length) -> void {
             auto work = data.new_extractor(start, length);
             for (Index_ s = start, end = start + length; s < end; ++s) {
-                auto ptr = work->get_observation();
+                const auto ptr = work->get_observation();
                 clusters[s] = index.find(ptr);
             }
         });
 
-        std::vector<Index_> cluster_sizes(ncenters);
+        auto cluster_sizes = sanisizer::create<std::vector<Index_> >(ncenters);
         for (Index_ o = 0; o < nobs; ++o) {
             ++cluster_sizes[clusters[o]];
         }
-
         internal::compute_centroids(data, ncenters, centers, clusters, cluster_sizes);
+
+        int status = 0;
+        if (iter == my_options.max_iterations + 1) {
+            status = 2;
+        }
         return Details<Index_>(std::move(cluster_sizes), iter, status);
     }
     /**
