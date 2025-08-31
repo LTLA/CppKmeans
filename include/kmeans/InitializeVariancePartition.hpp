@@ -80,7 +80,7 @@ Float_ optimize_partition(
      */
 
     const auto N = current.size();
-    auto work = data.new_extractor(current.data(), sanisizer::cast<std::size_t>(N));
+    auto work = data.new_extractor(current.data(), static_cast<std::size_t>(N)); // safety of the cast is already checked in InitializeVariancePartition::run(). 
     value_buffer.clear();
     value_buffer.reserve(N);
     for (decltype(I(N)) i = 0; i < N; ++i) {
@@ -201,6 +201,7 @@ public:
         auto assignments = sanisizer::create<std::vector<std::vector<Index_> > >(ncenters);
         sanisizer::resize(assignments[0], nobs);
         std::iota(assignments.front().begin(), assignments.front().end(), static_cast<Index_>(0));
+        sanisizer::cast<std::size_t>(nobs); // Checking that the maximum size of each 'assignments' can fit into a std::size_t, for optimal_partition().
 
         auto dim_ss = sanisizer::create<std::vector<std::vector<Float_> > >(ncenters);
         {
@@ -245,7 +246,7 @@ public:
             auto& cur_ss = dim_ss[chosen.second];
             auto& cur_assignments = assignments[chosen.second];
 
-            // iterator arithmetic is safe as we checked can_ptrdiff outside the loop.
+            // Iterator arithmetic is safe as we checked can_ptrdiff outside the loop.
             const decltype(I(ndim)) top_dim = std::max_element(cur_ss.begin(), cur_ss.end()) - cur_ss.begin();
             Float_ partition_boundary;
             if (my_options.optimize_partition) {
