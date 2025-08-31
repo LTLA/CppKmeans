@@ -66,8 +66,7 @@ Float_ optimize_partition(
     std::vector<Float_>& stat_buffer)
 {
     /**
-     * This function effectively implements a much more efficient
-     * version of the following prototype code in R:
+     * This function effectively implements a much more efficient version of the following prototype code in R:
      *
      * a <- sort(c(rnorm(100, -1), rnorm(1000, 5)))
      * stuff <- numeric(length(a))
@@ -83,49 +82,44 @@ Float_ optimize_partition(
     const auto N = current.size();
     auto work = data.new_extractor(current.data(), sanisizer::cast<std::size_t>(N));
     value_buffer.clear();
+    value_buffer.reserve(N);
     for (decltype(I(N)) i = 0; i < N; ++i) {
         const auto dptr = work->get_observation();
         value_buffer.push_back(dptr[top_dim]);
     }
-
     std::sort(value_buffer.begin(), value_buffer.end());
 
+    // stat_buffer[i] represents the SS when {0, 1, 2, ..., i} of values_buffer goes in the left partition and {i + 1, ..., N-1} goes in the right partition.
+    // This implies that stat_buffer will have length N - 1, such that i can span from 0 to N - 2.
+    // It can also be guaranteed that N >= 2 as a cluster with one point will have zero and thus never be selected for partition optimization. 
     stat_buffer.clear();
-    stat_buffer.reserve(sanisizer::sum_unsafe<decltype(I(stat_buffer.size()))>(value_buffer.size(), 1)); // overflow is fine as it's just a reserve(), hence the unsafe.
-    stat_buffer.push_back(0); // first and last entries of stat_buffer are 'nonsense' partitions, i.e., all points in one partition or the other.
+    const auto N_m1 = N - 1;
+    stat_buffer.reserve(N_m1);
 
-    // Forward and backward iterations to get the sum of squares at every possible partition point.
-    Float_ mean = 0, ss = 0, count = 1;
-    for (const auto val : value_buffer) {
-        compute_welford<Float_>(val, mean, ss, count);
+    // Forward and backward iterations to get the sum of squares for the left and right partitions, respectively, at every possible partition point.
+    stat_buffer.push_back(0);
+    Float_ mean = value_buffer.front(), ss = 0, count = 2;
+    for (decltype(I(N_m1)) i = 1; i < N_m1; ++i) { // skip i == 0 as the left partition only has one point.
+        compute_welford<Float_>(value_buffer[i], mean, ss, count);
         stat_buffer.push_back(ss);
         ++count;
     }
 
-    mean = 0, ss = 0, count = 1;
-    auto sbIt = stat_buffer.rbegin() + 1; // skipping the last entry, as it's a nonsense partition.
-    for (auto vIt = value_buffer.rbegin(), vEnd = value_buffer.rend(); vIt != vEnd; ++vIt) {
-        compute_welford<Float_>(*vIt, mean, ss, count);
-        *sbIt += ss;
+    mean = value_buffer.back(), ss = 0, count = 2;
+    for (decltype(I(N_m1)) i_p1 = N_m1 - 1; i_p1 > 0; --i_p1) { // skip i + 1 == N - 1 (i.e., i_p1 == N_m1) as the right partition only has one point. 
+        compute_welford<Float_>(value_buffer[i_p1], mean, ss, count);
+        stat_buffer[i_p1 - 1] += ss;
         ++count;
-        ++sbIt;
     }
 
+    // iterator arithmetic is safe as we checked can_ptrdiff() in InitializeVariancePartition::run().
     const auto sbBegin = stat_buffer.begin(); 
-    const auto which_min = std::min_element(sbBegin, stat_buffer.end()) - sbBegin; // iterator arithmetic is safe as we checked can_ptrdiff() in InitializeVariancePartition::run().
-    if (which_min == 0) {
-        // Should never get to this point as current.size() > 1,
-        // but we'll just add this in for safety's sake.
-        return value_buffer[0];
-    } else {
-        // stat_buffer[i] represents the SS when {0, 1, 2, ..., i-1} goes in
-        // the left partition and {i, ..., N-1} goes in the right partition.
-        // To avoid issues with ties, we use the average of the two edge
-        // points as the partition boundary.
-        const auto left = value_buffer[which_min - 1];
-        const auto right = value_buffer[which_min];
-        return left + (right - left) / 2; // avoid FP overflow.
-    }
+    const decltype(I(value_buffer.size())) which_min = std::min_element(sbBegin, stat_buffer.end()) - sbBegin;
+
+    // To avoid issues with ties, we use the average of the two edge points as the partition boundary.
+    const auto left = value_buffer[which_min];
+    const auto right = value_buffer[which_min + 1];
+    return left + (right - left) / 2; // avoid FP overflow.
 }
 
 }
@@ -236,7 +230,7 @@ public:
         std::vector<Index_> cur_assignments_copy;
         std::vector<Float_> opt_partition_values, opt_partition_stats;
 
-        // Checking that the iterator arithmetic won't overflow the ptrdiff type.
+        // Checking that iterator arithmetic won't overflow the vector's ptrdiff type.
         sanisizer::can_ptrdiff<decltype(I(opt_partition_values.begin()))>(nobs);
         sanisizer::can_ptrdiff<decltype(I(dim_ss.front().begin()))>(ndim);
 
@@ -251,7 +245,8 @@ public:
             auto& cur_ss = dim_ss[chosen.second];
             auto& cur_assignments = assignments[chosen.second];
 
-            const auto top_dim = std::max_element(cur_ss.begin(), cur_ss.end()) - cur_ss.begin(); // iterator arithmetic is safe as we checked can_ptrdiff outside the loop.
+            // iterator arithmetic is safe as we checked can_ptrdiff outside the loop.
+            const auto top_dim = std::max_element(cur_ss.begin(), cur_ss.end()) - cur_ss.begin();
             Float_ partition_boundary;
             if (my_options.optimize_partition) {
                 partition_boundary = InitializeVariancePartition_internal::optimize_partition(data, cur_assignments, top_dim, opt_partition_values, opt_partition_stats);
@@ -262,7 +257,7 @@ public:
             const auto next_center = centers + sanisizer::product_unsafe<std::size_t>(cluster, ndim);
             std::fill_n(next_center, ndim, 0);
             auto& next_ss = dim_ss[cluster];
-            next_ss.resize(ndim); // resize() is safe from overflow, as we already tested it with dim_ss[0].
+            next_ss.resize(ndim); // resize() is safe from overflow as we already tested it outside the loop with dim_ss[0].
             auto& next_assignments = assignments[cluster];
 
             cur_assignments_copy.clear();
@@ -281,12 +276,8 @@ public:
                 }
             }
 
-            // If one or the other is empty, then this entire procedure short
-            // circuits as all future iterations will just re-select this
-            // cluster (which won't get partitioned properly anyway). In the
-            // bigger picture, the quick exit out of the iterations is correct
-            // as we should only fail to partition in this manner if all points
-            // within each remaining cluster are identical.
+            // If one or the other is empty, then this entire procedure short-circuits as all future iterations will just re-select this cluster (which won't get partitioned properly anyway).
+            // In the bigger picture, the quick exit out of the iterations is correct as we should only fail to partition in this manner if all points within each remaining cluster are identical.
             if (next_assignments.empty() || cur_assignments_copy.empty()) {
                 return cluster;
             }

@@ -339,8 +339,8 @@ bool optimal_transfer(
             const auto l2_ptr = centers + sanisizer::product_unsafe<std::size_t>(ndim, l2);
             auto wcss_gain = squared_distance_from_cluster(obs_ptr, l2_ptr, ndim) * work.gain_multiplier[l2];
 
-            const auto update_destination_cluster = [&](Cluster_ cen) -> void {
-                auto cen_ptr = centers + sanisizer::product_unsafe(ndim, cen);
+            const auto update_destination_cluster = [&](const Cluster_ cen) -> void {
+                auto cen_ptr = centers + sanisizer::product_unsafe<std::size_t>(ndim, cen);
                 auto candidate = squared_distance_from_cluster(obs_ptr, cen_ptr, ndim) * work.gain_multiplier[cen];
                 if (candidate < wcss_gain) {
                     wcss_gain = candidate;
