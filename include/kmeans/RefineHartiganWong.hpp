@@ -215,10 +215,10 @@ public:
     {}
 };
 
-template<typename Data_, typename Float_, typename Dim_>
-Float_ squared_distance_from_cluster(const Data_* const data, const Float_* const center, const Dim_ ndim) {
+template<typename Data_, typename Float_>
+Float_ squared_distance_from_cluster(const Data_* const data, const Float_* const center, const std::size_t ndim) {
     Float_ output = 0;
-    for (Dim_ d = 0; d < ndim; ++d) {
+    for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
         const Float_ delta = static_cast<Float_>(data[d]) - center[d]; // cast to float for consistent precision regardless of Data_.
         output += delta * delta;
     }
@@ -232,7 +232,7 @@ void find_closest_two_centers(
     const Float_* const centers,
     Cluster_* const best_cluster,
     std::vector<Cluster_>& best_destination_cluster,
-    int nthreads)
+    const int nthreads)
 {
     const auto ndim = data.num_dimensions();
 
@@ -241,7 +241,7 @@ void find_closest_two_centers(
     const internal::QuickSearch<Float_, Cluster_> index(ndim, ncenters, centers);
 
     const auto nobs = data.num_observations();
-    parallelize(nthreads, nobs, [&](const int, const Index<Matrix_> start, const Index<Matrix_> length) -> void {
+    parallelize(nthreads, nobs, [&](const int, const decltype(I(nobs)) start, const decltype(I(nobs)) length) -> void {
         auto matwork = data.new_extractor(start, length);
         for (decltype(I(start)) obs = start, end = start + length; obs < end; ++obs) {
             const auto optr = matwork->get_observation();
@@ -257,9 +257,9 @@ constexpr Float_ big_number() {
     return 1e30; // Some very big number.
 }
 
-template<typename Dim_, typename Data_, typename Index_, typename Cluster_, typename Float_>
+template<typename Data_, typename Index_, typename Cluster_, typename Float_>
 void transfer_point(
-    const Dim_ ndim,
+    const std::size_t ndim,
     const Data_* const obs_ptr,
     const Index_ obs_id,
     const Cluster_ l1,

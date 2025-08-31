@@ -27,7 +27,7 @@ private:
     static Float_ raw_distance(const Float_* const x, const Query_* const y, const std::size_t ndim) {
         Float_ output = 0;
         for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
-            Float_ delta = x[d] - static_cast<Float_>(y[d]); // cast to ensure consistent precision regardless of Query_.
+            const Float_ delta = x[d] - static_cast<Float_>(y[d]); // cast to ensure consistent precision regardless of Query_.
             output += delta * delta;
         }
         return output;
@@ -124,14 +124,12 @@ private:
 public:
     QuickSearch() = default;
 
-    template<typename Dim_>
-    QuickSearch(const Dim_ ndim, const Index_ nobs, const Float_* const vals) {
+    QuickSearch(const std::size_t ndim, const Index_ nobs, const Float_* const vals) {
         reset(ndim, nobs, vals);
     }
 
-    template<typename Dim_>
-    void reset(const Dim_ ndim, const Index_ nobs, const Float_* const vals) {
-        num_dim = sanisizer::cast<decltype(I(num_dim))>(ndim);
+    void reset(const std::size_t ndim, const Index_ nobs, const Float_* const vals) {
+        num_dim = ndim;
         items.clear();
         nodes.clear();
 

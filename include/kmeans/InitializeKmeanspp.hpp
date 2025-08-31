@@ -57,7 +57,7 @@ Index_ weighted_sample(const std::vector<Float_>& cumulative, const std::vector<
     do {
         const Float_ sampled_weight = total * aarand::standard_uniform<Float_>(eng);
 
-        // Subtraction is safe as we check for valid ptrdiff_t.
+        // Subtraction is safe as we already checked for valid ptrdiff in run_kmeanspp().
         chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();
 
         // We wrap this in a do/while to defend against edge cases where
@@ -73,7 +73,7 @@ Index_ weighted_sample(const std::vector<Float_>& cumulative, const std::vector<
 }
 
 template<typename Index_, typename Float_, class Matrix_, typename Cluster_>
-std::vector<Index_> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, const typename InitializeKmeansppRng::result_type seed, int nthreads) {
+std::vector<Index_> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, const typename InitializeKmeansppRng::result_type seed, const int nthreads) {
     const auto nobs = data.num_observations();
     const auto ndim = data.num_dimensions();
     auto mindist = sanisizer::create<std::vector<Float_> >(nobs, 1);

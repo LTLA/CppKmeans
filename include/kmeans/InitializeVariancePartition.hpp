@@ -50,8 +50,8 @@ void compute_welford(const Float_ val, Float_& center, Float_& ss, const Float_ 
     ss += (val - new_center) * delta;
 }
 
-template<typename Dim_, typename Data_, typename Float_>
-void compute_welford(const Dim_ ndim, const Data_* const dptr, Float_* const center, Float_* const dim_ss, const Float_ count) {
+template<typename Data_, typename Float_>
+void compute_welford(const std::size_t ndim, const Data_* const dptr, Float_* const center, Float_* const dim_ss, const Float_ count) {
     for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
         compute_welford<Float_>(dptr[d], center[d], dim_ss[d], count);
     }
@@ -61,7 +61,7 @@ template<typename Matrix_, typename Index_, typename Float_>
 Float_ optimize_partition(
     const Matrix_& data,
     const std::vector<Index_>& current,
-    const Dim<Matrix_> top_dim,
+    const std::size_t top_dim,
     std::vector<Float_>& value_buffer,
     std::vector<Float_>& stat_buffer)
 {
@@ -207,7 +207,7 @@ public:
             auto& cur_ss = dim_ss[0];
             sanisizer::resize(cur_ss, ndim);
             std::fill_n(centers, ndim, 0);
-            auto matwork = data.new_extractor(0, nobs);
+            auto matwork = data.new_extractor(static_cast<Index_>(0), nobs);
             for (decltype(I(nobs)) i = 0; i < nobs; ++i) {
                 const auto dptr = matwork->get_observation();
                 InitializeVariancePartition_internal::compute_welford(ndim, dptr, centers, cur_ss.data(), static_cast<Float_>(i + 1));
@@ -246,7 +246,7 @@ public:
             auto& cur_assignments = assignments[chosen.second];
 
             // iterator arithmetic is safe as we checked can_ptrdiff outside the loop.
-            const auto top_dim = std::max_element(cur_ss.begin(), cur_ss.end()) - cur_ss.begin();
+            const decltype(I(ndim)) top_dim = std::max_element(cur_ss.begin(), cur_ss.end()) - cur_ss.begin();
             Float_ partition_boundary;
             if (my_options.optimize_partition) {
                 partition_boundary = InitializeVariancePartition_internal::optimize_partition(data, cur_assignments, top_dim, opt_partition_values, opt_partition_stats);

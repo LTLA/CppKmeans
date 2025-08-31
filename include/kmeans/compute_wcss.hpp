@@ -6,7 +6,6 @@
 
 #include "sanisizer/sanisizer.hpp"
 
-#include "Matrix.hpp"
 #include "utils.hpp"
 
 /**
@@ -37,7 +36,7 @@ void compute_wcss(const Matrix_& data, const Cluster_ ncenters, const Float_* co
     const auto ndim = data.num_dimensions();
     std::fill_n(wcss, ncenters, 0);
 
-    auto work = data.new_extractor(static_cast<Index<Matrix_> >(0), nobs);
+    auto work = data.new_extractor(static_cast<decltype(I(nobs))>(0), nobs);
     for (decltype(I(nobs)) obs = 0; obs < nobs; ++obs) {
         const auto curdata = work->get_observation();
         const auto cen = clusters[obs];

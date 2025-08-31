@@ -85,7 +85,7 @@ public:
      * @param[in] data Pointer to an array of length `num_dim * num_obs`, containing a column-major matrix of observation data.
      * It is expected that the array will not be deallocated during the lifetime of this `SimpleMatrix` instance.
      */
-    SimpleMatrix(std::size_t num_dimensions, const Index_ num_observations, const Data_* const data) :
+    SimpleMatrix(const std::size_t num_dimensions, const Index_ num_observations, const Data_* const data) :
         my_num_dim(num_dimensions), my_num_obs(num_observations), my_data(data) {}
 
 private:

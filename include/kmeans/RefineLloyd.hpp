@@ -103,8 +103,8 @@ public:
         const auto ndim = data.num_dimensions();
         internal::QuickSearch<Float_, Cluster_> index;
 
-        decltype(I(my_options.max_iterations)) iter = 1;
-        for (; iter <= my_options.max_iterations; ++iter) {
+        decltype(I(my_options.max_iterations)) iter = 0;
+        for (; iter < my_options.max_iterations; ++iter) {
             index.reset(ndim, ncenters, centers);
             parallelize(my_options.num_threads, nobs, [&](const int, const Index_ start, const Index_ length) -> void {
                 auto work = data.new_extractor(start, length);
@@ -135,8 +135,10 @@ public:
         }
 
         int status = 0;
-        if (iter == my_options.max_iterations + 1) {
+        if (iter == my_options.max_iterations) {
             status = 2;
+        } else {
+            ++iter; // make it 1-based.
         }
         return Details<Index_>(std::move(sizes), iter, status);
     }

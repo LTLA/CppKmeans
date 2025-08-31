@@ -137,15 +137,15 @@ public:
 
         Index_ actual_batch_size = sanisizer::max(nobs, my_options.batch_size);
         auto chosen = sanisizer::create<std::vector<Index_> >(actual_batch_size);
-        std::mt19937_64 eng(my_options.seed);
+        RefineMiniBatchRng eng(my_options.seed);
 
         const auto ndim = data.num_dimensions();
         internal::QuickSearch<Float_, Cluster_> index;
 
-        decltype(I(my_options.max_iterations)) iter = 1;
-        for (; iter <= my_options.max_iterations; ++iter) {
+        decltype(I(my_options.max_iterations)) iter = 0;
+        for (; iter < my_options.max_iterations; ++iter) {
             aarand::sample(nobs, actual_batch_size, chosen.data(), eng);
-            if (iter > 1) {
+            if (iter > 0) {
                 for (const auto o : chosen) {
                     previous[o] = clusters[o];
                 }
@@ -153,7 +153,7 @@ public:
 
             index.reset(ndim, ncenters, centers);
             parallelize(my_options.num_threads, actual_batch_size, [&](const int, const Index_ start, const Index_ length) -> void {
-                auto work = data.new_extractor(chosen.data() + start, length);
+                auto work = data.new_extractor(chosen.data() + start, sanisizer::cast<std::size_t>(length));
                 for (Index_ s = start, end = start + length; s < end; ++s) {
                     const auto ptr = work->get_observation();
                     clusters[chosen[s]] = index.find(ptr);
@@ -175,7 +175,7 @@ public:
             }
 
             // Checking for updates.
-            if (iter != 1) {
+            if (iter != 0) {
                 for (const auto o : chosen) {
                     const auto p = previous[o];
                     ++(last_sampled[p]);
@@ -187,7 +187,7 @@ public:
                     }
                 }
 
-                if (iter % my_options.convergence_history == 1) {
+                if (iter % my_options.convergence_history == 0) {
                     bool too_many_changes = false;
                     for (Cluster_ c = 0; c < ncenters; ++c) {
                         if (static_cast<double>(last_changed[c]) >= static_cast<double>(last_sampled[c]) * my_options.max_change_proportion) {
@@ -222,8 +222,10 @@ public:
         internal::compute_centroids(data, ncenters, centers, clusters, cluster_sizes);
 
         int status = 0;
-        if (iter == my_options.max_iterations + 1) {
+        if (iter == my_options.max_iterations) {
             status = 2;
+        } else {
+            ++iter; // make it 1-based.
         }
         return Details<Index_>(std::move(cluster_sizes), iter, status);
     }

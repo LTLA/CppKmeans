@@ -107,9 +107,10 @@ struct Results {
     /**
      * @cond
      */
-    template<typename Dim_>
-    Results(const Dim_ num_dimensions, const Index_ num_observations, const Cluster_ num_centers) : 
-        centers(num_dimensions * num_centers), clusters(num_observations) {}
+    Results(const std::size_t num_dimensions, const Index_ num_observations, const Cluster_ num_centers) : 
+        centers(sanisizer::product<decltype(I(centers.size()))>(num_dimensions, num_centers)),
+        clusters(num_observations)
+    {}
 
     Results() = default;
     /**
