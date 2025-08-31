@@ -1,30 +1,40 @@
 <map id="kmeans/InitializeKmeanspp.hpp" name="kmeans/InitializeKmeanspp.hpp">
-<area shape="rect" id="Node000001" title="Class for kmeans++ initialization." alt="" coords="320,5,524,31"/>
+<area shape="rect" id="Node000001" title="Class for kmeans++ initialization." alt="" coords="496,5,700,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,63,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="337,34,219,54,79,81,77,76,218,48,336,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="496,29,306,47,194,62,78,82,77,76,193,57,305,42,495,24"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="87,79,152,105"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="368,34,167,81,166,76,367,29"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="496,33,345,52,167,81,166,76,344,46,495,27"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="176,79,250,105"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="387,34,264,76,262,71,386,29"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="523,34,266,81,265,76,522,29"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="274,79,335,105"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="403,34,339,73,336,68,401,29"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="358,79,486,105"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="425,31,425,63,419,63,419,31"/>
-<area shape="rect" id="Node000007" href="$Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="561,79,654,105"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="454,29,563,71,561,75,452,34"/>
-<area shape="rect" id="Node000008" href="$Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="483,153,564,178"/>
-<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="446,29,474,50,500,77,514,107,522,136,517,138,509,109,496,81,470,54,443,34"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="677,79,812,105"/>
-<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="478,29,675,73,674,78,477,34"/>
-<area shape="rect" id="Node000013" href="$parallelize_8hpp.html" title="Utilities for parallelization." alt="" coords="836,79,938,105"/>
-<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="511,29,821,76,820,81,510,34"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="595,107,551,144,547,140,591,103"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="588,153,669,178"/>
-<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="613,104,623,137,618,138,608,106"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="448,226,516,252"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="519,180,499,214,494,211,514,177"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="540,226,592,252"/>
-<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="533,177,553,211,549,214,528,180"/>
-<area shape="rect" id="Node000014" href="/github/workspace/docs/subpar.tag$subpar_8hpp.html" title=" " alt="" coords="824,153,951,178"/>
-<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="890,105,890,137,885,137,885,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="544,34,351,81,349,75,543,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="358,79,510,105"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="571,34,477,75,475,70,569,29"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="534,79,662,105"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="601,31,601,63,595,63,595,31"/>
+<area shape="rect" id="Node000008" href="$Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="737,79,830,105"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="630,29,739,71,737,75,628,34"/>
+<area shape="rect" id="Node000011" href="$Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="606,153,686,178"/>
+<area shape="poly" id="edge17_Node000001_Node000011" title=" " alt="" coords="625,29,653,49,676,78,681,94,679,111,666,141,661,139,674,110,675,95,672,80,650,53,622,34"/>
+<area shape="rect" id="Node000014" href="$utils_8hpp_source.html" title=" " alt="" coords="811,226,881,252"/>
+<area shape="poly" id="edge21_Node000001_Node000014" title=" " alt="" coords="699,29,786,48,821,61,844,77,860,110,865,146,863,182,857,212,852,211,858,181,860,146,855,111,840,81,819,66,785,53,698,34"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="913,79,1048,105"/>
+<area shape="poly" id="edge18_Node000001_Node000015" title=" " alt="" coords="664,29,901,73,900,78,663,34"/>
+<area shape="rect" id="Node000016" href="$parallelize_8hpp.html" title="Utilities for parallelization." alt="" coords="1072,79,1174,105"/>
+<area shape="poly" id="edge19_Node000001_Node000016" title=" " alt="" coords="701,28,864,49,1057,76,1056,81,864,54,700,34"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="686,226,737,252"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="780,106,726,213,722,211,775,104"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="769,300,851,326"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="787,105,802,252,807,284,802,285,797,252,782,105"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="761,108,684,147,682,143,759,103"/>
+<area shape="poly" id="edge16_Node000008_Node000014" title=" " alt="" coords="791,104,837,211,832,213,786,106"/>
+<area shape="poly" id="edge12_Node000011_Node000009" title=" " alt="" coords="659,177,692,213,688,217,655,180"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="507,226,574,252"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="630,181,573,220,570,215,627,177"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="598,226,662,252"/>
+<area shape="poly" id="edge13_Node000011_Node000013" title=" " alt="" coords="646,179,639,211,633,210,641,178"/>
+<area shape="poly" id="edge14_Node000011_Node000014" title=" " alt="" coords="681,176,799,218,797,223,679,181"/>
+<area shape="poly" id="edge15_Node000014_Node000010" title=" " alt="" coords="842,253,825,287,820,285,838,251"/>
+<area shape="rect" id="Node000017" href="/github/workspace/docs/subpar.tag$subpar_8hpp.html" title=" " alt="" coords="1060,153,1187,178"/>
+<area shape="poly" id="edge20_Node000016_Node000017" title=" " alt="" coords="1126,105,1126,137,1121,137,1121,105"/>
 </map>

@@ -123,14 +123,14 @@ Inheritance diagram for kmeans::Matrix&lt; Index_, Data_ &gt;:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a906e03e63b05bdca9c98770330db3404" id="r_a906e03e63b05bdca9c98770330db3404"><td class="memItemLeft" align="right" valign="top">virtual Index_&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a906e03e63b05bdca9c98770330db3404">num_observations</a> () const =0</td></tr>
 <tr class="separator:a906e03e63b05bdca9c98770330db3404"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86449a09b20a3dd2e3409710f6474693" id="r_a86449a09b20a3dd2e3409710f6474693"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a86449a09b20a3dd2e3409710f6474693">num_dimensions</a> () const =0</td></tr>
-<tr class="separator:a86449a09b20a3dd2e3409710f6474693"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79897537157a5a1fd77ae3026687c615" id="r_a79897537157a5a1fd77ae3026687c615"><td class="memItemLeft" align="right" valign="top">virtual std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79897537157a5a1fd77ae3026687c615">num_dimensions</a> () const =0</td></tr>
+<tr class="separator:a79897537157a5a1fd77ae3026687c615"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f1e254ff70bf9f7aa7f2c2be4380636" id="r_a7f1e254ff70bf9f7aa7f2c2be4380636"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classkmeans_1_1RandomAccessExtractor.html">RandomAccessExtractor</a>&lt; Index_, Data_ &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7f1e254ff70bf9f7aa7f2c2be4380636">new_extractor</a> () const =0</td></tr>
 <tr class="separator:a7f1e254ff70bf9f7aa7f2c2be4380636"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7266f580a6b772dd23c42f9d62a077ad" id="r_a7266f580a6b772dd23c42f9d62a077ad"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classkmeans_1_1ConsecutiveAccessExtractor.html">ConsecutiveAccessExtractor</a>&lt; Index_, Data_ &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7266f580a6b772dd23c42f9d62a077ad">new_extractor</a> (Index_ start, Index_ length) const =0</td></tr>
 <tr class="separator:a7266f580a6b772dd23c42f9d62a077ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5ff150cff1acd264aa7d801be0403d00" id="r_a5ff150cff1acd264aa7d801be0403d00"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classkmeans_1_1IndexedAccessExtractor.html">IndexedAccessExtractor</a>&lt; Index_, Data_ &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5ff150cff1acd264aa7d801be0403d00">new_extractor</a> (const Index_ *sequence, size_t length) const =0</td></tr>
-<tr class="separator:a5ff150cff1acd264aa7d801be0403d00"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa452b7244735d4db34cc2fbac3ea1591" id="r_aa452b7244735d4db34cc2fbac3ea1591"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classkmeans_1_1IndexedAccessExtractor.html">IndexedAccessExtractor</a>&lt; Index_, Data_ &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa452b7244735d4db34cc2fbac3ea1591">new_extractor</a> (const Index_ *sequence, std::size_t length) const =0</td></tr>
+<tr class="separator:aa452b7244735d4db34cc2fbac3ea1591"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename Index_, typename Data_&gt;<br />
@@ -172,8 +172,8 @@ template&lt;typename Index_ , typename Data_ &gt; </div>
 
 </div>
 </div>
-<a id="a5ff150cff1acd264aa7d801be0403d00" name="a5ff150cff1acd264aa7d801be0403d00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5ff150cff1acd264aa7d801be0403d00">&#9670;&#160;</a></span>new_extractor() <span class="overload">[2/3]</span></h2>
+<a id="aa452b7244735d4db34cc2fbac3ea1591" name="aa452b7244735d4db34cc2fbac3ea1591"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa452b7244735d4db34cc2fbac3ea1591">&#9670;&#160;</a></span>new_extractor() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -191,7 +191,7 @@ template&lt;typename Index_ , typename Data_ &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t</td>          <td class="paramname"><span class="paramname"><em>length</em></span>&#160;) const</td>
+          <td class="paramtype">std::size_t</td>          <td class="paramname"><span class="paramname"><em>length</em></span>&#160;) const</td>
         </tr>
       </table>
   </td>
@@ -250,8 +250,8 @@ template&lt;typename Index_ , typename Data_ &gt; </div>
 
 </div>
 </div>
-<a id="a86449a09b20a3dd2e3409710f6474693" name="a86449a09b20a3dd2e3409710f6474693"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86449a09b20a3dd2e3409710f6474693">&#9670;&#160;</a></span>num_dimensions()</h2>
+<a id="a79897537157a5a1fd77ae3026687c615" name="a79897537157a5a1fd77ae3026687c615"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79897537157a5a1fd77ae3026687c615">&#9670;&#160;</a></span>num_dimensions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -262,7 +262,7 @@ template&lt;typename Index_ , typename Data_ &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual size_t <a class="el" href="classkmeans_1_1Matrix.html">kmeans::Matrix</a>&lt; Index_, Data_ &gt;::num_dimensions </td>
+          <td class="memname">virtual std::size_t <a class="el" href="classkmeans_1_1Matrix.html">kmeans::Matrix</a>&lt; Index_, Data_ &gt;::num_dimensions </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>

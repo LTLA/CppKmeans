@@ -4,7 +4,6 @@
     <name>compute_wcss.hpp</name>
     <path>kmeans/</path>
     <filename>compute__wcss_8hpp.html</filename>
-    <includes id="Matrix_8hpp" name="Matrix.hpp" local="yes" import="no" module="no" objc="no">Matrix.hpp</includes>
     <namespace>kmeans</namespace>
   </compound>
   <compound kind="file">
@@ -249,10 +248,10 @@
     <name>kmeans::InitializeKmeansppOptions</name>
     <filename>structkmeans_1_1InitializeKmeansppOptions.html</filename>
     <member kind="variable">
-      <type>uint64_t</type>
+      <type>InitializeKmeansppRng::result_type</type>
       <name>seed</name>
       <anchorfile>structkmeans_1_1InitializeKmeansppOptions.html</anchorfile>
-      <anchor>acf0d2057e8792438afe8bf8a82d03307</anchor>
+      <anchor>a56362950b1fc150abcd9dd15e4cae972</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -308,10 +307,10 @@
     <name>kmeans::InitializeRandomOptions</name>
     <filename>structkmeans_1_1InitializeRandomOptions.html</filename>
     <member kind="variable">
-      <type>uint64_t</type>
+      <type>InitializeRandomRng::result_type</type>
       <name>seed</name>
       <anchorfile>structkmeans_1_1InitializeRandomOptions.html</anchorfile>
-      <anchor>a90f47cd2ef6c910423f90cc4f5678602</anchor>
+      <anchor>a01abf7c62985477dda1f0ce522c4f23f</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -377,10 +376,10 @@
       <arglist>() const =0</arglist>
     </member>
     <member kind="function" virtualness="pure">
-      <type>virtual size_t</type>
+      <type>virtual std::size_t</type>
       <name>num_dimensions</name>
       <anchorfile>classkmeans_1_1Matrix.html</anchorfile>
-      <anchor>a86449a09b20a3dd2e3409710f6474693</anchor>
+      <anchor>a79897537157a5a1fd77ae3026687c615</anchor>
       <arglist>() const =0</arglist>
     </member>
     <member kind="function" virtualness="pure">
@@ -401,8 +400,8 @@
       <type>virtual std::unique_ptr&lt; IndexedAccessExtractor&lt; Index_, Data_ &gt; &gt;</type>
       <name>new_extractor</name>
       <anchorfile>classkmeans_1_1Matrix.html</anchorfile>
-      <anchor>a5ff150cff1acd264aa7d801be0403d00</anchor>
-      <arglist>(const Index_ *sequence, size_t length) const =0</arglist>
+      <anchor>aa452b7244735d4db34cc2fbac3ea1591</anchor>
+      <arglist>(const Index_ *sequence, std::size_t length) const =0</arglist>
     </member>
   </compound>
   <compound kind="class">
@@ -609,10 +608,10 @@
       <arglist></arglist>
     </member>
     <member kind="variable">
-      <type>uint64_t</type>
+      <type>RefineMiniBatchRng::result_type</type>
       <name>seed</name>
       <anchorfile>structkmeans_1_1RefineMiniBatchOptions.html</anchorfile>
-      <anchor>aa7a1dda3a142c5f2b4221af7fc8f05b9</anchor>
+      <anchor>a22603ec8be33d1e188c8c1bcdf734e7c</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -661,8 +660,8 @@
       <type></type>
       <name>SimpleMatrix</name>
       <anchorfile>classkmeans_1_1SimpleMatrix.html</anchorfile>
-      <anchor>af0e742cfab965e8cb0a887bc0a27abe9</anchor>
-      <arglist>(size_t num_dimensions, Index_ num_observations, const Data_ *data)</arglist>
+      <anchor>a72d6149bbe37c7d300a907dda17568df</anchor>
+      <arglist>(const std::size_t num_dimensions, const Index_ num_observations, const Data_ *const data)</arglist>
     </member>
   </compound>
   <compound kind="namespace">
@@ -690,12 +689,33 @@
     <class kind="struct">kmeans::RefineMiniBatchOptions</class>
     <class kind="struct">kmeans::Results</class>
     <class kind="class">kmeans::SimpleMatrix</class>
+    <member kind="typedef">
+      <type>std::mt19937_64</type>
+      <name>InitializeKmeansppRng</name>
+      <anchorfile>namespacekmeans.html</anchorfile>
+      <anchor>ae7a0754ceb601c6b37425e2191cc6415</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>std::mt19937_64</type>
+      <name>InitializeRandomRng</name>
+      <anchorfile>namespacekmeans.html</anchorfile>
+      <anchor>a37c646208c6c8db9a5beb041adb20439</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>std::mt19937_64</type>
+      <name>RefineMiniBatchRng</name>
+      <anchorfile>namespacekmeans.html</anchorfile>
+      <anchor>a480ae91f76100f985f2a8e9167643312</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="function">
       <type>void</type>
       <name>compute_wcss</name>
       <anchorfile>namespacekmeans.html</anchorfile>
-      <anchor>abaf3a7fbf7e5d39ff76d69ffce0e61ea</anchor>
-      <arglist>(const Matrix_ &amp;data, Cluster_ ncenters, const Float_ *centers, const Cluster_ *clusters, Float_ *wcss)</arglist>
+      <anchor>a1c27d812ef0960614b269e522dced577</anchor>
+      <arglist>(const Matrix_ &amp;data, const Cluster_ ncenters, const Float_ *const centers, const Cluster_ *const clusters, Float_ *const wcss)</arglist>
     </member>
     <member kind="function">
       <type>Details&lt; Index_ &gt;</type>
@@ -708,29 +728,29 @@
       <type>Details&lt; Index_ &gt;</type>
       <name>compute</name>
       <anchorfile>namespacekmeans.html</anchorfile>
-      <anchor>a1ae0f9cf3cc7dc58032e401f575d2ff7</anchor>
-      <arglist>(const Matrix&lt; Index_, Data_ &gt; &amp;data, const Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;initialize, const Refine&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;refine, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters)</arglist>
+      <anchor>a6566e5efe0cb09965a16fc6b8958c78c</anchor>
+      <arglist>(const Matrix&lt; Index_, Data_ &gt; &amp;data, const Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;initialize, const Refine&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;refine, const Cluster_ num_centers, Float_ *const centers, Cluster_ *const clusters)</arglist>
     </member>
     <member kind="function">
       <type>Results&lt; Index_, Cluster_, Float_ &gt;</type>
       <name>compute</name>
       <anchorfile>namespacekmeans.html</anchorfile>
-      <anchor>a11ea41f1455a38a52ebe2f6ed6b9f869</anchor>
-      <arglist>(const Matrix_ &amp;data, const Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;initialize, const Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;refine, Cluster_ num_centers)</arglist>
+      <anchor>af5bb5a85a31c8ea7fbbaae7c8d76de0d</anchor>
+      <arglist>(const Matrix_ &amp;data, const Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;initialize, const Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;refine, const Cluster_ num_centers)</arglist>
     </member>
     <member kind="function">
       <type>Results&lt; Index_, Cluster_, Float_ &gt;</type>
       <name>compute</name>
       <anchorfile>namespacekmeans.html</anchorfile>
-      <anchor>a046aad88e5c6252e16b94ca420f81527</anchor>
-      <arglist>(const Matrix&lt; Index_, Data_ &gt; &amp;data, const Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;initialize, const Refine&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;refine, Cluster_ num_centers)</arglist>
+      <anchor>ae303d8fa2b9b3c9ce93cf90252b9c95b</anchor>
+      <arglist>(const Matrix&lt; Index_, Data_ &gt; &amp;data, const Initialize&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;initialize, const Refine&lt; Index_, Data_, Cluster_, Float_, Matrix&lt; Index_, Data_ &gt; &gt; &amp;refine, const Cluster_ num_centers)</arglist>
     </member>
     <member kind="function">
       <type>void</type>
       <name>parallelize</name>
       <anchorfile>namespacekmeans.html</anchorfile>
-      <anchor>aa2f9911d581cfdb4b266c88cc244b8aa</anchor>
-      <arglist>(int num_workers, Task_ num_tasks, Run_ run_task_range)</arglist>
+      <anchor>a554562a5b1c75d7494de4e541a77ca30</anchor>
+      <arglist>(const int num_workers, const Task_ num_tasks, Run_ run_task_range)</arglist>
     </member>
   </compound>
   <compound kind="page">

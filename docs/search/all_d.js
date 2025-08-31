@@ -14,6 +14,7 @@ var searchData=
   ['refineminibatch_11',['RefineMiniBatch',['../classkmeans_1_1RefineMiniBatch.html',1,'kmeans::RefineMiniBatch&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;'],['../classkmeans_1_1RefineMiniBatch.html#ad79317d1cf26679274abc39202d5bf6e',1,'kmeans::RefineMiniBatch::RefineMiniBatch(RefineMiniBatchOptions options)'],['../classkmeans_1_1RefineMiniBatch.html#a2d0f07141e386418440aaadf8162b629',1,'kmeans::RefineMiniBatch::RefineMiniBatch()=default']]],
   ['refineminibatch_2ehpp_12',['RefineMiniBatch.hpp',['../RefineMiniBatch_8hpp.html',1,'']]],
   ['refineminibatchoptions_13',['RefineMiniBatchOptions',['../structkmeans_1_1RefineMiniBatchOptions.html',1,'kmeans']]],
-  ['results_14',['Results',['../structkmeans_1_1Results.html',1,'kmeans']]],
-  ['run_15',['run',['../classkmeans_1_1Initialize.html#a6a91bd58a95b69a775b70b7c526d3158',1,'kmeans::Initialize::run()'],['../classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0',1,'kmeans::Refine::run()']]]
+  ['refineminibatchrng_14',['RefineMiniBatchRng',['../namespacekmeans.html#a480ae91f76100f985f2a8e9167643312',1,'kmeans']]],
+  ['results_15',['Results',['../structkmeans_1_1Results.html',1,'kmeans']]],
+  ['run_16',['run',['../classkmeans_1_1Initialize.html#a6a91bd58a95b69a775b70b7c526d3158',1,'kmeans::Initialize::run()'],['../classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0',1,'kmeans::Refine::run()']]]
 ];

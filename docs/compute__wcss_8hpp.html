@@ -107,21 +107,25 @@ $(function(){ initResizable(false); });
 <p>Compute within-cluster sum of squares.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
-<code>#include &quot;<a class="el" href="Matrix_8hpp_source.html">Matrix.hpp</a>&quot;</code><br />
+<code>#include &lt;cstddef&gt;</code><br />
+<code>#include &quot;sanisizer/sanisizer.hpp&quot;</code><br />
+<code>#include &quot;utils.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for compute_wcss.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="compute__wcss_8hpp__incl.png" border="0" usemap="#akmeans_2compute__wcss_8hpp" alt=""/></div>
 <map name="akmeans_2compute__wcss_8hpp" id="akmeans_2compute__wcss_8hpp">
-<area shape="rect" title="Compute within&#45;cluster sum of squares." alt="" coords="5,5,189,31"/>
-<area shape="rect" title=" " alt="" coords="9,79,84,105"/>
-<area shape="poly" title=" " alt="" coords="91,33,66,68,61,65,86,30"/>
-<area shape="rect" href="Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="108,79,188,105"/>
-<area shape="poly" title=" " alt="" coords="108,30,133,65,128,68,103,33"/>
-<area shape="rect" title=" " alt="" coords="71,153,139,178"/>
-<area shape="poly" title=" " alt="" coords="143,106,122,141,118,138,138,104"/>
-<area shape="rect" title=" " alt="" coords="163,153,215,178"/>
-<area shape="poly" title=" " alt="" coords="157,104,177,138,172,141,152,106"/>
+<area shape="rect" title="Compute within&#45;cluster sum of squares." alt="" coords="110,5,293,31"/>
+<area shape="rect" title=" " alt="" coords="5,79,80,105"/>
+<area shape="poly" title=" " alt="" coords="175,34,84,75,82,70,173,29"/>
+<area shape="rect" title=" " alt="" coords="104,79,168,105"/>
+<area shape="poly" title=" " alt="" coords="192,33,159,69,155,66,188,29"/>
+<area shape="rect" title=" " alt="" coords="192,79,344,105"/>
+<area shape="poly" title=" " alt="" coords="214,29,248,66,244,69,210,33"/>
+<area shape="rect" href="utils_8hpp_source.html" title=" " alt="" coords="368,79,437,105"/>
+<area shape="poly" title=" " alt="" coords="236,29,355,71,353,76,234,34"/>
+<area shape="rect" title=" " alt="" coords="362,153,443,178"/>
+<area shape="poly" title=" " alt="" coords="405,105,405,137,400,137,400,105"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -145,9 +149,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea" id="r_abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplParams" colspan="2">template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#abaf3a7fbf7e5d39ff76d69ffce0e61ea">kmeans::compute_wcss</a> (const Matrix_ &amp;data, Cluster_ ncenters, const Float_ *centers, const Cluster_ *clusters, Float_ *wcss)</td></tr>
-<tr class="separator:abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c27d812ef0960614b269e522dced577" id="r_a1c27d812ef0960614b269e522dced577"><td class="memTemplParams" colspan="2">template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </td></tr>
+<tr class="memitem:a1c27d812ef0960614b269e522dced577"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#a1c27d812ef0960614b269e522dced577">kmeans::compute_wcss</a> (const Matrix_ &amp;data, const Cluster_ ncenters, const Float_ *const centers, const Cluster_ *const clusters, Float_ *const wcss)</td></tr>
+<tr class="separator:a1c27d812ef0960614b269e522dced577"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Compute within-cluster sum of squares. </p>

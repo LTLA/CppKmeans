@@ -150,7 +150,7 @@ template&lt;typename Index_ , typename Data_ &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>Pointer to an array of length equal to <code><a class="el" href="classkmeans_1_1Matrix.html#a86449a09b20a3dd2e3409710f6474693">Matrix::num_dimensions()</a></code>, containing the coordinates for the next observation.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Pointer to an array of length equal to <code><a class="el" href="classkmeans_1_1Matrix.html#a79897537157a5a1fd77ae3026687c615">Matrix::num_dimensions()</a></code>, containing the coordinates for the next observation.</dd></dl>
 <p>The first call to this method should return the coordinates of the <code>start</code> observation from <code>Matrix::new_consecutive_extractor()</code>. The next call should return <code>start + 1</code>, etc. until a maximum of <code>length</code> calls have been performed.</p>
 <p>This method will only be called within a single thread and may modify internal data members of a <code><a class="el" href="classkmeans_1_1ConsecutiveAccessExtractor.html" title="Extractor for accessing consecutive observations.">ConsecutiveAccessExtractor</a></code> subclass. </p>
 

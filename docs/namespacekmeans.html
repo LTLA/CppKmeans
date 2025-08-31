@@ -95,6 +95,7 @@ $(function(){ initResizable(false); });
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">kmeans Namespace Reference</div></div>
 </div><!--header-->
@@ -172,32 +173,91 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A simple matrix of observations.  <a href="classkmeans_1_1SimpleMatrix.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ae7a0754ceb601c6b37425e2191cc6415" id="r_ae7a0754ceb601c6b37425e2191cc6415"><td class="memItemLeft" align="right" valign="top">typedef std::mt19937_64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae7a0754ceb601c6b37425e2191cc6415">InitializeKmeansppRng</a></td></tr>
+<tr class="separator:ae7a0754ceb601c6b37425e2191cc6415"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37c646208c6c8db9a5beb041adb20439" id="r_a37c646208c6c8db9a5beb041adb20439"><td class="memItemLeft" align="right" valign="top">typedef std::mt19937_64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a37c646208c6c8db9a5beb041adb20439">InitializeRandomRng</a></td></tr>
+<tr class="separator:a37c646208c6c8db9a5beb041adb20439"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a480ae91f76100f985f2a8e9167643312" id="r_a480ae91f76100f985f2a8e9167643312"><td class="memItemLeft" align="right" valign="top">typedef std::mt19937_64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a480ae91f76100f985f2a8e9167643312">RefineMiniBatchRng</a></td></tr>
+<tr class="separator:a480ae91f76100f985f2a8e9167643312"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea" id="r_abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplParams" colspan="2">template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#abaf3a7fbf7e5d39ff76d69ffce0e61ea">compute_wcss</a> (const Matrix_ &amp;data, Cluster_ ncenters, const Float_ *centers, const Cluster_ *clusters, Float_ *wcss)</td></tr>
-<tr class="separator:abaf3a7fbf7e5d39ff76d69ffce0e61ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c27d812ef0960614b269e522dced577" id="r_a1c27d812ef0960614b269e522dced577"><td class="memTemplParams" colspan="2">template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </td></tr>
+<tr class="memitem:a1c27d812ef0960614b269e522dced577"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a1c27d812ef0960614b269e522dced577">compute_wcss</a> (const Matrix_ &amp;data, const Cluster_ ncenters, const Float_ *const centers, const Cluster_ *const clusters, Float_ *const wcss)</td></tr>
+<tr class="separator:a1c27d812ef0960614b269e522dced577"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46d49b7746f7d2e0b6f50ec799e0010d" id="r_a46d49b7746f7d2e0b6f50ec799e0010d"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ , class Matrix_  = Matrix&lt;Index_, Data_&gt;&gt; </td></tr>
 <tr class="memitem:a46d49b7746f7d2e0b6f50ec799e0010d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; Index_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a46d49b7746f7d2e0b6f50ec799e0010d">compute</a> (const Matrix_ &amp;data, const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;initialize, const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;refine, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters)</td></tr>
 <tr class="separator:a46d49b7746f7d2e0b6f50ec799e0010d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ae0f9cf3cc7dc58032e401f575d2ff7" id="r_a1ae0f9cf3cc7dc58032e401f575d2ff7"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:a1ae0f9cf3cc7dc58032e401f575d2ff7"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; Index_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a1ae0f9cf3cc7dc58032e401f575d2ff7">compute</a> (const <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &amp;data, const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Index_, Data_, Cluster_, Float_, <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &gt; &amp;initialize, const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Index_, Data_, Cluster_, Float_, <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &gt; &amp;refine, Cluster_ num_centers, Float_ *centers, Cluster_ *clusters)</td></tr>
-<tr class="separator:a1ae0f9cf3cc7dc58032e401f575d2ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11ea41f1455a38a52ebe2f6ed6b9f869" id="r_a11ea41f1455a38a52ebe2f6ed6b9f869"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ , class Matrix_  = Matrix&lt;Index_, Data_&gt;&gt; </td></tr>
-<tr class="memitem:a11ea41f1455a38a52ebe2f6ed6b9f869"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Results.html">Results</a>&lt; Index_, Cluster_, Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a11ea41f1455a38a52ebe2f6ed6b9f869">compute</a> (const Matrix_ &amp;data, const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;initialize, const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;refine, Cluster_ num_centers)</td></tr>
-<tr class="separator:a11ea41f1455a38a52ebe2f6ed6b9f869"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a046aad88e5c6252e16b94ca420f81527" id="r_a046aad88e5c6252e16b94ca420f81527"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ &gt; </td></tr>
-<tr class="memitem:a046aad88e5c6252e16b94ca420f81527"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Results.html">Results</a>&lt; Index_, Cluster_, Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a046aad88e5c6252e16b94ca420f81527">compute</a> (const <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &amp;data, const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Index_, Data_, Cluster_, Float_, <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &gt; &amp;initialize, const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Index_, Data_, Cluster_, Float_, <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &gt; &amp;refine, Cluster_ num_centers)</td></tr>
-<tr class="separator:a046aad88e5c6252e16b94ca420f81527"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2f9911d581cfdb4b266c88cc244b8aa" id="r_aa2f9911d581cfdb4b266c88cc244b8aa"><td class="memTemplParams" colspan="2">template&lt;typename Task_ , class Run_ &gt; </td></tr>
-<tr class="memitem:aa2f9911d581cfdb4b266c88cc244b8aa"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#aa2f9911d581cfdb4b266c88cc244b8aa">parallelize</a> (int num_workers, Task_ num_tasks, Run_ run_task_range)</td></tr>
-<tr class="separator:aa2f9911d581cfdb4b266c88cc244b8aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6566e5efe0cb09965a16fc6b8958c78c" id="r_a6566e5efe0cb09965a16fc6b8958c78c"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ &gt; </td></tr>
+<tr class="memitem:a6566e5efe0cb09965a16fc6b8958c78c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Details.html">Details</a>&lt; Index_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a6566e5efe0cb09965a16fc6b8958c78c">compute</a> (const <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &amp;data, const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Index_, Data_, Cluster_, Float_, <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &gt; &amp;initialize, const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Index_, Data_, Cluster_, Float_, <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &gt; &amp;refine, const Cluster_ num_centers, Float_ *const centers, Cluster_ *const clusters)</td></tr>
+<tr class="separator:a6566e5efe0cb09965a16fc6b8958c78c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5bb5a85a31c8ea7fbbaae7c8d76de0d" id="r_af5bb5a85a31c8ea7fbbaae7c8d76de0d"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ , class Matrix_  = Matrix&lt;Index_, Data_&gt;&gt; </td></tr>
+<tr class="memitem:af5bb5a85a31c8ea7fbbaae7c8d76de0d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Results.html">Results</a>&lt; Index_, Cluster_, Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#af5bb5a85a31c8ea7fbbaae7c8d76de0d">compute</a> (const Matrix_ &amp;data, const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;initialize, const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;refine, const Cluster_ num_centers)</td></tr>
+<tr class="separator:af5bb5a85a31c8ea7fbbaae7c8d76de0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae303d8fa2b9b3c9ce93cf90252b9c95b" id="r_ae303d8fa2b9b3c9ce93cf90252b9c95b"><td class="memTemplParams" colspan="2">template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ &gt; </td></tr>
+<tr class="memitem:ae303d8fa2b9b3c9ce93cf90252b9c95b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structkmeans_1_1Results.html">Results</a>&lt; Index_, Cluster_, Float_ &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#ae303d8fa2b9b3c9ce93cf90252b9c95b">compute</a> (const <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &amp;data, const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Index_, Data_, Cluster_, Float_, <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &gt; &amp;initialize, const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Index_, Data_, Cluster_, Float_, <a class="el" href="classkmeans_1_1Matrix.html">Matrix</a>&lt; Index_, Data_ &gt; &gt; &amp;refine, const Cluster_ num_centers)</td></tr>
+<tr class="separator:ae303d8fa2b9b3c9ce93cf90252b9c95b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a554562a5b1c75d7494de4e541a77ca30" id="r_a554562a5b1c75d7494de4e541a77ca30"><td class="memTemplParams" colspan="2">template&lt;typename Task_ , class Run_ &gt; </td></tr>
+<tr class="memitem:a554562a5b1c75d7494de4e541a77ca30"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="#a554562a5b1c75d7494de4e541a77ca30">parallelize</a> (const int num_workers, const Task_ num_tasks, Run_ run_task_range)</td></tr>
+<tr class="separator:a554562a5b1c75d7494de4e541a77ca30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a169e211a74a1fd538b97f7a8f8f900fe" id="r_a169e211a74a1fd538b97f7a8f8f900fe"><td class="memTemplParams" colspan="2"><a id="a169e211a74a1fd538b97f7a8f8f900fe" name="a169e211a74a1fd538b97f7a8f8f900fe"></a>
+template&lt;typename Input_ &gt; </td></tr>
+<tr class="memitem:a169e211a74a1fd538b97f7a8f8f900fe"><td class="memTemplItemLeft" align="right" valign="top">std::remove_cv_t&lt; std::remove_reference_t&lt; Input_ &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>I</b> (Input_ x)</td></tr>
+<tr class="separator:a169e211a74a1fd538b97f7a8f8f900fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Namespace for k-means clustering. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a046aad88e5c6252e16b94ca420f81527" name="a046aad88e5c6252e16b94ca420f81527"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a046aad88e5c6252e16b94ca420f81527">&#9670;&#160;</a></span>compute() <span class="overload">[1/4]</span></h2>
+</div><h2 class="groupheader">Typedef Documentation</h2>
+<a id="ae7a0754ceb601c6b37425e2191cc6415" name="ae7a0754ceb601c6b37425e2191cc6415"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7a0754ceb601c6b37425e2191cc6415">&#9670;&#160;</a></span>InitializeKmeansppRng</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::mt19937_64 <a class="el" href="#ae7a0754ceb601c6b37425e2191cc6415">kmeans::InitializeKmeansppRng</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Type of the pseudo-random number generator for <code><a class="el" href="classkmeans_1_1InitializeKmeanspp.html" title="k-means++ initialization of Arthur and Vassilvitskii (2007).">InitializeKmeanspp</a></code>. </p>
+
+</div>
+</div>
+<a id="a37c646208c6c8db9a5beb041adb20439" name="a37c646208c6c8db9a5beb041adb20439"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37c646208c6c8db9a5beb041adb20439">&#9670;&#160;</a></span>InitializeRandomRng</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::mt19937_64 <a class="el" href="#a37c646208c6c8db9a5beb041adb20439">kmeans::InitializeRandomRng</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Type of the pseudo-random number generator for <code><a class="el" href="classkmeans_1_1InitializeRandom.html" title="Initialize by sampling random observations without replacement.">InitializeRandom</a></code>. </p>
+
+</div>
+</div>
+<a id="a480ae91f76100f985f2a8e9167643312" name="a480ae91f76100f985f2a8e9167643312"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a480ae91f76100f985f2a8e9167643312">&#9670;&#160;</a></span>RefineMiniBatchRng</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef std::mt19937_64 <a class="el" href="#a480ae91f76100f985f2a8e9167643312">kmeans::RefineMiniBatchRng</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Type of the pseudo-random number generator for <code><a class="el" href="classkmeans_1_1RefineMiniBatch.html" title="Implements the mini-batch algorithm for k-means clustering.">RefineMiniBatch</a></code>. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Function Documentation</h2>
+<a id="ae303d8fa2b9b3c9ce93cf90252b9c95b" name="ae303d8fa2b9b3c9ce93cf90252b9c95b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae303d8fa2b9b3c9ce93cf90252b9c95b">&#9670;&#160;</a></span>compute() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -222,7 +282,7 @@ template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Floa
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Cluster_</td>          <td class="paramname"><span class="paramname"><em>num_centers</em></span>&#160;)</td>
+          <td class="paramtype">const Cluster_</td>          <td class="paramname"><span class="paramname"><em>num_centers</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -249,8 +309,8 @@ template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Floa
 
 </div>
 </div>
-<a id="a1ae0f9cf3cc7dc58032e401f575d2ff7" name="a1ae0f9cf3cc7dc58032e401f575d2ff7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1ae0f9cf3cc7dc58032e401f575d2ff7">&#9670;&#160;</a></span>compute() <span class="overload">[2/4]</span></h2>
+<a id="a6566e5efe0cb09965a16fc6b8958c78c" name="a6566e5efe0cb09965a16fc6b8958c78c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6566e5efe0cb09965a16fc6b8958c78c">&#9670;&#160;</a></span>compute() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -275,17 +335,17 @@ template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Floa
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Cluster_</td>          <td class="paramname"><span class="paramname"><em>num_centers</em></span>, </td>
+          <td class="paramtype">const Cluster_</td>          <td class="paramname"><span class="paramname"><em>num_centers</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Float_ *</td>          <td class="paramname"><span class="paramname"><em>centers</em></span>, </td>
+          <td class="paramtype">Float_ *const</td>          <td class="paramname"><span class="paramname"><em>centers</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Cluster_ *</td>          <td class="paramname"><span class="paramname"><em>clusters</em></span>&#160;)</td>
+          <td class="paramtype">Cluster_ *const</td>          <td class="paramname"><span class="paramname"><em>clusters</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -313,62 +373,8 @@ template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Floa
 
 </div>
 </div>
-<a id="a11ea41f1455a38a52ebe2f6ed6b9f869" name="a11ea41f1455a38a52ebe2f6ed6b9f869"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11ea41f1455a38a52ebe2f6ed6b9f869">&#9670;&#160;</a></span>compute() <span class="overload">[3/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ , class Matrix_  = Matrix&lt;Index_, Data_&gt;&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structkmeans_1_1Results.html">Results</a>&lt; Index_, Cluster_, Float_ &gt; kmeans::compute </td>
-          <td>(</td>
-          <td class="paramtype">const Matrix_ &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>initialize</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>refine</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Cluster_</td>          <td class="paramname"><span class="paramname"><em>num_centers</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Overload of <code><a class="el" href="#a46d49b7746f7d2e0b6f50ec799e0010d">compute()</a></code> that allocates and returns the vectors for the centroids and cluster assignments.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Index_</td><td>Integer type for the observation indices in the input dataset. </td></tr>
-    <tr><td class="paramname">Data_</td><td>Numeric type for the input dataset. </td></tr>
-    <tr><td class="paramname">Cluster_</td><td>Integer type for the cluster assignments. </td></tr>
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the centroids. This will also be used for any internal distance calculations. </td></tr>
-    <tr><td class="paramname">Matrix_</td><td>Class of the input data matrix. This should satisfy the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">data</td><td>A matrix-like object containing per-observation data. </td></tr>
-    <tr><td class="paramname">initialize</td><td>Initialization method to use. </td></tr>
-    <tr><td class="paramname">refine</td><td>Refinement method to use. </td></tr>
-    <tr><td class="paramname">num_centers</td><td>Number of cluster centers.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structkmeans_1_1Results.html" title="Full statistics from k-means clustering.">Results</a> of the clustering, including the centroid locations and cluster assignments. </dd></dl>
-
-</div>
-</div>
 <a id="a46d49b7746f7d2e0b6f50ec799e0010d" name="a46d49b7746f7d2e0b6f50ec799e0010d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46d49b7746f7d2e0b6f50ec799e0010d">&#9670;&#160;</a></span>compute() <span class="overload">[4/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a46d49b7746f7d2e0b6f50ec799e0010d">&#9670;&#160;</a></span>compute() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -431,8 +437,62 @@ template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Floa
 
 </div>
 </div>
-<a id="abaf3a7fbf7e5d39ff76d69ffce0e61ea" name="abaf3a7fbf7e5d39ff76d69ffce0e61ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abaf3a7fbf7e5d39ff76d69ffce0e61ea">&#9670;&#160;</a></span>compute_wcss()</h2>
+<a id="af5bb5a85a31c8ea7fbbaae7c8d76de0d" name="af5bb5a85a31c8ea7fbbaae7c8d76de0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5bb5a85a31c8ea7fbbaae7c8d76de0d">&#9670;&#160;</a></span>compute() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Float_ , class Matrix_  = Matrix&lt;Index_, Data_&gt;&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structkmeans_1_1Results.html">Results</a>&lt; Index_, Cluster_, Float_ &gt; kmeans::compute </td>
+          <td>(</td>
+          <td class="paramtype">const Matrix_ &amp;</td>          <td class="paramname"><span class="paramname"><em>data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classkmeans_1_1Initialize.html">Initialize</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>initialize</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classkmeans_1_1Refine.html">Refine</a>&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>refine</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Cluster_</td>          <td class="paramname"><span class="paramname"><em>num_centers</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Overload of <code><a class="el" href="#a46d49b7746f7d2e0b6f50ec799e0010d">compute()</a></code> that allocates and returns the vectors for the centroids and cluster assignments.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Index_</td><td>Integer type for the observation indices in the input dataset. </td></tr>
+    <tr><td class="paramname">Data_</td><td>Numeric type for the input dataset. </td></tr>
+    <tr><td class="paramname">Cluster_</td><td>Integer type for the cluster assignments. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type for the centroids. This will also be used for any internal distance calculations. </td></tr>
+    <tr><td class="paramname">Matrix_</td><td>Class of the input data matrix. This should satisfy the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>A matrix-like object containing per-observation data. </td></tr>
+    <tr><td class="paramname">initialize</td><td>Initialization method to use. </td></tr>
+    <tr><td class="paramname">refine</td><td>Refinement method to use. </td></tr>
+    <tr><td class="paramname">num_centers</td><td>Number of cluster centers.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structkmeans_1_1Results.html" title="Full statistics from k-means clustering.">Results</a> of the clustering, including the centroid locations and cluster assignments. </dd></dl>
+
+</div>
+</div>
+<a id="a1c27d812ef0960614b269e522dced577" name="a1c27d812ef0960614b269e522dced577"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c27d812ef0960614b269e522dced577">&#9670;&#160;</a></span>compute_wcss()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -447,22 +507,22 @@ template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Cluster_</td>          <td class="paramname"><span class="paramname"><em>ncenters</em></span>, </td>
+          <td class="paramtype">const Cluster_</td>          <td class="paramname"><span class="paramname"><em>ncenters</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Float_ *</td>          <td class="paramname"><span class="paramname"><em>centers</em></span>, </td>
+          <td class="paramtype">const Float_ *const</td>          <td class="paramname"><span class="paramname"><em>centers</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const Cluster_ *</td>          <td class="paramname"><span class="paramname"><em>clusters</em></span>, </td>
+          <td class="paramtype">const Cluster_ *const</td>          <td class="paramname"><span class="paramname"><em>clusters</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Float_ *</td>          <td class="paramname"><span class="paramname"><em>wcss</em></span>&#160;)</td>
+          <td class="paramtype">Float_ *const</td>          <td class="paramname"><span class="paramname"><em>wcss</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -487,8 +547,8 @@ template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </div>
 
 </div>
 </div>
-<a id="aa2f9911d581cfdb4b266c88cc244b8aa" name="aa2f9911d581cfdb4b266c88cc244b8aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa2f9911d581cfdb4b266c88cc244b8aa">&#9670;&#160;</a></span>parallelize()</h2>
+<a id="a554562a5b1c75d7494de4e541a77ca30" name="a554562a5b1c75d7494de4e541a77ca30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a554562a5b1c75d7494de4e541a77ca30">&#9670;&#160;</a></span>parallelize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -498,12 +558,12 @@ template&lt;typename Task_ , class Run_ &gt; </div>
         <tr>
           <td class="memname">void kmeans::parallelize </td>
           <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>num_workers</em></span>, </td>
+          <td class="paramtype">const int</td>          <td class="paramname"><span class="paramname"><em>num_workers</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Task_</td>          <td class="paramname"><span class="paramname"><em>num_tasks</em></span>, </td>
+          <td class="paramtype">const Task_</td>          <td class="paramname"><span class="paramname"><em>num_tasks</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

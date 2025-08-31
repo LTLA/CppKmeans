@@ -103,36 +103,38 @@ $(function(){ initResizable(false); });
 <a href="Initialize_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef KMEANS_INITIALIZE_HPP</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define KMEANS_INITIALIZE_HPP</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;<a class="code" href="Matrix_8hpp.html">Matrix.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacekmeans.html">kmeans</a> {</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Index_, <span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Cluster_, <span class="keyword">typename</span> Float_, <span class="keyword">class</span> Matrix_ = Matrix&lt;Index_, Data_&gt; &gt;</div>
-<div class="foldopen" id="foldopen00027" data-start="{" data-end="};">
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classkmeans_1_1Initialize.html">   27</a></span><span class="keyword">class </span><a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a> {</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>(<a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>(<span class="keyword">const</span> <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp;) = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp; operator=(<a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp; operator=(<span class="keyword">const</span> <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp;) = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="classkmeans_1_1Initialize.html">~Initialize</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">static_assert</span>(std::is_same&lt;decltype(std::declval&lt;Matrix_&gt;().num_observations()), Index_&gt;::value);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">static_assert</span>(std::is_same&lt;typename std::remove_pointer&lt;decltype(std::declval&lt;Matrix_&gt;().new_extractor()-&gt;get_observation(0))&gt;::type, <span class="keyword">const</span> Data_&gt;::value);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classkmeans_1_1Initialize.html#a6a91bd58a95b69a775b70b7c526d3158">   56</a></span>    <span class="keyword">virtual</span> Cluster_ <a class="code hl_function" href="classkmeans_1_1Initialize.html#a6a91bd58a95b69a775b70b7c526d3158">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ num_centers, Float_* centers) <span class="keyword">const</span> = 0;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>};</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;<a class="code" href="Matrix_8hpp.html">Matrix.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &quot;utils.hpp&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacekmeans.html">kmeans</a> {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Index_, <span class="keyword">typename</span> Data_, <span class="keyword">typename</span> Cluster_, <span class="keyword">typename</span> Float_, <span class="keyword">class</span> Matrix_ = Matrix&lt;Index_, Data_&gt; &gt;</div>
+<div class="foldopen" id="foldopen00029" data-start="{" data-end="};">
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classkmeans_1_1Initialize.html">   29</a></span><span class="keyword">class </span><a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a> {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>(<a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>(<span class="keyword">const</span> <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp; operator=(<a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp; operator=(<span class="keyword">const</span> <a class="code hl_class" href="classkmeans_1_1Initialize.html">Initialize</a>&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">virtual</span> <a class="code hl_class" href="classkmeans_1_1Initialize.html">~Initialize</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keyword">static_assert</span>(std::is_same&lt;decltype(I(std::declval&lt;Matrix_&gt;().num_observations())), Index_&gt;::value);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">static_assert</span>(std::is_same&lt;decltype(I(*(std::declval&lt;Matrix_&gt;().new_extractor()-&gt;get_observation(0)))), Data_&gt;::value);</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classkmeans_1_1Initialize.html#a6a91bd58a95b69a775b70b7c526d3158">   58</a></span>    <span class="keyword">virtual</span> Cluster_ <a class="code hl_function" href="classkmeans_1_1Initialize.html#a6a91bd58a95b69a775b70b7c526d3158">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ num_centers, Float_* centers) <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>};</div>
 </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>}</div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>}</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aMatrix_8hpp_html"><div class="ttname"><a href="Matrix_8hpp.html">Matrix.hpp</a></div><div class="ttdoc">Interface for matrix inputs.</div></div>
-<div class="ttc" id="aclasskmeans_1_1Initialize_html"><div class="ttname"><a href="classkmeans_1_1Initialize.html">kmeans::Initialize</a></div><div class="ttdoc">Interface for k-means initialization algorithms.</div><div class="ttdef"><b>Definition</b> Initialize.hpp:27</div></div>
+<div class="ttc" id="aclasskmeans_1_1Initialize_html"><div class="ttname"><a href="classkmeans_1_1Initialize.html">kmeans::Initialize</a></div><div class="ttdoc">Interface for k-means initialization algorithms.</div><div class="ttdef"><b>Definition</b> Initialize.hpp:29</div></div>
 <div class="ttc" id="aclasskmeans_1_1Initialize_html_a6a91bd58a95b69a775b70b7c526d3158"><div class="ttname"><a href="classkmeans_1_1Initialize.html#a6a91bd58a95b69a775b70b7c526d3158">kmeans::Initialize::run</a></div><div class="ttdeci">virtual Cluster_ run(const Matrix_ &amp;data, Cluster_ num_centers, Float_ *centers) const =0</div></div>
-<div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:12</div></div>
+<div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:16</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

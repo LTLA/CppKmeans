@@ -119,8 +119,8 @@ Public Attributes</h2></td></tr>
 <tr class="separator:a8facb9fb31d589bb41fa9e196e1e15e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93b37ae839d05eeaed1a9685f6d9112a" id="r_a93b37ae839d05eeaed1a9685f6d9112a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93b37ae839d05eeaed1a9685f6d9112a">convergence_history</a> = 10</td></tr>
 <tr class="separator:a93b37ae839d05eeaed1a9685f6d9112a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7a1dda3a142c5f2b4221af7fc8f05b9" id="r_aa7a1dda3a142c5f2b4221af7fc8f05b9"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7a1dda3a142c5f2b4221af7fc8f05b9">seed</a> = 1234567890u</td></tr>
-<tr class="separator:aa7a1dda3a142c5f2b4221af7fc8f05b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22603ec8be33d1e188c8c1bcdf734e7c" id="r_a22603ec8be33d1e188c8c1bcdf734e7c"><td class="memItemLeft" align="right" valign="top">RefineMiniBatchRng::result_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a22603ec8be33d1e188c8c1bcdf734e7c">seed</a> = sanisizer::cap&lt;typename RefineMiniBatchRng::result_type&gt;(1234567890)</td></tr>
+<tr class="separator:a22603ec8be33d1e188c8c1bcdf734e7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab246828d63b19dc11ad86ab8c01ec10e" id="r_ab246828d63b19dc11ad86ab8c01ec10e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab246828d63b19dc11ad86ab8c01ec10e">num_threads</a> = 1</td></tr>
 <tr class="separator:ab246828d63b19dc11ad86ab8c01ec10e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -198,18 +198,18 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Number of threads to use. The parallelization scheme is defined by <code><a class="el" href="namespacekmeans.html#aa2f9911d581cfdb4b266c88cc244b8aa">parallelize()</a></code>. </p>
+<p>Number of threads to use. The parallelization scheme is defined by <code><a class="el" href="namespacekmeans.html#a554562a5b1c75d7494de4e541a77ca30">parallelize()</a></code>. </p>
 
 </div>
 </div>
-<a id="aa7a1dda3a142c5f2b4221af7fc8f05b9" name="aa7a1dda3a142c5f2b4221af7fc8f05b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7a1dda3a142c5f2b4221af7fc8f05b9">&#9670;&#160;</a></span>seed</h2>
+<a id="a22603ec8be33d1e188c8c1bcdf734e7c" name="a22603ec8be33d1e188c8c1bcdf734e7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a22603ec8be33d1e188c8c1bcdf734e7c">&#9670;&#160;</a></span>seed</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint64_t kmeans::RefineMiniBatchOptions::seed = 1234567890u</td>
+          <td class="memname">RefineMiniBatchRng::result_type kmeans::RefineMiniBatchOptions::seed = sanisizer::cap&lt;typename RefineMiniBatchRng::result_type&gt;(1234567890)</td>
         </tr>
       </table>
 </div><div class="memdoc">

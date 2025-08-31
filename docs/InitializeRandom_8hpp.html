@@ -99,7 +99,8 @@ $(function(){ initResizable(false); });
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle"><div class="title">InitializeRandom.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -109,35 +110,45 @@ $(function(){ initResizable(false); });
 <div class="textblock"><code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;cstdint&gt;</code><br />
 <code>#include &lt;random&gt;</code><br />
+<code>#include &quot;sanisizer/sanisizer.hpp&quot;</code><br />
+<code>#include &quot;aarand/aarand.hpp&quot;</code><br />
 <code>#include &quot;<a class="el" href="Initialize_8hpp_source.html">Initialize.hpp</a>&quot;</code><br />
 <code>#include &quot;copy_into_array.hpp&quot;</code><br />
-<code>#include &quot;aarand/aarand.hpp&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for InitializeRandom.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="InitializeRandom_8hpp__incl.png" border="0" usemap="#akmeans_2InitializeRandom_8hpp" alt=""/></div>
 <map name="akmeans_2InitializeRandom_8hpp" id="akmeans_2InitializeRandom_8hpp">
-<area shape="rect" title="Class for random initialization." alt="" coords="177,5,367,31"/>
+<area shape="rect" title="Class for random initialization." alt="" coords="258,5,448,31"/>
 <area shape="rect" title=" " alt="" coords="5,79,80,105"/>
-<area shape="poly" title=" " alt="" coords="234,34,95,77,93,72,232,29"/>
+<area shape="poly" title=" " alt="" coords="300,34,95,81,94,76,299,29"/>
 <area shape="rect" title=" " alt="" coords="104,79,165,105"/>
-<area shape="poly" title=" " alt="" coords="250,34,173,74,170,69,247,29"/>
+<area shape="poly" title=" " alt="" coords="317,34,180,78,179,73,315,29"/>
 <area shape="rect" title=" " alt="" coords="189,79,253,105"/>
-<area shape="poly" title=" " alt="" coords="266,33,241,68,236,65,261,30"/>
-<area shape="rect" href="Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="278,79,370,105"/>
-<area shape="poly" title=" " alt="" coords="283,30,308,65,304,68,278,33"/>
-<area shape="rect" title=" " alt="" coords="394,79,529,105"/>
-<area shape="poly" title=" " alt="" coords="305,29,416,71,414,76,303,34"/>
-<area shape="rect" title=" " alt="" coords="554,79,681,105"/>
-<area shape="poly" title=" " alt="" coords="331,29,544,73,543,78,330,34"/>
-<area shape="rect" href="Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="230,153,311,178"/>
-<area shape="poly" title=" " alt="" coords="317,106,291,142,287,138,313,103"/>
-<area shape="rect" title=" " alt="" coords="335,153,416,178"/>
-<area shape="poly" title=" " alt="" coords="335,103,360,138,356,142,330,106"/>
-<area shape="rect" title=" " alt="" coords="196,226,263,252"/>
-<area shape="poly" title=" " alt="" coords="266,180,246,214,241,211,261,177"/>
-<area shape="rect" title=" " alt="" coords="288,226,339,252"/>
-<area shape="poly" title=" " alt="" coords="280,177,300,211,296,214,275,180"/>
+<area shape="poly" title=" " alt="" coords="332,34,258,74,255,69,330,29"/>
+<area shape="rect" title=" " alt="" coords="278,79,429,105"/>
+<area shape="poly" title=" " alt="" coords="356,31,356,63,350,63,350,31"/>
+<area shape="rect" title=" " alt="" coords="454,79,581,105"/>
+<area shape="poly" title=" " alt="" coords="382,29,477,70,474,75,380,34"/>
+<area shape="rect" href="Initialize_8hpp.html" title="Interface for k&#45;means initialization." alt="" coords="604,79,697,105"/>
+<area shape="poly" title=" " alt="" coords="405,29,590,73,588,78,403,34"/>
+<area shape="rect" title=" " alt="" coords="720,79,856,105"/>
+<area shape="poly" title=" " alt="" coords="428,29,705,74,704,80,427,34"/>
+<area shape="rect" title=" " alt="" coords="584,226,635,252"/>
+<area shape="poly" title=" " alt="" coords="650,106,619,212,614,211,645,104"/>
+<area shape="rect" title=" " alt="" coords="668,300,750,326"/>
+<area shape="poly" title=" " alt="" coords="638,107,610,134,582,171,572,191,566,212,566,232,574,251,590,268,610,282,655,300,653,305,607,287,586,272,570,253,561,233,561,211,567,189,577,168,606,131,634,103"/>
+<area shape="rect" href="Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="650,153,731,178"/>
+<area shape="poly" title=" " alt="" coords="659,104,679,138,674,140,655,106"/>
+<area shape="rect" href="utils_8hpp_source.html" title=" " alt="" coords="837,226,906,252"/>
+<area shape="poly" title=" " alt="" coords="671,103,744,150,843,215,840,220,741,155,668,107"/>
+<area shape="poly" title=" " alt="" coords="678,181,636,218,632,214,675,177"/>
+<area shape="rect" title=" " alt="" coords="746,226,814,252"/>
+<area shape="poly" title=" " alt="" coords="707,177,755,214,751,219,704,181"/>
+<area shape="rect" title=" " alt="" coords="658,226,723,252"/>
+<area shape="poly" title=" " alt="" coords="693,179,693,211,688,211,688,179"/>
+<area shape="poly" title=" " alt="" coords="722,176,828,218,826,223,720,181"/>
+<area shape="poly" title=" " alt="" coords="845,255,752,296,750,291,843,250"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -167,6 +178,11 @@ Namespaces</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacekmeans.html">kmeans</a></td></tr>
 <tr class="memdesc:namespacekmeans"><td class="mdescLeft">&#160;</td><td class="mdescRight">Namespace for k-means clustering. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a37c646208c6c8db9a5beb041adb20439" id="r_a37c646208c6c8db9a5beb041adb20439"><td class="memItemLeft" align="right" valign="top">typedef std::mt19937_64&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacekmeans.html#a37c646208c6c8db9a5beb041adb20439">kmeans::InitializeRandomRng</a></td></tr>
+<tr class="separator:a37c646208c6c8db9a5beb041adb20439"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for random initialization. </p>

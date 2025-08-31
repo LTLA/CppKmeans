@@ -1,9 +1,18 @@
 <map id="kmeans/SimpleMatrix.hpp" name="kmeans/SimpleMatrix.hpp">
-<area shape="rect" id="Node000001" title="Wrapper for a simple dense matrix." alt="" coords="5,5,176,31"/>
-<area shape="rect" id="Node000002" href="$Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="50,79,131,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,31,93,63,88,63,88,31"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="16,153,83,178"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="86,106,66,141,61,138,81,104"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="108,153,159,178"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="100,104,120,138,116,141,95,106"/>
+<area shape="rect" id="Node000001" title="Wrapper for a simple dense matrix." alt="" coords="26,5,196,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,153,70,178"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,34,49,53,36,65,25,80,21,94,20,109,28,138,22,139,15,109,15,93,20,78,32,62,46,48,78,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="35,79,186,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="114,31,114,63,108,63,108,31"/>
+<area shape="rect" id="Node000004" href="$Matrix_8hpp.html" title="Interface for matrix inputs." alt="" coords="211,79,291,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="136,29,215,69,212,74,133,34"/>
+<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="215,108,85,151,83,146,214,103"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="133,153,200,178"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="238,107,194,144,191,140,235,103"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="225,153,276,178"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="254,105,254,137,248,137,248,105"/>
+<area shape="rect" id="Node000007" href="$utils_8hpp_source.html" title=" " alt="" coords="300,153,370,178"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="267,103,311,140,307,144,263,107"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="294,226,376,252"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="338,179,338,211,332,211,332,179"/>
 </map>

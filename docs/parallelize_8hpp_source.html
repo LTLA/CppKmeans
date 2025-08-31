@@ -111,7 +111,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Task_, <span class="keyword">class</span> Run_&gt;</div>
 <div class="foldopen" id="foldopen00028" data-start="{" data-end="}">
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="namespacekmeans.html#aa2f9911d581cfdb4b266c88cc244b8aa">   28</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacekmeans.html#aa2f9911d581cfdb4b266c88cc244b8aa">parallelize</a>(<span class="keywordtype">int</span> num_workers, Task_ num_tasks, Run_ run_task_range) {</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="namespacekmeans.html#a554562a5b1c75d7494de4e541a77ca30">   28</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacekmeans.html#a554562a5b1c75d7494de4e541a77ca30">parallelize</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> num_workers, <span class="keyword">const</span> Task_ num_tasks, Run_ run_task_range) {</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#ifndef KMEANS_CUSTOM_PARALLEL</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">// Do NOT make this no-throw as we don&#39;t know whether Matrix_::get_observation() might throw.</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    subpar::parallelize(num_workers, num_tasks, std::move(run_task_range));</div>
@@ -124,8 +124,8 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:12</div></div>
-<div class="ttc" id="anamespacekmeans_html_aa2f9911d581cfdb4b266c88cc244b8aa"><div class="ttname"><a href="namespacekmeans.html#aa2f9911d581cfdb4b266c88cc244b8aa">kmeans::parallelize</a></div><div class="ttdeci">void parallelize(int num_workers, Task_ num_tasks, Run_ run_task_range)</div><div class="ttdef"><b>Definition</b> parallelize.hpp:28</div></div>
+<div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:16</div></div>
+<div class="ttc" id="anamespacekmeans_html_a554562a5b1c75d7494de4e541a77ca30"><div class="ttname"><a href="namespacekmeans.html#a554562a5b1c75d7494de4e541a77ca30">kmeans::parallelize</a></div><div class="ttdeci">void parallelize(const int num_workers, const Task_ num_tasks, Run_ run_task_range)</div><div class="ttdef"><b>Definition</b> parallelize.hpp:28</div></div>
 <div class="ttc" id="asubpar_8hpp_html"><div class="ttname"><a href="https://ltla.github.io/subpar/subpar_8hpp.html">subpar.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
