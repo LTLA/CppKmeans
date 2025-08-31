@@ -80,19 +80,13 @@ template<typename Index_, typename Data_>
 class SimpleMatrix final : public Matrix<Index_, Data_> {
 public:
     /**
-     * @tparam Dim_ Integer type of the number of dimensions.
-     *
      * @param num_dimensions Number of dimensions.
      * @param num_observations Number of observations.
      * @param[in] data Pointer to an array of length `num_dim * num_obs`, containing a column-major matrix of observation data.
      * It is expected that the array will not be deallocated during the lifetime of this `SimpleMatrix` instance.
      */
-    template<typename Dim_>
-    SimpleMatrix(const Dim_ num_dimensions, const Index_ num_observations, const Data_* const data) :
-        my_num_dim(sanisizer::cast<std::size_t>(num_dimensions)), // constructor is templated for user convenience, so that they doesn't need to check for overflow.
-        my_num_obs(num_observations),
-        my_data(data)
-    {}
+    SimpleMatrix(std::size_t num_dimensions, const Index_ num_observations, const Data_* const data) :
+        my_num_dim(num_dimensions), my_num_obs(num_observations), my_data(data) {}
 
 private:
     std::size_t my_num_dim;
