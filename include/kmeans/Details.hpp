@@ -23,9 +23,9 @@ struct Details {
      */
     Details() = default;
 
-    Details(int iterations, int status) : sizes(0), iterations(iterations), status(status) {}
+    Details(const int iterations, const int status) : sizes(0), iterations(iterations), status(status) {}
 
-    Details(std::vector<Index_> sizes, int iterations, int status) : sizes(std::move(sizes)), iterations(iterations), status(status) {} 
+    Details(std::vector<Index_> sizes, const int iterations, const int status) : sizes(std::move(sizes)), iterations(iterations), status(status) {} 
     /**
      * @endcond
      */
@@ -37,8 +37,8 @@ struct Details {
     std::vector<Index_> sizes;
 
     /**
-     * The number of iterations used to achieve convergence.
-     * This value may be greater than the `maxit` if convergence was not achieved, see `status`.
+     * The number of iterations that were performed.
+     * This can be interpreted as the number of iterations to convergence if `Details::status == 0`.
      */
     int iterations = 0;
 

@@ -18,7 +18,12 @@ test_that("Lloyd works correctly", {
                 expect_equal(out$centers, unname(t(ref$centers)))
                 expect_identical(out$clusters + 1L, ref$cluster)
                 expect_identical(out$size, ref$size)
-                expect_identical(out$iterations, ref$iter)
+
+                if (!is.null(ref$ifault)) {
+                    expect_identical(out$status, 2L)
+                } else {
+                    expect_identical(out$iterations, ref$iter)
+                }
             }
         }
     }

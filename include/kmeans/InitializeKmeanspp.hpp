@@ -6,12 +6,14 @@
 #include <algorithm>
 #include <cstdint>
 
+#include "sanisizer/sanisizer.hpp"
 #include "aarand/aarand.hpp"
 
 #include "Initialize.hpp"
 #include "Matrix.hpp"
 #include "copy_into_array.hpp"
 #include "parallelize.hpp"
+#include "utils.hpp"
 
 /**
  * @file InitializeKmeanspp.hpp
@@ -22,13 +24,18 @@
 namespace kmeans {
 
 /**
+ * Type of the pseudo-random number generator for `InitializeKmeanspp`.
+ */
+typedef std::mt19937_64 InitializeKmeansppRng;
+
+/**
  * @brief Options for **k-means++** initialization.
  */
 struct InitializeKmeansppOptions {
     /**
      * Random seed to use to construct the PRNG prior to sampling.
      */
-    uint64_t seed = 6523u;
+    typename InitializeKmeansppRng::result_type seed = sanisizer::cap<typename InitializeKmeansppRng::result_type>(6523);
 
     /** 
      * Number of threads to use.
@@ -44,11 +51,13 @@ namespace InitializeKmeanspp_internal {
 
 template<typename Float_, typename Index_, class Engine_>
 Index_ weighted_sample(const std::vector<Float_>& cumulative, const std::vector<Float_>& mindist, Index_ nobs, Engine_& eng) {
-    auto total = cumulative.back();
+    const auto total = cumulative.back();
     Index_ chosen_id = 0;
 
     do {
         const Float_ sampled_weight = total * aarand::standard_uniform<Float_>(eng);
+
+        // Subtraction is safe as we already checked for valid ptrdiff in run_kmeanspp().
         chosen_id = std::lower_bound(cumulative.begin(), cumulative.end(), sampled_weight) - cumulative.begin();
 
         // We wrap this in a do/while to defend against edge cases where
@@ -64,35 +73,40 @@ Index_ weighted_sample(const std::vector<Float_>& cumulative, const std::vector<
 }
 
 template<typename Index_, typename Float_, class Matrix_, typename Cluster_>
-std::vector<Index_> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, uint64_t seed, int nthreads) {
-    Index_ nobs = data.num_observations();
-    size_t ndim = data.num_dimensions();
-    std::vector<Float_> mindist(nobs, 1);
-    std::vector<Float_> cumulative(nobs);
+std::vector<Index_> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, const typename InitializeKmeansppRng::result_type seed, const int nthreads) {
+    const auto nobs = data.num_observations();
+    const auto ndim = data.num_dimensions();
+    auto mindist = sanisizer::create<std::vector<Float_> >(nobs, 1);
+
+    auto cumulative = sanisizer::create<std::vector<Float_> >(nobs);
+    sanisizer::can_ptrdiff<decltype(I(cumulative.begin()))>(nobs); // check that we can compute a ptrdiff for weighted_sample().
+
     std::vector<Index_> sofar;
     sofar.reserve(ncenters);
-    std::mt19937_64 eng(seed);
+    InitializeKmeansppRng eng(seed);
 
     auto last_work = data.new_extractor();
     for (Cluster_ cen = 0; cen < ncenters; ++cen) {
         if (!sofar.empty()) {
-            auto last_ptr = last_work->get_observation(sofar.back());
+            const auto last_ptr = last_work->get_observation(sofar.back());
 
-            parallelize(nthreads, nobs, [&](int, Index_ start, Index_ length) -> void {
+            parallelize(nthreads, nobs, [&](const int, const Index_ start, const Index_ length) -> void {
                 auto curwork = data.new_extractor(start, length);
                 for (Index_ obs = start, end = start + length; obs < end; ++obs) {
-                    auto current = curwork->get_observation(); // make sure this is outside the if(), as we MUST call this in every loop iteration to fulfill consecutive access.
+                    const auto current = curwork->get_observation(); // make sure this is before the 'continue', as we MUST call this in every loop iteration to fulfill consecutive access.
 
-                    if (mindist[obs]) {
-                        Float_ r2 = 0;
-                        for (size_t d = 0; d < ndim; ++d) {
-                            Float_ delta = static_cast<Float_>(current[d]) - static_cast<Float_>(last_ptr[d]); // cast to ensure consistent precision regardless of Data_.
-                            r2 += delta * delta;
-                        }
+                    if (mindist[obs] == 0) {
+                        continue;
+                    }
 
-                        if (cen == 1 || r2 < mindist[obs]) {
-                            mindist[obs] = r2;
-                        }
+                    Float_ r2 = 0;
+                    for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
+                        const Float_ delta = static_cast<Float_>(current[d]) - static_cast<Float_>(last_ptr[d]); // cast to ensure consistent precision regardless of Data_.
+                        r2 += delta * delta;
+                    }
+
+                    if (cen == 1 || r2 < mindist[obs]) {
+                        mindist[obs] = r2;
                     }
                 }
             });
@@ -108,7 +122,7 @@ std::vector<Index_> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, uint64_
             break;
         }
 
-        auto chosen_id = weighted_sample(cumulative, mindist, nobs, eng);
+        const auto chosen_id = weighted_sample(cumulative, mindist, nobs, eng);
         mindist[chosen_id] = 0;
         sofar.push_back(chosen_id);
     }
@@ -168,13 +182,13 @@ public:
     /**
      * @cond
      */
-    Cluster_ run(const Matrix_& matrix, Cluster_ ncenters, Float_* centers) const {
-        Index_ nobs = matrix.num_observations();
+    Cluster_ run(const Matrix_& matrix, const Cluster_ ncenters, Float_* const centers) const {
+        const auto nobs = matrix.num_observations();
         if (!nobs) {
             return 0;
         }
 
-        auto sofar = InitializeKmeanspp_internal::run_kmeanspp<Index_, Float_>(matrix, ncenters, my_options.seed, my_options.num_threads);
+        const auto sofar = InitializeKmeanspp_internal::run_kmeanspp<Index_, Float_>(matrix, ncenters, my_options.seed, my_options.num_threads);
         internal::copy_into_array(matrix, sofar, centers);
         return sofar.size();
     }

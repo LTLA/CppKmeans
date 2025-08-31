@@ -3,43 +3,46 @@
 
 #include <numeric>
 #include <algorithm>
+#include <vector>
+
+#include "sanisizer/sanisizer.hpp"
 
 #include "Details.hpp"
 #include "Matrix.hpp"
 #include "compute_centroids.hpp"
+#include "utils.hpp"
 
 namespace kmeans {
 
 namespace internal {
 
 template<typename Index_, typename Cluster_>
-bool is_edge_case(Index_ nobs, Cluster_ ncenters) {
-    return (ncenters <= 1 || static_cast<Index_>(ncenters) >= nobs);
+bool is_edge_case(const Index_ nobs, const Cluster_ ncenters) {
+    return ncenters <= 1 || sanisizer::is_greater_than_or_equal(ncenters, nobs);
 }
 
 template<class Matrix_, typename Cluster_, typename Float_>
 Details<Index<Matrix_> > process_edge_case(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) {
-    auto nobs = data.num_observations();
+    const auto nobs = data.num_observations();
 
     if (ncenters == 1) {
         // All points in cluster 0.
         std::fill_n(clusters, nobs, 0);
-        std::vector<Index<Matrix_> > sizes(1, nobs);
+        auto sizes = sanisizer::create<std::vector<decltype(I(nobs))> >(1, nobs);
         compute_centroid(data, centers);
         return Details(std::move(sizes), 0, 0);
 
-    } else if (static_cast<Index<Matrix_> >(ncenters) >= nobs) {
+    } else if (sanisizer::is_greater_than_or_equal(ncenters, nobs)) {
         // Special case, each observation is a center.
-        std::iota(clusters, clusters + nobs, 0);
-        std::vector<Index<Matrix_> > sizes(ncenters);
+        std::iota(clusters, clusters + nobs, static_cast<Cluster_>(0));
+        auto sizes = sanisizer::create<std::vector<decltype(I(nobs))> >(ncenters);
         std::fill_n(sizes.begin(), nobs, 1);
 
-        auto ndim = data.num_dimensions();
-        auto work = data.new_extractor(static_cast<Index<Matrix_> >(0), nobs);
-        auto cptr = centers;
-        for (decltype(nobs) o = 0; o < nobs; ++o, cptr += ndim) {
-            auto ptr = work->get_observation();
-            std::copy_n(ptr, ndim, cptr);
+        const auto ndim = data.num_dimensions();
+        auto work = data.new_extractor(static_cast<decltype(I(nobs))>(0), nobs);
+        for (decltype(I(nobs)) o = 0; o < nobs; ++o) {
+            const auto ptr = work->get_observation();
+            std::copy_n(ptr, ndim, centers + sanisizer::product_unsafe<std::size_t>(o, ndim));
         }
 
         return Details(std::move(sizes), 0, 0);

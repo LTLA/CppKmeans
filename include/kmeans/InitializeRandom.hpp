@@ -5,10 +5,11 @@
 #include <cstdint>
 #include <random>
 
+#include "sanisizer/sanisizer.hpp"
+#include "aarand/aarand.hpp"
+
 #include "Initialize.hpp"
 #include "copy_into_array.hpp"
-
-#include "aarand/aarand.hpp"
 
 /**
  * @file InitializeRandom.hpp
@@ -19,13 +20,18 @@
 namespace kmeans {
 
 /**
+ * Type of the pseudo-random number generator for `InitializeRandom`.
+ */
+typedef std::mt19937_64 InitializeRandomRng;
+
+/**
  * @brief Options to use for `InitializeRandom`.
  */
 struct InitializeRandomOptions {
     /**
      * Random seed to use to construct the PRNG prior to sampling.
      */
-    uint64_t seed = 6523u;
+    typename InitializeRandomRng::result_type seed = sanisizer::cap<InitializeRandomRng::result_type>(6523);
 };
 
 /**
@@ -68,10 +74,10 @@ public:
     /**
      * @cond
      */
-    Cluster_ run(const Matrix_& data, Cluster_ ncenters, Float_* centers) const {
-        std::mt19937_64 eng(my_options.seed);
-        auto nobs = data.num_observations();
-        std::vector<Index_> chosen(std::min(nobs, static_cast<Index_>(ncenters)));
+    Cluster_ run(const Matrix_& data, const Cluster_ ncenters, Float_* const centers) const {
+        InitializeRandomRng eng(my_options.seed);
+        const auto nobs = data.num_observations();
+        auto chosen = sanisizer::create<std::vector<Index_> >(sanisizer::min(nobs, ncenters));
         aarand::sample(nobs, ncenters, chosen.begin(), eng);
         internal::copy_into_array(data, chosen, centers);
         return chosen.size();

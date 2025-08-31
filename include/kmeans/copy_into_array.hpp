@@ -2,21 +2,24 @@
 #define KMEANS_COPY_HPP
 
 #include <algorithm>
-#include "Matrix.hpp"
+#include <vector>
+
+#include "sanisizer/sanisizer.hpp"
+
+#include "utils.hpp"
 
 namespace kmeans {
 
 namespace internal {
 
 template<class Matrix_, typename Float_>
-void copy_into_array(const Matrix_& matrix, const std::vector<Index<Matrix_> >& chosen, Float_* out) {
-    size_t ndim = matrix.num_dimensions();
-    size_t nchosen = chosen.size();
-    auto work = matrix.new_extractor(chosen.data(), nchosen);
-    for (size_t i = 0; i < nchosen; ++i) {
-        auto ptr = work->get_observation();
-        std::copy_n(ptr, ndim, out);
-        out += ndim;
+void copy_into_array(const Matrix_& matrix, const std::vector<Index<Matrix_> >& chosen, Float_* const out) {
+    const auto ndim = matrix.num_dimensions();
+    const auto nchosen = chosen.size();
+    auto work = matrix.new_extractor(chosen.data(), sanisizer::cast<std::size_t>(nchosen));
+    for (decltype(I(nchosen)) i = 0; i < nchosen; ++i) {
+        const auto ptr = work->get_observation();
+        std::copy_n(ptr, ndim, out + sanisizer::product_unsafe<std::size_t>(i, ndim));
     }
 }
 

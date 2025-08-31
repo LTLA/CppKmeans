@@ -4,6 +4,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "sanisizer/sanisizer.hpp"
+
 #include "Refine.hpp"
 #include "Details.hpp"
 #include "QuickSearch.hpp"
@@ -89,24 +91,25 @@ public:
     /**
      * @cond
      */
-    Details<Index_> run(const Matrix_& data, Cluster_ ncenters, Float_* centers, Cluster_* clusters) const {
-        Index_ nobs = data.num_observations();
+    Details<Index_> run(const Matrix_& data, const Cluster_ ncenters, Float_* const centers, Cluster_* const clusters) const {
+        const auto nobs = data.num_observations();
         if (internal::is_edge_case(nobs, ncenters)) {
             return internal::process_edge_case(data, ncenters, centers, clusters);
         }
 
-        int iter = 0, status = 0;
-        std::vector<Index_> sizes(ncenters);
-        std::vector<Cluster_> copy(nobs);
-        size_t ndim = data.num_dimensions();
+        auto sizes = sanisizer::create<std::vector<Index_> >(ncenters);
+        auto copy = sanisizer::create<std::vector<Cluster_> >(nobs);
+
+        const auto ndim = data.num_dimensions();
         internal::QuickSearch<Float_, Cluster_> index;
 
-        for (iter = 1; iter <= my_options.max_iterations; ++iter) {
+        decltype(I(my_options.max_iterations)) iter = 0;
+        for (; iter < my_options.max_iterations; ++iter) {
             index.reset(ndim, ncenters, centers);
-            parallelize(my_options.num_threads, nobs, [&](int, Index_ start, Index_ length) -> void {
+            parallelize(my_options.num_threads, nobs, [&](const int, const Index_ start, const Index_ length) -> void {
                 auto work = data.new_extractor(start, length);
                 for (Index_ obs = start, end = start + length; obs < end; ++obs) {
-                    auto dptr = work->get_observation();
+                    const auto dptr = work->get_observation();
                     copy[obs] = index.find(dptr); 
                 }
             });
@@ -131,10 +134,12 @@ public:
             internal::compute_centroids(data, ncenters, centers, clusters, sizes);
         }
 
-        if (iter == my_options.max_iterations + 1) {
+        int status = 0;
+        if (iter == my_options.max_iterations) {
             status = 2;
+        } else {
+            ++iter; // make it 1-based.
         }
-
         return Details<Index_>(std::move(sizes), iter, status);
     }
     /**
