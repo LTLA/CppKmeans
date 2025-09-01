@@ -99,7 +99,7 @@ $(function(){ initResizable(false); });
 <div class="textblock"><p><a class="anchor" id="md__2github_2workspace_2README"></a></p>
 <p><img src="https://github.com/LTLA/CppKmeans/actions/workflows/run-tests.yaml/badge.svg" alt="Unit tests" style="pointer-events: none;" class="inline"/> <img src="https://github.com/LTLA/CppKmeans/actions/workflows/doxygenate.yaml/badge.svg" alt="Documentation" style="pointer-events: none;" class="inline"/> <img src="https://github.com/LTLA/CppKmeans/actions/workflows/compare-kmeans.yaml/badge.svg" alt="stats comparison" style="pointer-events: none;" class="inline"/> <a href="https://codecov.io/gh/LTLA/CppKmeans"><img src="https://codecov.io/gh/LTLA/CppKmeans/branch/master/graph/badge.svg?token=7S231XHC0Q" alt="Codecov" style="pointer-events: none;" class="inline"/></a></p>
 <h1>Overview</h1>
-<p>This repository contains a header-only C++ library for k-means clustering. Initialization can be performed with user-supplied centers, random selection of points, weighted sampling with kmeans++ (Arthur and Vassilvitskii, 2007) or variance partitioning (Su and Dy, 2007). Refinement can be performed using the Hartigan-Wong approach or Lloyd's algorithm. The Hartigan-Wong implementation is derived from the Fortran code in the R <b>stats</b> package, heavily refactored for more idiomatic C++.</p>
+<p>This repository contains a header-only C++ library for k-means clustering. Initialization can be performed with user-supplied centers, random selection of points, weighted sampling with kmeans++ (Arthur and Vassilvitskii, 2007) or variance partitioning (Su and Dy, 2007). Refinement can be performed using the Hartigan-Wong method, Lloyd's algorithm or a custom mini-batch implementation. The Hartigan-Wong implementation is derived from the Fortran code in the R <b>stats</b> package, heavily refactored for more idiomatic C++.</p>
 <h1>Quick start</h1>
 <p><b>kmeans</b> is a header-only library, so it can be easily used by just <code>#include</code>ing the relevant source files and running <code>compute()</code>:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &quot;kmeans/Kmeans.hpp&quot;</span></div>
@@ -110,7 +110,7 @@ $(function(){ initResizable(false); });
 <div class="line"> </div>
 <div class="line"><span class="comment">// Wrap your matrix in a SimpleMatrix.</span></div>
 <div class="line"><a class="code hl_class" href="classkmeans_1_1SimpleMatrix.html">kmeans::SimpleMatrix</a>&lt;</div>
-<div class="line">    int, <span class="comment">/* type for the column index */</span></div>
+<div class="line">    int, <span class="comment">/* type of the column index */</span></div>
 <div class="line">    <span class="keywordtype">double</span> <span class="comment">/* type of the data */</span></div>
 <div class="line">&gt; kmat(ndim, nobs, matrix.data());</div>
 <div class="line"> </div>
@@ -214,7 +214,7 @@ $(function(){ initResizable(false); });
 <div class="line">    <span class="keywordtype">double</span> </div>
 <div class="line">&gt; initpp();</div>
 </div><!-- fragment --><h1>Other bits and pieces</h1>
-<p>If we want the within-cluster sum of squares, this can be easily computed from the output of <code>compute()</code>:</p>
+<p>If we want the within-cluster sum of squares, this can be easily calculated from the output of <code>compute()</code>:</p>
 <div class="fragment"><div class="line">std::vector&lt;double&gt; wcss(ncenters);</div>
 <div class="line"><a class="code hl_function" href="namespacekmeans.html#a1261dee8018fed1d1169f760e84fc189">kmeans::compute_wcss</a>(</div>
 <div class="line">    kmat, </div>
