@@ -134,7 +134,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Maximum number of optimal transfer iterations. More iterations increase the opportunity for convergence at the cost of more computational time. </p>
+<p>Maximum number of optimal transfer iterations. More iterations increase the opportunity for convergence at the cost of more compute time. </p>
 
 </div>
 </div>
@@ -149,7 +149,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Maximum number of quick transfer iterations. More iterations increase the opportunity for convergence at the cost of more computational time. </p>
+<p>Maximum number of quick transfer iterations. More iterations increase the opportunity for convergence at the cost of more compute time. </p>
 
 </div>
 </div>
@@ -179,7 +179,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Whether to quit early when the number of quick transfer iterations exceeds <code>RefineHartiganWongOptions::max_quick_tranfer_iterations</code>. Setting this to true mimics the default behavior of R's <code>kmeans()</code> implementation. </p>
+<p>Whether to quit early when the number of quick transfer iterations exceeds <code>RefineHartiganWongOptions::max_quick_tranfer_iterations</code>. Setting this to true recovers the default behavior of R's <code>kmeans()</code> implementation. If false, the algorithm will ignore any convergence failures during the quick transfer step and procced to the next optimal transfer iteration. This provides another opportunity to improve the clustering (and potentially achieve convergence) at the cost of more compute time. </p>
 
 </div>
 </div>
