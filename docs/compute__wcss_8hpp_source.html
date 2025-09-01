@@ -115,10 +115,10 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> Matrix_, <span class="keyword">typename</span> Cluster_, <span class="keyword">typename</span> Float_&gt;</div>
 <div class="foldopen" id="foldopen00034" data-start="{" data-end="}">
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="namespacekmeans.html#a1c27d812ef0960614b269e522dced577">   34</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacekmeans.html#a1c27d812ef0960614b269e522dced577">compute_wcss</a>(<span class="keyword">const</span> Matrix_&amp; data, <span class="keyword">const</span> Cluster_ ncenters, <span class="keyword">const</span> Float_* <span class="keyword">const</span> centers, <span class="keyword">const</span> Cluster_* <span class="keyword">const</span> clusters, Float_* <span class="keyword">const</span> wcss) {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="namespacekmeans.html#a1261dee8018fed1d1169f760e84fc189">   34</a></span><span class="keywordtype">void</span> <a class="code hl_function" href="namespacekmeans.html#a1261dee8018fed1d1169f760e84fc189">compute_wcss</a>(<span class="keyword">const</span> Matrix_&amp; data, <span class="keyword">const</span> Cluster_ num_centers, <span class="keyword">const</span> Float_* <span class="keyword">const</span> centers, <span class="keyword">const</span> Cluster_* <span class="keyword">const</span> clusters, Float_* <span class="keyword">const</span> wcss) {</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">const</span> <span class="keyword">auto</span> nobs = data.num_observations();</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">const</span> <span class="keyword">auto</span> ndim = data.num_dimensions();</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    std::fill_n(wcss, ncenters, 0);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    std::fill_n(wcss, num_centers, 0);</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="keyword">auto</span> work = data.new_extractor(<span class="keyword">static_cast&lt;</span>decltype(I(nobs))<span class="keyword">&gt;</span>(0), nobs);</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(nobs)) obs = 0; obs &lt; nobs; ++obs) {</div>
@@ -139,8 +139,8 @@ $(function(){ initResizable(false); });
 </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:16</div></div>
-<div class="ttc" id="anamespacekmeans_html_a1c27d812ef0960614b269e522dced577"><div class="ttname"><a href="namespacekmeans.html#a1c27d812ef0960614b269e522dced577">kmeans::compute_wcss</a></div><div class="ttdeci">void compute_wcss(const Matrix_ &amp;data, const Cluster_ ncenters, const Float_ *const centers, const Cluster_ *const clusters, Float_ *const wcss)</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:34</div></div>
+<div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Perform k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:16</div></div>
+<div class="ttc" id="anamespacekmeans_html_a1261dee8018fed1d1169f760e84fc189"><div class="ttname"><a href="namespacekmeans.html#a1261dee8018fed1d1169f760e84fc189">kmeans::compute_wcss</a></div><div class="ttdeci">void compute_wcss(const Matrix_ &amp;data, const Cluster_ num_centers, const Float_ *const centers, const Cluster_ *const clusters, Float_ *const wcss)</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

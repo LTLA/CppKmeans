@@ -1,5 +1,5 @@
 <map id="kmeans/RefineMiniBatch.hpp" name="kmeans/RefineMiniBatch.hpp">
 <area shape="rect" id="Node000001" title="Implements the mini&#45;batch algorithm for k&#45;means clustering." alt="" coords="5,5,195,31"/>
-<area shape="rect" id="Node000002" href="$kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="29,79,171,105"/>
+<area shape="rect" id="Node000002" href="$kmeans_8hpp.html" title="Perform k&#45;means clustering." alt="" coords="29,79,171,105"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,46,103,79,97,79,97,46"/>
 </map>

@@ -133,11 +133,11 @@ Public Member Functions</h2></td></tr>
 class kmeans::Refine&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</div><p>Interface for k-means refinement algorithms. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Index_</td><td>Integer type for the observation indices. </td></tr>
-    <tr><td class="paramname">Data_</td><td>Numeric type for the data. </td></tr>
-    <tr><td class="paramname">Cluster_</td><td>Integer type for the cluster assignments. </td></tr>
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the centroids. This will also be used for any internal distance calculations. </td></tr>
-    <tr><td class="paramname">Matrix_</td><td>Type for the input data matrix. This should satisfy the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface. </td></tr>
+    <tr><td class="paramname">Index_</td><td>Integer type of the observation indices. This should be the same as the index type of <code>Matrix_</code>. </td></tr>
+    <tr><td class="paramname">Data_</td><td>Numeric type of the input dataset. This should be the same as the data type of <code>Matrix_</code>. </td></tr>
+    <tr><td class="paramname">Cluster_</td><td>Integer type of the cluster assignments. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the centroids. </td></tr>
+    <tr><td class="paramname">Matrix_</td><td>Class satisfying the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface. </td></tr>
   </table>
   </dd>
 </dl>
@@ -182,14 +182,14 @@ template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Floa
 </div><div class="memdoc">
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir"></td><td class="paramname">data</td><td>A matrix-like object containing per-observation data. </td></tr>
+    <tr><td class="paramdir"></td><td class="paramname">data</td><td>A matrix containing data for each observation. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">num_centers</td><td>Number of cluster centers. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. On input, each column should contain the initial centroid location for its cluster. On output, each column will contain the final centroid locations for each cluster. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length equal to the number of observations (from <code>data.num_observations()</code>). On output, this will contain the cluster assignment for each observation.</td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. On input, each column should contain the initial centroid location for its cluster. On output, each column will contain the final centroid location for each cluster. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length equal to the number of observations (from <code>data.num_observations()</code>). On output, this will contain the 0-based cluster assignment for each observation, where each entry is less than <code>num_centers</code>.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and a <code><a class="el" href="structkmeans_1_1Details.html" title="Additional statistics from the k-means algorithm.">Details</a></code> object is returned containing clustering statistics. If <code>num_centers</code> is greater than <code>data.num_observations()</code>, only the first <code>data.num_observations()</code> columns of the <code>centers</code> array will be filled. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and an object is returned containing clustering statistics. If <code>num_centers</code> is greater than <code>data.num_observations()</code>, only the first <code>data.num_observations()</code> columns of the <code>centers</code> array will be filled. </dd></dl>
 
 </div>
 </div>

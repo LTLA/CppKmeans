@@ -144,14 +144,14 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix&lt;Index_, Data_&gt;&gt;<br />
 class kmeans::InitializeKmeanspp&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</div><p><b>k-means++</b> initialization of Arthur and Vassilvitskii (2007). </p>
-<p>This approach involves the selection of starting points via iterations of weighted sampling, where the sampling probability for each point is proportional to the squared distance to the closest starting point that was chosen in any of the previous iterations. The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.</p>
+<p>Selection of starting points is performed via iterations of weighted sampling, where the sampling probability for each point is proportional to the squared distance to the closest starting point that was chosen in any of the previous iterations. The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Index_</td><td>Integer type for the observation indices in the input dataset. </td></tr>
-    <tr><td class="paramname">Data_</td><td>Numeric type for the input dataset. </td></tr>
-    <tr><td class="paramname">Cluster_</td><td>Integer type for the cluster assignments. </td></tr>
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the centroids. </td></tr>
-    <tr><td class="paramname">Matrix_</td><td>Class of the input data matrix. This should satisfy the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface.</td></tr>
+    <tr><td class="paramname">Index_</td><td>Integer type of the observation indices. This should be the same as the index type of <code>Matrix_</code>. </td></tr>
+    <tr><td class="paramname">Data_</td><td>Numeric type of the input dataset. This should be the same as the data type of <code>Matrix_</code>. </td></tr>
+    <tr><td class="paramname">Cluster_</td><td>Integer type of the cluster assignments. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the centroids. </td></tr>
+    <tr><td class="paramname">Matrix_</td><td>Class satisfying the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface.</td></tr>
   </table>
   </dd>
 </dl>
@@ -243,7 +243,7 @@ template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Floa
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>Options for kmeans++ partitioning, to be modified prior to calling <code><a class="el" href="classkmeans_1_1Initialize.html#a6a91bd58a95b69a775b70b7c526d3158">run()</a></code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Options for kmeans++ partitioning. This can be modified prior to calling <code><a class="el" href="classkmeans_1_1Initialize.html#a6a91bd58a95b69a775b70b7c526d3158">run()</a></code>. </dd></dl>
 
 </div>
 </div>

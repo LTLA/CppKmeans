@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title="Interface for k&#45;means initialization." alt="" coords="300,5,443,31"/>
 <area shape="rect" id="Node000002" href="$InitializeKmeanspp_8hpp.html" title="Class for kmeans++ initialization." alt="" coords="5,86,210,112"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="317,38,149,88,147,83,316,33"/>
-<area shape="rect" id="Node000003" href="$kmeans_8hpp.html" title="Implements the full k&#45;means clustering procedure." alt="" coords="301,168,442,193"/>
+<area shape="rect" id="Node000003" href="$kmeans_8hpp.html" title="Perform k&#45;means clustering." alt="" coords="301,168,442,193"/>
 <area shape="poly" id="edge9_Node000001_Node000003" title=" " alt="" coords="322,40,295,57,275,80,269,99,275,118,287,134,302,146,335,165,333,170,299,151,283,137,270,121,264,99,271,78,292,53,319,36"/>
 <area shape="rect" id="Node000004" href="$InitializeNone_8hpp.html" title="Class for no initialization." alt="" coords="285,86,458,112"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="374,47,374,86,369,86,369,47"/>

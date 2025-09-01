@@ -714,8 +714,8 @@
       <type>void</type>
       <name>compute_wcss</name>
       <anchorfile>namespacekmeans.html</anchorfile>
-      <anchor>a1c27d812ef0960614b269e522dced577</anchor>
-      <arglist>(const Matrix_ &amp;data, const Cluster_ ncenters, const Float_ *const centers, const Cluster_ *const clusters, Float_ *const wcss)</arglist>
+      <anchor>a1261dee8018fed1d1169f760e84fc189</anchor>
+      <arglist>(const Matrix_ &amp;data, const Cluster_ num_centers, const Float_ *const centers, const Cluster_ *const clusters, Float_ *const wcss)</arglist>
     </member>
     <member kind="function">
       <type>Details&lt; Index_ &gt;</type>

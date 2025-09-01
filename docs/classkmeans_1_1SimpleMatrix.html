@@ -164,8 +164,8 @@ class kmeans::SimpleMatrix&lt; Index_, Data_ &gt;</div><p>A simple matrix of obs
 <p>This defines a simple column-major matrix of observations where the columns are observations and the rows are dimensions.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Data_</td><td>Numeric type for the data. </td></tr>
-    <tr><td class="paramname">Index_</td><td>Integer type for the observation indices. </td></tr>
+    <tr><td class="paramname">Index_</td><td>Integer type of the observation indices. </td></tr>
+    <tr><td class="paramname">Data_</td><td>Numeric type of the data. </td></tr>
   </table>
   </dd>
 </dl>
@@ -207,7 +207,7 @@ template&lt;typename Index_ , typename Data_ &gt; </div>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">num_dimensions</td><td>Number of dimensions. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">num_observations</td><td>Number of observations. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to an array of length <code>num_dim * num_obs</code>, containing a column-major matrix of observation data. It is expected that the array will not be deallocated during the lifetime of this <code><a class="el" href="classkmeans_1_1SimpleMatrix.html" title="A simple matrix of observations.">SimpleMatrix</a></code> instance. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">data</td><td>Pointer to an array of length equal to the product of <code>num_dimensions</code> and <code>num_observations</code>, containing a column-major matrix of observation data. It is expected that the array will not be deallocated during the lifetime of this <code><a class="el" href="classkmeans_1_1SimpleMatrix.html" title="A simple matrix of observations.">SimpleMatrix</a></code> instance. </td></tr>
   </table>
   </dd>
 </dl>

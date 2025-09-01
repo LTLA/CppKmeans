@@ -104,7 +104,7 @@ $(function(){ initResizable(false); });
 </div><!--header-->
 <div class="contents">
 
-<p>Full statistics from k-means clustering.  
+<p><a class="el" href="structkmeans_1_1Results.html" title="Results of the k-means clustering.">Results</a> of the k-means clustering.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="kmeans_8hpp_source.html">kmeans.hpp</a>&gt;</code></p>
@@ -120,7 +120,7 @@ Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename Index_, typename Cluster_, typename Float_&gt;<br />
-struct kmeans::Results&lt; Index_, Cluster_, Float_ &gt;</div><p>Full statistics from k-means clustering. </p>
+struct kmeans::Results&lt; Index_, Cluster_, Float_ &gt;</div><p><a class="el" href="structkmeans_1_1Results.html" title="Results of the k-means clustering.">Results</a> of the k-means clustering. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a7815cde9ab5edb8479264c36091bdeca" name="a7815cde9ab5edb8479264c36091bdeca"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7815cde9ab5edb8479264c36091bdeca">&#9670;&#160;</a></span>centers</h2>
@@ -135,7 +135,7 @@ template&lt;typename Index_ , typename Cluster_ , typename Float_ &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>An array containing a column-major matrix where each row corresponds to a dimension and each column corresponds to a cluster. Each column contains the centroid coordinates for its cluster. </p>
+<p>An array of length equal to the product of the number of dimensions and clusters. This contains a column-major matrix where each row corresponds to a dimension and each column corresponds to a cluster. Each column contains the centroid coordinates for the associated cluster. </p>
 
 </div>
 </div>
@@ -152,7 +152,7 @@ template&lt;typename Index_ , typename Cluster_ , typename Float_ &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>An array of length equal to the number of observations, containing 0-indexed cluster assignments for each observation. </p>
+<p>An array of length equal to the number of observations, containing the 0-indexed cluster assignment for each observation. Each entry is less than the number of clusters. </p>
 
 </div>
 </div>
@@ -169,7 +169,7 @@ template&lt;typename Index_ , typename Cluster_ , typename Float_ &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Further details from the chosen k-means algorithm. </p>
+<p>Further details from running the chosen k-means algorithm. </p>
 
 </div>
 </div>

@@ -148,11 +148,11 @@ class kmeans::RefineLloyd&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</div
 <p>In the <code><a class="el" href="structkmeans_1_1Details.html#a89083fab78be038cd2acfdc8cd1decd3">Details::status</a></code> returned by <code><a class="el" href="classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0">run()</a></code>, the status code is either 0 (success) or 2 (maximum iterations reached without convergence). Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Index_</td><td>Integer type for the observation indices. </td></tr>
-    <tr><td class="paramname">Data_</td><td>Numeric type for the data. </td></tr>
-    <tr><td class="paramname">Cluster_</td><td>Integer type for the cluster assignments. </td></tr>
-    <tr><td class="paramname">Float_</td><td>Floating-point type for the centroids. This will also be used for any internal distance calculations. </td></tr>
-    <tr><td class="paramname">Matrix_</td><td>Type for the input data matrix. This should satisfy the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface.</td></tr>
+    <tr><td class="paramname">Index_</td><td>Integer type of the observation indices. This should be the same as the index type of <code>Matrix_</code>. </td></tr>
+    <tr><td class="paramname">Data_</td><td>Numeric type of the input dataset. This should be the same as the data type of <code>Matrix_</code>. </td></tr>
+    <tr><td class="paramname">Cluster_</td><td>Integer type of the cluster assignments. </td></tr>
+    <tr><td class="paramname">Float_</td><td>Floating-point type of the centroids. This will also be used for the internal distance calculations. </td></tr>
+    <tr><td class="paramname">Matrix_</td><td>Class satisfying the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface.</td></tr>
   </table>
   </dd>
 </dl>
@@ -245,7 +245,7 @@ template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Floa
   </tr>
 </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>Options for Lloyd clustering, to be modified prior to calling <code><a class="el" href="classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0">run()</a></code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Options for Lloyd clustering. This can be modified prior to calling <code><a class="el" href="classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0">run()</a></code>. </dd></dl>
 
 </div>
 </div>

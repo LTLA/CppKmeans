@@ -139,11 +139,11 @@ Additional Inherited Members</h2></td></tr>
 class kmeans::InitializeNone&lt; Index_, Data_, Cluster_, Float_, Matrix_ &gt;</div><p>No-op "initialization" with existing cluster centers. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Index_</td><td>Integer type for the observation indices in the input dataset. </td></tr>
-    <tr><td class="paramname">Data_</td><td>Numeric type for the input dataset. </td></tr>
+    <tr><td class="paramname">Index_</td><td>Integer type of the observation indices. This should be the same as the index type of <code>Matrix_</code>. </td></tr>
+    <tr><td class="paramname">Data_</td><td>Numeric type of the input dataset. This should be the same as the data type of <code>Matrix_</code>. </td></tr>
     <tr><td class="paramname">Cluster_</td><td>Integer type for the cluster assignments. </td></tr>
     <tr><td class="paramname">Float_</td><td>Floating-point type for the centroids. This will also be used for any internal distance calculations. </td></tr>
-    <tr><td class="paramname">Matrix_</td><td>Class of the input data matrix. This should satisfy the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface.</td></tr>
+    <tr><td class="paramname">Matrix_</td><td>Class satisfying the <code><a class="el" href="classkmeans_1_1Matrix.html" title="Interface for matrix data.">Matrix</a></code> interface.</td></tr>
   </table>
   </dd>
 </dl>

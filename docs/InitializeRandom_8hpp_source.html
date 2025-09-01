@@ -145,17 +145,18 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    Cluster_ <a class="code hl_function" href="classkmeans_1_1Initialize.html#a6a91bd58a95b69a775b70b7c526d3158">run</a>(<span class="keyword">const</span> Matrix_&amp; data, <span class="keyword">const</span> Cluster_ ncenters, Float_* <span class="keyword">const</span> centers)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>        <a class="code hl_typedef" href="namespacekmeans.html#a37c646208c6c8db9a5beb041adb20439">InitializeRandomRng</a> eng(my_options.<a class="code hl_variable" href="structkmeans_1_1InitializeRandomOptions.html#a01abf7c62985477dda1f0ce522c4f23f">seed</a>);</div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>        <span class="keyword">const</span> <span class="keyword">auto</span> nobs = data.num_observations();</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keyword">auto</span> chosen = sanisizer::create&lt;std::vector&lt;Index_&gt; &gt;(sanisizer::min(nobs, ncenters));</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        aarand::sample(nobs, ncenters, chosen.begin(), eng);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        internal::copy_into_array(data, chosen, centers);</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        <span class="keywordflow">return</span> chosen.size();</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    }</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>};</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>        <span class="keyword">const</span> <span class="keyword">decltype</span>(I(nobs)) nchosen = sanisizer::min(nobs, ncenters);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>        <span class="keyword">auto</span> chosen = sanisizer::create&lt;std::vector&lt;Index_&gt; &gt;(nchosen);</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>        aarand::sample(nobs, nchosen, chosen.begin(), eng);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>        internal::copy_into_array(data, chosen, centers);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        <span class="keywordflow">return</span> nchosen;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    }</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>};</div>
 </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>}</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aInitialize_8hpp_html"><div class="ttname"><a href="Initialize_8hpp.html">Initialize.hpp</a></div><div class="ttdoc">Interface for k-means initialization.</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializeRandom_html"><div class="ttname"><a href="classkmeans_1_1InitializeRandom.html">kmeans::InitializeRandom</a></div><div class="ttdoc">Initialize by sampling random observations without replacement.</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:49</div></div>
 <div class="ttc" id="aclasskmeans_1_1InitializeRandom_html_a10a99b3c8e6264b3004f2db9949c7c4a"><div class="ttname"><a href="classkmeans_1_1InitializeRandom.html#a10a99b3c8e6264b3004f2db9949c7c4a">kmeans::InitializeRandom::InitializeRandom</a></div><div class="ttdeci">InitializeRandom()=default</div></div>
@@ -163,9 +164,9 @@ $(function(){ initResizable(false); });
 <div class="ttc" id="aclasskmeans_1_1InitializeRandom_html_accd0b2af56a2f14edee46c9aa1e99b16"><div class="ttname"><a href="classkmeans_1_1InitializeRandom.html#accd0b2af56a2f14edee46c9aa1e99b16">kmeans::InitializeRandom::get_options</a></div><div class="ttdeci">InitializeRandomOptions &amp; get_options()</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:69</div></div>
 <div class="ttc" id="aclasskmeans_1_1Initialize_html"><div class="ttname"><a href="classkmeans_1_1Initialize.html">kmeans::Initialize</a></div><div class="ttdoc">Interface for k-means initialization algorithms.</div><div class="ttdef"><b>Definition</b> Initialize.hpp:29</div></div>
 <div class="ttc" id="aclasskmeans_1_1Initialize_html_a6a91bd58a95b69a775b70b7c526d3158"><div class="ttname"><a href="classkmeans_1_1Initialize.html#a6a91bd58a95b69a775b70b7c526d3158">kmeans::Initialize::run</a></div><div class="ttdeci">virtual Cluster_ run(const Matrix_ &amp;data, Cluster_ num_centers, Float_ *centers) const =0</div></div>
-<div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Namespace for k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:16</div></div>
+<div class="ttc" id="anamespacekmeans_html"><div class="ttname"><a href="namespacekmeans.html">kmeans</a></div><div class="ttdoc">Perform k-means clustering.</div><div class="ttdef"><b>Definition</b> compute_wcss.hpp:16</div></div>
 <div class="ttc" id="anamespacekmeans_html_a37c646208c6c8db9a5beb041adb20439"><div class="ttname"><a href="namespacekmeans.html#a37c646208c6c8db9a5beb041adb20439">kmeans::InitializeRandomRng</a></div><div class="ttdeci">std::mt19937_64 InitializeRandomRng</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:25</div></div>
-<div class="ttc" id="astructkmeans_1_1InitializeRandomOptions_html"><div class="ttname"><a href="structkmeans_1_1InitializeRandomOptions.html">kmeans::InitializeRandomOptions</a></div><div class="ttdoc">Options to use for InitializeRandom.</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:30</div></div>
+<div class="ttc" id="astructkmeans_1_1InitializeRandomOptions_html"><div class="ttname"><a href="structkmeans_1_1InitializeRandomOptions.html">kmeans::InitializeRandomOptions</a></div><div class="ttdoc">Options for InitializeRandom.</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:30</div></div>
 <div class="ttc" id="astructkmeans_1_1InitializeRandomOptions_html_a01abf7c62985477dda1f0ce522c4f23f"><div class="ttname"><a href="structkmeans_1_1InitializeRandomOptions.html#a01abf7c62985477dda1f0ce522c4f23f">kmeans::InitializeRandomOptions::seed</a></div><div class="ttdeci">InitializeRandomRng::result_type seed</div><div class="ttdef"><b>Definition</b> InitializeRandom.hpp:34</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
