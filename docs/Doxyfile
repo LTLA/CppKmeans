@@ -1019,7 +1019,8 @@ RECURSIVE              = YES
 EXCLUDE                = ../include/kmeans/compute_centroids.hpp \
                          ../include/kmeans/is_edge_case.hpp \
                          ../include/kmeans/copy_into_array.hpp \
-                         ../include/kmeans/QuickSearch.hpp
+                         ../include/kmeans/QuickSearch.hpp \
+                         ../include/kmeans/utils.hpp
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded

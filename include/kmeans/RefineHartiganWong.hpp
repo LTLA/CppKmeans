@@ -498,20 +498,23 @@ std::pair<bool, bool> quick_transfer(
  * The algorithm terminates when no observation wishes to transfer between clusters.
  *
  * This implementation is derived from the Fortran code underlying the `kmeans` function in the **stats** R package,
- * which in turn is derived from Hartigan and Wong (1979).
+ * which in turn is taken from Hartigan and Wong (1979).
  * 
  * In the `Details::status` returned by `run()`, the status code is either 0 (success),
  * 2 (maximum optimal transfer iterations reached without convergence)
  * or 4 (maximum quick transfer iterations reached without convergence, if `RefineHartiganWongOptions::quit_on_quick_transfer_convergence_failure = true`).
  * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
- * 
- * @tparam Index_ Integer type for the observation indices in the input dataset.
- * @tparam Data_ Numeric type for the input dataset.
- * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Float_ Floating-point type for the centroids.
- * This will also be used for any internal distance calculations.
- * @tparam Matrix_ Class of the input data matrix.
- * This should satisfy the `Matrix` interface.
+ *
+ * In the `Details::iterations` returned by `run()`, the reported number of iterations is that of the optimal transfers.
+ *
+ * @tparam Index_ Integer type of the observation indices. 
+ * This should be the same as the index type of `Matrix_`.
+ * @tparam Data_ Numeric type of the input dataset.
+ * This should be the same as the data type of `Matrix_`.
+ * @tparam Cluster_ Integer type of the cluster assignments.
+ * @tparam Float_ Floating-point type of the centroids.
+ * This will also be used for the internal distance calculations.
+ * @tparam Matrix_ Class satisfying the `Matrix` interface.
  *
  * @see
  * Hartigan, J. A. and Wong, M. A. (1979).
@@ -536,8 +539,8 @@ private:
 
 public:
     /**
-     * @return Options for Hartigan-Wong clustering,
-     * to be modified prior to calling `run()`.
+     * @return Options for Hartigan-Wong clustering.
+     * This can be modified prior to calling `run()`.
      */
     RefineHartiganWongOptions& get_options() {
         return my_options;

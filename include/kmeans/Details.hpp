@@ -14,7 +14,7 @@ namespace kmeans {
 /**
  * @brief Additional statistics from the k-means algorithm.
  *
- * @tparam Index_ Integer type for the observation index.
+ * @tparam Index_ Integer type of the observation index.
  */
 template<typename Index_>
 struct Details {

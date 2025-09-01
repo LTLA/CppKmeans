@@ -15,13 +15,14 @@ namespace kmeans {
 /**
  * @brief No-op "initialization" with existing cluster centers.
  *
- * @tparam Index_ Integer type for the observation indices in the input dataset.
- * @tparam Data_ Numeric type for the input dataset.
+ * @tparam Index_ Integer type of the observation indices. 
+ * This should be the same as the index type of `Matrix_`.
+ * @tparam Data_ Numeric type of the input dataset.
+ * This should be the same as the data type of `Matrix_`.
  * @tparam Cluster_ Integer type for the cluster assignments.
  * @tparam Float_ Floating-point type for the centroids.
  * This will also be used for any internal distance calculations.
- * @tparam Matrix_ Class of the input data matrix.
- * This should satisfy the `Matrix` interface.
+ * @tparam Matrix_ Class satisfying the `Matrix` interface.
  * 
  * This class assumes that that cluster centers are already present in the `centers` array, and returns them without modification.
  */

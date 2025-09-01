@@ -24,26 +24,25 @@
 
 /** 
  * @file kmeans.hpp
- *
- * @brief Implements the full k-means clustering procedure.
+ * @brief Perform k-means clustering.
  */
 
 /**
  * @namespace kmeans
- * @brief Namespace for k-means clustering.
+ * @brief Perform k-means clustering.
  */
 namespace kmeans {
 
 /**
- * @tparam Index_ Integer type for the observation indices in the input dataset.
- * @tparam Data_ Numeric type for the input dataset.
- * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Float_ Floating-point type for the centroids.
- * This will also be used for any internal distance calculations.
- * @tparam Matrix_ Class of the input data matrix.
- * This should satisfy the `Matrix` interface.
+ * @tparam Index_ Integer type of the observation indices. 
+ * This should be the same as the index type of `Matrix_`.
+ * @tparam Data_ Numeric type of the input dataset.
+ * This should be the same as the data type of `Matrix_`.
+ * @tparam Cluster_ Integer type of the cluster assignments.
+ * @tparam Float_ Floating-point type of the centroids.
+ * @tparam Matrix_ Class satisfying the `Matrix` interface.
  *
- * @param data A matrix-like object containing per-observation data.
+ * @param data A matrix containing data for each observation. 
  * @param initialize Initialization method to use.
  * @param refine Refinement method to use.
  * @param num_centers Number of cluster centers.
@@ -51,7 +50,9 @@ namespace kmeans {
  * This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers.
  * On output, each column should contain the initial centroid location for its cluster.
  * @param[in] clusters Pointer to an array of length equal to the number of observations (from `data.num_observations()`).
- * On output, this will contain the 0-based cluster assignment for each observation.
+ * On output, this will contain the 0-based cluster assignment for each observation, where each entry is less than `num_centers`.
+ *
+ * @return Details of the clustering, including the size of each cluster and the status of the algorithm.
  */
 template<typename Index_, typename Data_, typename Cluster_, typename Float_, class Matrix_ = Matrix<Index_, Data_> >
 Details<Index_> compute(
@@ -71,13 +72,12 @@ Details<Index_> compute(
 /**
  * Overload of `compute()` to assist template deduction for the default `Matrix`.
  *
- * @tparam Index_ Integer type for the observation indices in the input dataset.
- * @tparam Data_ Numeric type for the input dataset.
- * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Float_ Floating-point type for the centroids.
- * This will also be used for any internal distance calculations.
+ * @tparam Index_ Integer type of the observation indices. 
+ * @tparam Data_ Numeric type of the input dataset.
+ * @tparam Cluster_ Integer type of the cluster assignments.
+ * @tparam Float_ Floating-point type of the centroids.
  *
- * @param data A matrix-like object containing per-observation data.
+ * @param data A matrix containing data for each observation. 
  * @param initialize Initialization method to use.
  * @param refine Refinement method to use.
  * @param num_centers Number of cluster centers.
@@ -85,7 +85,9 @@ Details<Index_> compute(
  * This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers.
  * On output, each column should contain the initial centroid location for its cluster.
  * @param[in] clusters Pointer to an array of length equal to the number of observations (from `data.num_observations()`).
- * On output, this will contain the 0-based cluster assignment for each observation.
+ * On output, this will contain the 0-based cluster assignment for each observation, where each entry is less than `num_centers`.
+ *
+ * @return Details of the clustering, including the size of each cluster and the status of the algorithm.
  */
 template<typename Index_, typename Data_, typename Cluster_, typename Float_>
 Details<Index_> compute(
@@ -100,7 +102,7 @@ Details<Index_> compute(
 }
 
 /**
- * @brief Full statistics from k-means clustering.
+ * @brief Results of the k-means clustering.
  */
 template<typename Index_, typename Cluster_, typename Float_>
 struct Results {
@@ -118,18 +120,20 @@ struct Results {
      */
 
     /**
-     * An array of length equal to the number of observations, containing 0-indexed cluster assignments for each observation.
+     * An array of length equal to the number of observations, containing the 0-indexed cluster assignment for each observation.
+     * Each entry is less than the number of clusters.
      */
     std::vector<Cluster_> clusters;
 
     /**
-     * An array containing a column-major matrix where each row corresponds to a dimension and each column corresponds to a cluster.
-     * Each column contains the centroid coordinates for its cluster.
+     * An array of length equal to the product of the number of dimensions and clusters.
+     * This contains a column-major matrix where each row corresponds to a dimension and each column corresponds to a cluster.
+     * Each column contains the centroid coordinates for the associated cluster.
      */
     std::vector<Float_> centers;
 
     /**
-     * Further details from the chosen k-means algorithm.
+     * Further details from running the chosen k-means algorithm.
      */
     Details<Index_> details;
 };
@@ -137,15 +141,15 @@ struct Results {
 /**
  * Overload of `compute()` that allocates and returns the vectors for the centroids and cluster assignments.
  *
- * @tparam Index_ Integer type for the observation indices in the input dataset.
- * @tparam Data_ Numeric type for the input dataset.
- * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Float_ Floating-point type for the centroids.
- * This will also be used for any internal distance calculations.
- * @tparam Matrix_ Class of the input data matrix.
- * This should satisfy the `Matrix` interface.
+ * @tparam Index_ Integer type of the observation indices. 
+ * This should be the same as the index type of `Matrix_`.
+ * @tparam Data_ Numeric type of the input dataset.
+ * This should be the same as the data type of `Matrix_`.
+ * @tparam Cluster_ Integer type of the cluster assignments.
+ * @tparam Float_ Floating-point type of the centroids.
+ * @tparam Matrix_ Class satisfying the `Matrix` interface.
  *
- * @param data A matrix-like object containing per-observation data.
+ * @param data A matrix containing data for each observation. 
  * @param initialize Initialization method to use.
  * @param refine Refinement method to use.
  * @param num_centers Number of cluster centers.
@@ -170,13 +174,12 @@ Results<Index_, Cluster_, Float_> compute(
  * Overload of `compute()` to assist template deduction for the default `Matrix`.
  * This allocates and returns the vectors for the centroids and cluster assignments.
  *
- * @tparam Index_ Integer type for the observation indices in the input dataset.
- * @tparam Data_ Numeric type for the input dataset.
- * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Float_ Floating-point type for the centroids.
- * This will also be used for any internal distance calculations.
+ * @tparam Index_ Integer type of the observation indices. 
+ * @tparam Data_ Numeric type of the input dataset.
+ * @tparam Cluster_ Integer type of the cluster assignments.
+ * @tparam Float_ Floating-point type of the centroids.
  *
- * @param data A matrix-like object containing per-observation data.
+ * @param data A matrix containing data for each observation. 
  * @param initialize Initialization method to use.
  * @param refine Refinement method to use.
  * @param num_centers Number of cluster centers.

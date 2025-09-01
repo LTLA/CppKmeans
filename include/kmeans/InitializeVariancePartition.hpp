@@ -24,7 +24,7 @@ namespace kmeans {
  */
 struct InitializeVariancePartitionOptions {
     /**
-     * Size adjustment value, check out `InitializeVariancePartition` for more details.
+     * Size adjustment value, see `InitializeVariancePartition` for more details.
      * This value should lie in `[0, 1]`.
      */
     double size_adjustment = 1;
@@ -145,17 +145,18 @@ Float_ optimize_partition(
  * A value of zero means that the cluster size is completely ignored, though this seems unwise as it causes excessive splitting of small clusters with unstable WCSS.
  *
  * The original algorithm splits the cluster at the center (i.e., mean) along its most variable dimension.
- * We provide an improvement on this approach where the partition boundary is chosen to minimizes the sum of sum of squares of the two child partitions.
+ * We refine this approach by choosing the partition boundary to minimize the sum of sum of squares of the two child partitions.
  * This often provides more appropriate partitions by considering the distribution of observations within the cluster, at the cost of some extra computation.
  * Users can switch back to the original approach by setting `InitializeVariancePartitionOptions::optimize_partition = false`.
  *
- * @tparam Index_ Integer type for the observation indices in the input dataset.
- * @tparam Data_ Numeric type for the input dataset.
- * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Float_ Floating-point type for the centroids.
- * This will also be used for any internal distance calculations.
- * @tparam Matrix_ Class of the input data matrix.
- * This should satisfy the `Matrix` interface.
+ * @tparam Index_ Integer type of the observation indices. 
+ * This should be the same as the index type of `Matrix_`.
+ * @tparam Data_ Numeric type of the input dataset.
+ * This should be the same as the data type of `Matrix_`.
+ * @tparam Cluster_ Integer type of the cluster assignments.
+ * @tparam Float_ Floating-point type of the centroids.
+ * This will also be used for the internal variance calculations.
+ * @tparam Matrix_ Class satisfying the `Matrix` interface.
  *
  * @see
  * Su, T. and Dy, J. G. (2007).
@@ -180,8 +181,8 @@ private:
 
 public:
     /**
-     * @return Options for variance partitioning,
-     * to be modified prior to calling `run()`.
+     * @return Options for variance partitioning.
+     * This can be modified prior to calling `run()`.
      */
     InitializeVariancePartitionOptions& get_options() {
         return my_options;

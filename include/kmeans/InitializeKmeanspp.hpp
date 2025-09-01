@@ -29,7 +29,7 @@ namespace kmeans {
 typedef std::mt19937_64 InitializeKmeansppRng;
 
 /**
- * @brief Options for **k-means++** initialization.
+ * @brief Options for `InitializeKmeanspp`.
  */
 struct InitializeKmeansppOptions {
     /**
@@ -138,16 +138,17 @@ std::vector<Index_> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, const t
 /**
  * @brief **k-means++** initialization of Arthur and Vassilvitskii (2007).
  *
- * This approach involves the selection of starting points via iterations of weighted sampling, 
+ * Selection of starting points is performed via iterations of weighted sampling, 
  * where the sampling probability for each point is proportional to the squared distance to the closest starting point that was chosen in any of the previous iterations.
  * The aim is to obtain well-separated starting points to encourage the formation of suitable clusters.
  *
- * @tparam Index_ Integer type for the observation indices in the input dataset.
- * @tparam Data_ Numeric type for the input dataset.
- * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Float_ Floating-point type for the centroids.
- * @tparam Matrix_ Class of the input data matrix.
- * This should satisfy the `Matrix` interface.
+ * @tparam Index_ Integer type of the observation indices. 
+ * This should be the same as the index type of `Matrix_`.
+ * @tparam Data_ Numeric type of the input dataset.
+ * This should be the same as the data type of `Matrix_`.
+ * @tparam Cluster_ Integer type of the cluster assignments.
+ * @tparam Float_ Floating-point type of the centroids.
+ * @tparam Matrix_ Class satisfying the `Matrix` interface.
  *
  * @see
  * Arthur, D. and Vassilvitskii, S. (2007).
@@ -172,7 +173,8 @@ public:
 
 public:
     /**
-     * @return Options for kmeans++ partitioning, to be modified prior to calling `run()`.
+     * @return Options for kmeans++ partitioning.
+     * This can be modified prior to calling `run()`.
      */
     InitializeKmeansppOptions& get_options() {
         return my_options;

@@ -16,25 +16,25 @@
 namespace kmeans {
 
 /**
- * @tparam Matrix_ Matrix type for the input data, satisfying the `MockMatrix` contract.
- * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Float_ Floating-point type for the centers and output.
+ * @tparam Matrix_ Class satisfying the `Matrix` interface.
+ * @tparam Cluster_ Integer type of the cluster assignments.
+ * @tparam Float_ Floating-point type of the centers and output.
  *
- * @param data A matrix-like object (see `MockMatrix`) containing per-observation data.
- * @param ncenters Number of cluster centers.
+ * @param data A matrix containing data for each observation. 
+ * @param num_centers Number of cluster centers.
  * @param[in] centers Pointer to an array of length equal to the product of `num_centers` and `data.num_dimensions()`.
  * This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers.
  * Each column should contain the initial centroid location for its cluster.
  * @param[in] clusters Pointer to an array of length equal to the number of observations (from `data.num_observations()`).
- * This should contain the 0-based cluster assignment for each observation.
- * @param[out] wcss Pointer to an array of length equal to the number of cluster centers.
+ * This should contain the 0-based cluster assignment for each observation, where each value is no greater than `num_centers`.
+ * @param[out] wcss Pointer to an array of length equal to `num_centers`.
  * On output, this will contain the within-cluster sum of squares.
  */
 template<class Matrix_, typename Cluster_, typename Float_>
-void compute_wcss(const Matrix_& data, const Cluster_ ncenters, const Float_* const centers, const Cluster_* const clusters, Float_* const wcss) {
+void compute_wcss(const Matrix_& data, const Cluster_ num_centers, const Float_* const centers, const Cluster_* const clusters, Float_* const wcss) {
     const auto nobs = data.num_observations();
     const auto ndim = data.num_dimensions();
-    std::fill_n(wcss, ncenters, 0);
+    std::fill_n(wcss, num_centers, 0);
 
     auto work = data.new_extractor(static_cast<decltype(I(nobs))>(0), nobs);
     for (decltype(I(nobs)) obs = 0; obs < nobs; ++obs) {

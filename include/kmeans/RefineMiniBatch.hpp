@@ -29,7 +29,7 @@ namespace kmeans {
 typedef std::mt19937_64 RefineMiniBatchRng;
 
 /** 
- * @brief Options for `RefineMiniBatch` construction.
+ * @brief Options for `RefineMiniBatch`.
  */
 struct RefineMiniBatchOptions {
     /** 
@@ -87,13 +87,14 @@ struct RefineMiniBatchOptions {
  * In the `Details::status` returned by `run()`, the status code is either 0 (success) or 2 (maximum iterations reached without convergence).
  * Previous versions of the library would report a status code of 1 upon encountering an empty cluster, but these are now just ignored.
  *
- * @tparam Index_ Integer type for the observation indices.
- * @tparam Data_ Numeric type for the data.
- * @tparam Cluster_ Integer type for the cluster assignments.
- * @tparam Float_ Floating-point type for the centroids.
- * This will also be used for any internal distance calculations.
- * @tparam Matrix_ Type for the input data matrix.
- * This should satisfy the `Matrix` interface.
+ * @tparam Index_ Integer type of the observation indices. 
+ * This should be the same as the index type of `Matrix_`.
+ * @tparam Data_ Numeric type of the input dataset.
+ * This should be the same as the data type of `Matrix_`.
+ * @tparam Cluster_ Integer type of the cluster assignments.
+ * @tparam Float_ Floating-point type of the centroids.
+ * This will also be used for the internal distance calculations.
+ * @tparam Matrix_ Class satisfying the `Matrix` interface.
  */
 template<typename Index_, typename Data_, typename Cluster_, typename Float_, typename Matrix_ = Matrix<Index_, Data_> >
 class RefineMiniBatch : public Refine<Index_, Data_, Cluster_, Float_, Matrix_> {
@@ -110,8 +111,8 @@ public:
 
 public:
     /**
-     * @return Options for mini-batch partitioning,
-     * to be modified prior to calling `run()`.
+     * @return Options for mini-batch partitioning.
+     * This can be modified prior to calling `run()`.
      */
     RefineMiniBatchOptions& get_options() {
         return my_options;

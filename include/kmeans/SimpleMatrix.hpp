@@ -73,8 +73,8 @@ public:
  *
  * This defines a simple column-major matrix of observations where the columns are observations and the rows are dimensions.
  *
- * @tparam Data_ Numeric type for the data.
- * @tparam Index_ Integer type for the observation indices.
+ * @tparam Index_ Integer type of the observation indices.
+ * @tparam Data_ Numeric type of the data.
  */
 template<typename Index_, typename Data_>
 class SimpleMatrix final : public Matrix<Index_, Data_> {
@@ -82,7 +82,7 @@ public:
     /**
      * @param num_dimensions Number of dimensions.
      * @param num_observations Number of observations.
-     * @param[in] data Pointer to an array of length `num_dim * num_obs`, containing a column-major matrix of observation data.
+     * @param[in] data Pointer to an array of length equal to the product of `num_dimensions` and `num_observations`, containing a column-major matrix of observation data.
      * It is expected that the array will not be deallocated during the lifetime of this `SimpleMatrix` instance.
      */
     SimpleMatrix(const std::size_t num_dimensions, const Index_ num_observations, const Data_* const data) :

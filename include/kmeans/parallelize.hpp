@@ -13,7 +13,7 @@
 namespace kmeans {
 
 /**
- * @tparam Task_ Integer type for the number of tasks.
+ * @tparam Task_ Integer type of the number of tasks.
  * @tparam Run_ Function to execute a range of tasks.
  *
  * @param num_workers Number of workers.

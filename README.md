@@ -9,7 +9,7 @@
 
 This repository contains a header-only C++ library for k-means clustering.
 Initialization can be performed with user-supplied centers, random selection of points, weighted sampling with kmeans++ (Arthur and Vassilvitskii, 2007) or variance partitioning (Su and Dy, 2007).
-Refinement can be performed using the Hartigan-Wong approach or Lloyd's algorithm.
+Refinement can be performed using the Hartigan-Wong method, Lloyd's algorithm or a custom mini-batch implementation.
 The Hartigan-Wong implementation is derived from the Fortran code in the R **stats** package, heavily refactored for more idiomatic C++.
 
 ## Quick start
@@ -25,7 +25,7 @@ std::vector<double> matrix(ndim * nobs); // column-major ndim x nobs matrix of c
 
 // Wrap your matrix in a SimpleMatrix.
 kmeans::SimpleMatrix<
-    int, /* type for the column index */
+    int, /* type of the column index */
     double /* type of the data */
 > kmat(ndim, nobs, matrix.data());
 
@@ -133,7 +133,7 @@ kmeans::InitializeKmeanspp<
 
 ## Other bits and pieces
 
-If we want the within-cluster sum of squares, this can be easily computed from the output of `compute()`:
+If we want the within-cluster sum of squares, this can be easily calculated from the output of `compute()`:
 
 ```cpp
 std::vector<double> wcss(ncenters);
