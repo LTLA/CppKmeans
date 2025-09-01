@@ -77,10 +77,11 @@ public:
     Cluster_ run(const Matrix_& data, const Cluster_ ncenters, Float_* const centers) const {
         InitializeRandomRng eng(my_options.seed);
         const auto nobs = data.num_observations();
-        auto chosen = sanisizer::create<std::vector<Index_> >(sanisizer::min(nobs, ncenters));
-        aarand::sample(nobs, ncenters, chosen.begin(), eng);
+        const decltype(I(nobs)) nchosen = sanisizer::min(nobs, ncenters);
+        auto chosen = sanisizer::create<std::vector<Index_> >(nchosen);
+        aarand::sample(nobs, nchosen, chosen.begin(), eng);
         internal::copy_into_array(data, chosen, centers);
-        return chosen.size();
+        return nchosen;
     }
     /**
      * @endcond

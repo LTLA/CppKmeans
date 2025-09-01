@@ -20,7 +20,7 @@ option(KMEANS_FETCH_EXTERN "Automatically fetch CppKmeans's external dependencie
 if(KMEANS_FETCH_EXTERN)
     add_subdirectory(extern)
 else()
-    find_package(ltla_aarand 1.0.0 CONFIG REQUIRED)
+    find_package(ltla_aarand 1.1.0 CONFIG REQUIRED)
     find_package(ltla_subpar 0.4.0 CONFIG REQUIRED)
     find_package(ltla_subpar 0.1.3 CONFIG REQUIRED)
 endif()

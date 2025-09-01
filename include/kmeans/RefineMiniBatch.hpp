@@ -135,7 +135,7 @@ public:
         auto last_sampled = sanisizer::create<std::vector<unsigned long long> >(ncenters);
         auto previous = sanisizer::create<std::vector<Cluster_> >(nobs);
 
-        Index_ actual_batch_size = sanisizer::min(nobs, my_options.batch_size);
+        const decltype(I(nobs)) actual_batch_size = sanisizer::min(nobs, my_options.batch_size);
         sanisizer::cast<std::size_t>(actual_batch_size); // check that static_cast for new_extractor() calls will be safe.
         auto chosen = sanisizer::create<std::vector<Index_> >(actual_batch_size);
         RefineMiniBatchRng eng(my_options.seed);
