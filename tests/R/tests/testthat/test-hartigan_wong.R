@@ -18,8 +18,12 @@ test_that("Hartigan-Wong works correctly", {
                 expect_equal(out$centers, unname(t(ref$centers)))
                 expect_identical(out$clusters + 1L, ref$cluster)
                 expect_identical(out$size, ref$size)
-                expect_identical(out$status, ref$ifault)
-                expect_identical(out$iterations, ref$iter)
+
+                if (ref$ifault != 0L) {
+                    expect_identical(out$status, 2L)
+                } else {
+                    expect_identical(out$iterations, ref$iter)
+                }
             }
         }
     }

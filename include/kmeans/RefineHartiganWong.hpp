@@ -30,19 +30,21 @@ namespace kmeans {
 struct RefineHartiganWongOptions {
     /**
      * Maximum number of optimal transfer iterations.
-     * More iterations increase the opportunity for convergence at the cost of more computational time.
+     * More iterations increase the opportunity for convergence at the cost of more compute time.
      */
     int max_iterations = 10;
 
     /**
      * Maximum number of quick transfer iterations.
-     * More iterations increase the opportunity for convergence at the cost of more computational time.
+     * More iterations increase the opportunity for convergence at the cost of more compute time.
      */
     int max_quick_transfer_iterations = 50;
 
     /**
      * Whether to quit early when the number of quick transfer iterations exceeds `RefineHartiganWongOptions::max_quick_tranfer_iterations`.
-     * Setting this to true mimics the default behavior of R's `kmeans()` implementation.
+     * Setting this to true recovers the default behavior of R's `kmeans()` implementation.
+     * If false, the algorithm will ignore any convergence failures during the quick transfer step and procced to the next optimal transfer iteration.
+     * This provides another opportunity to improve the clustering (and potentially achieve convergence) at the cost of more compute time.
      */
     bool quit_on_quick_transfer_convergence_failure = false;
 
@@ -572,8 +574,8 @@ public:
 
         decltype(I(my_options.max_iterations)) iter = 0;
         int ifault = 0;
-        while ((++iter) <= my_options.max_iterations) {
-            const bool finished = RefineHartiganWong_internal::optimal_transfer(data, work, ncenters, centers, clusters, /* all_live = */ (iter == 1));
+        for (; iter < my_options.max_iterations; ++iter) {
+            const bool finished = RefineHartiganWong_internal::optimal_transfer(data, work, ncenters, centers, clusters, /* all_live = */ (iter == 0));
             if (finished) {
                 break;
             }
@@ -616,8 +618,10 @@ public:
             }
         }
 
-        if (iter == my_options.max_iterations + 1) {
+        if (iter == my_options.max_iterations) {
             ifault = 2;
+        } else {
+            ++iter; // make it 1-based.
         }
 
         return Details(std::move(work.cluster_sizes), iter, ifault);
