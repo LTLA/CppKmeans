@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(kmeans
-    VERSION 4.0.1
-    DESCRIPTION "A C++ port of the Hartigan-Wong k-means algorithm"
+    VERSION 4.0.2
+    DESCRIPTION "K-means clustering in C++"
     LANGUAGES CXX)
 
 add_library(kmeans INTERFACE)
