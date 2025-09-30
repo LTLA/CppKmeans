@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(kmeans
-    VERSION 4.0.2
+    VERSION 4.0.3
     DESCRIPTION "K-means clustering in C++"
     LANGUAGES CXX)
 
@@ -22,7 +22,7 @@ if(KMEANS_FETCH_EXTERN)
 else()
     find_package(ltla_aarand 1.1.0 CONFIG REQUIRED)
     find_package(ltla_subpar 0.4.0 CONFIG REQUIRED)
-    find_package(ltla_subpar 0.1.3 CONFIG REQUIRED)
+    find_package(ltla_sanisizer 0.1.3 CONFIG REQUIRED)
 endif()
 
 target_link_libraries(kmeans INTERFACE ltla::aarand ltla::subpar ltla::sanisizer)
