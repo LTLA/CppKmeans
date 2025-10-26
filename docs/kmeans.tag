@@ -76,6 +76,7 @@
     <includes id="RefineLloyd_8hpp" name="RefineLloyd.hpp" local="yes" import="no" module="no" objc="no">RefineLloyd.hpp</includes>
     <includes id="RefineMiniBatch_8hpp" name="RefineMiniBatch.hpp" local="yes" import="no" module="no" objc="no">RefineMiniBatch.hpp</includes>
     <includes id="compute__wcss_8hpp" name="compute_wcss.hpp" local="yes" import="no" module="no" objc="no">compute_wcss.hpp</includes>
+    <includes id="remove__unused__centers_8hpp" name="remove_unused_centers.hpp" local="yes" import="no" module="no" objc="no">remove_unused_centers.hpp</includes>
     <class kind="struct">kmeans::Results</class>
     <namespace>kmeans</namespace>
   </compound>
@@ -135,6 +136,12 @@
     <includes id="parallelize_8hpp" name="parallelize.hpp" local="yes" import="no" module="no" objc="no">parallelize.hpp</includes>
     <class kind="struct">kmeans::RefineMiniBatchOptions</class>
     <class kind="class">kmeans::RefineMiniBatch</class>
+    <namespace>kmeans</namespace>
+  </compound>
+  <compound kind="file">
+    <name>remove_unused_centers.hpp</name>
+    <path>kmeans/</path>
+    <filename>remove__unused__centers_8hpp.html</filename>
     <namespace>kmeans</namespace>
   </compound>
   <compound kind="file">
@@ -751,6 +758,13 @@
       <anchorfile>namespacekmeans.html</anchorfile>
       <anchor>a554562a5b1c75d7494de4e541a77ca30</anchor>
       <arglist>(const int num_workers, const Task_ num_tasks, Run_ run_task_range)</arglist>
+    </member>
+    <member kind="function">
+      <type>Cluster_</type>
+      <name>remove_unused_centers</name>
+      <anchorfile>namespacekmeans.html</anchorfile>
+      <anchor>ac3a9ad73447e8295259736b22a294b00</anchor>
+      <arglist>(const std::size_t num_dimensions, const Index_ num_observations, Cluster_ *const clusters, const Cluster_ num_centers, Float_ *const centers, std::vector&lt; Index_ &gt; &amp;sizes)</arglist>
     </member>
   </compound>
   <compound kind="page">
