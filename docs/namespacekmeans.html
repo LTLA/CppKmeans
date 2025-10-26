@@ -539,9 +539,9 @@ template&lt;class Matrix_ , typename Cluster_ , typename Float_ &gt; </div>
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">data</td><td>A matrix containing data for each observation. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">num_centers</td><td>Number of cluster centers. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. Each column should contain the initial centroid location for its cluster. </td></tr>
-    <tr><td class="paramdir">[in]</td><td class="paramname">clusters</td><td>Pointer to an array of length equal to the number of observations (from <code>data.num_observations()</code>). This should contain the 0-based cluster assignment for each observation, where each value is no greater than <code>num_centers</code>. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">wcss</td><td>Pointer to an array of length equal to <code>num_centers</code>. On output, this will contain the within-cluster sum of squares. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. The <code>j</code>-th column should contain the initial centroid location for cluster <code>j</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">clusters</td><td>Pointer to an array of length equal to the number of observations (from <code>data.num_observations()</code>). This should contain the 0-based cluster assignment for each observation. Specifically, each entry is an index that refers to a column of <code>centers</code> and is no greater than <code>num_centers</code>. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">wcss</td><td>Pointer to an array of length equal to <code>num_centers</code>. On output, this will contain the within-cluster sum of squares for each cluster. </td></tr>
   </table>
   </dd>
 </dl>

@@ -181,7 +181,7 @@ template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Floa
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">data</td><td>A matrix containing data for each observation. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">num_centers</td><td>Number of cluster centers. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. On output, each column will contain the final centroid locations for each cluster.</td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. On output, column <code>j</code> will contain the final centroid locations for cluster <code>j</code>.</td></tr>
   </table>
   </dd>
 </dl>

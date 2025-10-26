@@ -125,13 +125,13 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keyword">static_assert</span>(std::is_same&lt;I&lt;decltype(std::declval&lt;Matrix_&gt;().num_observations())&gt;, Index_&gt;::value);</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">static_assert</span>(std::is_same&lt;I&lt;decltype(*(std::declval&lt;Matrix_&gt;().new_extractor()-&gt;get_observation(0)))&gt;, Data_&gt;::value);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0">   61</a></span>    <span class="keyword">virtual</span> <a class="code hl_struct" href="structkmeans_1_1Details.html">Details&lt;Index_&gt;</a> <a class="code hl_function" href="classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ num_centers, Float_* centers, Cluster_* clusters) <span class="keyword">const</span> = 0;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>};</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno"><a class="line" href="classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0">   65</a></span>    <span class="keyword">virtual</span> <a class="code hl_struct" href="structkmeans_1_1Details.html">Details&lt;Index_&gt;</a> <a class="code hl_function" href="classkmeans_1_1Refine.html#a0ff0875ef8cd5b726098ecb1038258b0">run</a>(<span class="keyword">const</span> Matrix_&amp; data, Cluster_ num_centers, Float_* centers, Cluster_* clusters) <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>};</div>
 </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>}</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aDetails_8hpp_html"><div class="ttname"><a href="Details_8hpp.html">Details.hpp</a></div><div class="ttdoc">Report detailed clustering statistics.</div></div>
 <div class="ttc" id="aMatrix_8hpp_html"><div class="ttname"><a href="Matrix_8hpp.html">Matrix.hpp</a></div><div class="ttdoc">Interface for matrix inputs.</div></div>
 <div class="ttc" id="aclasskmeans_1_1Refine_html"><div class="ttname"><a href="classkmeans_1_1Refine.html">kmeans::Refine</a></div><div class="ttdoc">Interface for k-means refinement algorithms.</div><div class="ttdef"><b>Definition</b> Refine.hpp:30</div></div>

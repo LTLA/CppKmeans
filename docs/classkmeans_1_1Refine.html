@@ -184,12 +184,13 @@ template&lt;typename Index_ , typename Data_ , typename Cluster_ , typename Floa
   <table class="params">
     <tr><td class="paramdir"></td><td class="paramname">data</td><td>A matrix containing data for each observation. </td></tr>
     <tr><td class="paramdir"></td><td class="paramname">num_centers</td><td>Number of cluster centers. </td></tr>
-    <tr><td class="paramdir">[in,out]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. On input, each column should contain the initial centroid location for its cluster. On output, each column will contain the final centroid location for each cluster. </td></tr>
-    <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length equal to the number of observations (from <code>data.num_observations()</code>). On output, this will contain the 0-based cluster assignment for each observation, where each entry is less than <code>num_centers</code>.</td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">centers</td><td>Pointer to an array of length equal to the product of <code>num_centers</code> and <code>data.num_dimensions()</code>. This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers. On input, column <code>j</code> should contain the initial centroid location for cluster <code>j</code>. On output, each column will contain the final centroid location for its corresponding cluster. </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">clusters</td><td>Pointer to an array of length equal to the number of observations (from <code>data.num_observations()</code>). On output, this will contain the 0-based cluster assignment for each observation. Specifically, each entry is an index that refers to a column of <code>centers</code> and is no greater than <code>num_centers</code>.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and an object is returned containing clustering statistics. If <code>num_centers</code> is greater than <code>data.num_observations()</code>, only the first <code>data.num_observations()</code> columns of the <code>centers</code> array will be filled. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>centers</code> and <code>clusters</code> are filled, and an object is returned containing clustering statistics.</dd></dl>
+<p>Not all columns of <code>centers</code> may be represented in the output <code>clusters</code>, i.e., some clusters may be unused. The <code><a class="el" href="namespacekmeans.html#ac3a9ad73447e8295259736b22a294b00">remove_unused_centers()</a></code> function will rearrange the cluster assignments to more easily skip these empty clusters. In practice, empty clusters should be rare if the initial centroids are chosen appropriately. </p>
 
 </div>
 </div>
