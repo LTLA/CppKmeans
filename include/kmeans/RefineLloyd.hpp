@@ -99,34 +99,42 @@ public:
         }
 
         auto sizes = sanisizer::create<std::vector<Index_> >(ncenters);
-        auto copy = sanisizer::create<std::vector<Cluster_> >(nobs);
-
         const auto ndim = data.num_dimensions();
         internal::QuickSearch<Float_, Cluster_> index;
+
+        auto num_diff_threads = sanisizer::create<std::vector<Index_> >(my_options.num_threads);
+        std::fill_n(clusters, nobs, 0); // just to avoid using uninitialized values in the first iteration of the loop.
 
         decltype(I(my_options.max_iterations)) iter = 0;
         for (; iter < my_options.max_iterations; ++iter) {
             index.reset(ndim, ncenters, centers);
-            parallelize(my_options.num_threads, nobs, [&](const int, const Index_ start, const Index_ length) -> void {
+
+            parallelize(my_options.num_threads, nobs, [&](const int t, const Index_ start, const Index_ length) -> void {
                 auto work = data.new_extractor(start, length);
+                Index_ num_diff = 0;
                 for (Index_ obs = start, end = start + length; obs < end; ++obs) {
                     const auto dptr = work->get_observation();
-                    copy[obs] = index.find(dptr); 
+                    const auto closest = index.find(dptr); 
+                    auto& previous = clusters[obs];
+                    num_diff += (closest != previous);
+                    previous = closest;
                 }
+                num_diff_threads[t] = num_diff;
             });
 
-            // Checking if it already converged.
-            bool updated = false;
-            for (Index_ obs = 0; obs < nobs; ++obs) {
-                if (copy[obs] != clusters[obs]) {
-                    updated = true;
+            if (iter) {
+                // Checking if it already converged.
+                bool updated = false;
+                for (const auto num_diff : num_diff_threads) {
+                    if (num_diff) {
+                        updated = true;
+                        break;
+                    }
+                }
+                if (!updated) {
                     break;
                 }
             }
-            if (!updated) {
-                break;
-            }
-            std::copy(copy.begin(), copy.end(), clusters);
 
             std::fill(sizes.begin(), sizes.end(), 0);
             for (Index_ obs = 0; obs < nobs; ++obs) {
