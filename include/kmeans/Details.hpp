@@ -32,6 +32,8 @@ struct Details {
 
     /**
      * The number of observations in each cluster.
+     * This has length equal to `num_centers` in `Refine::run()`, where `sizes[j]` contains the number of observations in cluster `j`.
+     *
      * Some clusters may be empty, e.g., when there are more requested centers than clusters -
      * see `remove_unused_centers()` to optionally remove such clusters.
      */

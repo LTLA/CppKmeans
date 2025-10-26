@@ -49,7 +49,7 @@ public:
      * @param num_centers Number of cluster centers.
      * @param[out] centers Pointer to an array of length equal to the product of `num_centers` and `data.num_dimensions()`.
      * This contains a column-major matrix where rows correspond to dimensions and columns correspond to cluster centers.
-     * On output, each column will contain the final centroid locations for each cluster.
+     * On output, column `j` will contain the final centroid locations for cluster `j`.
      *
      * @return `centers` is filled with the new cluster centers and the number of filled centers is returned.
      * The latter is usually equal to `num_centers`, but may not be if, e.g., `num_centers` is greater than the number of observations.
