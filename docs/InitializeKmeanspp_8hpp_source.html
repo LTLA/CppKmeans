@@ -161,7 +161,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keyword">auto</span> mindist = sanisizer::create&lt;std::vector&lt;Float_&gt; &gt;(nobs, 1);</div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keyword">auto</span> cumulative = sanisizer::create&lt;std::vector&lt;Float_&gt; &gt;(nobs);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    sanisizer::can_ptrdiff&lt;<span class="keyword">decltype</span>(I(cumulative.begin()))&gt;(nobs); <span class="comment">// check that we can compute a ptrdiff for weighted_sample().</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    sanisizer::can_ptrdiff&lt;I&lt;<span class="keyword">decltype</span>(cumulative.begin())&gt; &gt;(nobs); <span class="comment">// check that we can compute a ptrdiff for weighted_sample().</span></div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    std::vector&lt;Index_&gt; sofar;</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    sofar.reserve(ncenters);</div>
@@ -182,7 +182,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                    }</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                    Float_ r2 = 0;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                    <span class="keywordflow">for</span> (<span class="keyword">decltype</span>(I(ndim)) d = 0; d &lt; ndim; ++d) {</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                    <span class="keywordflow">for</span> (I&lt;<span class="keyword">decltype</span>(ndim)&gt; d = 0; d &lt; ndim; ++d) {</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                        <span class="keyword">const</span> Float_ delta = <span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(current[d]) - <span class="keyword">static_cast&lt;</span>Float_<span class="keyword">&gt;</span>(last_ptr[d]); <span class="comment">// cast to ensure consistent precision regardless of Data_.</span></div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                        r2 += delta * delta;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                    }</div>

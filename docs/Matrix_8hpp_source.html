@@ -179,7 +179,7 @@ $(function(){ initResizable(false); });
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="comment">// A simple alias to help determine the Index_ inside a Matrix_ instance.</span></div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="keyword">template</span>&lt;<span class="keyword">class</span> Matrix_&gt;</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="keyword">using </span>Index = <span class="keyword">decltype</span>(I(std::declval&lt;Matrix_&gt;().num_observations()));</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="keyword">using </span>Index = I&lt;decltype(std::declval&lt;Matrix_&gt;().num_observations())&gt;;</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>}</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span><span class="preprocessor">#endif</span></div>
