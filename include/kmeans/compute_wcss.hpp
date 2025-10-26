@@ -36,13 +36,13 @@ void compute_wcss(const Matrix_& data, const Cluster_ num_centers, const Float_*
     const auto ndim = data.num_dimensions();
     std::fill_n(wcss, num_centers, 0);
 
-    auto work = data.new_extractor(static_cast<decltype(I(nobs))>(0), nobs);
-    for (decltype(I(nobs)) obs = 0; obs < nobs; ++obs) {
+    auto work = data.new_extractor(static_cast<I<decltype(nobs)> >(0), nobs);
+    for (I<decltype(nobs)> obs = 0; obs < nobs; ++obs) {
         const auto curdata = work->get_observation();
         const auto cen = clusters[obs];
 
         Float_& curwcss = wcss[cen];
-        for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
+        for (I<decltype(ndim)> d = 0; d < ndim; ++d) {
             const auto curcenter = centers[sanisizer::nd_offset<std::size_t>(d, ndim, cen)];
             const Float_ delta = static_cast<Float_>(curdata[d]) - curcenter; // cast for consistent precision regardless of the input data type.
             curwcss += delta * delta;

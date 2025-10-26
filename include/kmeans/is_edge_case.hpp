@@ -28,19 +28,19 @@ Details<Index<Matrix_> > process_edge_case(const Matrix_& data, Cluster_ ncenter
     if (ncenters == 1) {
         // All points in cluster 0.
         std::fill_n(clusters, nobs, 0);
-        auto sizes = sanisizer::create<std::vector<decltype(I(nobs))> >(1, nobs);
+        auto sizes = sanisizer::create<std::vector<I<decltype(nobs)> > >(1, nobs);
         compute_centroid(data, centers);
         return Details(std::move(sizes), 0, 0);
 
     } else if (sanisizer::is_greater_than_or_equal(ncenters, nobs)) {
         // Special case, each observation is a center.
         std::iota(clusters, clusters + nobs, static_cast<Cluster_>(0));
-        auto sizes = sanisizer::create<std::vector<decltype(I(nobs))> >(ncenters);
+        auto sizes = sanisizer::create<std::vector<I<decltype(nobs)> > >(ncenters);
         std::fill_n(sizes.begin(), nobs, 1);
 
         const auto ndim = data.num_dimensions();
-        auto work = data.new_extractor(static_cast<decltype(I(nobs))>(0), nobs);
-        for (decltype(I(nobs)) o = 0; o < nobs; ++o) {
+        auto work = data.new_extractor(static_cast<I<decltype(nobs)> >(0), nobs);
+        for (I<decltype(nobs)> o = 0; o < nobs; ++o) {
             const auto ptr = work->get_observation();
             std::copy_n(ptr, ndim, centers + sanisizer::product_unsafe<std::size_t>(o, ndim));
         }

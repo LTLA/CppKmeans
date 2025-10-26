@@ -52,7 +52,7 @@ void compute_welford(const Float_ val, Float_& center, Float_& ss, const Float_ 
 
 template<typename Data_, typename Float_>
 void compute_welford(const std::size_t ndim, const Data_* const dptr, Float_* const center, Float_* const dim_ss, const Float_ count) {
-    for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
+    for (I<decltype(ndim)> d = 0; d < ndim; ++d) {
         compute_welford<Float_>(dptr[d], center[d], dim_ss[d], count);
     }
 }
@@ -83,7 +83,7 @@ Float_ optimize_partition(
     auto work = data.new_extractor(current.data(), static_cast<std::size_t>(N)); // safety of the cast is already checked in InitializeVariancePartition::run(). 
     value_buffer.clear();
     value_buffer.reserve(N);
-    for (decltype(I(N)) i = 0; i < N; ++i) {
+    for (I<decltype(N)> i = 0; i < N; ++i) {
         const auto dptr = work->get_observation();
         value_buffer.push_back(dptr[top_dim]);
     }
@@ -99,14 +99,14 @@ Float_ optimize_partition(
     // Forward and backward iterations to get the sum of squares for the left and right partitions, respectively, at every possible partition point.
     stat_buffer.push_back(0);
     Float_ mean = value_buffer.front(), ss = 0, count = 2;
-    for (decltype(I(N_m1)) i = 1; i < N_m1; ++i) { // skip i == 0 as the left partition only has one point.
+    for (I<decltype(N_m1)> i = 1; i < N_m1; ++i) { // skip i == 0 as the left partition only has one point.
         compute_welford<Float_>(value_buffer[i], mean, ss, count);
         stat_buffer.push_back(ss);
         ++count;
     }
 
     mean = value_buffer.back(), ss = 0, count = 2;
-    for (decltype(I(N_m1)) i_p1 = N_m1 - 1; i_p1 > 0; --i_p1) { // skip i + 1 == N - 1 (i.e., i_p1 == N_m1) as the right partition only has one point. 
+    for (I<decltype(N_m1)> i_p1 = N_m1 - 1; i_p1 > 0; --i_p1) { // skip i + 1 == N - 1 (i.e., i_p1 == N_m1) as the right partition only has one point. 
         compute_welford<Float_>(value_buffer[i_p1], mean, ss, count);
         stat_buffer[i_p1 - 1] += ss;
         ++count;
@@ -114,7 +114,7 @@ Float_ optimize_partition(
 
     // iterator arithmetic is safe as we checked can_ptrdiff() in InitializeVariancePartition::run().
     const auto sbBegin = stat_buffer.begin(); 
-    const decltype(I(value_buffer.size())) which_min = std::min_element(sbBegin, stat_buffer.end()) - sbBegin;
+    const I<decltype(value_buffer.size())> which_min = std::min_element(sbBegin, stat_buffer.end()) - sbBegin;
 
     // To avoid issues with ties, we use the average of the two edge points as the partition boundary.
     const auto left = value_buffer[which_min];
@@ -210,7 +210,7 @@ public:
             sanisizer::resize(cur_ss, ndim);
             std::fill_n(centers, ndim, 0);
             auto matwork = data.new_extractor(static_cast<Index_>(0), nobs);
-            for (decltype(I(nobs)) i = 0; i < nobs; ++i) {
+            for (I<decltype(nobs)> i = 0; i < nobs; ++i) {
                 const auto dptr = matwork->get_observation();
                 InitializeVariancePartition_internal::compute_welford(ndim, dptr, centers, cur_ss.data(), static_cast<Float_>(i + 1));
             }
@@ -233,8 +233,8 @@ public:
         std::vector<Float_> opt_partition_values, opt_partition_stats;
 
         // Checking that iterator arithmetic won't overflow the vector's ptrdiff type.
-        sanisizer::can_ptrdiff<decltype(I(opt_partition_values.begin()))>(nobs);
-        sanisizer::can_ptrdiff<decltype(I(dim_ss.front().begin()))>(ndim);
+        sanisizer::can_ptrdiff<I<decltype(opt_partition_values.begin())> >(nobs);
+        sanisizer::can_ptrdiff<I<decltype(dim_ss.front().begin())> >(ndim);
 
         for (Cluster_ cluster = 1; cluster < ncenters; ++cluster) {
             const auto chosen = highest.top();
@@ -248,7 +248,7 @@ public:
             auto& cur_assignments = assignments[chosen.second];
 
             // Iterator arithmetic is safe as we checked can_ptrdiff outside the loop.
-            const decltype(I(ndim)) top_dim = std::max_element(cur_ss.begin(), cur_ss.end()) - cur_ss.begin();
+            const I<decltype(ndim)> top_dim = std::max_element(cur_ss.begin(), cur_ss.end()) - cur_ss.begin();
             Float_ partition_boundary;
             if (my_options.optimize_partition) {
                 partition_boundary = InitializeVariancePartition_internal::optimize_partition(data, cur_assignments, top_dim, opt_partition_values, opt_partition_stats);

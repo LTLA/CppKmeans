@@ -105,7 +105,7 @@ public:
         auto num_diff_threads = sanisizer::create<std::vector<Index_> >(my_options.num_threads);
         std::fill_n(clusters, nobs, 0); // just to avoid using uninitialized values in the first iteration of the loop.
 
-        decltype(I(my_options.max_iterations)) iter = 0;
+        I<decltype(my_options.max_iterations)> iter = 0;
         for (; iter < my_options.max_iterations; ++iter) {
             index.reset(ndim, ncenters, centers);
 

@@ -38,8 +38,8 @@ public:
     Initialize& operator=(const Initialize&) = default;
     virtual ~Initialize() = default;
 
-    static_assert(std::is_same<decltype(I(std::declval<Matrix_>().num_observations())), Index_>::value);
-    static_assert(std::is_same<decltype(I(*(std::declval<Matrix_>().new_extractor()->get_observation(0)))), Data_>::value);
+    static_assert(std::is_same<I<decltype(std::declval<Matrix_>().num_observations())>, Index_>::value);
+    static_assert(std::is_same<I<decltype(*(std::declval<Matrix_>().new_extractor()->get_observation(0)))>, Data_>::value);
     /**
      * @endcond
      */

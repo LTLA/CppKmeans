@@ -17,7 +17,7 @@ void copy_into_array(const Matrix_& matrix, const std::vector<Index<Matrix_> >& 
     const auto ndim = matrix.num_dimensions();
     const auto nchosen = chosen.size();
     auto work = matrix.new_extractor(chosen.data(), sanisizer::cast<std::size_t>(nchosen));
-    for (decltype(I(nchosen)) i = 0; i < nchosen; ++i) {
+    for (I<decltype(nchosen)> i = 0; i < nchosen; ++i) {
         const auto ptr = work->get_observation();
         std::copy_n(ptr, ndim, out + sanisizer::product_unsafe<std::size_t>(i, ndim));
     }

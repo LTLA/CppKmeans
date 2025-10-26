@@ -136,7 +136,7 @@ public:
         auto last_sampled = sanisizer::create<std::vector<unsigned long long> >(ncenters);
         auto previous = sanisizer::create<std::vector<Cluster_> >(nobs);
 
-        const decltype(I(nobs)) actual_batch_size = sanisizer::min(nobs, my_options.batch_size);
+        const I<decltype(nobs)> actual_batch_size = sanisizer::min(nobs, my_options.batch_size);
         sanisizer::cast<std::size_t>(actual_batch_size); // check that static_cast for new_extractor() calls will be safe.
         auto chosen = sanisizer::create<std::vector<Index_> >(actual_batch_size);
         RefineMiniBatchRng eng(my_options.seed);
@@ -144,7 +144,7 @@ public:
         const auto ndim = data.num_dimensions();
         internal::QuickSearch<Float_, Cluster_> index;
 
-        decltype(I(my_options.max_iterations)) iter = 0;
+        I<decltype(my_options.max_iterations)> iter = 0;
         for (; iter < my_options.max_iterations; ++iter) {
             aarand::sample(nobs, actual_batch_size, chosen.data(), eng);
             if (iter > 0) {
@@ -170,7 +170,7 @@ public:
                 ++n;
 
                 const auto ocopy = work->get_observation();
-                for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
+                for (I<decltype(ndim)> d = 0; d < ndim; ++d) {
                     auto& curcenter = centers[sanisizer::nd_offset<std::size_t>(d, ndim, c)];
                     curcenter += (static_cast<Float_>(ocopy[d]) - curcenter) / n; // cast to ensure consistent precision regardless of Matrix_::data_type.
                 }

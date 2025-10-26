@@ -183,7 +183,7 @@ public:
  */
 // A simple alias to help determine the Index_ inside a Matrix_ instance.
 template<class Matrix_>
-using Index = decltype(I(std::declval<Matrix_>().num_observations()));
+using Index = I<decltype(std::declval<Matrix_>().num_observations())>;
 /**
  * @endcond
  */

@@ -26,7 +26,7 @@ private:
     template<typename Query_>
     static Float_ raw_distance(const Float_* const x, const Query_* const y, const std::size_t ndim) {
         Float_ output = 0;
-        for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
+        for (I<decltype(ndim)> d = 0; d < ndim; ++d) {
             const Float_ delta = x[d] - static_cast<Float_>(y[d]); // cast to ensure consistent precision regardless of Query_.
             output += delta * delta;
         }

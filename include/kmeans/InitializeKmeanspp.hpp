@@ -79,7 +79,7 @@ std::vector<Index_> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, const t
     auto mindist = sanisizer::create<std::vector<Float_> >(nobs, 1);
 
     auto cumulative = sanisizer::create<std::vector<Float_> >(nobs);
-    sanisizer::can_ptrdiff<decltype(I(cumulative.begin()))>(nobs); // check that we can compute a ptrdiff for weighted_sample().
+    sanisizer::can_ptrdiff<I<decltype(cumulative.begin())> >(nobs); // check that we can compute a ptrdiff for weighted_sample().
 
     std::vector<Index_> sofar;
     sofar.reserve(ncenters);
@@ -100,7 +100,7 @@ std::vector<Index_> run_kmeanspp(const Matrix_& data, Cluster_ ncenters, const t
                     }
 
                     Float_ r2 = 0;
-                    for (decltype(I(ndim)) d = 0; d < ndim; ++d) {
+                    for (I<decltype(ndim)> d = 0; d < ndim; ++d) {
                         const Float_ delta = static_cast<Float_>(current[d]) - static_cast<Float_>(last_ptr[d]); // cast to ensure consistent precision regardless of Data_.
                         r2 += delta * delta;
                     }
