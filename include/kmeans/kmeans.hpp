@@ -21,6 +21,7 @@
 #include "RefineMiniBatch.hpp"
 
 #include "compute_wcss.hpp"
+#include "remove_unused_centers.hpp"
 
 /** 
  * @file kmeans.hpp

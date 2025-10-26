@@ -32,7 +32,8 @@ struct Details {
 
     /**
      * The number of observations in each cluster.
-     * Some clusters may be empty, e.g., when there are more requested centers than clusters.
+     * Some clusters may be empty, e.g., when there are more requested centers than clusters -
+     * see `remove_unused_centers()` to optionally remove such clusters.
      */
     std::vector<Index_> sizes;
 

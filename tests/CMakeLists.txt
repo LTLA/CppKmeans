@@ -50,6 +50,7 @@ add_executable(
     src/InitializeVariancePartition.cpp
     src/QuickSearch.cpp
     src/is_edge_case.cpp
+    src/remove_unused_centers.cpp
     src/RefineLloyd.cpp
     src/RefineHartiganWong.cpp
     src/RefineMiniBatch.cpp
